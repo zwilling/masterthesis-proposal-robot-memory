@@ -1,0 +1,158 @@
+\documentclass[a4paper,11pt]{article}
+
+%%%%%%%%%
+%%usees%%
+%%%%%%%%%
+\usepackage[utf8]{inputenc}
+%\usepackage[ngerman]{babel}
+%\usepackage{a4wide}
+\usepackage[margin=3.0cm, top=3.0cm, bottom=3.0cm]{geometry}
+\usepackage{setspace}
+\usepackage{graphicx}
+\usepackage{amssymb} 
+\usepackage{amsmath}
+\usepackage{mathtools}
+\usepackage{footnote}
+\usepackage{caption}
+\usepackage{color}
+\usepackage[hidelinks]{hyperref}
+\usepackage{cite}
+\usepackage{todonotes}
+
+
+%%%%%%%%%
+%%Title%%
+%%%%%%%%%
+
+\author{Frederik Zwilling 304314}
+\title{Master-Thesis Proposal:\\ Shared Robot Memory for Multiple Planners in Fawkes}
+\begin{document}
+%\thispagestyle{empty}
+%\tableofcontents
+%\newpage
+%\onehalfspace
+\maketitle
+%%%%%%%%%
+%%Text%%
+%%%%%%%%
+
+\abstract{abstract.}
+
+\section{Introduction}
+\begin{itemize}
+\item Motivation Knowledge Representation on Cyber Physical Systems
+\item Problem description
+  \begin{itemize}
+  \item Worldmodel exchange between resoners/planners
+  \item Worldmodel exchange between robots
+  \item Long time storage
+  \end{itemize}
+\item Idea Robot Memory
+\item Application RCLL PDDL-CLIPS
+\item Application @Home/PR2
+\end{itemize}
+
+\section{Background}
+\subsection{Fawkes Robot Software Framework}
+\begin{itemize}
+\item Component based approach
+\item Blackboard
+\item Comparison to ROS
+\end{itemize}
+\subsection{Planners and Reasoners}
+\begin{itemize}
+\item CLIPS
+\item PDDL
+\item Golog
+\item MoveIt
+\end{itemize}
+\subsection{Database}
+\begin{itemize}
+\item MongoDB
+\item Query Language
+\item Comparison to using CLIPS, KnowRob
+\item Comparison to other DBs (SQL, Graph DBs, other Document DBs)
+\end{itemize}
+
+\section{Related Work}
+\subsection{KnowRob}
+\begin{itemize}
+\item Common sense Resoning
+\item Concepts Ontologies, Triple Store, Virtual Knowledge base
+\item Prolog implementation
+\item Pro/Contra
+\end{itemize}
+\subsection{MongoDB Logging}
+\subsection{More}
+\todo[inline]{More}
+\begin{itemize}
+\item Blackboard
+\item RoboEarth
+\item Robot Memory... Robot Databases... Robot Knowledge Storage...
+\end{itemize}
+
+
+\section{Approach}
+\subsection{Goals}
+\begin{itemize}
+\item Same worldmodel for reasoners/planners
+\item Distributed for robot team
+\item Long time storage (persistent, different kinds of long time knowledge, decay?)
+\item Triggers
+\item Interrupt storage?
+\item Beliefs/Confidences?
+\item Versatility (virtual knowledge base)
+\item Temporal/Spatial grounding
+\item Common sense knowledge
+\end{itemize}
+\subsection{Architecture}
+\begin{itemize}
+\item Data representation
+\item Component interactions (diagram)
+\item Data acquisition
+\end{itemize}
+
+
+\subsection{Implementation}
+\subsubsection{Robot Memory}
+\begin{itemize}
+\item Data Representation
+\item MongoDB query language
+\item Trigger
+\item Multi-robot synchronization
+\end{itemize}
+\subsubsection{Planner/Reasoner}
+\begin{itemize}
+\item Example for using the Robot Memory
+\item Queries/Register Triggers
+\item Build initial domain
+\item When to replan
+\end{itemize}
+
+\subsection{Evaluation}
+\subsubsection{Application}
+\begin{itemize}
+\item RCLL PDDL-CLIPS
+\item RCLL between bots
+\item @Home
+\end{itemize}
+\subsubsection{Efficiency-Scalability}
+\subsubsection{Expressiveness}
+\subsubsection{Versatility}
+\subsubsection{Software development expandability, interfacing}
+\subsection{Schedule}
+\begin{itemize}
+\item Timetable
+\end{itemize}
+
+\section{Summery}
+\begin{itemize}
+\item Challenges
+\item Impact
+\end{itemize}
+
+
+\bibliographystyle{plain}
+\bibliography{../references}
+
+\end{document}
