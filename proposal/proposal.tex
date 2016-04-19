@@ -20,6 +20,8 @@
 \usepackage{todonotes}
 
 
+\newcommand{\reffig}[1]{Figure~\ref{#1}}
+
 %%%%%%%%%
 %%Title%%
 %%%%%%%%%
@@ -127,75 +129,22 @@ and production flow between machines to produce and deliver products
 according to dynamic orders. Competing teams deploy a group of up to
 three robots which have to autonomously build ordered products by
 interacting with \textit{Modular Production Machines (MPS)} and
-transporting workpieces between these machines.
+transporting workpieces between these machines.  \reffig{fig:rcll}
+shows an RCLL robot filling a machine which mounts colored rings on
+workpieces. The robots are based on the Festo Robotino 3 platform
+which uses an holonomic drive, and can be extended and programmed by
+the teams. The robot shown in \reffig{fig:rcll} was build by the
+Carologistics team and used an laser range finder for localization, a
+custom made gripper for handling workpieces and several cameras for
+detection of AR-tags and light-signals mounted on the
+machines~\cite{Carologistics2015}.
 
-
-%% received increasing attention. In 2012, the new industry-oriented
-%% RoboCup Logistics League (RCLL, previously LLSF), was founded to
-%% tackle the problem of production logistics. Groups of up to three
-%% robots have to plan, execute, and optimize the material flow in a
-%% smart factory scenario and deliver products according to dynamic
-%% orders. Therefore, the challenge consists of creating and adjusting a
-%% production schedule and coordinate the group of robots. We describe
-%% the rules of 2014, to which this paper applies.
-%% \begin{figure}[t]
-%%   % when aligned at bottom:
-%%   %\vspace{-3.8mm}
-%%   \includegraphics[width=\linewidth,trim=0pt 140pt 0pt 27pt,clip]{figures/rc2014-finale-production.jpg}
-%%   \caption{Carologistics (three Robotino 2 with laptops on top) and
-%%     BavarianBendingUnits (two Robotino 3) during the LLSF finals at
-%%     RoboCup 2014.}
-%% \label{fig:rc2014-finale}
-%% \vspace*{-2ex}
-%% \end{figure}
-
-%% \begin{figure}[b]
-%%   \vspace{-3mm}
-%%   \centering
-    
-%%   \tikzstyle{M}=[rectangle, draw=blue!50, thick, fill=blue!20, text width=2em,align=center, rounded corners=2pt, 
-%%   minimum height=1.5em,inner sep=2pt]
-%%   % 
-%%   \tikzstyle{P}=[draw=orange, thick, circle,fill=orange!20, minimum height=1.5em,inner sep=2pt]
-%%   \tikzstyle{FP}=[draw=orange, thick, circle,fill=red!20, minimum height=1.5em,inner sep=2pt]
-%%   \tikzstyle{D}=[thick, level distance=1.2cm,sibling distance=0.8cm,draw=orange!80]
-
-%%   \begin{tikzpicture}[D]
-%%     \node [FP] (P) {\scriptsize $P_{1}$} [grow=left]
-%%     child {
-%%       node [M] (M3) {\scriptsize $T_3$}
-%%       child { % -> S2
-%%         node [P] (S2) {\scriptsize $S_2$}
-%%         child { % -> S1
-%%           node [M] (S1-M2) {\scriptsize $T_2$}
-%%           child {
-%%             node [P] (S2-S1) {\scriptsize $S_1$}
-%%             child {
-%%               node [M] (S2-S1-M1) {\scriptsize $T_1$}
-%%               child {node [P] (S2-S1-S0) {\scriptsize $S_0$}}
-%%             }
-%%           }
-%%           child {
-%%             node [P] (S2-S0) {\scriptsize $S_0$}
-%%           }
-%%         }
-%%       }
-%%       child {
-%%         node [P] (S0) {\scriptsize $S_0$}
-%%       }
-%%       child {
-%%         node [P] (S1) {\scriptsize $S_1$}
-%%         child {
-%%           node [M] (S1-M1) {\scriptsize $T_1$}
-%%           child {node [P] (S1-S0) {\scriptsize $S_0$}}
-%%         }
-%%       }
-%%     };
-%%   \end{tikzpicture}
-
-%%   \caption{Production Chains for the most complex product of the RCLL 2014.}
-%%   \label{fig:production-diagram}  
-%% \end{figure}
+The game consists of two phases. In the first phase, the exploration
+phase, the robots have to roam the factory to find randomly placed
+machines which are used later. By detecting the light signal shown by
+the machines, the robots can determine the machine-type. For correct
+reports of discovered machines the team is awarded points, for
+incorrect ones points are subtracted.
 
 %% \subsection{RoboCup Logistics League 2014}
 %% The RCLL 2014 competition takes place on a field of \SI{11.2 x
@@ -284,6 +233,12 @@ transporting workpieces between these machines.
 \item Prolog implementation
 \item Pro/Contra
 \end{itemize}
+\subsection{OpenRobots Ontology (ORO)}
+\begin{itemize}
+\item Events (Trigger)
+\item RDF, Ontologies
+\item multi-agent?
+\end{itemize}
 \subsection{MongoDB Logging}
 \label{sec:mongo-logging}
 \subsection{More}
@@ -315,6 +270,7 @@ transporting workpieces between these machines.
 \begin{itemize}
 \item Data representation
 \item Component interactions (diagram)
+\item Middle-layer (virtual kb resolving)
 \item Data acquisition
 \end{itemize}
 
