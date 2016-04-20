@@ -189,25 +189,65 @@ obstacles, such as the other teams robots and hard to completely avoid
 handling mistakes by the robots. To cope with these challenges and
 achieve an efficient production, a multi-robot decision making is
 nesseccary.
+\todo[inline]{Connection to robot memory}
 
 \subsubsection{@Home League}
-\todo[inline]{League, Ceasar}
 
-%% The RoboCup@Home league is a
-%% competition about service robots. The robots have to assist humans in
-%% a domestic environment. There are a variety of tasks, such as
-%% following a human, serving drinks and handling emergency
-%% situations. Especially important in this league are the technical and
-%% open challenge. Here, the teams can present their own ideas and how
-%% the robot implements them.
+
+\begin{figure}[t]
+  \centering
+  \begin{minipage}{.6\linewidth}
+    \includegraphics[height=120px]{img/athome-table}%
+  \end{minipage}
+  \quad%
+  \begin{minipage}{.35\linewidth}
+  \includegraphics[height=120px]{img/ceasar}%
+  \end{minipage}
+  \caption{RoboCup@Home robot helping to carry a table
+    (left)~\cite{athome-bit} and tidying up
+    (right)~\cite{wisspeintner2009robocup}}
+  \vspace{-2mm}
+  \label{fig:athome}
+\end{figure}
+
+The RoboCup@Home league is a competition about domestic service
+robots~\cite{wisspeintner2009robocup}. The robots have to assist
+humans in a wide variety of everyday tasks. These tasks include
+serving drinks, cleaning, setting tables, guiding or following people,
+helping in emergency situations, shopping, cooking and
+more. \reffig{fig:athome} shows two examples of @Home robots in the
+competition.
+%
+The goal of the RoboCup@Home league is to foster and benchmark
+research in the area of domestic service robots, to build a research
+community and to envision autonomous multi-purpose robots helping
+humans and especially elder people in the personal life.
+
+The competition consists of an open challenge and multiple subtasks
+such as finding and manipulating objects, navigation tasks,
+remembering persons, wait on tables and acting as
+nurse~\cite{athome-rules}. To solve these challenges, robots need to
+have a wide variaty of abilities, including navigation, object
+detection and manipulation, speech recognition and especially human
+robot interaction, which requires, for example, applying everyday
+knowledge to incomplete task descriptions given by humans.
+
+Important challenges in the @Home league are acting robustly in a
+dynamic and only partial observable domestic environment where people
+and objects can disappear or be moved without the robot recognizing
+it. Furthermore, detecting and manipulating objects in a personal
+environment can be difficult because the space the robot acts in, for
+example the frige, can be very clouded.
+
+\todo[inline]{connection robot memory}
 
 \subsection{Fawkes Robot Software Framework}
 \label{sec:fawkes}
-%% \begin{itemize}
-%% \item Component based approach
-%% \item Blackboard
-%% \item Comparison to ROS
-%% \end{itemize}
+\begin{itemize}
+\item Component based approach
+\item Blackboard
+\item Comparison to ROS
+\end{itemize}
 
 
 \subsection{Planners and Reasoners}
