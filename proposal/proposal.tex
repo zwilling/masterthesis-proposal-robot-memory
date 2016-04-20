@@ -71,7 +71,7 @@ the robot memory.
 \subsection{RoboCup}
 \label{sec:robocup}
 \todo[inline]{rewrite or copy from bachelorthesis?}  The
-\textit{RoboCup} is an international robotics competition founded to
+\emph{RoboCup} is an international robotics competition founded to
 foster research in the field of robotics and artificial
 intelligence.~\cite{Robocup}. It provides standard problems as a
 platform to foster and compare research results. Research
@@ -86,17 +86,17 @@ The RoboCup features a variety of leagues, each focusing on another
 aspect or application domain of robotics and artificial
 intelligence. The majority of the RoboCup leagues host soccer robots
 in different sizes and complexities. The leagues range from the
-\textit{Small Size League} with small cylindrical robots and ground
+\emph{Small Size League} with small cylindrical robots and ground
 truth perception from an overhead camera to humanoid robots in teen
 size which need to have all sensors and computation devices on the
 robot. The RoboCup also features more application oriented domains,
-e.g. the \textit{Rescue League} with robots solving different
-challenges in desaster scenarios and \textit{RoboCup@Work} with robots
+e.g. the \emph{Rescue League} with robots solving different
+challenges in desaster scenarios and \emph{RoboCup@Work} with robots
 operating in an industrial scenario to perform identification,
 handling and transporting tasks with work related objects such as
-skrews and nuts. The \textit{RoboCup Logistics League (RCLL)} which
+skrews and nuts. The \emph{RoboCup Logistics League (RCLL)} which
 features logistics robots in a production scenario and the
-\textit{RoboCup@Home} leage featuring service robots in a domestic
+\emph{RoboCup@Home} leage featuring service robots in a domestic
 environment are presented in the following in more detail because
 these two leagues are used as application and evaluation domains of
 the proposed thesis.
@@ -112,79 +112,83 @@ the proposed thesis.
   \end{minipage}
 \quad
 \begin{minipage}[b]{0.5\linewidth}
-  \includegraphics[scale=0.45]{pics/production_chain}
-  \caption[LLSF Production Chain]{LLSF Production Chain~\cite{LLSFRules}}
-  \label{fig:llsf_chain}
+  \todo[inline]{empty}
+  \label{fig:}
 \end{minipage}
 \end{figure}
 
 \todo[inline]{League, robotino}
 %
-The \textit{RoboCup Logistics League (RCLL)}\footnote{RoboCup
-  Logistics League website: \url{http://www.robocup-logistics.org}},
-previously LLSF, is a industry-oriented competition within RoboCup.
-It tackles the problem of production logistics in a smart factory
-where mobile robots have to plan, execute, and optimize the material
-and production flow between machines to produce and deliver products
-according to dynamic orders. Competing teams deploy a group of up to
-three robots which have to autonomously build ordered products by
-interacting with \textit{Modular Production Machines (MPS)} and
-transporting workpieces between these machines.  \reffig{fig:rcll}
-shows an RCLL robot filling a machine which mounts colored rings on
-workpieces. The robots are based on the Festo Robotino 3 platform
-which uses an holonomic drive, and can be extended and programmed by
-the teams. The robot shown in \reffig{fig:rcll} was build by the
-Carologistics team and used an laser range finder for localization, a
-custom made gripper for handling workpieces and several cameras for
-detection of AR-tags and light-signals mounted on the
-machines~\cite{Carologistics2015}.
+The \emph{RoboCup Logistics League (RCLL)}\footnote{RoboCup Logistics
+  League website: \url{http://www.robocup-logistics.org}}, previously
+LLSF, is a industry-oriented competition within RoboCup.  It tackles
+the problem of production logistics in a smart factory where mobile
+robots have to plan, execute, and optimize the material and production
+flow between machines to produce and deliver products according to
+dynamic orders. Competing teams deploy a group of up to three robots
+which have to autonomously build ordered products by interacting with
+\emph{Modular Production Machines (MPS)} and transporting workpieces
+between these machines.  \reffig{fig:rcll} shows an RCLL robot filling
+a machine which mounts colored rings on workpieces. The robots are
+based on the Festo Robotino 3 platform which uses an holonomic drive,
+and can be extended and programmed by the teams. The robot shown in
+\reffig{fig:rcll} was build by the Carologistics team and used an
+laser range finder for localization, a custom made gripper for
+handling workpieces and several cameras for detection of AR-tags and
+light-signals mounted on the machines~\cite{Carologistics2015}. The
+game is controlled by a software component called \emph{referee box
+  (refbox)} which randomizes the machine placement in the factory and
+the production orders, communicates with the competing robots,
+controls the machines and awards points.
 
-The game consists of two phases. In the first phase, the exploration
-phase, the robots have to roam the factory to find randomly placed
-machines which are used later. By detecting the light signal shown by
-the machines, the robots can determine the machine-type. For correct
-reports of discovered machines the team is awarded points, for
-incorrect ones points are subtracted.
+The game consists of two phases~\cite{LLSF-Rules-2015}. In the first
+phase, the \emph{exploration phase}, the robots have to roam the
+factory to find randomly placed machines which are used later. By
+detecting the light signal shown by the machines, the robots can
+determine the machine-type. For correct reportsof discovered machines
+to the refbox the team is awarded points, for incorrect ones points
+are subtracted.
+%
+\begin{figure}[t]
+  \centering
+  \begin{minipage}{.8\linewidth}
+  \includegraphics[width=\linewidth]{img/chain_c3}%
+  \end{minipage}
+  \quad%
+  \begin{minipage}{.15\linewidth}
+  \includegraphics[width=\linewidth]{img/legend}%
+  \end{minipage}
+  \caption{Production chain of a high complexity
+    product in the RCLL.}
+  \vspace{-2mm}
+  \label{fig:prod-chain}
+\end{figure}
+%
+In the second phase, the \emph{produciton phase}, the refbox announces
+orders, which products have to be produced by the robots. The products
+are build from colored cups with optionally mounted rings and and a
+colored cap. \reffig{fig:prod-chain} shows the production chain to
+build a high complexity product. There are four different machine
+types. The \emph{base-station (BS)} provides new bases, the colored
+cups, as raw ressource. The \emph{ring stations (RS)} mounts colored
+rings on a workpiece and after preparing it with a varying amount of
+bases. The \emph{cap-station (CS)} mounts black or grey caps to finish
+a product after loading it with a cap form a shelf first. The
+\emph{delivery-station (DS)} is used to deliver products.
 
-%% \subsection{RoboCup Logistics League 2014}
-%% The RCLL 2014 competition takes place on a field of \SI{11.2 x
-%%   5.6}{\metre} (Fig.~\ref{fig:rc2014-finale}). Two teams are playing
-%% at the same time competing for points by
-%% fulfilling orders in time coping with robots of the other team.  Each
-%% team has an exclusive input storage (blue areas) and delivery zone
-%% (green area in figure \ref{fig:rc2014-finale}). Machines are
-%% represented by RFID-readers with signal lights on top indicating the
-%% machine state.  At the beginning all pucks (representing the products)
-%% have the raw material state $S_0$, are in the input storage, and can
-%% be refined (through several stages) to final products using the
-%% production machines. These machines are assigned a type randomly at
-%% the start of a match which determines what inputs are required and
-%% what output will be produced, and how long this conversion will
-%% take~\cite{LLSF-Sim}. The production tree for a complex product is
-%% shown in \reffig{fig:production-diagram}. Orange circles denote input
-%% products in a certain stage. One or more are fed into a machine (blue
-%% boxes) and yield a certain output. Eventually, this leads to a
-%% finished product (red circle). This must then be taken to the active
-%% gate in the delivery zone. Machines may be down for a limited time to
-%% simulate machine maintenance or faults.
-
-%% The game is controlled by the \emph{referee box} (refbox), a software
-%% component which keeps track of puck states, instructs the light
-%% signals, and posts orders to the teams~\cite{LLSF2014}.  After the
-%% game is started, no manual interference is allowed, robots receive
-%% instructions only from the refbox. Teams are awarded with points for
-%% producing complex products, delivering ordered products, and
-%% recycling.
-%% % The refbox can be seen as a higher-level production
-%% %planning entity as used in industry, e.g.  ERP or MES-Systems.
-
-%% In 2015, the RCLL introduces physical processing stations which
-%% perform actual product modifications~\cite{LLSF2014} by stacking up
-%% base products, colored rings, and caps. This also means a vastly
-%% increased number of product variants that can be produced. Up from
-%% three types to several hundreds. This makes RCLL also very
-%% interesting from a planning and scheduling point of view as pointed
-%% out in \cite{RCLL-Planning}.
+The challenges of the RCLL lie in the dynamic and only partially
+observable environment the robots have to robustly and fully
+autonomously work in, in the planning and multi-robot coordination
+required to build as many ordered products as possible and deliver
+them in time given time window, and in the baseline robotic challenges
+such as collision avoidance, perception and behavior execution. The
+dynamism of the environment is caused by the ranomized factory layout,
+randomized out-of-order times of machines, the highly customizable
+amount of products that preclude producing in advance, unknown
+obstacles, such as the other teams robots and hard to completely avoid
+handling mistakes by the robots. To cope with these challenges and
+achieve an efficient production, a multi-robot decision making is
+nesseccary.
 
 \subsubsection{@Home League}
 \todo[inline]{League, Ceasar}
