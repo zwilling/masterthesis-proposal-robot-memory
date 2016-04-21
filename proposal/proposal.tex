@@ -242,12 +242,54 @@ example the frige, can be very clouded.
 \todo[inline]{connection robot memory}
 
 \subsection{Fawkes Robot Software Framework}
-\label{sec:fawkes}
-\begin{itemize}
-\item Component based approach
-\item Blackboard
-\item Comparison to ROS
-\end{itemize}
+The basis for the proposed thesis is the robot software framework
+\emph{Fawkes}\footnote{\url{http://www.fawkesrobotics.org}}. It is
+available as Open Source and developed primarily at the
+Knowledge-based Systems
+Group\footnote{\url{http://www.kbsg.rwth-aachen.de}} (KBSG) at RWTH
+Aachen University~\cite{FawkesDesign}. It is designed to work with a
+plenthora of robots in different domains and follows a component-based
+software design which separates functional entities into individual
+software modules~\cite{component}. This enables reusing common
+software solutions for robotic problems such as localization,
+navigation, perception, reasoning and behavior execution.
+The binary components can be loaded as \emph{plugins} at run-time.
+
+
+
+The communication between plugins is realized with a \emph{blackboard}
+paradigm. The blackboard lists structured entries called
+\emph{interfaces} which contain informaiton. Interfaces can be
+provided by one plugin at a time, the writer, and read by other
+plugins, the readers. This allows a very flexible communication
+because the information provision in the interface is decoupled from
+the concrete components which use the information and plugins writing
+to the interfaces can be exchanged, e.g. by simulation plugins writing
+to the same interface. Furthermore, the blackboard architecture
+simplifies debugging because the current communication between two
+plugins, determined by the state of the interface, can be viewed and
+logged at runtime. To send commands to an interface writer, e.g. a
+motor command to the motor controller, readers can send messages to
+the interface.
+
+As a communication infrastructure between different components, the
+blackboard is one possibility to realize a robot memory shared between
+multiple planners and reasoners in the current version of
+Fawkes. Indeed the blackboard works well for providing information and
+sending commands, though there are major limitations for this
+application. One limitation is the strict rule, that only one component can write an interface to provide information. This rule is very usefull for 
+
+%current over-component robot memory
+%limitations (long-term, sharing, dynamicity)
+
+% memory stuff at the time (bb)
+
+%% \label{sec:fawkes}
+%% \begin{itemize}
+%% \item Component based approach
+%% \item Blackboard
+%% \item Comparison to ROS
+%% \end{itemize}
 
 
 \subsection{Planners and Reasoners}
