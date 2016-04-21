@@ -242,20 +242,32 @@ example the frige, can be very clouded.
 \todo[inline]{connection robot memory}
 
 \subsection{Fawkes Robot Software Framework}
+\label{sec:fawkes}
 The basis for the proposed thesis is the robot software framework
 \emph{Fawkes}\footnote{\url{http://www.fawkesrobotics.org}}. It is
-available as Open Source and developed primarily at the
-Knowledge-based Systems
+available as Open Source and developed at the Knowledge-based Systems
 Group\footnote{\url{http://www.kbsg.rwth-aachen.de}} (KBSG) at RWTH
 Aachen University~\cite{FawkesDesign}. It is designed to work with a
 plenthora of robots in different domains and follows a component-based
 software design which separates functional entities into individual
 software modules~\cite{component}. This enables reusing common
 software solutions for robotic problems such as localization,
-navigation, perception, reasoning and behavior execution.
-The binary components can be loaded as \emph{plugins} at run-time.
-
-
+navigation, perception, reasoning and behavior execution. The binary
+components can be loaded as \emph{plugins} at run-time.
+%
+Plugin activity is organized in threads to make use of multi-core
+architectures. The threads can be run continously ore be hooked into
+the main-loop of Fawkes to order the execution into a
+\emph{sence-think-act} cycle to guararnee that higher-level components
+can use the latest data. Furthermore, Fawkes guarantees loop times by
+monitoring and eventually pausing and resuming threads running for too
+long in one loop iteration.
+% Ros blabla from BA?
+Features in Fawkes are provided as \textit{aspects}. These aspects are
+based on aspect-oriented programming~\cite{aspect_oriented} and give
+access to a particular feature. Threads that want to use a feature can
+inherit from the corresponding aspect. For example there are aspects
+for accessing the blackboard, logging and timing~\cite{tnthesis}.
 
 The communication between plugins is realized with a \emph{blackboard}
 paradigm. The blackboard lists structured entries called
@@ -277,20 +289,18 @@ blackboard is one possibility to realize a robot memory shared between
 multiple planners and reasoners in the current version of
 Fawkes. Indeed the blackboard works well for providing information and
 sending commands, though there are major limitations for this
-application. One limitation is the strict rule, that only one component can write an interface to provide information. This rule is very usefull for 
-
-%current over-component robot memory
-%limitations (long-term, sharing, dynamicity)
-
-% memory stuff at the time (bb)
-
-%% \label{sec:fawkes}
-%% \begin{itemize}
-%% \item Component based approach
-%% \item Blackboard
-%% \item Comparison to ROS
-%% \end{itemize}
-
+application. One limitation is the strict rule, that only one
+component can write an interface to provide information. This rule is
+very usefull to avoid problems in standart plugin communication but
+obstructive for multiple components sharing common information. For
+example when a reasoner concludes that a product is placed at the
+machine output after the production time and a behavior execution
+component concludes that the robot holds the product after the grabing
+action succeded, both components would have to modify the same piece
+of information in the shared robot memory. Another limitation is the
+fixed size and structure of blackboard interfaces. Therefore it is not
+possible to dynamically represent more information, such as positions
+of detected objects, than initially defined. Furthermore, the blackboard does not support long-time memory.
 
 \subsection{Planners and Reasoners}
 \label{sec:planners}
