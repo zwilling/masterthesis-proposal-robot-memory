@@ -320,12 +320,27 @@ of detected objects, than initially defined. Furthermore, the blackboard
 does not support long-time memory.
 
 \subsection{Planners and Reasoners}
+This subsection gives an overview of planners and reasoners which are
+going to profit from using and communicating with the robot
+memory. For the variety of these, we give three\todo{four?} concrete
+examples which should use the robot memory to achieve new or improved
+functionality and to evaluate this thesis. The example planner and
+reasoner systems are \emph{CLIPS}, a rule-based production system,
+\emph{Golog}, a high-level programming language based on the Situation
+Calculus, and the \emph{Planning Domain Definition Language (PDDL)},
+which incorporates a family of planning formalisms into a standart
+programming language. These examples are representatives for often
+used types of planners and reasoners. However, the robot memory should
+not be limited to these examples and provide a general C++ interface.
+
+
+
 \label{sec:planners}
 \begin{itemize}
 \item CLIPS
 \item PDDL
 \item Golog
-\item MoveIt
+\item MoveIt? In Fawkes integriert? Sonst OpenRave? Kürzen?
 \end{itemize}
 
 \subsection{MongoDB}
@@ -463,29 +478,10 @@ control system, thus multiple conflicting versions can be kept in
 parallel for later revision. However, MongoDB has shown to scale much better than CouchDB.\todo[inline]{Proof (RoboDB Tim)}
 
 
-%% Indexing
-%% is  a  database  feature  particularly  relevant  for
-%% query  performance.  MongoDB  maintains  indexes  over  col-
-%% lections  for  specified  combinations  of  document  fields.  If
-%% new  applications  create  new  query  patterns,  corresponding
-%% indexes can easily be generated as needed.
-
-%% One  of  the  original  intents  to  create  document-oriented
-%% stores was to ease
-%% replication
-
-%% this very efficient. In our particular case of a robot database
-%% we imagine that replication could be useful for applications
-%% like  a  shared,  distributed  world  model  among  a  group  of
-%% robots,  more  than  failure  safety  during  database  downtime.
 
 \begin{itemize}
-\item MongoDB
-\item Query Language
-\item Comparison to other DBs (other Document DBs)
-\item scalability/performace
 \item BSON JSON format for documents
-\item JavaScript
+\item JavaScript example
 \item Capped collections?
 \item dreieck comparison ?
 \item GridFS file storage?
