@@ -18,9 +18,25 @@
 \usepackage[hidelinks]{hyperref}
 \usepackage{cite}
 \usepackage{todonotes}
+\usepackage{subfigure}
+\usepackage{siunitx}
+\usepackage{tabularx}
+\usepackage{wrapfig}
+\usepackage{url}
+\usepackage{listings}
 
 
 \newcommand{\reffig}[1]{Figure~\ref{#1}}
+\newcommand{\refsec}[1]{Section~\ref{#1}}
+\newcommand{\refdef}[1]{Definition~\ref{#1}}
+\newcommand{\reflst}[1]{Listing~\ref{#1}}
+\newcommand{\reftab}[1]{Table~\ref{#1}}
+
+\definecolor{Mulberry}{cmyk}{0.34,0.90,0,0.02}
+\definecolor{BrickRed}{cmyk}{0,0.89,0.94,0.28}
+\lstset{language=C++,frame=none, basicstyle=\tt}
+\input{../listings/clips.tex}
+\input{../listings/json.tex}
 
 %%%%%%%%%
 %%Title%%
@@ -300,7 +316,8 @@ action succeded, both components would have to modify the same piece
 of information in the shared robot memory. Another limitation is the
 fixed size and structure of blackboard interfaces. Therefore it is not
 possible to dynamically represent more information, such as positions
-of detected objects, than initially defined. Furthermore, the blackboard does not support long-time memory.
+of detected objects, than initially defined. Furthermore, the blackboard
+does not support long-time memory.
 
 \subsection{Planners and Reasoners}
 \label{sec:planners}
@@ -310,13 +327,168 @@ of detected objects, than initially defined. Furthermore, the blackboard does no
 \item Golog
 \item MoveIt
 \end{itemize}
+
 \subsection{MongoDB}
 \label{sec:mongodb}
+
+Since storing, keeping and retrieving knowledge of the robot memory
+are central tasks of this thesis, the choise of a database
+implementation is important. MongoDB is a \emph{document-oriented}
+database which fits particularly well for this application. It
+provides many useful features which would take a large effort to
+implement manually and has proven as powerful and scalable data
+storage~\cite{mongodb,RoboDB} and is widely used. As document-oriented
+database, it is a non relational database which stores entities called
+\emph{documents} which consist of key-value pairs.
+\begin{figure}
+\begin{lstlisting}[style=SmallJSON,
+  caption={MongoDB document representing the position of a robot},
+  label=lst:mongo-document,
+  framexleftmargin=15pt, xleftmargin=15pt,
+ morekeywords={}]
+ {
+   _id: ObjectId("573e7cfbb2af16b5443949d9"),
+   type: "position",
+   name: "robot1",
+   translation: {x: 2.5, y: 1.0, z: 0.0},
+   rotation: {x: 0.0, y: 0.0, z: 0.0, w: 1.0},
+   timestamp : ISODate("2016-05-19T15:26:34.466Z")
+ }
+\end{lstlisting}
+\end{figure}
+\todo[inline]{hinde lst lines} \reflst{lst:mongo-document} shows such
+a document used for storing the position of a robot. The different
+values can be accessed by their key and can have different types, such
+as strings, numbers, complexer objects (e.g. dates) and nested
+sub-documents (e.g. translation containing 3D coordinates). In
+contrast to relational databases, there is no predefined schema that
+enforces the structure of documents. However, documents with similar
+structure are usually grouped into \emph{collections}. Therefore the
+documents inserted in a collection implicitly define the structure
+during runtime. This allows a flexible use of the database because
+applications are not limited to a fixed schema and can, for example,
+add key-value pairs during runtime when additional information needs
+to be stored. Furthermore, this simlyfies development in which the
+document structure tends to change often. Even if there are documents
+with different structure, the application can choose to retrieve only
+certain documents by giving a specialized query.
+\begin{figure}
+\begin{lstlisting}[style=SmallJSON,
+  caption={MongoDB query retrieving the document shown in \reflst{lst:mongo-document}},
+  label=lst:mongo-query,
+  framexleftmargin=15pt, xleftmargin=15pt,
+ morekeywords={}]
+db.positions.find(
+  {
+    type: "position",
+    name: "robot1",
+    timestamp : {"$gt": ISODate("2016-05-19T15:26:34.000Z")}
+  })
+\end{lstlisting}
+\end{figure}
+Queries in MongoDB are very similar to documents because they are
+represented in the same form. \todo{mention JSON} An example query is
+shown in \reflst{lst:mongo-query}. It searches for all documents in
+the collection \texttt{positions} of the current database that have
+the same values for the \texttt{type} and \texttt{position} keys and
+are up to date, thus with a timestamp greater than the given
+one. Multiple key-value pairs in a query are conjunctive \todo{word
+  right?}, the values can be checked and compared as in the example
+with a variety of operators such as \textit{not}, \textit{or},
+\textit{and}, \textit{equals}, and \textit{greater than}. These
+queries can be evaluated very quickly, especially when \emph{Indexing}
+is used, a database feature that manages indexes for a combination of
+document keys.
+%
+For more complex queries it is
+possible to add arbitrary JavaScript function with the \textit{where}
+operator to check if documents match the query. Furthermore, it is
+possible to aggregate results using the \emph{Map-Reduce} paradigm
+which maps resulting documents to intermediate documents which are
+then reduced until the end-result is found. For example this allows
+querying for the nearest visible object by getting all visible
+objects, mapping their position to a distance and reducing them to the
+nearest one by dropping more distant ones when comparing them.  The
+higher expressiveness of these queries comes with the price of slower
+computation. However, the computational effort can be reduced by
+formulating queries smartly. Many usual queries,
+e.g. \reflst{lst:mongo-query}, can be formulated without using
+\textit{where} operators. Furthermore, complex queries can be nested
+to filter documents first with a fast query and execute the
+computationally costly query only on the remaining documents.
+\todo{example where?}
+%
+An especially useful feature of MongoDB which allows sharing knowledge
+between multiple robots is \emph{replication}. Replication is a
+process that distributes a database onto multiple machines. The
+original database of the MongoDB instance called \emph{Master} is
+copied to one or more instances called \emph{Slaves}. Once an initial
+copy is finished, all modifications to the master database, which are
+stored in a separate collection called \emph{Oplog}, are forwarded to
+the slave to keep them synchronized and consistent. This is often used
+in web-services to distribute read-queries and their computation on
+multiple machines and to keep backups. Read only queries can be
+computed by Master and Slave instances, modifying queries are
+forwarded to the Master to garantee consistency.
+\todo[inline]{eventual conistency} MongoDB can also group multiple
+instances into a \emph{Replica Sets} which automatically manages which
+instance is the Master and which instance becomes the new Master if
+the current Master is unavailable for a certain time. This way
+multiple robots can robustly share a common and consistent world
+model. Robot specific knowledge can be kept in a seperate and not
+replicated collection to avoid unneded communication. There also exist
+extensions of MongoDB which implement a \emph{Multi-Master
+  Replication}. This would enable writing to each instance immediately
+and synchronizing the changes later. \todo{source} This allows faster
+writing especially if the Master is not available for some time but
+requires to resolve write conflicts and handle them in the
+application. Thus Master-Slave Replication is more convinient for the
+applicaiton.
+%
+There are also extensions which provide so called \emph{Trigers} which
+can notify an application if something in the database changes as
+previouly defined. \todo{source} These Triggers use the Oplog of
+MongoDB to find changes and are useful for planners. For example if a
+global planner determined a plan that is being executed and wants to
+be notified, if a condition changes that makes the plan invalid, to
+replan.
+
+MongoDB is especially well suited for this thesis because of its
+performance and scalability compared to other document-oriented
+databases with similar features. A possible alternative to MongoDB is
+the document-oriented database CouchDB\todo{reference}. CouchDB
+focuses more on distributed Systems providing a similar system as the
+Multi-Master Replication. Conflicts can be solved similar to a version
+control system, thus multiple conflicting versions can be kept in
+parallel for later revision. However, MongoDB has shown to scale much better than CouchDB.\todo[inline]{Proof (RoboDB Tim)}
+
+
+%% Indexing
+%% is  a  database  feature  particularly  relevant  for
+%% query  performance.  MongoDB  maintains  indexes  over  col-
+%% lections  for  specified  combinations  of  document  fields.  If
+%% new  applications  create  new  query  patterns,  corresponding
+%% indexes can easily be generated as needed.
+
+%% One  of  the  original  intents  to  create  document-oriented
+%% stores was to ease
+%% replication
+
+%% this very efficient. In our particular case of a robot database
+%% we imagine that replication could be useful for applications
+%% like  a  shared,  distributed  world  model  among  a  group  of
+%% robots,  more  than  failure  safety  during  database  downtime.
+
 \begin{itemize}
 \item MongoDB
 \item Query Language
-\item Comparison to using CLIPS, KnowRob
-\item Comparison to other DBs (SQL, Graph DBs, other Document DBs)
+\item Comparison to other DBs (other Document DBs)
+\item scalability/performace
+\item BSON JSON format for documents
+\item JavaScript
+\item Capped collections?
+\item dreieck comparison ?
+\item GridFS file storage?
 \end{itemize}
 
 \section{Related Work}
