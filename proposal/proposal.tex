@@ -320,6 +320,7 @@ of detected objects, than initially defined. Furthermore, the blackboard
 does not support long-time memory.
 
 \subsection{Planners and Reasoners}
+\label{sec:planners}
 This subsection gives an overview of planners and reasoners which are
 going to profit from using and communicating with the robot
 memory. For the variety of these, we give three\todo{four?} concrete
@@ -333,9 +334,116 @@ programming language. These examples are representatives for often
 used types of planners and reasoners. However, the robot memory should
 not be limited to these examples and provide a general C++ interface.
 
+\emph{CLIPS rules engine: } The reasoner we currently use in the RCLL
+to implement the high-level game agent is the rule-based production
+system CLIPS which uses forward chaining based on the Rete
+algorithm~\cite{Rete}. CLIPS consists of a fact-base, which is a
+working memory with many small pieces of information, a knowledge base
+with rules and procedures, and an inference engine~\cite{CLIPS-RM}
+working with the knowledge base on the fact-base. The pieces of
+information in the fact-base are called facts and consist of a name
+and a key-value structure defined in a template for \emph{unordered
+  facts}
+(e.g. \textit{(position~(name~robot1)~(translation~2.5~1.0~0.0)}) or
+an ordered list of values for \emph{ordered facts}.
+\begin{figure}
+\begin{lstlisting}[showlines,style=ReallySmallCLIPS, caption={CLIPS
+    rule to change a robots state when the object it searched for is visible.},
+  label=lst:clips-rule,
+  emph={skill, args, state, target, res},
+  emphstyle=\bfseries\color{green!80!black},
+  emph={[2]\?skill, \$\?args, wait-for-lock, \?target, use,
+  WAIT-FOR-LOCK, SKILL-EXECUTION, running},
+  emphstyle={[2]\bfseries\color{blue!80!black}},
+  morekeywords={retract, assert, modify, skill-call, skill-to-execute,
+  wait-for-lock}]
+(defrule found-machine
+  ?s <- (state SEARCHING_FOR ?machine)
+  (visible  (name ?machine))
+  (position (name robot1) (translation $?pos))
+  =>  
+  (retract ?s) 
+  (assert (state IDLE))
+  (printout t "Found machine " ?machine " at " ?pos crlf)
+)
+\end{lstlisting} %$ This is just to fix Emacs highlighting due to dollar sign in code above
+\end{figure}
+An example rule is shown in \reflst{lst:clips-rule}. Rules are
+composed of an \emph{antecedent} and a \emph{consequent}. The
+antecendent is written before $=>$ and describes the contition that
+has to be satisfied before the the rule is activated. It consists of a
+list of patterns that have to be matched by the fact-base. For the
+antecendent in \reflist{lst:clips-rule} there have to be fitting
+\textit{state}, \textit{visible}, and \textit{position} facts where
+$?$ and $\$?$ mark variables. The consequent is the part behind $=>$
+and defines the procedure that is executed when the rule is
+activated. It usually modifies the fact-base by retracting and
+asserting facts as in the example to remove the old and add a new
+state fact. The inference engine is responsible for checking which
+rule antecendents are satisfied by the fact-base. If multiple rules
+could fire, the inference engine chooses the rule with the highest
+priority, executes the consequent and checks again. \emph{Functions}
+can be called in the consequent, can have side effects and also be
+implemented in C++. The RCLL agent implemented in CLIPS represents its
+knowledge about the state of the world, the \emph{world model}, in its
+fact-base. It controls which actions are taken by the robot by using a
+technique called \emph{Incremental Reasoning}~\cite{CLIPS-Agent}. This
+basically means that, whenever the robot is idle, it searches for the
+next best task and executes it. For each task there is a rule with its
+preconditions in the antecendent and the actions to take in the
+consequent. There are also rules for modifying the worldmodel
+(e.g. after finishing actions or getting new sensor data), task
+execution, coordination with other robots and more. The coordination
+of the robot team includes synchronizing their world model, so each
+robot knows what other robots noticed and changed in the environment,
+and resource allocation to ensure no two robots try to use the same
+machine at a time or try to achieve the same goal by choosing a
+redundant task. This coordination is currently implemented in CLIPS
+rules using Profobuf\footnote{Google Protocol Buffers}
+messages. Alternatively, this could also be done by using a
+distributed robot memory which contains the world model in a
+distributed database. This would be advantageous\todo{spelling}
+because the database already provides efficient synchronization and
+the implementation in CLIPS is not convinient due to its
+specialization on logical rules.
 
 
-\label{sec:planners}
+\emph{Planning Domain Definition Language (PDDL): } PDDL is a
+standardized language for planning problems~\cite{PDDL}. It allows
+modeling the nature and behavior of a domain as well as the
+\emph{actions} possible to perform in a \emph{problem
+  description}. With an additional \emph{problem description} which
+defines the problem to solve it can be given to a PDDL planner which
+searches for a totally or partially ordered sequence of actions, the
+\emph{plan}, to solve the problem.
+%
+\todo[inline]{action example}
+%
+\reflst{lsf:pddl-action} shows an example action contained in a domain
+description. Actions consist of preconditions and effects.  There are
+various versions and extensions of PDDL which introduce new concepts
+and features. A version often used in RoboCup domains is
+PDDL~2.1~\cite{PDDL2.1} \todo{really?}. It adds numeric values and
+continous actions. This allows finding optimal plans in continous
+environments where, for example, distances and travel times
+matter. PDDl has the advantage of being able to find comlete and
+optimal, or at least efficient, plans. However, this comes with the
+drawbacks of high computational effort for larger domains and the
+problem of adopting to events during plan execution. For example when
+the domain is not fully observable, the robot could sense changes in
+the environment or fail executing an action. This would require
+notifying the planner, incorporating the changes in PDDL and
+replanning. To solve this problem we want to combine PDDL with an
+execution in CLIPS. Then PDDL generates an efficient and complete plan
+with coarse actions and CLIPS executes the plan action for action,
+while monitoring the execution and updating the worldmodel according
+to percieved changes. This world model is written into the robot
+memory so that PDDL can access the world model with all applied
+changes. This way the strenghtes of both PDDL and CLIPS.
+
+
+\emph{Golog: }
+
 \begin{itemize}
 \item CLIPS
 \item PDDL
