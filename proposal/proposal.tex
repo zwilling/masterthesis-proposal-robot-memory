@@ -334,7 +334,7 @@ programming language. These examples are representatives for often
 used types of planners and reasoners. However, the robot memory should
 not be limited to these examples and provide a general C++ interface.
 
-\emph{CLIPS rules engine: } The reasoner we currently use in the RCLL
+\subsubsection{CLIPS rules engine} The reasoner we currently use in the RCLL
 to implement the high-level game agent is the rule-based production
 system CLIPS which uses forward chaining based on the Rete
 algorithm~\cite{Rete}. CLIPS consists of a fact-base, which is a
@@ -373,7 +373,7 @@ composed of an \emph{antecedent} and a \emph{consequent}. The
 antecendent is written before $=>$ and describes the contition that
 has to be satisfied before the the rule is activated. It consists of a
 list of patterns that have to be matched by the fact-base. For the
-antecendent in \reflist{lst:clips-rule} there have to be fitting
+antecendent in \reflst{lst:clips-rule} there have to be fitting
 \textit{state}, \textit{visible}, and \textit{position} facts where
 $?$ and $\$?$ mark variables. The consequent is the part behind $=>$
 and defines the procedure that is executed when the rule is
@@ -402,13 +402,13 @@ redundant task. This coordination is currently implemented in CLIPS
 rules using Profobuf\footnote{Google Protocol Buffers}
 messages. Alternatively, this could also be done by using a
 distributed robot memory which contains the world model in a
-distributed database. This would be advantageous\todo{spelling}
+distributed database. This would be advantageous
 because the database already provides efficient synchronization and
 the implementation in CLIPS is not convinient due to its
 specialization on logical rules.
 
 
-\emph{Planning Domain Definition Language (PDDL): } PDDL is a
+\subsubsection{Planning Domain Definition Language (PDDL)} PDDL is a
 standardized language for planning problems~\cite{PDDL}. It allows
 modeling the nature and behavior of a domain as well as the
 \emph{actions} possible to perform in a \emph{problem
@@ -442,14 +442,48 @@ memory so that PDDL can access the world model with all applied
 changes. This way the strenghtes of both PDDL and CLIPS.
 
 
-\emph{Golog: }
+\subsubsection{Golog } Golog is a high-level programming language based on the
+\emph{Situation Calculus}, a first order logic formalism for knowledge
+representation and reasoning in dynamic domains~\cite{Golog}. It
+allows representing world states as terms called
+\emph{situations}. These can be used in relations and functions called
+\emph{fluents}. (e.g. $holding(x,s)$ is a fluent representing if
+object $x$ is hold by the robot in situation $s$.) \emph{Actions} can
+lead to new situations (e.g. $s'=do(pickup(x),s)$) and are modeled
+with \emph{precondition axioms} (e.g. $Poss(pickup(x),s) \equiv
+\forall y [\neg holding(y,s)]$). The value of relational fluents after
+performing actions is defined by \emph{successor state axioms}
+(e.g. $Poss(drop(x),s) \supset [broken(x,do(a,s)) \equiv a=drop(x)
+  \wedge fragile(x) \vee broken(x,s) \wedge \neg a=repair(x)]$).
+Golog as a high-level programming laguage features imperative
+programming constructs such as procedures, conditions and loops as
+well as nondeterministic branching. There are multiple dialects of
+Golog which add features needed for robotic
+applications. ConGolog~\cite{ConGolog} adds concurrency and
+interrupts, IndiGolog~\cite{IndiGolog} adds on-line execution of
+programs and sensing actions, which determine the value of a fluent
+during execution, and ReadyLog~\cite{ferrein08ras} extends IndiGolog
+with passive sensing during the execution of other actions. With these
+dialects, Golog has been proven as useful for robot applications in
+multiple domains such as domestic service robots. By providing an
+interface to the robot memory, the strengthes of Golog, the highly
+expressive behavior specification, can be combined with other
+approaches to compensate the weaknesses, e.g. unefficient
+planning~\cite{Golog-Planning}. There already are approaches to
+combine Golog an PDDL into a continous planning framework that uses
+PDDL for planning and Golog for execution and expanding placeholder
+actions into sub-plans based on current information unavailable during
+initial planning~\cite{ContPlanGolog}. It is implemented with a
+translation between PDDL and
+Golog~\cite{Golog-PDDL-Trans}. Furthermore, the robot memory could be
+useful as additional persistent and distributed knowledge storage
+(e.g. for saving the context during an interrupt\todo{cite Gesche
+  Interrupts} and resuming the task by another robot).
 
-\begin{itemize}
-\item CLIPS
-\item PDDL
-\item Golog
-\item MoveIt? In Fawkes integriert? Sonst OpenRave? Kürzen?
-\end{itemize}
+\subsubsection{Motion Planners:}
+%
+\todo[inline]{General, MoveIt-Ros, OpenRave-Fawkes, possible without
+  promise, hybrid aspect}
 
 \subsection{MongoDB}
 \label{sec:mongodb}
@@ -624,6 +658,8 @@ parallel for later revision. However, MongoDB has shown to scale much better tha
 
 \section{Approach}
 \label{sec:approach}
+This section presents the approach of the thesis with the goals the robot memory should fulfill, how to achieve them and 
+
 \subsection{Goals}
 \label{sec:goals}
 \begin{itemize}
