@@ -481,9 +481,21 @@ useful as additional persistent and distributed knowledge storage
   Interrupts} and resuming the task by another robot).
 
 \subsubsection{Motion Planners:}
-%
-\todo[inline]{General, MoveIt-Ros, OpenRave-Fawkes, possible without
-  promise, hybrid aspect}
+Another kind of widely used planner in robotics are motion
+planners. They usually plan the motion of a robotic arm to reach a
+certain goal position where an object should be grabed or placed. A
+motion planner needs to find a trajectory from the initial position to
+the goal position, taking joints of the arm into account and avoiding
+collisions with objects in the environment. A widely used motion
+planner is MoveIt which is available for ROS and the PR2
+robot~\cite{MoveIt}. Another motion planner already integrated into
+Fawkes is OpenRave~\cite{OpenRave}. These planners could benefit from
+using a robot memory by accessing and sharing information about
+objects and obstacles in the environment and by informing other
+planners and task execution components about the outcome of a motion
+plan (e.g. about the cause that prohibited the motion). This
+especially requires the robot memory to represent hybrid knowledge in
+the form of continous positions and time related events.
 
 \subsection{MongoDB}
 \label{sec:mongodb}
