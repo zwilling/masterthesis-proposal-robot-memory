@@ -701,11 +701,36 @@ larger datasets (e.g. storing locations of found object over long time
 to learn the distribution where they can be found).
 
 \subsection{OpenRobots Ontology (ORO)}
-\begin{itemize}
-\item Events (Trigger)
-\item RDF, Ontologies
-\item multi-agent?
-\end{itemize}
+\label{sec:oro}
+The OpenRobots Ontology (ORO) is an open source knowledge processing
+framework for robotics~\cite{Oro}. It features commonsense ontologies
+similar to KnowRob and is designed to enable human-robot
+interaction. It also uses RDF triples and OWL ontologies. The triple
+storage is implemented in Jena, a Java toolkit for RDF, and the
+inference with Pellet, a Java OWL reasoner. Besides knowledge storing,
+querying and reasoning, ORO features a modular architecture between
+the back-end storage and front end socket server for querying. These
+modules add features such as events that notify external components
+about changes (e.g. if instances of certain classes are added or
+modyfied). Another module adds representations of alternative
+perspectives that should allow understanding difficult situations with
+multiple agents. For example when a human asks a robot to bring the
+cup, there are two cups on a table and the robot should infer which
+cup is meant by knowing that the other cup is occluded from the humans
+point of view. Furthermore ORO features categorization to find
+differences between objects (e.g. to ask if the blue cup or the red
+cup was meant in a vague task description) and Memory profiles for
+distinguishing long-term knowledge and short-term knowledge which is
+removed when the lifetime of a fact exires. Although these are usefull
+features and we want to realize the concepts of events and memory
+profiles in this thesis, we do not use ORO as a basis. Due to its
+focus on human-robot interaction and commonsense reasoning, it is not
+suitable for representing large amounts of data for non reasoning
+components because all data would have to be stored in RDF tripels and
+processed by the OWL reasoner. Furthermore, it does neither support
+synchronizing a part of the knowledge with other robots nor a virtual
+knowledge base.
+
 \subsection{MongoDB Logging}
 \label{sec:mongo-logging}
 \subsection{More}
