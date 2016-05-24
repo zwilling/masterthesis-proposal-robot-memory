@@ -645,12 +645,61 @@ parallel for later revision. However, MongoDB has shown to scale much better tha
 \label{sec:related}
 \subsection{KnowRob}
 \label{sec:knowrob}
-\begin{itemize}
-\item Common sense Resoning
-\item Concepts Ontologies, Triple Store, Virtual Knowledge base
-\item Prolog implementation
-\item Pro/Contra
-\end{itemize}
+KnowRob is an open source knowledge processing system for
+cognition-enabled robots~\cite{KnowRob,KnowRob-Representation}. It is
+designed to store knowledge about the environment and set it into
+relation to common sense knowledge to understand vaguely described
+tasks such as "set the table". For storage and inference of knowledge,
+KnowRob uses Description Logic and approaches of the semantic web, an
+effort to make websites machine understandable, and the logic
+programming language Prolog for implementation. Each small piece of
+information is represented as a \emph{Resource Description Framework
+  (RDF) triple} (e.g. $rdf(robot, holding, cup)$) which are composed
+of a subject, predicate and object. Commonsense knowledge is
+represented in the \emph{Web Ontology Language (OWL)}. It uses
+\emph{ontologies} which can roughly be described as directed graphs
+setting objects or classes of objects into relation. The graph can be
+represented with multiple RDF triples, where the subject and object
+are nodes and the predicate is a directed edge from the subject to the
+object. In these ontologies it is possible to represent common sense
+knowledge such as "milk is-a perishable", "refrigerator
+storage-place-for perishable", and "refrigerator is-a
+box-container". Thus a robot asked to bring milk could infere that the
+milk is stored in the refrigerator which needs to be opened first
+since it is a box-like container.  To be able to interface the
+perception of a robotic system, KnowRob uses a concept called
+\emph{virtual knowledge base}. It allows computing needed information
+on demand instead of storing everything providently. Thus special
+queries can be forwarded to other components which compute the answer
+efficiently. Especially for perception based on sensor data or
+transformation of spational relations, this is advantageous compared
+to continously computing the results for all possible queries and
+storing them. The concept inspired the usage of virtual knowledge
+bases in this thesis. KnowRob implements it with Prolog predicates
+called \emph{Computables} which call C++ functions of other
+components. This indeed slows down the computation of a query but is
+more efficient than continously computing and storing the results or
+implementing and computing the other components algorithms in Prolog.
+To understand the robots environment large and detailed ontologies are
+necessary. KnowRob features aquireing and connecting these from
+various sources such as online common sense databases, the cloud-based
+robot infrastructure RoboEarth and websites made for humans for
+deriving object information from internet shops and action recipies
+from howto websites. However, it has been found that this aquired
+knowledge needs a lot of manual extension and verification before it
+can be used~\cite{KnowRob-Web}. Encyclopedial knowledge often lacks
+action information needed by the robot (e.g. how to grab tools) and
+action recepies require human text understanding. Furthermore large
+ontologies limit the performance of KnowRob because of the Prolog
+implementation and general complexity. Although KnowRob features
+usefull concepts such as common sense reasoning with ontologies and
+virtual knowledge bases we do not use it as a basis for a robot memory
+in Fawkes because of missing support knowledge shared between multiple
+robots and a too strong focus on data only for reasoning components or
+respectively performance and scalability concerns with Prolog handling
+larger datasets (e.g. storing locations of found object over long time
+to learn the distribution where they can be found).
+
 \subsection{OpenRobots Ontology (ORO)}
 \begin{itemize}
 \item Events (Trigger)
@@ -684,6 +733,7 @@ This section presents the approach of the thesis with the goals the robot memory
 \item Versatility (virtual knowledge base)
 \item Temporal/Spatial grounding
 \item Common sense knowledge
+\item Knowledge enabling through connecting with reasoners (flexible)
 \end{itemize}
 \subsection{Architecture}
 \label{sec:arch}
