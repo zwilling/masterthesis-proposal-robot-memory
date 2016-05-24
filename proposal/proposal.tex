@@ -731,8 +731,32 @@ processed by the OWL reasoner. Furthermore, it does neither support
 synchronizing a part of the knowledge with other robots nor a virtual
 knowledge base.
 
-\subsection{MongoDB Logging}
+\subsection{Generic Robot Database with MongoDB}
 \label{sec:mongo-logging}
+There already is a generic robot database developed with MongoDB as
+data storage~\cite{RoboDB}. It is primarily used to log data of a
+robot middleware (Fawkes and ROS) for fault analysis and performance
+evaluation. To achieve this, it taps into the messaging infrastructure
+in ROS and the blackboard interfaces in Fawkes to store the data one
+to one utilizing the flexibility of the schema free MongoDB. The
+logged data can later be queried by the robot or a developer. This
+allows better evaluation and fault analysis because the data would
+otherwise be disposed and logging of the whole
+Data-Information-Knowledge (DIK) hierarchy~\cite{DIKW} enables
+retracing processes such as from point clouds (data) to cluster
+positions (information) to object positions (data) combined from
+multiple clues. This work already implemented a basic connection to
+MongoDB in Fawkes for storing documents and executing queries, which
+can be used in this thesis. It also showed that MongoDB is a good
+choise because it can handle querying a large dabase and writing a lot
+of data efficiently while being flexible how an which kind of data is
+being represented.  However this work lacks some important concepts
+needed for a robot memory as intended in this thesis. It is intended
+as logging facility and not as working memory holding a world model
+for multiple planners and reasoners. Therefore updating and querying
+mechanisms for planners and reasoners are missing as well as triggers,
+a virtual knowledge base and multi-robot synchronization.
+
 \subsection{More}
 \todo[inline]{More}
 \begin{itemize}
@@ -749,6 +773,7 @@ This section presents the approach of the thesis with the goals the robot memory
 \subsection{Goals}
 \label{sec:goals}
 \begin{itemize}
+\item Storage/retrieval (flexible, DIK)
 \item Same worldmodel for reasoners/planners
 \item Distributed for robot team
 \item Long time storage (persistent, different kinds of long time knowledge, decay?)
@@ -759,6 +784,7 @@ This section presents the approach of the thesis with the goals the robot memory
 \item Temporal/Spatial grounding
 \item Common sense knowledge
 \item Knowledge enabling through connecting with reasoners (flexible)
+\item views for planners
 \end{itemize}
 \subsection{Architecture}
 \label{sec:arch}
