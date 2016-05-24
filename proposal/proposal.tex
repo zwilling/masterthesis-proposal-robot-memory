@@ -757,13 +757,31 @@ for multiple planners and reasoners. Therefore updating and querying
 mechanisms for planners and reasoners are missing as well as triggers,
 a virtual knowledge base and multi-robot synchronization.
 
-\subsection{More}
-\todo[inline]{More}
-\begin{itemize}
-\item Blackboard
-\item RoboEarth
-\item Robot Memory... Robot Databases... Robot Knowledge Storage...
-\end{itemize}
+\subsection{Open-EASE}
+\label{sec:openease}
+Open-EASE is a knowledge processing service for robots and AI
+researchers~\cite{OpenEASE}. It is based on and combines
+KnowRob~\cite{KnowRob} and the Generic Robot Database with MongoDB in
+ROS~\cite{RoboDB}. It is designed as a web service accessible by
+robots via a socket connection and by humans via a web browser. It
+uses KnowRob for commonsense reasoning and storing the world model of
+a robot. The Generic Robot Database is used to log data about robots
+or humans performing manipulation tasks. This data can then be
+accessed by using computables of the virtual knowledge base concept to
+learn from human demonstration and analyze and learn from faults. The
+focus of Open-EASE also is on providing the recorded data and access
+to KnowRob to humans using the web interface. This allows using
+Open-EASE as eLearning tool for students, who can explore and
+experiment with the data and system on the robot. Furthermore it
+fosters reproducing experiment results (e.g. for reviews) and
+visualizing them. Although the system is accessible from multiple
+users and robots which can query the same Open-EASE instance, it is
+focused on single robot data and non collaborative processes because
+each user operates in his private container with individual knowledge
+base. This makes sense in the context of student exercizes. If the
+system is also usable or being extended for cooperating robots or
+planners exchanging knowledge over the web service is not mentioned in
+current publications.
 
 
 \section{Approach}
@@ -784,7 +802,8 @@ This section presents the approach of the thesis with the goals the robot memory
 \item Temporal/Spatial grounding
 \item Common sense knowledge
 \item Knowledge enabling through connecting with reasoners (flexible)
-\item views for planners
+\item Views for planners
+\item Visualization for debugging, human interaction
 \end{itemize}
 \subsection{Architecture}
 \label{sec:arch}
