@@ -631,15 +631,13 @@ Multi-Master Replication. Conflicts can be solved similar to a version
 control system, thus multiple conflicting versions can be kept in
 parallel for later revision. However, MongoDB has shown to scale much better than CouchDB.\todo[inline]{Proof (RoboDB Tim)}
 
-
-
-\begin{itemize}
-\item BSON JSON format for documents
-\item JavaScript example
-\item Capped collections?
-\item dreieck comparison ?
-\item GridFS file storage?
-\end{itemize}
+%% \begin{itemize}
+%% \item BSON JSON format for documents
+%% \item JavaScript example
+%% \item Capped collections?
+%% \item dreieck comparison ?
+%% \item GridFS file storage?
+%% \end{itemize}
 
 \section{Related Work}
 \label{sec:related}
@@ -742,20 +740,21 @@ to one utilizing the flexibility of the schema free MongoDB. The
 logged data can later be queried by the robot or a developer. This
 allows better evaluation and fault analysis because the data would
 otherwise be disposed and logging of the whole
-Data-Information-Knowledge (DIK) hierarchy~\cite{DIKW} enables
+Data-Information-Knowledge-Wisdom (DIKW) hierarchy~\cite{DIKW} enables
 retracing processes such as from point clouds (data) to cluster
 positions (information) to object positions (data) combined from
-multiple clues. This work already implemented a basic connection to
-MongoDB in Fawkes for storing documents and executing queries, which
-can be used in this thesis. It also showed that MongoDB is a good
-choise because it can handle querying a large dabase and writing a lot
-of data efficiently while being flexible how an which kind of data is
-being represented.  However this work lacks some important concepts
-needed for a robot memory as intended in this thesis. It is intended
-as logging facility and not as working memory holding a world model
-for multiple planners and reasoners. Therefore updating and querying
-mechanisms for planners and reasoners are missing as well as triggers,
-a virtual knowledge base and multi-robot synchronization.
+multiple clues to learning results (wisdom). This work already
+implemented a basic connection to MongoDB in Fawkes for storing
+documents and executing queries, which can be used in this thesis. It
+also showed that MongoDB is a good choise because it can handle
+querying a large dabase and writing a lot of data efficiently while
+being flexible how an which kind of data is being represented.
+However this work lacks some important concepts needed for a robot
+memory as intended in this thesis. It is intended as logging facility
+and not as working memory holding a world model for multiple planners
+and reasoners. Therefore updating and querying mechanisms for planners
+and reasoners are missing as well as triggers, a virtual knowledge
+base and multi-robot synchronization.
 
 \subsection{Open-EASE}
 \label{sec:openease}
@@ -800,21 +799,134 @@ give a time schedule for the thesis.
 
 \subsection{Goals}
 \label{sec:goals}
-\begin{itemize}
-\item Storage/retrieval (flexible, DIK)
-\item Same worldmodel for reasoners/planners
-\item Distributed for robot team
-\item Long time storage (persistent, different kinds of long time knowledge, decay?)
-\item Triggers
-\item Interrupt storage?
-\item Beliefs/Confidences?
-\item Versatility (virtual knowledge base)
-\item Temporal/Spatial grounding
-\item Common sense knowledge
-\item Knowledge enabling through connecting with reasoners (flexible)
-\item Views for planners
-\item Visualization for debugging, human interaction
-\end{itemize}
+
+This subsection presents the goals of this thesis and why we want to
+achieve them:
+
+\smallskip
+\textbf{Flexible Storage and Retrieval:} The robot memory has to
+provide a service for storing, updating, removing and querying so that
+different components can use the robot memory to provide knowledge,
+use it as a source, or collaborate using the same memory. It should be
+flexible enough to store any kind of data, information, knowledge, and
+wisdom of the DIKW hierarchy in any structure. For example the robot
+memory should be able to store a world model, perception results and
+even large datasets such as remermbered sights of objects for later
+learning and user preferences.
+
+\smallskip
+\textbf{Collaboration of Planners, Reasoners and Other Components:}
+The robot memory has to allow multiple components to collaborate by
+sharing a common database. This should especially be used to share a
+common world model between different kinds of planners and reasoners
+to combine their special strenghts and componensate their
+weaknesses. For example PDDL can generate global and optimal plans
+which are executed and monitored by CLIPS that can react better to
+different situations during execution. Through using the robot memory,
+both can share a common world model so that changes found and applied
+to the world model by CLIPS are directly available in PDDL (e.g. in
+case replanning is necessary because the previous plan is not feasable
+anymore).
+
+\smallskip
+\textbf{Special Views for Different Components:} Depending on the
+application of different components using the robot memory, different
+views on the stored data is necessary. For example a planning
+components needs another part of the stored data, than a component
+learning distributions of object sights. Thus component specific
+filters are necessary. Furthermore, different components need the
+stored data in different formats (e.g. depending on the used
+programming language). Keys or identifyers might be named differently
+and have to be translated.
+
+\smallskip
+\textbf{Virtual Knowledge Base:} The robot memory has to prodive
+access to virtual knowledge. This is knowledge which is not stored in
+the robot memory directly, but computed on demand. This allows
+accessing knowledge through the robot memory that is otherwise
+impractable to compute and store continously and for all possible
+queries. For example when a component queries the distance of two
+objects, it is better to compute the result on demand taking both
+concrete objects into account than to store all distances between each
+two objects in the memory and to update these values continously.
+When components using the robot memory can also provide computation
+functions for virtual knowledge to the robot memor, this adds a lot of
+versitality and expandability. For exapmle it would be possible to add
+a commonsense reasoner similar to KnowRob or ORO providing virtual
+knowledge to the robot memory. Queries for this commonsense knowledge
+would then be forwarded to the commonsense reasoner and be solved by
+relating knowledge in the memory to an ontology.
+
+\smallskip
+\textbf{Shared Knowledge for Multi-Robot Systems:} The robot memory
+should be able to distribute parts of the knowledge over multiple
+robots which can then share a common world model necessary for
+collaboration. The concept is similar to multiple planners sharing a
+world model with the differnence that the components on a multi-robot
+system work simultaniously and the additional difficulty to
+synchronize the robot memory between the robots. Such a distributed
+robot-memory is necessary in many multi-robot domains, especially the
+RCLL where the whole robot team needs to know the world model
+(e.g. where other robots placed intermediate products) and what other
+robots intend to achieve at the moment. If the distribution of the
+knowledge would not be implemented in the robot memory it would have
+to be implemented seperately. Distributing the robot memory adds
+additional requirements and challenges, especially robustness (e.g. in
+the case of robots dropping out), consistency of the memory, and
+accessibility so each robot can use the robot memory without large
+latencies.
+
+\smallskip
+\textbf{Spatio-Temporal Grounding:} It is often desirable to ground
+stored knowledge based on location and time because this allows many
+applications such as spatio-temporal clustering, using old
+observations to deal with the assignment problem, and learn
+distributions (e.g. at which daytimes objects can be found at which
+positions). Thus the robot memory has to be able to store knowledge
+tagged with spatio-temporal information and consider this information
+while querying.
+
+\smallskip
+\textbf{Event Triggers:} The robot memory should be able to notify
+components about changes in the memory which are relevant for
+them. These notifications are called \emph{event triggers} and should
+automatically be sent after a component registers an event it wants to
+be notified about. These events include appearences of new instances
+of a specific knowledge type, modifications and deletions of it as
+well as sentences becoming true or queries returning documents. The
+balance of expressiveness versus performance still needs to be
+found. A use case in which event triggers are especially useful are
+when planners want to be notified when their plan becomomes unfeasable
+and replanning is necessary. In this case, the planner could for
+example register events for the plan execution being aborted or
+preconditions of a plan becoming false.
+
+\smallskip
+\textbf{Modular Extentions:} The robot memory should be expandable
+with various modules imlementing additional functionality. An
+interesting example module could introduce knowledge decay for
+removing knowledge with exceeded lifetimes. This would allow
+differentiating short-term knowledge and long-term knowledge. Other
+modules could, for example, add confidence values to stored knowledge
+or abstraction levels.
+
+
+\smallskip
+\textbf{Persistent Storage:} To profit from long-time knowledge and to
+operate robots over long time as neccessary in the intended domains
+such as domestic service, the knowledge needs to be stored
+persistently. This way, it is not lost when restarting a robot or
+repeating an experiment depending on knowledge stored in the robot
+memory.
+
+\smallskip
+\textbf{Human Interface and Visualization:} An important factor in the
+development of a robotic systems is the accessibility of underlying
+components for easier debugging and modeling. Therefore the robot
+memory needs to provide an interface for developers to monitor the
+state of the robot memory and to modify it. A visualization would also
+be desierable to analyze spatio-temporal data efficiently.
+
 
 \subsection{Architecture}
 \label{sec:arch}
@@ -831,7 +943,7 @@ give a time schedule for the thesis.
 \label{sec:impl-memory}
 \begin{itemize}
 \item Data Representation
-\item MongoDB query language
+\item MongoDB query language formalize somehow
 \item Trigger
 \item Multi-robot synchronization
 \end{itemize}
