@@ -89,7 +89,7 @@ the robot memory.
 \todo[inline]{rewrite or copy from bachelorthesis?}  The
 \emph{RoboCup} is an international robotics competition founded to
 foster research in the field of robotics and artificial
-intelligence.~\cite{Robocup}. It provides standard problems as a
+intelligence.~\cite{RoboCup-Paper}. It provides standard problems as a
 platform to foster and compare research results. Research
 teams from all over the world compete in different leagues to
 benchmark their robotic system. The RoboCup provides a research
@@ -907,8 +907,11 @@ with various modules imlementing additional functionality. An
 interesting example module could introduce knowledge decay for
 removing knowledge with exceeded lifetimes. This would allow
 differentiating short-term knowledge and long-term knowledge. Other
-modules could, for example, add confidence values to stored knowledge
-or abstraction levels.
+modules could, for example, add confidence values or abstraction
+levels to stored knowledge. Furthermore, extensions such as robot
+memory initialization from a saved file, saving parts of the memory to
+a file and a logging facility similar to the generic robot database
+would be useful.
 
 
 \smallskip
@@ -930,10 +933,26 @@ be desierable to analyze spatio-temporal data efficiently.
 
 \subsection{Architecture}
 \label{sec:arch}
+This subsection presents the architecture of the robot memory and
+explains its design consideration. It shows how the intended
+functionality is organized in smaller components and how these
+components interact with each other.  The architecture in general
+contains standart concepts of software
+engeneering~\cite{software-architecture} and design pattern
+considerations~\cite{design-patterns} to allow reusability and
+adaptability to changing requirements and use cases. The most
+important concepts are a layered architecture, functional abstraction
+(e.g. of the different processes happening during storing and
+querying), and data abstraction (e.g. of stored knowledge which is
+more specialized internally than visible from a using
+application). \reffig{fig:arch} shows the architecture of the robot
+memory and is explained in the following.
+
+
 \begin{itemize}
-\item Data representation
 \item Component interactions (diagram)
-\item Middle-layer (virtual kb resolving)
+\item Middle-layer (virtual kb resolving) tasks
+\item Planner-layer tasks/responsibilities
 \item Data acquisition
 \end{itemize}
 
