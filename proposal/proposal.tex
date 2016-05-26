@@ -947,22 +947,62 @@ querying), and data abstraction (e.g. of stored knowledge which is
 more specialized internally than visible from a using
 application). \reffig{fig:arch} shows the architecture of the robot
 memory and is explained in the following.
-
-
+\todo[inline]{move arch-figure so it is easily viewable when reading}
 \begin{figure}
   \centering
-  \includegraphics[width=1\textwidth]{architecture.pdf}
-  \caption{caption}
+  \includegraphics[width=0.9\textwidth]{architecture.pdf}
+  \caption{Software architecture of the Robot Memory}
   \label{fig:arch}
 \end{figure}
-
-
-\begin{itemize}
-\item Component interactions (diagram)
-\item Middle-layer (virtual kb resolving) tasks
-\item Planner-layer tasks/responsibilities
-\item Data acquisition
-\end{itemize}
+The architecture organizes all components relevant for the robot
+memory into four layers: Back-End, Robot Memory, Application Interface
+and Application. The Back-End contains the MongoDB databases where the
+knowledge is stored and queries are executed. There is a private
+database and a shared database distributed between multiple robots
+using the same architecture. This distribution utilizes the efficient
+replication features of MongoDB and avoids additional overhead. The
+Robot Memory-layer contains the central functions that distinguish the
+robot memory from a pure MongoDB database. It contains the Storage-,
+Update- and Querymanager which is an intermediate component that
+realizes most of the robot memorys functionality by modifying and
+enhancing queries, storage and update requests before applying them to
+MongoDB. If a query asks for virtual knowledge, the manager forwards
+the query to the virtual knowledge base. The virtual knowledge base
+manages which virtual knowledge is provided by which application and
+requests the computation of virtual knowledge when demanded. The
+component responsible for event-triggers receives and manages
+registrations of applications that want to be notified in the case of
+an event, uses the Querymanager to check if events happen and notifies
+applications accordingly. Additional modules can be added to extend
+the functionality of the Storage-, Update- and Querymanager. These
+extensions use the ---Compositor
+Pattern~\cite{design-patterns}\todo{check name} --- and therefore work
+compositionally and dynamically. Between the robot memory and a
+planner (or reasoner) component is the Application Interface layer. It
+includes the Interface Provider component which makes the function of
+the robot memory, which are accessable in C++, available to the
+planner and the special programming language used by the planner. It
+is not necessary for components that can directly use the C++
+interface of the robot memory. The central task of wrapping the robot
+memory functions into the planner programming language also includes
+bringing query results in the appropriate format used by the planner
+and eventually renaming key-names when they have be mapped to match
+the names used in the planner domain model. Because planning and
+reasoning languages and concepts can be very different, each planner
+and reasoner needs a separate Interface Provider. The Interface
+Provider can also contain a domain creator which creates the planning
+domain and problem definition from a template and additional knowledge
+from query results. For example, this is useful for PDDL planners
+which would automatically get problem definitions updated to the
+current world model stored in the robot memory. Finaly the Application
+layer contains all components using the robot memory eigther through
+the Interface provider or directly through the C++
+interface. Application components can also register event-triggers and
+provide computation functions for the virtual knowledge base.  The
+knowledge aquisition filling the robot memory is devided between the
+applications using the robot memory. Additionally, the Initializer
+module can provide the initial knowledge from a file (e.g. for the
+world model of a new RCLL game).
 
 \subsection{Implementation}
 \label{sec:impl}
@@ -974,6 +1014,7 @@ memory and is explained in the following.
 \item Trigger
 \item Multi-robot synchronization
 \end{itemize}
+
 
 \subsubsection{Planner/Reasoner}
 \label{sec:impl-planner}
