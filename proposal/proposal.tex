@@ -1004,17 +1004,71 @@ applications using the robot memory. Additionally, the Initializer
 module can provide the initial knowledge from a file (e.g. for the
 world model of a new RCLL game).
 
+
 \subsection{Implementation}
 \label{sec:impl}
+This subsection covers the considerations for the impementation. It is
+separated according to the layered architecture. Both application
+layers are represented by the planner and reasoner part, because all
+other application components (e.g. for perception) can simply use the
+C++ interface of the robot memory.
+
+\subsubsection{Back-End}
+\label{sec:back-end}
+The back-end is realized with MongoDB, acts as storage of the robot
+memory and executes queries. The representation of stored knowledge
+utilizes the document structure of MongoDB with key-value pairs and
+nested subdocuments. This allows a very flexible storage of
+knowledge-pieces with any additional properties needed by the
+application. An example document stored in the back-end is shown in
+\reflst{lst:backend}. 
+\begin{figure}
+\begin{lstlisting}[style=SmallJSON,
+  caption={Representation of a knowledge piece in the back-end},
+  label=lst:backend,
+  framexleftmargin=15pt, xleftmargin=15pt,
+ morekeywords={}]
+ {
+   _id: ObjectId("983e7cfbb2af16b5443949h5"),
+   robot_memory_info:
+   {
+     persistent: true,
+     decay_time: ISODate("2016-05-19T23:50:00.000Z")
+   },
+   type: "object info",
+   name: "milk_1",
+   position: {x: 2.5, y: 1.0, z: 0.0},
+   storage_place: "refrigerator",
+   fat_percentage: 3.5
+ }
+\end{lstlisting}
+\end{figure}
+It contains knowledge about a bottle of milk as it could be needed by
+a planner with additional information where it should be stored
+later. Additionally the document contains meta information needed by
+the robot memory (e.g. if the document should be stored persistently
+or removed at restart and when it should be dropped because it is
+usetime has expired). The MongoDB back-end also manages the
+distribution of knowledge between multiple robots. A part of the robot
+memory is only locally relevant. The other part that should be shared
+has to be set up as MongoDB replica set as already described in
+\refsec{sec:mongodb}. This ensures that no unnecessary data is sent
+over the network. The other proplems of a distributed database such as
+consistency, master election and synchronization are solved by
+MongoDB. The back-end also contains the Oplog of MongoDB, a separate
+capped collection containing a list of all changes to the database
+with a timestamp. This can also be accessed by the robot memory to
+analyze changes (e.g. for event-trigger).
+
 \subsubsection{Robot Memory}
 \label{sec:impl-memory}
 \begin{itemize}
-\item Data Representation
 \item MongoDB query language formalize somehow
 \item Trigger
-\item Multi-robot synchronization
+\item modules, query/request modification, parsing with mongo, then analyzing
+\item virtual knowledge function parameters, generate into mongo, execute query on mongoxs
+\item existing prototype
 \end{itemize}
-
 
 \subsubsection{Planner/Reasoner}
 \label{sec:impl-planner}
