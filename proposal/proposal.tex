@@ -1062,22 +1062,121 @@ analyze changes (e.g. for event-trigger).
 
 \subsubsection{Robot Memory}
 \label{sec:impl-memory}
-\begin{itemize}
-\item MongoDB query language formalize somehow
-\item Trigger
-\item modules, query/request modification, parsing with mongo, then analyzing
-\item virtual knowledge function parameters, generate into mongo, execute query on mongoxs
-\item existing prototype
-\end{itemize}
+The implementation of the robot memory middle-layer between the
+applications storing and querying knowledge and the MongoDB back-end
+is an important part of the thesis because most of the functions
+exeding a typical database are realized here. A central question is
+which query language should be used between applications and the robot
+memory because this determines expressiveness and has a large impact
+on the performance. We choosed to use the query language of MongoDB as
+it is used between the robot memory and the back-end. This has many
+advantages compared to using other query languages such as SQL,
+SPARQL, XQuery and JSONiq. The query language of MongoDB is obviously
+well suited for a document oriented database, requires no translation
+before application on the database and is very flexible for extending
+and modifying queries because queries are structured as documents with
+key-value fields and can be nested or executed in
+sequence. Furthermore it is an intuitive query language, has been
+provent as efficient for usual and well designed
+queries~\cite{mongodb,RoboDB}, and is also highly expressive when
+using additional JavaScript functions or the MapReduce
+paradigm. MongoDB queries can easily be parsed (e.g. from a string) by
+using the MongoDB C++ API. The resulting object can be analyzed and
+modified for example to add key-value pairs or to check if virtual
+knowledge is queried.
+
+This provides the starting point for the Storage-, Update-, and
+Querymanager. When adding new documents, the
+\texttt{robot\_memory\_info} subdocument can be added to store
+additional meta information. When querying documents, this information
+can be removed out by appending an additional filter. To detect
+queries for virtual knowledge, the manager can analyze the fields of
+the query to check if there is virtual knowledge provided for a
+field. For example when a query contains the field \texttt{type:
+  "distance"} and there is a application that provides computation
+functions for distances the query can be forwarded to the computation
+function together with additional parameters such as two concrete
+objects for the distance calculation. When some fields are missing
+(e.g. only one object is given) the application may have to compute
+all distances, so that the query can afterwards be executed on the set
+of results (e.g. to find the nearest one with some property). To
+execute the query as a usual query with arbitrary filters, aggregation
+and functions, the comutation function writes the the result into a
+separate collection the query can be executed on with MongoDB. This
+already works in an early prototype which executes queries from
+interface messages eighter on the MongoDB directly or in case of
+virtual knowledge about other interfaces, generates the knowledge from
+the blackboard on demand and then executes the query.
+
+To implement event-trigger a registration function needs to be
+provided which takes a callback funtion for notification and a query
+to define the event. This query can check the Oplog first whether
+there are changed documents with relevant key-value pairs and
+afterwards execute a more complex query on the database. The callback
+function is called if the query result changes, retuns no document or
+is not empty as specified during the registration. How events on
+virtual knowledge work has to be evaluated. For example, it would be
+possible to compute the virtual knowledge and check for the event in
+certain intervals while monitoring the computation time.
+
+Modules extend the functionality of the robot memory. They can use
+multiple hookpoints for implementation. For example, a knowledge decay
+module could use loop-hookpoint to remove documents with exceeded
+lifetimes in certain intervals and an initialization module can use a
+hookpoint at startup. Further hookpoints would be at
+query-modification time (e.g. to add additional meta-information) and
+at query-result-return time (e.g. to filter or modify resulting
+documents).
 
 \subsubsection{Planner/Reasoner}
 \label{sec:impl-planner}
-\begin{itemize}
-\item Example for using the Robot Memory
-\item Queries/Register Triggers
-\item Build initial domain
-\item When to replan
-\end{itemize}
+The implementation on the application layer includes the development
+of the Interface Provider and the usage of the robot memory in the
+planning language. As an example for the varios planners and
+reasoners, we focus here on CLIPS. The Interface Provider for CLIPS
+can be realized as CLIPS-feature in Fawkes as it was already done for
+providing CLIPS access to the blackboard, protobuf-messaging and the
+navgraph. The CLIPS \emph{robot-memory feature} is implemented in C++
+and provides the CLIPS environment with functions that call C++
+functions of the robot-memory feature. For example \reflst{lst:clips-rm}
+\begin{figure}
+  \begin{lstlisting}[showlines,style=ReallySmallCLIPS, caption={CLIPS funtion to execute a query},
+  label=lst:clips-rm,
+  emph={skill, args, state, target, res},
+  emphstyle=\bfseries\color{green!80!black},
+  emph={[2]\?skill, \$\?args, wait-for-lock, \?target, use,
+  WAIT-FOR-LOCK, SKILL-EXECUTION, running},
+  emphstyle={[2]\bfseries\color{blue!80!black}},
+  morekeywords={retract, assert, modify, skill-call, skill-to-execute,
+    wait-for-lock}]
+(rm-query "database.collection"
+          (str-cat "\{type:'order', end-time:\{\$gt:"
+                   ?gametime
+                   "\}\}"
+          )
+)
+\end{lstlisting} %$ This is just to fix Emacs highlighting due to dollar sign in code above
+\end{figure}
+would be the CLIPS function which queries all orders that have not
+ended yet, by creating the query with string concatination to fill in
+the current time. The result would be a list of pointer to document
+objects represented as instances of CLIPS templates. Similarly there
+can be functions for registering events and providing virtual
+knowledge.
+
+The Domain Creator for CLIPS can implemented by loading a list of
+CLIPS files as usual and filling the fact-base with additional initial
+facts. For example, a domain creator implemented in the CLIPS language
+could execute the query function in \reflst{lst:clips-rm} and assert
+all orders as facts into the fact base.
+
+CLIPS could use event-trigers to be notified when there is a new PDDL
+plan in the robot memory that should be executed by CLIPS. Similarly
+PDDL could use event-trigers to get notified when it should
+replan. Providing a proper event definition for this case is the
+responsibility of PDDL. For example it could incorporate into the
+event, that plan execution state changed to aborted or finished or
+that a machine used in the plan is out of order.
 
 \subsection{Evaluation}
 \label{sec:eval}
