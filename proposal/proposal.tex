@@ -58,15 +58,39 @@
 
 \section{Introduction}
 \label{sec:introduction}
+Robots which should solve tasks intellegently need to represent and
+apply knowledge. Domestic robots serving breakfast need to know which
+items belong on the table, where they are stored, how to make
+pancakes, and how to clean up afterwards. Intelligent factory robots
+need to know where resources are placed, what products are ordered,
+and which actions with preconditions and effects can be executed to
+reach a goal. There are countless applications, some with major impact
+to solve problems such as appropriate elder care and scalable desaster
+rescue. Before these applications can be realized, important
+challenges need to be solved. These challenges include representing
+and storing large amounts of knowledge with various types over long
+times so that it can be queried and used efficiently. Also planning
+and reasoning with large amounts of knowledge in dynamic and complex
+environments is a hard challenge. There already are approaches and
+implementations which can solve specialized parts of this challenge
+(e.g. expert systems, temporal planners and commonsense
+reasoners). However none of these can solve the whole problem in its
+full complexity. Furthermore there is the problem of distributing
+knowledge over robot teams to achieve robust and efficient
+collaboration.
+
+The idea of the proposed thesis is to develop a robot memory to help
+solving these challenges. The robot memory is designed as a central
+storage for the knowledge of the robot to handle large amounts of
+knowledge of any type and provide efficient querying and long-time
+storage. As a central storage, it allows multiple planners and
+reasoners to share the same world model. This way multiple planners
+and reasoners can be combined to utilize their specialized strengths
+and compensate for their weaknesses.
+
 \begin{itemize}
-\item Motivation Knowledge Representation on Cyber Physical Systems
-\item Problem description
-  \begin{itemize}
-  \item Worldmodel exchange between resoners/planners
-  \item Worldmodel exchange between robots
-  \item Long time storage
-  \end{itemize}
-\item Idea Robot Memory
+\item Idea Robot Memory -> advantages
+\item ideas trigger, vkb
 \item Application RCLL PDDL-CLIPS
 \item Application @Home/PR2
 \end{itemize}
