@@ -82,18 +82,56 @@ collaboration.
 The idea of the proposed thesis is to develop a robot memory to help
 solving these challenges. The robot memory is designed as a central
 storage for the knowledge of the robot to handle large amounts of
-knowledge of any type and provide efficient querying and long-time
-storage. As a central storage, it allows multiple planners and
-reasoners to share the same world model. This way multiple planners
-and reasoners can be combined to utilize their specialized strengths
-and compensate for their weaknesses.
+semantic and spatio-temporal knowledge and provide efficient querying
+and long-time storage. As a central storage, it allows multiple
+planners and reasoners to share the same world model. This way
+multiple planners and reasoners can be combined to utilize their
+specialized strengths and compensate for their weaknesses. Without the
+robot memory the knowledge transfer between the planners and reasoners
+is a problem. For example when a planner and a reasoner for plan
+execution operate alternately and the reasoner cancels the plan
+execution because of a previously unknown problem (e.g. an object not
+being at its usual location), the planner needs to be informed about
+this change in the environment. Similarly the robot memory allows
+multiple robots to share a common knowledge base which is needed for
+proper cooperation (e.g. to know which tasks are already done by other
+robots or where another robots placed an object). This frees planners
+and reasoners from implementing their own messaging and
+synchronization which is usually laborious in the planner or reasoner
+programming language. Two additional main features of the robot memory
+are event-trigger and a virtual knowledge base. The event-trigger
+should notify a component when a previously defined condition of the
+robot memory changes. This is especially useful for planners which can
+be notified when their plan becomes infeasable because some
+precondidtion is no longer satisfied. The concept of a virtual
+knowledge base allows computing certain knowledge on demand instead of
+storing it directly in the robot memory. Imagine a query for the
+distance of two objects. This can be computed rather quickly but
+storing all distances between each two known objects and keeping them
+up do date is a lot of unnecessary effort.
 
-\begin{itemize}
-\item Idea Robot Memory -> advantages
-\item ideas trigger, vkb
-\item Application RCLL PDDL-CLIPS
-\item Application @Home/PR2
-\end{itemize}
+The robot memory is designed for the Fawkes robot software framework
+and should be usable in any application. For the time of the thesis,
+we focus on two applications which can especially profit from the
+robot memory and which will be used for evaluation. On the one hand,
+the robot memory should be used on logistics robots of the RoboCup
+Logistics League (RCLL). Here it is needed to share the worldmodel
+about the environment between a global planner and a reasoner for plan
+execution and between the multiple robots collaborating as in a
+team. On the other hand, the robot memory should be used on a domestic
+service robot related to the RoboCup@Home league where the robot
+memory is needed as flexible and scalable long-time storage to store
+various facts about a domestic environment, how to perform actions and
+to learn from observed object positions.
+
+In the following, the proposal gives an overview over the background
+of the thesis with the RoboCup application domain and the used
+software in \refsec{sec:background}. \refsec{sec:related} presents
+related work and in \refsec{sec:approach} the approach of the thesis
+is shown with the goals of the robot memory, the architecture,
+impementation, and evaluation considerations. We conclude with a
+summery in \refsec{sec:summery}.
+
 
 \section{Background}
 \label{sec:background}
@@ -110,7 +148,7 @@ the robot memory.
 
 \subsection{RoboCup}
 \label{sec:robocup}
-\todo[inline]{rewrite or copy from bachelorthesis?}  The
+The
 \emph{RoboCup} is an international robotics competition founded to
 foster research in the field of robotics and artificial
 intelligence.~\cite{RoboCup-Paper}. It provides standard problems as a
