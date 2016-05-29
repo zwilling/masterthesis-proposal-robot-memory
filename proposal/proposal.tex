@@ -54,7 +54,9 @@
 %%Text%%
 %%%%%%%%
 
-\abstract{abstract.}
+\begin{abstract}
+  abstract.
+\end{abstract}
 
 \section{Introduction}
 \label{sec:introduction}
@@ -143,7 +145,7 @@ the most important software for the proposed thesis. In
 section~\ref{sec:fawkes} we present the robot software framework
 Fawkes. Section~\ref{sec:planners} describes the planners and
 reasoners which should profit from using the robot memory and in
-section~\ref{sec:mongodb} MongoDB, the database used in the backend of
+section~\ref{sec:mongodb} MongoDB, the database used in the back-end of
 the robot memory.
 
 \subsection{RoboCup}
@@ -160,46 +162,41 @@ make them robust against the challenges of the real world
 complexity. Furthermore, the competition leads to comparison and
 evaluation of different approaches.\\
 %
-The RoboCup features a variety of leagues, each focusing on another
-aspect or application domain of robotics and artificial
-intelligence. The majority of the RoboCup leagues host soccer robots
-in different sizes and complexities. The leagues range from the
-\emph{Small Size League} with small cylindrical robots and ground
-truth perception from an overhead camera to humanoid robots in teen
-size which need to have all sensors and computation devices on the
-robot. The RoboCup also features more application oriented domains,
-e.g. the \emph{Rescue League} with robots solving different
-challenges in desaster scenarios and \emph{RoboCup@Work} with robots
-operating in an industrial scenario to perform identification,
-handling and transporting tasks with work related objects such as
-skrews and nuts. The \emph{RoboCup Logistics League (RCLL)} which
-features logistics robots in a production scenario and the
-\emph{RoboCup@Home} leage featuring service robots in a domestic
-environment are presented in the following in more detail because
-these two leagues are used as application and evaluation domains of
-the proposed thesis.
+The RoboCup features a variety of leagues, from soccer leagues in
+different sizes to rescue robots, each focusing on another aspect or
+application domain of robotics and artificial intelligence.
+
+%% The
+%% majority of the RoboCup leagues host soccer robots in different sizes
+%% and complexities. The leagues range from the \emph{Small Size League}
+%% with small cylindrical robots and ground truth perception from an
+%% overhead camera to humanoid robots in teen size which need to have all
+%% sensors and computation devices on the robot. The RoboCup also
+%% features more application oriented domains, e.g. the \emph{Rescue
+%%   League} with robots solving different challenges in desaster
+%% scenarios and \emph{RoboCup@Work} with robots operating in an
+%% industrial scenario to perform identification, handling and
+%% transporting tasks with work related objects such as skrews and
+%% nuts. The \emph{RoboCup Logistics League (RCLL)} which features
+%% logistics robots in a production scenario and the \emph{RoboCup@Home}
+%% leage featuring service robots in a domestic environment are presented
+%% in the following in more detail because these two leagues are used as
+%% application and evaluation domains of the proposed thesis.
 
 
 \subsubsection{RoboCup Logistics League}
-\begin{figure}
-  \begin{minipage}[b]{0.5\linewidth}
-    \centering
-    \includegraphics[width=0.5\textwidth]{img/rcll}
-    \caption{Robot and MPS used in the RCLL}
-    \label{fig:rcll}
-  \end{minipage}
-\quad
-\begin{minipage}[b]{0.5\linewidth}
-  \todo[inline]{empty}
-  \label{fig:}
-\end{minipage}
-\end{figure}
+\begin{wrapfigure}{r}{0.3\textwidth}
+  \centering
+  \vspace{-2.7ex}
+  \includegraphics[width=0.3\textwidth]{img/rcll}
+  \vspace{-4ex}
+  \caption{Robot and MPS used in the RCLL}
+  \label{fig:rcll}
+\end{wrapfigure}
 
-\todo[inline]{League, robotino}
-%
 The \emph{RoboCup Logistics League (RCLL)}\footnote{RoboCup Logistics
-  League website: \url{http://www.robocup-logistics.org}}, previously
-LLSF, is a industry-oriented competition within RoboCup.  It tackles
+  League website: \url{http://www.robocup-logistics.org}}
+is a industry-oriented competition within RoboCup.  It tackles
 the problem of production logistics in a smart factory where mobile
 robots have to plan, execute, and optimize the material and production
 flow between machines to produce and deliver products according to
@@ -221,38 +218,42 @@ controls the machines and awards points.
 
 The game consists of two phases~\cite{LLSF-Rules-2015}. In the first
 phase, the \emph{exploration phase}, the robots have to roam the
-factory to find randomly placed machines which are used later. By
-detecting the light signal shown by the machines, the robots can
-determine the machine-type. For correct reportsof discovered machines
-to the refbox the team is awarded points, for incorrect ones points
-are subtracted.
-%
-\begin{figure}[t]
-  \centering
-  \begin{minipage}{.8\linewidth}
-  \includegraphics[width=\linewidth]{img/chain_c3}%
-  \end{minipage}
-  \quad%
-  \begin{minipage}{.15\linewidth}
-  \includegraphics[width=\linewidth]{img/legend}%
-  \end{minipage}
-  \caption{Production chain of a high complexity
-    product in the RCLL.}
-  \vspace{-2mm}
-  \label{fig:prod-chain}
-\end{figure}
+factory to find randomly placed machines which are used later.
+%% By detecting the light signal shown by the machines, the robots can
+%% determine the machine-type. For correct reports of discovered machines
+%% to the refbox the team is awarded points, for incorrect ones points
+%% are subtracted.
+%%
+%% \begin{figure}[t]
+%%   \centering
+%%   \begin{minipage}{.8\linewidth}
+%%   \includegraphics[width=\linewidth]{img/chain_c3}%
+%%   \end{minipage}
+%%   \quad%
+%%   \begin{minipage}{.15\linewidth}
+%%   \includegraphics[width=\linewidth]{img/legend}%
+%%   \end{minipage}
+%%   \caption{Production chain of a high complexity
+%%     product in the RCLL.}
+%%   \vspace{-2mm}
+%%   \label{fig:prod-chain}
+%% \end{figure}
 %
 In the second phase, the \emph{produciton phase}, the refbox announces
 orders, which products have to be produced by the robots. The products
 are build from colored cups with optionally mounted rings and and a
-colored cap. \reffig{fig:prod-chain} shows the production chain to
-build a high complexity product. There are four different machine
+colored cap.
+%% \reffig{fig:prod-chain} shows the production chain to
+%% build a high complexity product.
+There are four different machine
 types. The \emph{base-station (BS)} provides new bases, the colored
 cups, as raw ressource. The \emph{ring stations (RS)} mounts colored
-rings on a workpiece and after preparing it with a varying amount of
-bases. The \emph{cap-station (CS)} mounts black or grey caps to finish
-a product after loading it with a cap form a shelf first. The
-\emph{delivery-station (DS)} is used to deliver products.
+rings on a workpiece
+%after preparing it with a varying amount ofbases.
+The \emph{cap-station (CS)} mounts %black or grey
+aps to finish a product
+%after loading it with a cap form a shelf first.
+The \emph{delivery-station (DS)} is used to deliver products.
 
 The challenges of the RCLL lie in the dynamic and only partially
 observable environment the robots have to robustly and fully
@@ -267,33 +268,25 @@ obstacles, such as the other teams robots and hard to completely avoid
 handling mistakes by the robots. To cope with these challenges and
 achieve an efficient production, a multi-robot decision making is
 nesseccary.
-\todo[inline]{Connection to robot memory}
+\todo[inline]{Shorten and connect to robot memory}
 
 \subsubsection{@Home League}
 
 
-\begin{figure}[t]
+\begin{wrapfigure}{r}{0.3\textwidth}
   \centering
-  \begin{minipage}{.6\linewidth}
-    \includegraphics[height=120px]{img/athome-table}%
-  \end{minipage}
-  \quad%
-  \begin{minipage}{.35\linewidth}
-  \includegraphics[height=120px]{img/ceasar}%
-  \end{minipage}
-  \caption{RoboCup@Home robot helping to carry a table
-    (left)~\cite{athome-bit} and tidying up
-    (right)~\cite{wisspeintner2009robocup}}
+  \includegraphics[height=150px]{img/ceasar}%
+  \caption{RoboCup@Home robot tidying up~\cite{wisspeintner2009robocup}}
   \vspace{-2mm}
   \label{fig:athome}
-\end{figure}
+\end{wrapfigure}
 
 The RoboCup@Home league is a competition about domestic service
 robots~\cite{wisspeintner2009robocup}. The robots have to assist
 humans in a wide variety of everyday tasks. These tasks include
 serving drinks, cleaning, setting tables, guiding or following people,
 helping in emergency situations, shopping, cooking and
-more. \reffig{fig:athome} shows two examples of @Home robots in the
+more. \reffig{fig:athome} shows an @Home robot in the
 competition.
 %
 The goal of the RoboCup@Home league is to foster and benchmark
@@ -317,15 +310,17 @@ it. Furthermore, detecting and manipulating objects in a personal
 environment can be difficult because the space the robot acts in, for
 example the frige, can be very clouded.
 
-\todo[inline]{connection robot memory}
+\todo[inline]{Shorten and connect to robot memory}
 
 \subsection{Fawkes Robot Software Framework}
 \label{sec:fawkes}
 The basis for the proposed thesis is the robot software framework
 \emph{Fawkes}\footnote{\url{http://www.fawkesrobotics.org}}. It is
-available as Open Source and developed at the Knowledge-based Systems
-Group\footnote{\url{http://www.kbsg.rwth-aachen.de}} (KBSG) at RWTH
-Aachen University~\cite{FawkesDesign}. It is designed to work with a
+available as Open Source~\cite{FawkesDesign}.
+%and developed at the Knowledge-based Systems
+%Group\footnote{\url{http://www.kbsg.rwth-aachen.de}} (KBSG) at RWTH
+%Aachen University
+It is designed to work with a
 plenthora of robots in different domains and follows a component-based
 software design which separates functional entities into individual
 software modules~\cite{component}. This enables reusing common
