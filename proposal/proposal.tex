@@ -54,9 +54,10 @@
 %%Text%%
 %%%%%%%%
 
-\begin{abstract}
-  abstract.
-\end{abstract}
+%% \begin{abstract}
+%%   abstract.
+%% \end{abstract}
+\todo{abstract?}
 
 \section{Introduction}
 \label{sec:introduction}
@@ -113,6 +114,7 @@ storing all distances between each two known objects and keeping them
 up do date is a lot of unnecessary effort.
 
 The robot memory is designed for the Fawkes robot software framework
+with the document-oriented database MongoDB as a basis
 and should be usable in any application. For the time of the thesis,
 we focus on two applications which can especially profit from the
 robot memory and which will be used for evaluation. On the one hand,
@@ -257,22 +259,23 @@ The \emph{delivery-station (DS)} is used to deliver products.
 
 The challenges of the RCLL lie in the dynamic and only partially
 observable environment the robots have to robustly and fully
-autonomously work in, in the planning and multi-robot coordination
-required to build as many ordered products as possible and deliver
-them in time given time window, and in the baseline robotic challenges
-such as collision avoidance, perception and behavior execution. The
-dynamism of the environment is caused by the ranomized factory layout,
-randomized out-of-order times of machines, the highly customizable
-amount of products that preclude producing in advance, unknown
-obstacles, such as the other teams robots and hard to completely avoid
-handling mistakes by the robots. To cope with these challenges and
-achieve an efficient production, a multi-robot decision making is
-nesseccary.
-\todo[inline]{Shorten and connect to robot memory}
+autonomously work in and in the planning and multi-robot coordination
+required.
+%% to build as many ordered products as possible and deliver
+%% them in time given time window, and in the baseline robotic challenges
+%% such as collision avoidance, perception and behavior execution. The
+%% dynamism of the environment is caused by the ranomized factory layout,
+%% randomized out-of-order times of machines, the highly customizable
+%% amount of products that preclude producing in advance, unknown
+%% obstacles, such as the other teams robots and hard to completely avoid
+%% handling mistakes by the robots.
+To cope with these challenges, a
+multi-robot decision making is nesseccary and therefore a mechanism to
+share knowledge about the world model between the robots. This can be
+done by the robot memory which also allows combining a global planner
+for finding almost optimal plans and a reasoner for plan execution.
 
 \subsubsection{@Home League}
-
-
 \begin{wrapfigure}{r}{0.3\textwidth}
   \centering
   \includegraphics[height=150px]{img/ceasar}%
@@ -306,11 +309,12 @@ knowledge to incomplete task descriptions given by humans.
 Important challenges in the @Home league are acting robustly in a
 dynamic and only partial observable domestic environment where people
 and objects can disappear or be moved without the robot recognizing
-it. Furthermore, detecting and manipulating objects in a personal
-environment can be difficult because the space the robot acts in, for
-example the frige, can be very clouded.
-
-\todo[inline]{Shorten and connect to robot memory}
+it. The robot memory can help here because it allows to collect a lot
+of knowledge about the concrete domestic environment and, for example,
+log object observations to learn their spatio-temporal distribution.
+%% Furthermore, detecting and manipulating objects in a personal
+%% environment can be difficult because the space the robot acts in, for
+%% example the frige, can be very clouded.
 
 \subsection{Fawkes Robot Software Framework}
 \label{sec:fawkes}
@@ -380,7 +384,7 @@ does not support long-time memory.
 \label{sec:planners}
 This subsection gives an overview of planners and reasoners which are
 going to profit from using and communicating with the robot
-memory. For the variety of these, we give three\todo{four?} concrete
+memory. For the variety of these, we give four
 examples which should use the robot memory to achieve new or improved
 functionality and to evaluate this thesis. The example planner and
 reasoner systems are \emph{CLIPS}, a rule-based production system,
@@ -473,11 +477,10 @@ modeling the nature and behavior of a domain as well as the
 defines the problem to solve it can be given to a PDDL planner which
 searches for a totally or partially ordered sequence of actions, the
 \emph{plan}, to solve the problem.
-%
-\todo[inline]{action example}
-%
-\reflst{lsf:pddl-action} shows an example action contained in a domain
-description. Actions consist of preconditions and effects.  There are
+%% \todo{action example}
+%% \reflst{lsf:pddl-action} shows an example action contained in a domain
+%% description.
+Actions consist of preconditions and effects.  There are
 various versions and extensions of PDDL which introduce new concepts
 and features. A version often used in RoboCup domains is
 PDDL~2.1~\cite{PDDL2.1} \todo{really?}. It adds numeric values and
@@ -534,8 +537,9 @@ initial planning~\cite{ContPlanGolog}. It is implemented with a
 translation between PDDL and
 Golog~\cite{Golog-PDDL-Trans}. Furthermore, the robot memory could be
 useful as additional persistent and distributed knowledge storage
-(e.g. for saving the context during an interrupt\todo{cite Gesche
-  Interrupts} and resuming the task by another robot).
+(e.g. for saving the context during an interrupt
+\todo{cite Gesche Interrupts}
+and resuming the task by another robot).
 
 \subsubsection{Motion Planners:}
 Another kind of widely used planner in robotics are motion
@@ -557,33 +561,52 @@ the form of continous positions and time related events.
 \subsection{MongoDB}
 \label{sec:mongodb}
 
-Since storing, keeping and retrieving knowledge of the robot memory
-are central tasks of this thesis, the choise of a database
-implementation is important. MongoDB is a \emph{document-oriented}
-database which fits particularly well for this application. It
+%% Since storing, keeping and retrieving knowledge of the robot memory
+%% are central tasks of this thesis, the choise of a database
+%% implementation is important.
+MongoDB is a \emph{document-oriented}
+database which fits particularly well for application in this thesis. It
 provides many useful features which would take a large effort to
-implement manually and has proven as powerful and scalable data
-storage~\cite{mongodb,RoboDB} and is widely used. As document-oriented
-database, it is a non relational database which stores entities called
-\emph{documents} which consist of key-value pairs.
+implement manually, has proven as powerful and scalable data
+storage~\cite{mongodb,RoboDB} and is widely used. In contrast to
+relational databases, document-oriented ones store entities called
+\emph{documents} consisting of key-value pairs.
 \begin{figure}
+  \begin{minipage}{0.6\linewidth}
 \begin{lstlisting}[style=SmallJSON,
-  caption={MongoDB document representing the position of a robot},
+  caption={MongoDB document representing\\ the position of a robot},
   label=lst:mongo-document,
-  framexleftmargin=15pt, xleftmargin=15pt,
- morekeywords={}]
+  framexleftmargin=2pt, xleftmargin=2pt,
+ morekeywords={}, numbers=none]
  {
-   _id: ObjectId("573e7cfbb2af16b5443949d9"),
+   _id: ObjectId("573e7cfbb2af949d9"),
    type: "position",
    name: "robot1",
-   translation: {x: 2.5, y: 1.0, z: 0.0},
-   rotation: {x: 0.0, y: 0.0, z: 0.0, w: 1.0},
+   translation: {x:2.5, y:1.0, z:0.0},
+   rotation: {x:0.0, y:0.0, z:0.0, w:1.0},
    timestamp : ISODate("2016-05-19T15:26:34.466Z")
  }
 \end{lstlisting}
+  \end{minipage}
+  \begin{minipage}{0.4\linewidth}
+\begin{lstlisting}[style=SmallJSON,
+  caption={MongoDB query for the document in \reflst{lst:mongo-document}},
+  label=lst:mongo-query,
+  framexleftmargin=2pt, xleftmargin=10pt,
+ morekeywords={}, numbers=none]
+db.positions.find(
+  {
+    type: "position",
+    name: "robot1",
+    timestamp : {"$gt": ISODate(
+      "2016-05-19T15:26:34.000Z")}
+  })
+\end{lstlisting}
+  \end{minipage}
 \end{figure}
-\todo[inline]{hinde lst lines} \reflst{lst:mongo-document} shows such
-a document used for storing the position of a robot. The different
+\reflst{lst:mongo-document} shows such a document
+%used for storing the position of a robot.
+The different
 values can be accessed by their key and can have different types, such
 as strings, numbers, complexer objects (e.g. dates) and nested
 sub-documents (e.g. translation containing 3D coordinates). In
@@ -594,40 +617,28 @@ documents inserted in a collection implicitly define the structure
 during runtime. This allows a flexible use of the database because
 applications are not limited to a fixed schema and can, for example,
 add key-value pairs during runtime when additional information needs
-to be stored. Furthermore, this simlyfies development in which the
-document structure tends to change often. Even if there are documents
-with different structure, the application can choose to retrieve only
-certain documents by giving a specialized query.
-\begin{figure}
-\begin{lstlisting}[style=SmallJSON,
-  caption={MongoDB query retrieving the document shown in \reflst{lst:mongo-document}},
-  label=lst:mongo-query,
-  framexleftmargin=15pt, xleftmargin=15pt,
- morekeywords={}]
-db.positions.find(
-  {
-    type: "position",
-    name: "robot1",
-    timestamp : {"$gt": ISODate("2016-05-19T15:26:34.000Z")}
-  })
-\end{lstlisting}
-\end{figure}
-Queries in MongoDB are very similar to documents because they are
-represented in the same form. \todo{mention JSON} An example query is
+to be stored.
+%% Furthermore, this simlyfies development in which the
+%% document structure tends to change often. Even if there are documents
+%% with different structure, the application can choose to retrieve only
+%% certain documents by giving a specialized query.
+Queries in MongoDB are similar to documents because the arguments of
+query funcitons also use document structure. An example query is
 shown in \reflst{lst:mongo-query}. It searches for all documents in
-the collection \texttt{positions} of the current database that have
-the same values for the \texttt{type} and \texttt{position} keys and
+the collection \texttt{positions}
+%of the current database
+that have matching  values for \texttt{type} and \texttt{position} and
 are up to date, thus with a timestamp greater than the given
-one. Multiple key-value pairs in a query are conjunctive \todo{word
-  right?}, the values can be checked and compared as in the example
+one. Multiple key-value pairs in a query are conjunctive.
+Values can be checked and compared as in the example
 with a variety of operators such as \textit{not}, \textit{or},
 \textit{and}, \textit{equals}, and \textit{greater than}. These
 queries can be evaluated very quickly, especially when \emph{Indexing}
 is used, a database feature that manages indexes for a combination of
 document keys.
-%
+%todo continue shortening
 For more complex queries it is
-possible to add arbitrary JavaScript function with the \textit{where}
+possible to add arbitrary JavaScript functions with the \textit{where}
 operator to check if documents match the query. Furthermore, it is
 possible to aggregate results using the \emph{Map-Reduce} paradigm
 which maps resulting documents to intermediate documents which are
@@ -642,51 +653,53 @@ e.g. \reflst{lst:mongo-query}, can be formulated without using
 \textit{where} operators. Furthermore, complex queries can be nested
 to filter documents first with a fast query and execute the
 computationally costly query only on the remaining documents.
-\todo{example where?}
 %
 An especially useful feature of MongoDB which allows sharing knowledge
 between multiple robots is \emph{replication}. Replication is a
-process that distributes a database onto multiple machines. The
-original database of the MongoDB instance called \emph{Master} is
-copied to one or more instances called \emph{Slaves}. Once an initial
-copy is finished, all modifications to the master database, which are
+process that distributes a database onto multiple machines.
+One MongoDB instance called \emph{Master} initially
+copies the database  to other instances called \emph{Slaves}.
+Afterwards, all modifications to the master database, which are
 stored in a separate collection called \emph{Oplog}, are forwarded to
-the slave to keep them synchronized and consistent. This is often used
-in web-services to distribute read-queries and their computation on
-multiple machines and to keep backups. Read only queries can be
+the slave to keep them synchronized and consistent.
+%% This is often used
+%% in web-services to distribute read-queries and their computation on
+%% multiple machines and to keep backups.
+Read only queries can be
 computed by Master and Slave instances, modifying queries are
 forwarded to the Master to garantee consistency.
-\todo[inline]{eventual conistency} MongoDB can also group multiple
-instances into a \emph{Replica Sets} which automatically manages which
-instance is the Master and which instance becomes the new Master if
-the current Master is unavailable for a certain time. This way
+MongoDB can also group multiple
+instances into a \emph{Replica Sets} which automatically manages
+the master election when necessary. Using replication,
 multiple robots can robustly share a common and consistent world
 model. Robot specific knowledge can be kept in a seperate and not
-replicated collection to avoid unneded communication. There also exist
-extensions of MongoDB which implement a \emph{Multi-Master
-  Replication}. This would enable writing to each instance immediately
-and synchronizing the changes later. \todo{source} This allows faster
-writing especially if the Master is not available for some time but
-requires to resolve write conflicts and handle them in the
-application. Thus Master-Slave Replication is more convinient for the
-applicaiton.
-%
-There are also extensions which provide so called \emph{Trigers} which
-can notify an application if something in the database changes as
-previouly defined. \todo{source} These Triggers use the Oplog of
-MongoDB to find changes and are useful for planners. For example if a
-global planner determined a plan that is being executed and wants to
-be notified, if a condition changes that makes the plan invalid, to
-replan.
+replicated collection to avoid unneded communication.
+%% There also exist
+%% extensions of MongoDB which implement a \emph{Multi-Master
+%%   Replication}. This would enable writing to each instance immediately
+%% and synchronizing the changes later. \todo{source} This allows faster
+%% writing especially if the Master is not available for some time but
+%% requires to resolve write conflicts and handle them in the
+%% application. Thus Master-Slave Replication is more convinient for the
+%% applicaiton.
+%% There are also extensions of MongoDB providing so called \emph{Trigers} which
+%% can notify an application if something in the database changes as
+%% previouly defined. \todo{source} These Triggers use the Oplog of
+%% MongoDB to find changes and are useful for planners. For example if a
+%% global planner determined a plan that is being executed and wants to
+%% be notified, if a condition changes that makes the plan invalid, to
+%% replan.
 
 MongoDB is especially well suited for this thesis because of its
 performance and scalability compared to other document-oriented
 databases with similar features. A possible alternative to MongoDB is
-the document-oriented database CouchDB\todo{reference}. CouchDB
-focuses more on distributed Systems providing a similar system as the
-Multi-Master Replication. Conflicts can be solved similar to a version
+the document-oriented database CouchDB~\cite{CouchDB}. CouchDB
+focuses more on distributed Systems providing a system called
+Multi-Master Replication which allows writing to all replication instances.
+Conflicts can be solved similar to a version
 control system, thus multiple conflicting versions can be kept in
-parallel for later revision. However, MongoDB has shown to scale much better than CouchDB.\todo[inline]{Proof (RoboDB Tim)}
+parallel for later revision. However, MongoDB has shown to scale much
+better than CouchDB and other document-oriented databases~\cite{db-comparison}.
 
 %% \begin{itemize}
 %% \item BSON JSON format for documents
