@@ -57,7 +57,6 @@
 %% \begin{abstract}
 %%   abstract.
 %% \end{abstract}
-\todo{abstract?}
 
 \section{Introduction}
 \label{sec:introduction}
@@ -67,9 +66,11 @@ items belong on the table, where they are stored, how to make
 pancakes, and how to clean up afterwards. Intelligent factory robots
 need to know where resources are placed, what products are ordered,
 and which actions with preconditions and effects can be executed to
-reach a goal. There are countless applications, some with major impact
-to solve problems such as appropriate elder care and scalable disaster
-rescue. Before these applications can be realized, important
+reach a goal.
+%% There are countless applications, some with major impact
+%% to solve problems such as appropriate elder care and scalable disaster
+%% rescue.
+Before these applications can be realized, important
 challenges need to be solved. These challenges include representing
 and storing large amounts of knowledge with various types over long
 times so that it can be queried and used efficiently. Also planning
@@ -91,18 +92,18 @@ planners and reasoners to share the same world model. This way
 multiple planners and reasoners can be combined to utilize their
 specialized strengths and compensate for their weaknesses. Without the
 robot memory the knowledge transfer between the planners and reasoners
-is a problem. For example when a planner and a reasoner for plan
-execution operate alternately and the reasoner cancels the plan
-execution because of a previously unknown problem (e.g. an object not
-being at its usual location), the planner needs to be informed about
-this change in the environment. Similarly the robot memory allows
-multiple robots to share a common knowledge base which is needed for
+is a problem. For example when a planner creates plans and a reasoner
+executes them, the reasoner might cancel the plan because of a newly
+discovered obstacle. Without a shared worldmodel or at least a notification,
+the planner could create the same plan again and would be stuck.
+The robot memory is also needed for
+multiple robots sharing a common knowledge base for
 proper cooperation (e.g. to know which tasks are already done by other
-robots or where another robots placed an object). This frees planners
+robots or where another robots placed an object). The robot memory frees planners
 and reasoners from implementing their own messaging and
 synchronization which is usually laborious in the planner or reasoner
 programming language. Two additional main features of the robot memory
-are event-trigger and a virtual knowledge base. The event-trigger
+are event-triggers and a virtual knowledge base. The event-trigger
 should notify a component when a previously defined condition of the
 robot memory changes. This is especially useful for planners which can
 be notified when their plan becomes infeasible because some
@@ -114,19 +115,19 @@ storing all distances between each two known objects and keeping them
 up do date is a lot of unnecessary effort.
 
 The robot memory is designed for the Fawkes robot software framework
-with the document-oriented database MongoDB as a basis
-and should be usable in any application. For the time of the thesis,
+with the document-oriented database MongoDB as a basis.
+For the time of the thesis,
 we focus on two applications which can especially profit from the
-robot memory and which will be used for evaluation. On the one hand,
+robot memory and will be used for evaluation. On the one hand,
 the robot memory should be used on logistics robots of the RoboCup
 Logistics League (RCLL). Here it is needed to share the world model
 about the environment between a global planner and a reasoner for plan
 execution and between the multiple robots collaborating as in a
 team. On the other hand, the robot memory should be used on a domestic
 service robot related to the RoboCup@Home league where the robot
-memory is needed as flexible and scalable long-time storage to store
+memory is needed as flexible and scalable long-time storage of
 various facts about a domestic environment, how to perform actions and
-to learn from observed object positions.
+to learn spatio-temporal distributions from observed object positions.
 
 In the following, the proposal gives an overview over the background
 of the thesis with the RoboCup application domain and the used
@@ -141,14 +142,12 @@ summery in \refsec{sec:summery}.
 \label{sec:background}
 This section presents the background of the proposed thesis. On the
 one hand, we describe the primary application and evaluation domain,
-the RoboCup with the RoboCup Logistics League (RCLL), the @Home league
-and their robots in ~\ref{sec:robocup}. On the other hand, we present
-the most important software for the proposed thesis. In
-section~\ref{sec:fawkes} we present the robot software framework
-Fawkes. Section~\ref{sec:planners} describes the planners and
-reasoners which should profit from using the robot memory and in
-section~\ref{sec:mongodb} MongoDB, the database used in the back-end of
-the robot memory.
+the RoboCup with the RoboCup Logistics League (RCLL), the @Home league.
+On the other hand, we present
+the most important software for the proposed thesis,
+the robot software framework Fawkes, planners and
+reasoners which should profit from using the robot memory and
+the database MongoDB used in the back-end of the robot memory.
 
 \subsection{RoboCup}
 \label{sec:robocup}
@@ -187,14 +186,6 @@ application domain of robotics and artificial intelligence.
 
 
 \subsubsection{RoboCup Logistics League}
-\begin{wrapfigure}{r}{0.3\textwidth}
-  \centering
-  \vspace{-2.7ex}
-  \includegraphics[width=0.3\textwidth]{img/rcll}
-  \vspace{-4ex}
-  \caption{Robot and MPS used in the RCLL}
-  \label{fig:rcll}
-\end{wrapfigure}
 
 The \emph{RoboCup Logistics League (RCLL)}\footnote{RoboCup Logistics
   League website: \url{http://www.robocup-logistics.org}}
@@ -205,7 +196,16 @@ flow between machines to produce and deliver products according to
 dynamic orders. Competing teams deploy a group of up to three robots
 which have to autonomously build ordered products by interacting with
 \emph{Modular Production Machines (MPS)} and transporting work pieces
-between these machines.  \reffig{fig:rcll} shows an RCLL robot filling
+between these machines.
+\begin{wrapfigure}{r}{0.3\textwidth}
+  \centering
+  \vspace{-2.7ex}
+  \includegraphics[width=0.3\textwidth]{img/rcll}
+  \vspace{-4ex}
+  \caption{Robot and MPS used in the RCLL}
+  \label{fig:rcll}
+\end{wrapfigure}
+\reffig{fig:rcll} shows an RCLL robot filling
 a machine which mounts colored rings on work pieces. The robots are
 based on the Festo Robotino 3 platform which uses an holonomic drive,
 and can be extended and programmed by the teams. The robot shown in
@@ -216,7 +216,7 @@ light-signals mounted on the machines~\cite{Carologistics2015}. The
 game is controlled by a software component called \emph{referee box
   (refbox)} which randomizes the machine placement in the factory and
 the production orders, communicates with the competing robots,
-controls the machines and awards points.
+controls the machines, and awards points.
 
 The game consists of two phases~\cite{LLSF-Rules-2015}. In the first
 phase, the \emph{exploration phase}, the robots have to roam the
@@ -243,7 +243,7 @@ factory to find randomly placed machines which are used later.
 %
 In the second phase, the \emph{production phase}, the refbox announces
 orders, which products have to be produced by the robots. The products
-are build from colored cups with optionally mounted rings and and a
+are build from colored cups with optionally mounted rings and a
 colored cap.
 %% \reffig{fig:prod-chain} shows the production chain to
 %% build a high complexity product.
@@ -288,7 +288,7 @@ The RoboCup@Home league is a competition about domestic service
 robots~\cite{wisspeintner2009robocup}. The robots have to assist
 humans in a wide variety of everyday tasks. These tasks include
 serving drinks, cleaning, setting tables, guiding or following people,
-helping in emergency situations, shopping, cooking and
+helping in emergency situations, shopping, cooking, and
 more. \reffig{fig:athome} shows an @Home robot in the
 competition.
 %
@@ -299,10 +299,10 @@ humans and especially elder people in the personal life.
 
 The competition consists of an open challenge and multiple sub-tasks
 such as finding and manipulating objects, navigation tasks,
-remembering persons, wait on tables and acting as
+remembering persons, wait on tables, and acting as
 nurse~\cite{athome-rules}. To solve these challenges, robots need to
 have a wide variety of abilities, including navigation, object
-detection and manipulation, speech recognition and especially human
+detection and manipulation, speech recognition, and especially human
 robot interaction, which requires, for example, applying everyday
 knowledge to incomplete task descriptions given by humans.
 
@@ -319,7 +319,7 @@ log object observations to learn their spatio-temporal distribution.
 \subsection{Fawkes Robot Software Framework}
 \label{sec:fawkes}
 The basis for the proposed thesis is the robot software framework
-\emph{Fawkes}\footnote{\url{http://www.fawkesrobotics.org}}. It is
+\emph{Fawkes}\footnote{\url{http://www.fawkesrobotics.org}}
 available as Open Source~\cite{FawkesDesign}.
 %and developed at the Knowledge-based Systems
 %Group\footnote{\url{http://www.kbsg.rwth-aachen.de}} (KBSG) at RWTH
@@ -327,80 +327,91 @@ available as Open Source~\cite{FawkesDesign}.
 It is designed to work with
 various robots in different domains and follows a component-based
 software design which separates functional entities into individual
-software modules~\cite{component}. This enables reusing common
+software modules~\cite{component}. This enables reusing
 software solutions for robotic problems such as localization,
-navigation, perception, reasoning and behavior execution. The binary
+perception, reasoning, and behavior execution. The binary
 components can be loaded as \emph{plugins} at run-time.
 %
-Plugin activity is organized in threads to make use of multi-core
-architectures. The threads can be run continuously ore be hooked into
+Plugin activity is organized in threads
+%to make use of multi-core architectures. The threads
+which can be run continuously ore hooked into
 the main-loop of Fawkes to order the execution into a
-\emph{sense-think-act} cycle to guarantee that higher-level components
-can use the latest data. Furthermore, Fawkes guarantees loop times by
+\emph{sense-think-act} cycle.
+%This guarantees that higher-level components can use the latest data.
+Fawkes guarantees loop times by
 monitoring and eventually pausing and resuming threads running for too
-long in one loop iteration.
+long.
 % Ros blabla from BA?
 Features in Fawkes are provided as \textit{aspects}. These aspects are
 based on aspect-oriented programming~\cite{aspect_oriented} and give
 access to a particular feature. Threads that want to use a feature can
-inherit from the corresponding aspect. For example there are aspects
-for accessing the blackboard, logging and timing~\cite{tnthesis}.
+inherit from the corresponding aspect. For example, there are aspects
+for accessing logging, timing, and external libraries~\cite{tnthesis}.
 
-The communication between plugins is realized with a \emph{blackboard}
+The communication between plugins is realized with the \emph{blackboard}
 paradigm. The blackboard lists structured entries called
 \emph{interfaces} which contain information. Interfaces can be
 provided by one plugin at a time, the writer, and read by other
 plugins, the readers. This allows a very flexible communication
-because the information provision in the interface is decoupled from
-the concrete components which use the information and plugins writing
-to the interfaces can be exchanged, e.g. by simulation plugins writing
-to the same interface. Furthermore, the blackboard architecture
-simplifies debugging because the current communication between two
-plugins, determined by the state of the interface, can be viewed and
-logged at runtime. To send commands to an interface writer, e.g. a
+because the interface is independent from the concrete writer and readers.
+For examples sensor and actor plugins can be exchanged by simulation
+plugins~\cite{LLSF-Sim}.
+%% because the information provision in the interface is decoupled from
+%% the concrete components which use the information and plugins writing
+%% to the interfaces can be exchanged, e.g. by simulation plugins writing
+%% to the same interface. Furthermore, the blackboard architecture
+%% simplifies debugging because the current communication between two
+%% plugins, determined by the state of the interface, can be viewed and
+%% logged at runtime.
+To send commands to an interface writer, e.g. a
 motor command to the motor controller, readers can send messages to
 the interface.
 
 As a communication infrastructure between different components, the
-blackboard is one possibility to realize a robot memory shared between
-multiple planners and reasoners in the current version of
-Fawkes. Indeed the blackboard works well for providing information and
+blackboard is a limited possibility to realize a robot memory
+%shared between multiple planners and reasoners in the current version of
+%Fawkes.
+Indeed the blackboard works well for providing information and
 sending commands, though there are major limitations for this
 application. One limitation is the strict rule, that only one
 component can write an interface to provide information. This rule is
 very useful to avoid problems in standard plugin communication but
-obstructive for multiple components sharing common information. For
-example when a reasoner concludes that a product is placed at the
-machine output after the production time and a behavior execution
-component concludes that the robot holds the product after the grabbing
-action succeeded, both components would have to modify the same piece
-of information in the shared robot memory. Another limitation is the
+obstructive for multiple components sharing common information.
+%% For
+%% example when a reasoner concludes that a product is placed at the
+%% machine output after the production time and a behavior execution
+%% component concludes that the robot holds the product after the grabbing
+%% action succeeded, both components would have to modify the same piece
+%% of information in the shared robot memory.
+Another limitation is the
 fixed size and structure of blackboard interfaces. Therefore it is not
-possible to dynamically represent more information, such as positions
-of detected objects, than initially defined. Furthermore, the blackboard
-does not support long-time memory.
+possible to dynamically represent more information.
+%% , such as positions
+%% of detected objects, than initially defined.
+Furthermore, the blackboard does not support long-time memory.
 
 \subsection{Planners and Reasoners}
 \label{sec:planners}
 This subsection gives an overview of planners and reasoners which are
-going to profit from using and communicating with the robot
-memory. For the variety of these, we give four
-examples which should use the robot memory to achieve new or improved
-functionality and to evaluate this thesis. The example planner and
-reasoner systems are \emph{CLIPS}, a rule-based production system,
-\emph{Golog}, a high-level programming language based on the Situation
-Calculus, and the \emph{Planning Domain Definition Language (PDDL)},
-which incorporates a family of planning formalisms into a standard
-programming language. These examples are representatives for often
-used types of planners and reasoners. However, the robot memory should
-not be limited to these examples and provide a general C++ interface.
+going to profit from the robot memory. For the variety of these, we
+give four examples which should use the robot memory to achieve new or
+improved functionality and to evaluate this thesis. The example
+planner and reasoner systems are \emph{CLIPS}, a rule-based production
+system, the \emph{Planning Domain Definition Language (PDDL)}, which
+incorporates a family of planning formalisms into a standard
+programming language, \emph{Golog}, a high-level programming language
+based on the Situation Calculus, and \emph{Motion Planners} finding
+collision free actuation plans.
+%% These examples are representatives for often
+%% used types of planners and reasoners. However, the robot memory should
+%% not be limited to these examples and provide a general C++ interface.
 
 \subsubsection{CLIPS rules engine} The reasoner we currently use in the RCLL
 to implement the high-level game agent is the rule-based production
-system CLIPS which uses forward chaining based on the Rete
-algorithm~\cite{Rete}. CLIPS consists of a fact-base, which is a
+system CLIPS~\cite{CLIPS-RM}. It uses forward chaining based on the Rete
+algorithm~\cite{Rete} and basically consists of a fact-base, which is a
 working memory with many small pieces of information, a knowledge base
-with rules and procedures, and an inference engine~\cite{CLIPS-RM}
+with rules and procedures, and an inference engine
 working with the knowledge base on the fact-base. The pieces of
 information in the fact-base are called facts and consist of a name
 and a key-value structure defined in a template for \emph{unordered
@@ -433,33 +444,40 @@ An example rule is shown in \reflst{lst:clips-rule}. Rules are
 composed of an \emph{antecedent} and a \emph{consequent}. The
 antecedent is written before $=>$ and describes the condition that
 has to be satisfied before the the rule is activated. It consists of a
-list of patterns that have to be matched by the fact-base. For the
+list of patterns that have to be matched by facts in the fact-base. For the
 antecedent in \reflst{lst:clips-rule} there have to be fitting
-\textit{state}, \textit{visible}, and \textit{position} facts where
-$?$ and $\$?$ mark variables. The consequent is the part behind $=>$
-and defines the procedure that is executed when the rule is
+\texttt{state}, \texttt{visible}, and \texttt{position} facts where
+$?$ and $\$?$ mark variables. The consequent behind $=>$
+defines the procedure to execute when the rule is
 activated. It usually modifies the fact-base by retracting and
-asserting facts as in the example to remove the old and add a new
-state fact. The inference engine is responsible for checking which
-rule antecedents are satisfied by the fact-base. If multiple rules
+asserting facts, for example to exchange the \texttt{state} fact.
+The inference engine checks which
+rule antecedents are satisfied. If multiple rules
 could fire, the inference engine chooses the rule with the highest
 priority, executes the consequent and checks again. \emph{Functions}
 can be called in the consequent, can have side effects and also be
-implemented in C++. The RCLL agent implemented in CLIPS represents its
-knowledge about the state of the world, the \emph{world model}, in its
-fact-base. It controls which actions are taken by the robot by using a
-technique called \emph{Incremental Reasoning}~\cite{CLIPS-Agent}. This
-basically means that, whenever the robot is idle, it searches for the
-next best task and executes it. For each task there is a rule with its
-preconditions in the antecedent and the actions to take in the
-consequent. There are also rules for modifying the world model
-(e.g. after finishing actions or getting new sensor data), task
-execution, coordination with other robots and more. The coordination
-of the robot team includes synchronizing their world model, so each
-robot knows what other robots noticed and changed in the environment,
-and resource allocation to ensure no two robots try to use the same
-machine at a time or try to achieve the same goal by choosing a
-redundant task. This coordination is currently implemented in CLIPS
+implemented in C++.
+
+The RCLL agent implemented in CLIPS represents its
+knowledge about the world, the \emph{world model}, in its
+fact-base. It chooses actions to taken by using a
+technique called \emph{Incremental Reasoning}~\cite{CLIPS-Agent}:
+Whenever the robot is idle, it searches for the
+next best task and executes it.
+%% For each task there is a rule with its
+%% preconditions in the antecedent and the actions to take in the
+%% consequent. There are also rules for modifying the world model
+%% (e.g. after finishing actions or getting new sensor data), task
+%% execution, coordination with other robots and more.
+The coordination
+of the robot team includes synchronizing their world model
+%% , so each
+%% robot knows what other robots noticed and changed in the environment,
+and resource allocation.
+%% to ensure no two robots try to use the same
+%% machine at a time or try to achieve the same goal by choosing a
+%% redundant task.
+This coordination is currently implemented in CLIPS
 rules using Profobuf\footnote{Google Protocol Buffers}
 messages. Alternatively, this could also be done by using a
 distributed robot memory which contains the world model in a
@@ -482,8 +500,8 @@ searches for a totally or partially ordered sequence of actions, the
 %% description.
 Actions consist of preconditions and effects.  There are
 various versions and extensions of PDDL which introduce new concepts
-and features. A version often used in RoboCup domains is
-PDDL~2.1~\cite{PDDL2.1} \todo{really?}. It adds numeric values and
+and features. A version used in RoboCup domains is
+PDDL~2.1~\cite{PDDL2.1}. It adds numeric values and
 continuous actions. This allows finding optimal plans in continuous
 environments where, for example, distances and travel times
 matter. PDDl has the advantage of being able to find complete and
@@ -516,7 +534,7 @@ performing actions is defined by \emph{successor state axioms}
 (e.g. $Poss(drop(x),s) \supset [broken(x,do(a,s)) \equiv a=drop(x)
   \wedge fragile(x) \vee broken(x,s) \wedge \neg a=repair(x)]$).
 Golog as a high-level programming language features imperative
-programming constructs such as procedures, conditions and loops as
+programming constructs such as procedures, conditions, and loops as
 well as nondeterministic branching. There are multiple dialects of
 Golog which add features needed for robotic
 applications. ConGolog~\cite{ConGolog} adds concurrency and
@@ -537,8 +555,7 @@ initial planning~\cite{ContPlanGolog}. It is implemented with a
 translation between PDDL and
 Golog~\cite{Golog-PDDL-Trans}. Furthermore, the robot memory could be
 useful as additional persistent and distributed knowledge storage
-(e.g. for saving the context during an interrupt
-\todo{cite Gesche Interrupts}
+(e.g. for saving the context during an interrupt~\cite{Gesche-Thesis}
 and resuming the task by another robot).
 
 \subsubsection{Motion Planners:}
@@ -568,13 +585,13 @@ MongoDB is a \emph{document-oriented}
 database which fits particularly well for application in this thesis. It
 provides many useful features which would take a large effort to
 implement manually, has proven as powerful and scalable data
-storage~\cite{mongodb,RoboDB} and is widely used. In contrast to
+storage~\cite{mongodb,RoboDB}, and is widely used. In contrast to
 relational databases, document-oriented ones store entities called
 \emph{documents} consisting of key-value pairs.
 \begin{figure}
   \begin{minipage}{0.6\linewidth}
 \begin{lstlisting}[style=SmallJSON,
-  caption={MongoDB document representing\\ the position of a robot},
+  caption={MongoDB document representing\protect\\ the position of a robot},
   label=lst:mongo-document,
   framexleftmargin=2pt, xleftmargin=2pt,
  morekeywords={}, numbers=none]
@@ -627,7 +644,7 @@ query functions also use document structure. An example query is
 shown in \reflst{lst:mongo-query}. It searches for all documents in
 the collection \texttt{positions}
 %of the current database
-that have matching  values for \texttt{type} and \texttt{position} and
+that have matching  values for \texttt{type} and \texttt{position}, and
 are up to date, thus with a timestamp greater than the given
 one. Multiple key-value pairs in a query are conjunctive.
 Values can be checked and compared as in the example
@@ -718,12 +735,13 @@ cognition-enabled robots~\cite{KnowRob,KnowRob-Representation}. It is
 designed to store knowledge about the environment and set it into
 relation to common sense knowledge to understand vaguely described
 tasks such as "set the table". For storage and inference of knowledge,
-KnowRob uses Description Logic and approaches of the semantic web, an
-effort to make websites machine understandable, and the logic
+KnowRob uses Description Logic and approaches of the semantic web
+%% , an effort to make websites machine understandable,
+and the logic
 programming language Prolog for implementation. Each small piece of
 information is represented as a \emph{Resource Description Framework
   (RDF) triple} (e.g. $rdf(robot, holding, cup)$) which are composed
-of a subject, predicate and object. Commonsense knowledge is
+of a subject, predicate, and object. Commonsense knowledge is
 represented in the \emph{Web Ontology Language (OWL)}. It uses
 \emph{ontologies} which can roughly be described as directed graphs
 setting objects or classes of objects into relation. The graph can be
@@ -734,35 +752,39 @@ knowledge such as "milk is-a perishable", "refrigerator
 storage-place-for perishable", and "refrigerator is-a
 box-container". Thus a robot asked to bring milk could infer that the
 milk is stored in the refrigerator which needs to be opened first
-since it is a box-like container.  To be able to interface the
-perception of a robotic system, KnowRob uses a concept called
+since it is a box-like container. To be able to interface the
+perception, KnowRob uses a concept called
 \emph{virtual knowledge base}. It allows computing needed information
 on demand instead of storing everything providently. Thus special
 queries can be forwarded to other components which compute the answer
-efficiently. Especially for perception based on sensor data or
-transformation of spatial relations, this is advantageous compared
-to continuously computing the results for all possible queries and
-storing them. The concept inspired the usage of virtual knowledge
-bases in this thesis. KnowRob implements it with Prolog predicates
-called \emph{Computables} which call C++ functions of other
-components. This indeed slows down the computation of a query but is
-more efficient than continuously computing and storing the results or
-implementing and computing the other components algorithms in Prolog.
+efficiently.
+%% Especially for perception based on sensor data or
+%% transformation of spatial relations, this is advantageous compared
+%% to continuously computing the results for all possible queries and
+%% storing them.
+The concept inspired the usage of virtual knowledge
+bases in this thesis.
+%% KnowRob implements it with Prolog predicates
+%% called \emph{Computables} which call C++ functions of other
+%% components. This indeed slows down the computation of a query but is
+%% more efficient than continuously computing and storing the results or
+%% implementing and computing the other components algorithms in Prolog.
 To understand the robots environment large and detailed ontologies are
 necessary. KnowRob features acquiring and connecting these from
 various sources such as online common sense databases, the cloud-based
-robot infrastructure RoboEarth and websites made for humans for
+robot infrastructure RoboEarth and websites for
 deriving object information from internet shops and action recipes
 from how-to websites. However, it has been found that this acquired
 knowledge needs a lot of manual extension and verification before it
 can be used~\cite{KnowRob-Web}. Encyclopedic knowledge often lacks
-action information needed by the robot (e.g. how to grab tools) and
-action recipes require human text understanding. Furthermore large
+action information needed by the robot. %% (e.g. how to grab tools) and
+%% action recipes require human text understanding
+Furthermore large
 ontologies limit the performance of KnowRob because of the Prolog
 implementation and general complexity. Although KnowRob features
 useful concepts such as common sense reasoning with ontologies and
-virtual knowledge bases we do not use it as a basis for a robot memory
-in Fawkes because of missing support knowledge shared between multiple
+virtual knowledge bases, we do not use it as a basis for a robot memory
+in Fawkes because of missing support to share knowledge between multiple
 robots and a too strong focus on data only for reasoning components or
 respectively performance and scalability concerns with Prolog handling
 larger data-sets (e.g. storing locations of found object over long time
@@ -779,8 +801,9 @@ inference with Pellet, a Java OWL reasoner. Besides knowledge storing,
 querying and reasoning, ORO features a modular architecture between
 the back-end storage and front end socket server for querying. These
 modules add features such as events that notify external components
-about changes (e.g. if instances of certain classes are added or
-modified). Another module adds representations of alternative
+about changes.
+%%  (e.g. if instances of certain classes are added or modified).
+Another module adds representations of alternative
 perspectives that should allow understanding difficult situations with
 multiple agents. For example when a human asks a robot to bring the
 cup, there are two cups on a table and the robot should infer which
@@ -836,7 +859,7 @@ robots via a socket connection and by humans via a web browser. It
 uses KnowRob for commonsense reasoning and storing the world model of
 a robot. The Generic Robot Database is used to log data about robots
 or humans performing manipulation tasks. This data can then be
-accessed by using Computables of the virtual knowledge base concept to
+accessed by using the virtual knowledge base concept to
 learn from human demonstration and analyze and learn from faults. The
 focus of Open-EASE also is on providing the recorded data and access
 to KnowRob to humans using the web interface. This allows using
@@ -857,15 +880,14 @@ website\footnote{\url{http://www.open-ease.org/}}.
 \section{Approach}
 \label{sec:approach}
 This section presents the approach of the proposed thesis. It starts
-with the goals we want to achieve with the robot memory and why they
-are useful for the application. It follows an overview of the
+with the goals we want to achieve with the robot memory.
+It follows an overview of the
 architecture which describes in which components the robot memory is
 organized and how they interact with each other. Afterwards, we
 describe how the implementation is planned, especially for the robot
-memory and the interface using planners, reasoners and other
+memory and interfaces for planners, reasoners and other
 components. We finish the presentation of the approach with a section
-how to evaluate the robot memory qualitatively and quantitatively and
-give a time schedule for the thesis.
+about evaluation and give a time schedule for the thesis.
 
 \subsection{Goals}
 \label{sec:goals}
@@ -875,7 +897,7 @@ achieve them:
 
 \smallskip
 \textbf{Flexible Storage and Retrieval:} The robot memory has to
-provide a service for storing, updating, removing and querying so that
+provide a service for storing, updating, removing, and querying so that
 different components can use the robot memory to provide knowledge,
 use it as a source, or collaborate using the same memory. It should be
 flexible enough to store any kind of data, information, knowledge, and
@@ -885,7 +907,7 @@ even large datasets such as remembered sights of objects for later
 learning and user preferences.
 
 \smallskip
-\textbf{Collaboration of Planners, Reasoners and Other Components:}
+\textbf{Collaboration of Planners, Reasoners, and Other Components:}
 The robot memory has to allow multiple components to collaborate by
 sharing a common database. This should especially be used to share a
 common world model between different kinds of planners and reasoners
@@ -911,14 +933,14 @@ and have to be translated.
 
 \smallskip
 \textbf{Virtual Knowledge Base:} The robot memory has to provide
-access to virtual knowledge. This is knowledge which is not stored in
+access to virtual knowledge. This is knowledge that is not stored in
 the robot memory directly, but computed on demand. This allows
 accessing knowledge through the robot memory that is otherwise
 impracticable to compute and store continuously and for all possible
 queries. For example when a component queries the distance of two
-objects, it is better to compute the result on demand taking both
-concrete objects into account than to store all distances between each
-two objects in the memory and to update these values continuously.
+objects, it is better to compute the result on demand
+than to store all distances between each
+two objects in the memory and to keep them updated.
 When components using the robot memory can also provide computation
 functions for virtual knowledge to the robot memory, this adds a lot of
 versatility and expandability. For example it would be possible to add
@@ -930,17 +952,19 @@ relating knowledge in the memory to an ontology.
 \smallskip
 \textbf{Shared Knowledge for Multi-Robot Systems:} The robot memory
 should be able to distribute parts of the knowledge over multiple
-robots which can then share a common world model necessary for
+robots, which can then share a common world model necessary for
 collaboration. The concept is similar to multiple planners sharing a
 world model with the difference that the components on a multi-robot
 system work simultaneously and the additional difficulty to
 synchronize the robot memory between the robots. Such a distributed
 robot-memory is necessary in many multi-robot domains, especially the
-RCLL where the whole robot team needs to know the world model
-(e.g. where other robots placed intermediate products) and what other
-robots intend to achieve at the moment. If the distribution of the
-knowledge would not be implemented in the robot memory it would have
-to be implemented separately. Distributing the robot memory adds
+RCLL.%%  where the whole robot team needs to know the world model
+%% (e.g. where other robots placed intermediate products) and what other
+%% robots intend to achieve at the moment.
+%% If the distribution of the
+%% knowledge would not be implemented in the robot memory it would have
+%% to be implemented separately. 
+Distributing the robot memory adds
 additional requirements and challenges, especially robustness (e.g. in
 the case of robots dropping out), consistency of the memory, and
 accessibility so each robot can use the robot memory without large
@@ -958,18 +982,18 @@ while querying.
 
 \smallskip
 \textbf{Event Triggers:} The robot memory should be able to notify
-components about changes in the memory which are relevant for
-them. These notifications are called \emph{event triggers} and should
+components about relevant  changes in the memory.
+These notifications are called \emph{event-triggers} and should
 automatically be sent after a component registers an event it wants to
 be notified about. These events include appearances of new instances
-of a specific knowledge type, modifications and deletions of it as
+of a specific knowledge type, modifications and deletions of it, as
 well as sentences becoming true or queries returning documents. The
 balance of expressiveness versus performance still needs to be
 found. A use case in which event triggers are especially useful are
 when planners want to be notified when their plan becomes unfeasible
-and re-planning is necessary. In this case, the planner could for
-example register events for the plan execution being aborted or
-preconditions of a plan becoming false.
+and re-planning is necessary. In this case, the planner could, for
+example, register events for the plan execution being aborted or
+preconditions of the plan becoming false.
 
 \smallskip
 \textbf{Modular Extensions:} The robot memory should be expandable
@@ -986,8 +1010,8 @@ would be useful.
 
 \smallskip
 \textbf{Persistent Storage:} To profit from long-time knowledge and to
-operate robots over long time as necessary in the intended domains
-such as domestic service, the knowledge needs to be stored
+operate robots over long time as necessary in intended domains
+such as the domestic service, the knowledge needs to be stored
 persistently. This way, it is not lost when restarting a robot or
 repeating an experiment depending on knowledge stored in the robot
 memory.
@@ -1006,26 +1030,30 @@ be desirable to analyze spatio-temporal data efficiently.
 This subsection presents the architecture of the robot memory and
 explains its design consideration. It shows how the intended
 functionality is organized in smaller components and how these
-components interact with each other.  The architecture in general
+components interact with each other. The architecture
 contains standard concepts of software
 engineering~\cite{software-architecture} and design pattern
 considerations~\cite{design-patterns} to allow reusability and
 adaptability to changing requirements and use cases. The most
-important concepts are a layered architecture, functional abstraction
-(e.g. of the different processes happening during storing and
-querying), and data abstraction (e.g. of stored knowledge which is
-more specialized internally than visible from a using
-application). \reffig{fig:arch} shows the architecture of the robot
+important concepts are a layered architecture, functional abstraction,
+%% (e.g. of the different processes happening during storing and
+%% querying)
+and data abstraction.
+%%  (e.g. of stored knowledge which is
+%% more specialized internally than visible from a using
+%% application)
+
+\reffig{fig:arch} shows the architecture of the robot
 memory and is explained in the following.
-\todo[inline]{move arch-figure so it is easily viewable when reading}
 \begin{figure}
   \centering
   \includegraphics[width=0.9\textwidth]{architecture.pdf}
+  \vspace{-5mm}
   \caption{Software architecture of the Robot Memory}
   \label{fig:arch}
 \end{figure}
-The architecture organizes all components relevant for the robot
-memory into four layers: Back-End, Robot Memory, Application Interface
+The architecture organizes all components
+into four layers: Back-End, Robot Memory, Application Interface,
 and Application. The Back-End contains the MongoDB databases where the
 knowledge is stored and queries are executed. There is a private
 database and a shared database distributed between multiple robots
@@ -1033,44 +1061,43 @@ using the same architecture. This distribution utilizes the efficient
 replication features of MongoDB and avoids additional overhead. The
 Robot Memory-layer contains the central functions that distinguish the
 robot memory from a pure MongoDB database. It contains the Storage-,
-Update- and Query-manager which is an intermediate component that
+Update-, and Query-manager which is an intermediate component that
 realizes most of the robot memorys functionality by modifying and
 enhancing queries, storage and update requests before applying them to
 MongoDB. If a query asks for virtual knowledge, the manager forwards
-the query to the virtual knowledge base. The virtual knowledge base
+it to the virtual knowledge base, which
 manages which virtual knowledge is provided by which application and
-requests the computation of virtual knowledge when demanded. The
+requests the computation on demanded. The
 component responsible for event-triggers receives and manages
 registrations of applications that want to be notified in the case of
-an event, uses the Query-manager to check if events happen and notifies
+an event. It uses the Query-manager to check if events happen and notifies
 applications accordingly. Additional modules can be added to extend
-the functionality of the Storage-, Update- and Query-manager. These
-extensions use the ---Compositor
-Pattern~\cite{design-patterns}\todo{check name} --- and therefore work
-compositionally and dynamically. Between the robot memory and a
+the functionality of the Storage-, Update-, and Query-manager. These
+extensions can be used the Command Pattern~\cite{design-patterns}
+and to work process compositionally and dynamically.
+Between the robot memory and a
 planner (or reasoner) component is the Application Interface layer. It
-includes the Interface Provider component which makes the function of
-the robot memory, which are accessible in C++, available to the
+includes the Interface Provider component, which makes the function of
+the robot memory, accessible in C++, available to the
 planner and the special programming language used by the planner. It
 is not necessary for components that can directly use the C++
-interface of the robot memory. The central task of wrapping the robot
-memory functions into the planner programming language also includes
-bringing query results in the appropriate format used by the planner
-and eventually renaming key-names when they have be mapped to match
+interface of the robot memory. This wrapping task also includes
+transforming query results in the appropriate format used by the planner
+and eventually renaming key-names if they have be mapped to match
 the names used in the planner domain model. Because planning and
 reasoning languages and concepts can be very different, each planner
 and reasoner needs a separate Interface Provider. The Interface
-Provider can also contain a domain creator which creates the planning
+Provider can also contain a domain creator, which creates the planning
 domain and problem definition from a template and additional knowledge
-from query results. For example, this is useful for PDDL planners
-which would automatically get problem definitions updated to the
+resulting from queries. Thus PDDL planners
+can automatically use problem definitions updated to the
 current world model stored in the robot memory. Finally the Application
 layer contains all components using the robot memory either through
 the Interface provider or directly through the C++
 interface. Application components can also register event-triggers and
-provide computation functions for the virtual knowledge base.  The
+provide computation functions for the virtual knowledge base. The
 knowledge acquisition filling the robot memory is divided between the
-applications using the robot memory. Additionally, the Initializer
+applications using the robot memory. Additionally the Initializer
 module can provide the initial knowledge from a file (e.g. for the
 world model of a new RCLL game).
 
@@ -1086,38 +1113,39 @@ C++ interface of the robot memory.
 \subsubsection{Back-End}
 \label{sec:back-end}
 The back-end is realized with MongoDB, acts as storage of the robot
-memory and executes queries. The representation of stored knowledge
+memory, and executes queries. The representation of stored knowledge
 utilizes the document structure of MongoDB with key-value pairs and
 nested sub-documents. This allows a very flexible storage of
 knowledge-pieces with any additional properties needed by the
-application. An example document stored in the back-end is shown in
-\reflst{lst:backend}. 
-\begin{figure}
+application.
+\begin{wrapfigure}{r}{0.47\textwidth}
 \begin{lstlisting}[style=SmallJSON,
   caption={Representation of a knowledge piece in the back-end},
   label=lst:backend,
-  framexleftmargin=15pt, xleftmargin=15pt,
- morekeywords={}]
+  framexleftmargin=1pt, xleftmargin=0pt,
+ morekeywords={}, numbers=none]
  {
-   _id: ObjectId("983e7cfbb2af16b5443949h5"),
+   _id: ObjectId("983e7c49h5"),
    robot_memory_info:
    {
      persistent: true,
-     decay_time: ISODate("2016-05-19T23:50:00.000Z")
+     decay_time: ISODate("2016-05-19T
+                   23:50:00.000Z")
    },
    type: "object info",
    name: "milk_1",
-   position: {x: 2.5, y: 1.0, z: 0.0},
-   storage_place: "refrigerator",
-   fat_percentage: 3.5
+   position: {x:2.5, y:1.0, z:0.0},
+   storage_place: "refrigerator"
  }
 \end{lstlisting}
-\end{figure}
+\end{wrapfigure}
+An example document stored in the back-end is shown in
+\reflst{lst:backend}.
 It contains knowledge about a bottle of milk as it could be needed by
 a planner with additional information where it should be stored
 later. Additionally the document contains meta information needed by
 the robot memory (e.g. if the document should be stored persistently
-or removed at restart and when it should be dropped because it is
+or removed at restart and when it should be dropped because it's
 use-time has expired). The MongoDB back-end also manages the
 distribution of knowledge between multiple robots. A part of the robot
 memory is only locally relevant. The other part that should be shared
@@ -1132,16 +1160,19 @@ analyze changes (e.g. for event-trigger).
 
 \subsubsection{Robot Memory}
 \label{sec:impl-memory}
-The implementation of the robot memory middle-layer between the
-applications storing and querying knowledge and the MongoDB back-end
-is an important part of the thesis because most of the functions
-exceeding a typical database are realized here. A central question is
+The robot memory middle-layer implements most functions exceeding a
+typical database.
+%% between the
+%% applications storing and querying knowledge and the MongoDB back-end
+%% is an important part of the thesis because most of the functions
+%% exceeding a typical database are realized here.
+A central question is
 which query language should be used between applications and the robot
-memory because this determines expressiveness and has a large impact
+memory because this determines the expressiveness and has a large impact
 on the performance. We choose to use the query language of MongoDB as
-it is used between the robot memory and the back-end. This has many
+it is already  used between the robot memory and the back-end. This has many
 advantages compared to using other query languages such as SQL,
-SPARQL, XQuery and JSONiq. The query language of MongoDB is obviously
+SPARQL, XQuery, and JSONiq. The query language of MongoDB is obviously
 well suited for a document oriented database, requires no translation
 before application on the database and is very flexible for extending
 and modifying queries because queries are structured as documents with
@@ -1161,30 +1192,31 @@ Query-manager. When adding new documents, the
 additional meta information. When querying documents, this information
 can be removed out by appending an additional filter. To detect
 queries for virtual knowledge, the manager can analyze the fields of
-the query to check if there is virtual knowledge provided for a
-field. For example when a query contains the field \texttt{type:
+the query to check if there is virtual knowledge provided for it.
+For example when a query contains the field \texttt{type:
   "distance"} and there is a application that provides computation
-functions for distances the query can be forwarded to the computation
-function together with additional parameters such as two concrete
-objects for the distance calculation. When some fields are missing
+functions for distances between two objects, the query can be forwarded
+with the additional parameters, the two objects.
+When some fields are missing
 (e.g. only one object is given) the application may have to compute
 all distances, so that the query can afterwards be executed on the set
 of results (e.g. to find the nearest one with some property). To
 execute the query as a usual query with arbitrary filters, aggregation
 and functions, the computation function writes the the result into a
 separate collection the query can be executed on with MongoDB. This
-already works in an early prototype which executes queries from
+already works in an early prototype, which executes queries from
 interface messages either on the MongoDB directly or in case of
 virtual knowledge about other interfaces, generates the knowledge from
 the blackboard on demand and then executes the query.
 
-To implement event-trigger a registration function needs to be
-provided which takes a callback function for notification and a query
+To implement event-trigger, a registration function needs to be
+provided that takes a callback function for notification and a query
 to define the event. This query can check the Oplog first whether
 there are changed documents with relevant key-value pairs and
-afterwards execute a more complex query on the database. The callback
-function is called if the query result changes, returns no document or
-is not empty as specified during the registration. How events on
+afterwards execute a more complex query on the database. The
+egistration also specifies whether the callback
+function is called if the query result changes, returns no document, or
+is not empty. How events on
 virtual knowledge work has to be evaluated. For example, it would be
 possible to compute the virtual knowledge and check for the event in
 certain intervals while monitoring the computation time.
@@ -1206,7 +1238,7 @@ planning language. As an example for the various planners and
 reasoners, we focus here on CLIPS. The Interface Provider for CLIPS
 can be realized as CLIPS-feature in Fawkes as it was already done for
 providing CLIPS access to the blackboard, Profobuf-messaging and the
-navgraph. The CLIPS \emph{robot-memory feature} is implemented in C++
+navgraph. The CLIPS \emph{robot-memory feature} will be implemented in C++
 and provides the CLIPS environment with functions that call C++
 functions of the robot-memory feature. For example \reflst{lst:clips-rm}
 \begin{figure}
@@ -1220,16 +1252,12 @@ functions of the robot-memory feature. For example \reflst{lst:clips-rm}
   morekeywords={retract, assert, modify, skill-call, skill-to-execute,
     wait-for-lock}]
 (rm-query "database.collection"
-          (str-cat "\{type:'order', end-time:\{\$gt:"
-                   ?gametime
-                   "\}\}"
-          )
-)
+          (str-cat "{type:'order', end-time:{$gt:" ?gametime "}}"))
 \end{lstlisting} %$ This is just to fix Emacs highlighting due to dollar sign in code above
 \end{figure}
 would be the CLIPS function which queries all orders that have not
-ended yet, by creating the query with string concatenation to fill in
-the current time. The result would be a list of pointer to document
+ended yet, by creating the query using string concatenation to fill in
+the current game-time. The result would be a list of pointers to document
 objects represented as instances of CLIPS templates. Similarly there
 can be functions for registering events and providing virtual
 knowledge.
@@ -1239,12 +1267,13 @@ CLIPS files as usual and filling the fact-base with additional initial
 facts. For example, a domain creator implemented in the CLIPS language
 could execute the query function in \reflst{lst:clips-rm} and assert
 all orders as facts into the fact base.
+%% possibility to also generate rules form robot memory
 
 CLIPS could use event-triggers to be notified when there is a new PDDL
 plan in the robot memory that should be executed by CLIPS. Similarly
 PDDL could use event-triggers to get notified when it should
 re-plan. Providing a proper event definition for this case is the
-responsibility of PDDL. For example it could incorporate into the
+responsibility of the PDDL planner. For example it could incorporate into the
 event, that plan execution state changed to aborted or finished or
 that a machine used in the plan is out of order.
 
@@ -1259,13 +1288,13 @@ that a machine used in the plan is out of order.
 \end{itemize}
 \subsubsection{Efficiency-Scalability}
 \subsubsection{Expressiveness}
-\subsubsection{Versatility}
-\subsubsection{Software development expandability, interfacing}
+\subsubsection{Software development expandability, Versatility}
 
 \subsection{Schedule}
 \begin{table}
   \centering
   \includegraphics[width=\textwidth]{gantt-chart}%
+  \vspace{-5mm}
   \caption{Gantt Chart of the thesis time schedule}
   \label{tab:gantt}
 \end{table}
