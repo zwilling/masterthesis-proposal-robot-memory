@@ -1279,16 +1279,40 @@ that a machine used in the plan is out of order.
 
 \subsection{Evaluation}
 \label{sec:eval}
-\subsubsection{Application}
-\label{sec:eval-apl}
-\begin{itemize}
-\item RCLL PDDL-CLIPS
-\item RCLL between bots
-\item @Home
-\end{itemize}
-\subsubsection{Efficiency-Scalability}
-\subsubsection{Expressiveness}
-\subsubsection{Software development expandability, Versatility}
+This subsection covers the evaluation of the proposed thesis. On the
+one hand a qualitative analysis should show if and how well the robot
+memory can be used in the RCLL and on the domestic service robot.
+On the other hand the thesis will give a quantitative
+analysis of the robot memory's performance and scalability.
+
+The qualitative evaluation analyzes how well the robot memory can be
+used in the RCLL and domestic service robot domains, how useful it is,
+and where difficulties are. This mainly includes the expressiveness
+and convenience of representing and querying knowledge, the
+integration into planner and reasoner languages, and the collaborative
+access to the same world model in the robot memory across different
+applications of the same robot and between different
+robots. Furthermore it needs to be analyzed how well the virtual
+knowledge base fits into the robot memory and if there are differences
+between querying virtual knowledge or stored knowledge for the
+application. For event-triggers it needs to be evaluated how
+expressive the events can be and if the events also work properly on
+virtual knowledge. Other important evaluation aspects are the
+usability of the domain creation and the expandability of the robot
+memory for new functionality such as the proposed modules.
+
+In the quantitative evaluation, the performance and scalability of the
+robot memory are analyzed. Especially the relation of query
+computation-time depending on database size and query complexity is
+important. Furthermore, the CPU and memory usage of the robot memory
+have to be analyzed as well as the size of the database on the hard
+drive. Also the performance of querying the virtual knowledge base
+needs to be evaluated and compared to querying non virtual knowledge
+taking the computation time for the virtual knowledge itself into
+account. For the robot memory distributed over multiple robots, the
+response times for storing knowledge and updates times between
+applying a change on the Master and having it available on Slaves are
+important.
 
 \subsection{Schedule}
 \begin{table}
@@ -1305,9 +1329,6 @@ iteratively improved to implement all other features needed in the
 RCLL and in @Home. The robot-memory itself and both applications are
 then evaluated and the rest of the time is spent on the written
 thesis.
-\begin{itemize}
-\item Timetable
-\end{itemize}
 
 \section{Summery}
 \label{sec:summery}
