@@ -54,26 +54,60 @@
 %%Text%%
 %%%%%%%%
 
-%% \begin{abstract}
-%%   abstract.
-%% \end{abstract}
-
 \section{Introduction}
 \label{sec:introduction}
-Robots which should solve tasks intelligently need to represent and
-apply knowledge. Domestic robots serving breakfast need to know which
-items belong on the table, where they are stored, how to make
-pancakes, and how to clean up afterwards. Intelligent factory robots
-need to know where resources are placed, what products are ordered,
-and which actions with preconditions and effects can be executed to
-reach a goal.
-%% There are countless applications, some with major impact
-%% to solve problems such as appropriate elder care and scalable disaster
-%% rescue.
+
+In the science fiction comedy-drama Robot \&
+Frank~\cite{robot-and-frank}, a domestic service robot supports and
+takes care of the dement, old man Frank to allow him a happy and
+meaningful life. The robot cooks healthy food, helps in the household,
+and treats mental issues by encouraging Frank to work on challenging
+projects. To realize this vision of intelligent and helpful robots, a
+couple of challenges have to be solved. The proposed thesis focuses on
+the challenges of building a robot memory required in many
+applications. For example domestic robots serving breakfast need it to
+know which items belong on the table, where they are stored, and how
+to clean up afterwards. Intelligent factory robots need to know where
+resources are placed, what products are ordered, and which actions
+with preconditions and effects \todo{precond+eff drin lassen?} can be
+executed to reach a goal.
+
+The basic requirements of a robot memory are representing and storing
+knowledge and providing it again when beeing queried. With knowledge,
+we mean the generalization of the whole
+Data-Information-Knowledge-Wisdom (DIK) hierarchy~\cite{DIKW} ranging
+from point clouds (data) to cluster positions (information), derived
+object positions and action recepies (knowledge), and learned
+probability distributions (wisdom). This includes spatio-temporal
+knowledge such as position coordinates with timestaps as well as
+symbolic knowledge (e.g. in which room the robot currently is). Stored
+knowledge is used by planners and reasoners to implement robot
+behavior. These are often specialized and have different
+strenghts. For example it is convinient to use a PDDL based planner to
+find a global plan achieving a goal, a reasoner to execute plans and
+update the world model, and a motion planner for grasping and drivng
+actions. For complex tasks and environments, different planners and
+reasoners can combined to utilize their specialized strengths. However
+this requires common knowledge (e.g. so that a global planner can use
+the current world model updated by a reasoner).
+A general and shared robot memory, as intended in this thesis, can
+centrally manage the robot's knowledge and supply or generate
+specialized knowledge bases used by planners and reasoners. This
+allows sharing knowledge consistently and avoids ...
+
+
+\begin{enumerate}
+\item Domäne -> Anforderungen
+\item Anforderungen
+  \begin{enumerate}
+  \item Derive Symbolic K
+  \item ~Planning challenge
+  \item Share K (planners/robots)
+  \item Persistance
+  \item State Estimation
+  \end{enumerate}
 Before these applications can be realized, important
-challenges need to be solved. These challenges include representing
-and storing large amounts of knowledge with various types over long
-times so that it can be queried and used efficiently. Also planning
+challenges need to be solved.  Also planning
 and reasoning with large amounts of knowledge in dynamic and complex
 environments is a hard challenge. There already are approaches and
 implementations which can solve specialized parts of this challenge
@@ -82,13 +116,17 @@ reasoners). However none of these can solve the whole problem in its
 full complexity. Furthermore there is the problem of distributing
 knowledge over robot teams to achieve robust and efficient
 collaboration.
-
-The idea of the proposed thesis is to develop a robot memory to help
+\item Idea Thesis
+  The idea of the proposed thesis is to develop a robot memory to help
 solving these challenges. The robot memory is designed as a central
 storage for the knowledge of the robot to handle large amounts of
 semantic and spatio-temporal knowledge and provide efficient querying
 and long-time storage. As a central storage, it allows multiple
-planners and reasoners to share the same world model. This way
+planners and reasoners to share the same world model.
+\item Useage of K: allgemein -> speziell + Filter/Update/generierung
+\item K about different stuff (Info,Action) -> represented in structure
+\item Combination of strengths
+  This way
 multiple planners and reasoners can be combined to utilize their
 specialized strengths and compensate for their weaknesses. Without the
 robot memory the knowledge transfer between the planners and reasoners
@@ -96,38 +134,50 @@ is a problem. For example when a planner creates plans and a reasoner
 executes them, the reasoner might cancel the plan because of a newly
 discovered obstacle. Without a shared worldmodel or at least a notification,
 the planner could create the same plan again and would be stuck.
-The robot memory is also needed for
+
+\item Geom Motion Planner (Clolli) Hybrid
+\item Connection Temporal/Geometric K -Symbolic K
+\item ONE state estimation for all Apps
+\item Shared RM generates KB on different robots
+  The robot memory is also needed for
 multiple robots sharing a common knowledge base for
 proper cooperation (e.g. to know which tasks are already done by other
 robots or where another robots placed an object). The robot memory frees planners
 and reasoners from implementing their own messaging and
 synchronization which is usually laborious in the planner or reasoner
-programming language. Two additional main features of the robot memory
-are event-triggers and a virtual knowledge base. The event-trigger
-should notify a component when a previously defined condition of the
-robot memory changes. This is especially useful for planners which can
-be notified when their plan becomes infeasible because some
-precondition is no longer satisfied. The concept of a virtual
+programming language.
+\item VKB (name) Computable knowledge, on-demand (computed) knowledge, Computables, computable documents
+   The concept of a virtual
 knowledge base allows computing certain knowledge on demand instead of
 storing it directly in the robot memory. Imagine a query for the
 distance of two objects. This can be computed rather quickly but
 storing all distances between each two known objects and keeping them
 up do date is a lot of unnecessary effort.
 
-The robot memory is designed for the Fawkes robot software framework
+\item Event trigger
+  The event-trigger
+should notify a component when a previously defined condition of the
+robot memory changes. This is especially useful for planners which can
+be notified when their plan becomes infeasible because some
+precondition is no longer satisfied.
+\item MongoDB
+\item Fawkes
+  The robot memory is designed for the Fawkes robot software framework
 with the document-oriented database MongoDB as a basis.
-For the time of the thesis,
-we focus on two applications which can especially profit from the
-robot memory and will be used for evaluation. On the one hand,
-the robot memory should be used on logistics robots of the RoboCup
-Logistics League (RCLL). Here it is needed to share the world model
-about the environment between a global planner and a reasoner for plan
-execution and between the multiple robots collaborating as in a
-team. On the other hand, the robot memory should be used on a domestic
-service robot related to the RoboCup@Home league where the robot
-memory is needed as flexible and scalable long-time storage of
-various facts about a domestic environment, how to perform actions and
-to learn spatio-temporal distributions from observed object positions.
+\end{enumerate}
+
+For the time of the thesis, we focus on two applications which can
+especially profit from the robot memory and will be used for
+evaluation. On the one hand, the robot memory should be used on
+logistics robots of the RoboCup Logistics League (RCLL). Here it
+should enable sharing the world model between a global planner and a
+reasoner for plan execution and between the multiple robots
+collaborating as in a team. --only prototype poc-- On the other hand, the robot memory should
+be used on a domestic service robot related to the RoboCup@Home league
+where the robot memory is needed as flexible and scalable long-time
+storage of various facts about a domestic environment, how to perform
+actions and to learn spatio-temporal distributions from observed
+object positions.
 
 In the following, the proposal gives an overview over the background
 of the thesis with the RoboCup application domain and the used
@@ -136,6 +186,7 @@ related work and in \refsec{sec:approach} the approach of the thesis
 is shown with the goals of the robot memory, the architecture,
 implementation, and evaluation considerations. We conclude with a
 summery in \refsec{sec:summery}.
+
 
 
 \section{Background}
@@ -835,7 +886,7 @@ allows better evaluation and fault analysis because the data would
 otherwise be disposed and logging of the whole
 Data-Information-Knowledge-Wisdom (DIKW) hierarchy~\cite{DIKW} enables
 retracing processes such as from point clouds (data) to cluster
-positions (information) to object positions (data) combined from
+positions (information) to object positions (knowledge) combined from
 multiple clues to learning results (wisdom). This work already
 implemented a basic connection to MongoDB in Fawkes for storing
 documents and executing queries, which can be used in this thesis. It
@@ -1332,6 +1383,9 @@ thesis.
 
 \section{Summery}
 \label{sec:summery}
+In the proposed thesis, we want to develop a robot memory for Fawkes,
+which stores knowledge and can execute queries to retrieve it. 
+
 \begin{itemize}
 \item Challenges
 \item Impact
