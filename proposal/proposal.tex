@@ -155,31 +155,34 @@ summery in \refsec{sec:summery}.
 \section{Background}
 \label{sec:background}
 This section presents the background of the proposed thesis. On the
-one hand, we describe the primary application and evaluation domain,
-the RoboCup with the RoboCup Logistics League (RCLL), the @Home league.
+one hand, we describe the primary application and evaluation domains
+the RoboCup Logistics League (RCLL) and the RoboCup@Home league.
 On the other hand, we present
 the most important software for the proposed thesis,
 the robot software framework Fawkes, planners and
-reasoners which should profit from using the robot memory and
+reasoners which should benefit from using the robot memory and
 the database MongoDB used in the back-end of the robot memory.
 
 \subsection{RoboCup}
 \label{sec:robocup}
-The
 \emph{RoboCup} is an international robotics competition founded to
 foster research in the field of robotics and artificial
-intelligence.~\cite{RoboCup-Paper}. It provides standard problems as a
+intelligence.~\cite{RoboCup-Paper}. It provides standardized problems as a
 platform to foster and compare research results. Research
 teams from all over the world compete in different leagues to
-benchmark their robotic system. The RoboCup provides a research
+benchmark their robotic system. RoboCup provides a research
 test-bed, in which participating teams implement new approaches and
 make them robust against the challenges of the real world
 complexity. Furthermore, the competition leads to comparison and
 evaluation of different approaches.\\
 %
-The RoboCup features a variety of leagues, from soccer leagues in
+RoboCup features a variety of leagues, from soccer leagues in
 different sizes to rescue robots, each focusing on another aspect or
 application domain of robotics and artificial intelligence.
+%% For example there are soccer simulation leagues and small soccer
+%% robots focusing on tactical team moves, humanoid soccer robots
+%% focusing on body control and limited perception, and rescue robots,
+%% both fully autonomous and partially tele-operated.
 
 %% The
 %% majority of the RoboCup leagues host soccer robots in different sizes
@@ -203,12 +206,12 @@ application domain of robotics and artificial intelligence.
 
 The \emph{RoboCup Logistics League (RCLL)}\footnote{RoboCup Logistics
   League website: \url{http://www.robocup-logistics.org}}
-is a industry-oriented competition within RoboCup.  It tackles
+is an industry-oriented competition.  It tackles
 the problem of production logistics in a smart factory where mobile
 robots have to plan, execute, and optimize the material and production
 flow between machines to produce and deliver products according to
-dynamic orders. Competing teams deploy a group of up to three robots
-which have to autonomously build ordered products by interacting with
+dynamic orders. Competing teams deploy a group of three robots
+which have to build ordered products autonomously by interacting with
 \emph{Modular Production Machines (MPS)} and transporting work pieces
 between these machines.
 \begin{wrapfigure}{r}{0.3\textwidth}
@@ -216,17 +219,17 @@ between these machines.
   \vspace{-2.7ex}
   \includegraphics[width=0.3\textwidth]{img/rcll}
   \vspace{-4ex}
-  \caption{Robot and MPS used in the RCLL}
+  \caption{Robot and MPS used in the RCLL~\cite{chapter-cps}}
   \label{fig:rcll}
 \end{wrapfigure}
 \reffig{fig:rcll} shows an RCLL robot filling
 a machine which mounts colored rings on work pieces. The robots are
-based on the Festo Robotino 3 platform which uses an holonomic drive,
+based on the Festo Robotino 3 platform which uses a holonomic drive,
 and can be extended and programmed by the teams. The robot shown in
-\reffig{fig:rcll} was build by the Carologistics team and used an
+\reffig{fig:rcll} was built by the Carologistics team and uses a
 laser range finder for localization, a custom made gripper for
-handling work pieces and several cameras for detection of AR-tags and
-light-signals mounted on the machines~\cite{Carologistics2015}. The
+handling work pieces, and several cameras for detection of markers and
+light-signals mounted on the machines~\cite{Carologistics2015,chapter-cps}. The
 game is controlled by a software component called \emph{referee box
   (refbox)} which randomizes the machine placement in the factory and
 the production orders, communicates with the competing robots,
@@ -271,10 +274,9 @@ caps to finish a product
 %after loading it with a cap form a shelf first.
 The \emph{delivery-station (DS)} is used to deliver products.
 
-The challenges of the RCLL lie in the dynamic and only partially
-observable environment the robots have to robustly and fully
-autonomously work in and in the planning and multi-robot coordination
-required.
+A major challenge of the RCLL lies in the fully autonomous task
+planning and coordination of the multi-robot system in the dynamic
+environment with spatial information and time constraints.
 %% to build as many ordered products as possible and deliver
 %% them in time given time window, and in the baseline robotic challenges
 %% such as collision avoidance, perception and behavior execution. The
@@ -287,9 +289,9 @@ To cope with these challenges, a
 multi-robot decision making is necessary and therefore a mechanism to
 share knowledge about the world model between the robots. This can be
 done by the robot memory which also allows combining a global planner
-for finding almost optimal plans and a reasoner for plan execution.
+for finding plans and a reasoner for plan execution.
 
-\subsubsection{@Home League}
+\subsubsection{RoboCup@Home League}
 \begin{wrapfigure}{r}{0.3\textwidth}
   \centering
   \includegraphics[height=150px]{img/ceasar}%
@@ -299,11 +301,11 @@ for finding almost optimal plans and a reasoner for plan execution.
 \end{wrapfigure}
 
 The RoboCup@Home league is a competition about domestic service
-robots~\cite{wisspeintner2009robocup}. The robots have to assist
+robots~\cite{wisspeintner2009robocup}. Robots have to assist
 humans in a wide variety of everyday tasks. These tasks include
 serving drinks, cleaning, setting tables, guiding or following people,
-helping in emergency situations, shopping, cooking, and
-more. \reffig{fig:athome} shows an @Home robot in the
+helping in emergency situations, shopping, and cooking.
+\reffig{fig:athome} shows an @Home robot in the
 competition.
 %
 The goal of the RoboCup@Home league is to foster and benchmark
@@ -311,19 +313,20 @@ research in the area of domestic service robots, to build a research
 community and to envision autonomous multi-purpose robots helping
 humans and especially elder people in the personal life.
 
-The competition consists of an open challenge and multiple sub-tasks
+The competition consists of multiple sub-tasks
 such as finding and manipulating objects, navigation tasks,
-remembering persons, wait on tables, and acting as
-nurse~\cite{athome-rules}. To solve these challenges, robots need to
+remembering persons, wait on tables, acting as
+nurse, and an open challenge~\cite{athome-rules}.
+To solve these challenges, robots need to
 have a wide variety of abilities, including navigation, object
 detection and manipulation, speech recognition, and especially human
 robot interaction, which requires, for example, applying everyday
 knowledge to incomplete task descriptions given by humans.
 
 Important challenges in the @Home league are acting robustly in a
-dynamic and only partial observable domestic environment where people
-and objects can disappear or be moved without the robot recognizing
-it. The robot memory can help here because it allows to collect a lot
+dynamic and only partial observable domestic environment and hybrid
+reasoning with qualitative and quantitative information.
+The robot memory can help here because it allows to collect a lot
 of knowledge about the concrete domestic environment and, for example,
 log object observations to learn their spatio-temporal distribution.
 %% Furthermore, detecting and manipulating objects in a personal
@@ -334,7 +337,7 @@ log object observations to learn their spatio-temporal distribution.
 \label{sec:fawkes}
 The basis for the proposed thesis is the robot software framework
 \emph{Fawkes}\footnote{\url{http://www.fawkesrobotics.org}}
-available as Open Source~\cite{FawkesDesign}.
+available as Open Source~\cite{FawkesDesign,Fawkes-RCLL-2014}.
 %and developed at the Knowledge-based Systems
 %Group\footnote{\url{http://www.kbsg.rwth-aachen.de}} (KBSG) at RWTH
 %Aachen University
@@ -343,7 +346,7 @@ various robots in different domains and follows a component-based
 software design which separates functional entities into individual
 software modules~\cite{component}. This enables reusing
 software solutions for robotic problems such as localization,
-perception, reasoning, and behavior execution. The binary
+perception, reasoning, and behavior execution. The compiled
 components can be loaded as \emph{plugins} at run-time.
 %
 Plugin activity is organized in threads
@@ -352,23 +355,24 @@ which can be run continuously ore hooked into
 the main-loop of Fawkes to order the execution into a
 \emph{sense-think-act} cycle.
 %This guarantees that higher-level components can use the latest data.
-Fawkes guarantees loop times by
+Fawkes softly guarantees loop times by
 monitoring and eventually pausing and resuming threads running for too
 long.
 % Ros blabla from BA?
-Features in Fawkes are provided as \textit{aspects}. These aspects are
+Features in Fawkes are provided as \textit{aspects}. These are
 based on aspect-oriented programming~\cite{aspect_oriented} and give
-access to a particular feature. Threads that want to use a feature can
+access to a particular feature. Threads that need to use a feature can
 inherit from the corresponding aspect. For example, there are aspects
-for accessing logging, timing, and external libraries~\cite{tnthesis}.
+for accessing logging, timing, and specific external libraries~\cite{tnthesis}.
 
-The communication between plugins is realized with the \emph{blackboard}
+The communication between plugins is realized with a \emph{hybrid blackboard}
 paradigm. The blackboard lists structured entries called
-\emph{interfaces} which contain information. Interfaces can be
+\emph{interfaces} which contain qualitative and quantitative information.
+Interfaces can be
 provided by one plugin at a time, the writer, and read by other
 plugins, the readers. This allows a very flexible communication
 because the interface is independent from the concrete writer and readers.
-For examples sensor and actor plugins can be exchanged by simulation
+For example, sensor and actor plugins can be exchanged by simulation
 plugins~\cite{LLSF-Sim}.
 %% because the information provision in the interface is decoupled from
 %% the concrete components which use the information and plugins writing
@@ -382,32 +386,22 @@ motor command to the motor controller, readers can send messages to
 the interface.
 
 As a communication infrastructure between different components, the
-blackboard is a limited possibility to realize a robot memory
+blackboard is a limited possibility to realize a robot memory.
 %shared between multiple planners and reasoners in the current version of
 %Fawkes.
 Indeed the blackboard works well for providing information and
-sending commands, though there are major limitations for this
-application. One limitation is the strict rule, that only one
-component can write an interface to provide information. This rule is
-very useful to avoid problems in standard plugin communication but
-obstructive for multiple components sharing common information.
-%% For
-%% example when a reasoner concludes that a product is placed at the
-%% machine output after the production time and a behavior execution
-%% component concludes that the robot holds the product after the grabbing
-%% action succeeded, both components would have to modify the same piece
-%% of information in the shared robot memory.
-Another limitation is the
-fixed size and structure of blackboard interfaces. Therefore it is not
-possible to dynamically represent more information.
+sending commands, though there are limitations for this
+application. The size and structure of blackboard interfaces is fixed, and
+thus does not allow to dynamically represent more information.
 %% , such as positions
 %% of detected objects, than initially defined.
-Furthermore, the blackboard does not support long-time memory.
+Furthermore the blackboard does not support long-time memory,
+expressive querying, and event-triggers.
 
 \subsection{Planners and Reasoners}
 \label{sec:planners}
 This subsection gives an overview of planners and reasoners which are
-going to profit from the robot memory. For the variety of these, we
+going to benefit from the robot memory. For the variety of these, we
 give four examples which should use the robot memory to achieve new or
 improved functionality and to evaluate this thesis. The example
 planner and reasoner systems are \emph{CLIPS}, a rule-based production
@@ -420,11 +414,12 @@ collision free actuation plans.
 %% used types of planners and reasoners. However, the robot memory should
 %% not be limited to these examples and provide a general C++ interface.
 
-\subsubsection{CLIPS rules engine} The reasoner we currently use in the RCLL
+\subsubsection{CLIPS rules engine} The reasoner currently used by
+Carologistics in the RCLL
 to implement the high-level game agent is the rule-based production
 system CLIPS~\cite{CLIPS-RM}. It uses forward chaining based on the Rete
 algorithm~\cite{Rete} and basically consists of a fact-base, which is a
-working memory with many small pieces of information, a knowledge base
+working memory with small pieces of information, a knowledge base
 with rules and procedures, and an inference engine
 working with the knowledge base on the fact-base. The pieces of
 information in the fact-base are called facts and consist of a name
@@ -456,23 +451,26 @@ an ordered list of values for \emph{ordered facts}.
 \end{figure}
 An example rule is shown in \reflst{lst:clips-rule}. Rules are
 composed of an \emph{antecedent} and a \emph{consequent}. The
-antecedent is written before $=>$ and describes the condition that
-has to be satisfied before the the rule is activated. It consists of a
+antecedent is the first part of the rule and describes the condition that
+has to be satisfied before the the rule is considered for activation.
+It consists of a
 list of patterns that have to be matched by facts in the fact-base. For the
 antecedent in \reflst{lst:clips-rule} there have to be fitting
-\texttt{state}, \texttt{visible}, and \texttt{position} facts where
-$?$ and $\$?$ mark variables. The consequent behind $=>$
+\texttt{state}, \texttt{visible}, and \texttt{position} facts with
+matching constants and variables started with questionmarks.
+The consequent is written behind the antecedent and
 defines the procedure to execute when the rule is
 activated. It usually modifies the fact-base by retracting and
 asserting facts, for example to exchange the \texttt{state} fact.
-The inference engine checks which
-rule antecedents are satisfied. If multiple rules
-could fire, the inference engine chooses the rule with the highest
-priority, executes the consequent and checks again. \emph{Functions}
-can be called in the consequent, can have side effects and also be
-implemented in C++.
+The inference engine checks which rule antecedents are satisfied and
+puts only them on the \emph{agenda}.  Which rule of the agenda is
+executed, is determined by a conflict resolution strategy such as
+highest priority or earliest on the agenda.  The consequent of the
+chosen rule is executed and the inference engine checks
+again. \emph{Functions} encode procedural knowledge, can have side
+effects, and also be implemented in C++.
 
-The RCLL agent implemented in CLIPS represents its
+The Carologistics RCLL agent implemented in CLIPS represents its
 knowledge about the world, the \emph{world model}, in its
 fact-base. It chooses actions to taken by using a
 technique called \emph{Incremental Reasoning}~\cite{CLIPS-Agent}:
@@ -492,54 +490,59 @@ and resource allocation.
 %% machine at a time or try to achieve the same goal by choosing a
 %% redundant task.
 This coordination is currently implemented in CLIPS
-rules using Profobuf\footnote{Google Protocol Buffers}
+rules using Google Protocol Buffers (Protobuf)
 messages. Alternatively, this could also be done by using a
 distributed robot memory which contains the world model in a
 distributed database. This would be advantageous
 because the database already provides efficient synchronization and
-the implementation in CLIPS is not convenient due to its
-specialization on logical rules.
+the implementation in CLIPS increases the agent's complexity.
+%% and is not convenient because the language focuses on reasoning
+%% instead of messaging and data synchronization.
 
 
 \subsubsection{Planning Domain Definition Language (PDDL)} PDDL is a
 standardized language for planning problems~\cite{PDDL}. It allows
 modeling the nature and behavior of a domain as well as the
-\emph{actions} possible to perform in a \emph{problem
+\emph{actions} possible to perform in a \emph{domain
   description}. With an additional \emph{problem description} which
 defines the problem to solve it can be given to a PDDL planner which
-searches for a totally or partially ordered sequence of actions, the
+typically searches for a totally or partially ordered sequence of actions, the
 \emph{plan}, to solve the problem.
 %% \todo{action example}
 %% \reflst{lsf:pddl-action} shows an example action contained in a domain
 %% description.
 Actions consist of preconditions and effects.  There are
 various versions and extensions of PDDL which introduce new concepts
-and features. A version used in RoboCup domains is
-PDDL~2.1~\cite{PDDL2.1}. It adds numeric values and
-continuous actions. This allows finding optimal plans in continuous
+and features. For example, PDDL~2.1~\cite{PDDL2.1} adds numeric values and
+continuous actions. This allows finding plans in continuous
 environments where, for example, distances and travel times
-matter. PDDl has the advantage of being able to find complete and
-optimal, or at least efficient, plans. However, this comes with the
+matter. PDDL has the advantage of being able to find complete and
+optimal or efficient plans depending on the model. However, this comes with the
 drawbacks of high computational effort for larger domains and the
 problem of adopting to events during plan execution. For example when
 the domain is not fully observable, the robot could sense changes in
 the environment or fail executing an action. This would require
 notifying the planner, incorporating the changes in PDDL and
-re-planning. To solve this problem we want to combine PDDL with an
+re-planning. To solve this problem, the robot memory should allow combining PDDL with an
 execution in CLIPS. Then PDDL generates an efficient and complete plan
 with coarse actions and CLIPS executes the plan action for action,
 while monitoring the execution and updating the world model according
 to perceived changes. This world model is written into the robot
-memory so that PDDL can access the world model with all applied
-changes. This way the strengths of both PDDL and CLIPS.
+memory so that PDDL can access the world model with all changes applied.
+This way the strengths of both PDDL and CLIPS are combined.
 
 
-\subsubsection{Golog } Golog is a high-level programming language based on the
+\subsubsection{Golog} Golog is a high-level programming language based on the
 \emph{Situation Calculus}, a first order logic formalism for knowledge
 representation and reasoning in dynamic domains~\cite{Golog}. It
 allows representing world states as terms called
-\emph{situations}. These can be used in relations and functions called
-\emph{fluents}. (e.g. $holding(x,s)$ is a fluent representing if
+\emph{situations}. These are used in functions yielding new situations
+to
+
+and relations
+to represent facts of the environment in 
+
+ (e.g. $holding(x,s)$ is a fluent representing if
 object $x$ is hold by the robot in situation $s$.) \emph{Actions} can
 lead to new situations (e.g. $s'=do(pickup(x),s)$) and are modeled
 with \emph{precondition axioms} (e.g. $Poss(pickup(x),s) \equiv
@@ -547,6 +550,9 @@ with \emph{precondition axioms} (e.g. $Poss(pickup(x),s) \equiv
 performing actions is defined by \emph{successor state axioms}
 (e.g. $Poss(drop(x),s) \supset [broken(x,do(a,s)) \equiv a=drop(x)
   \wedge fragile(x) \vee broken(x,s) \wedge \neg a=repair(x)]$).
+called
+\emph{fluents}
+
 Golog as a high-level programming language features imperative
 programming constructs such as procedures, conditions, and loops as
 well as nondeterministic branching. There are multiple dialects of
@@ -555,8 +561,8 @@ applications. ConGolog~\cite{ConGolog} adds concurrency and
 interrupts, IndiGolog~\cite{IndiGolog} adds on-line execution of
 programs and sensing actions, which determine the value of a fluent
 during execution, and ReadyLog~\cite{ferrein08ras} extends IndiGolog
-with passive sensing during the execution of other actions. With these
-dialects, Golog has been proven as useful for robot applications in
+to support robot decision making in dynamic real-time domains. With these
+dialects, Golog has been found useful for robot applications in
 multiple domains such as domestic service robots. By providing an
 interface to the robot memory, the strength of Golog, the highly
 expressive behavior specification, can be combined with other
@@ -569,10 +575,9 @@ initial planning~\cite{ContPlanGolog}. It is implemented with a
 translation between PDDL and
 Golog~\cite{Golog-PDDL-Trans}. Furthermore, the robot memory could be
 useful as additional persistent and distributed knowledge storage
-(e.g. for saving the context during an interrupt~\cite{Gesche-Thesis}
-and resuming the task by another robot).
+(e.g. for saving the context during an interrupt~\cite{Gesche-Thesis}).
 
-\subsubsection{Motion Planners:}
+\subsubsection{Motion Planners}
 Another kind of widely used planner in robotics are motion
 planners. They usually plan the motion of a robotic arm to reach a
 certain goal position where an object should be grabbed or placed. A
