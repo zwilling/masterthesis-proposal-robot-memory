@@ -116,13 +116,13 @@ and synchronization which is usually laborious in reasoner programming
 languages.
 
 Two additional features of the robot memory are
-\emph{\todo{(on-demand?)}computable knowledge} and
-\emph{event-triggers}.  The concept of computable knowledge allows
+\emph{computables} and
+\emph{event-triggers}.  The concept of computables allows
 computing certain knowledge on demand instead of storing it directly
 in the robot memory. Imagine a query for the distance of two
 objects. This can be computed rather quickly but storing all distances
 between each two dynamic objects and keeping them up do date is a lot
-of unnecessary effort. Moreover computable knowledge allows deriving
+of unnecessary effort. Moreover computables allows deriving
 symbolic from spatio-temporal knowledge.  Event-triggers should notify
 components when a previously defined conditions of the robot memory
 apply. This is especially useful for planners which can be notified
@@ -743,6 +743,13 @@ better than CouchDB and other document-oriented databases~\cite{db-comparison}.
 
 \section{Related Work}
 \label{sec:related}
+This section gives an overview of the related work of the proposed
+thesis starting with the knowledge processing systems KnowRob and
+OpenRobots Ontology, which provide similar functionality. Afterwards
+we present the Generic Robot Database based on MongoDB and Fawkes and
+Open-EASE, a combination of KnowRob and the Generic Robot Database.
+
+
 \subsection{KnowRob}
 \label{sec:knowrob}
 KnowRob is an open source knowledge processing system for
@@ -777,8 +784,7 @@ efficiently.
 %% transformation of spatial relations, this is advantageous compared
 %% to continuously computing the results for all possible queries and
 %% storing them.
-The concept inspired the usage of virtual knowledge
-bases in this thesis.
+The concept inspired the usage of computables in this thesis.
 %% KnowRob implements it with Prolog predicates
 %% called \emph{Computables} which call C++ functions of other
 %% components. This indeed slows down the computation of a query but is
@@ -834,8 +840,7 @@ focus on human-robot interaction and commonsense reasoning, it is not
 suitable for representing large amounts of data for non reasoning
 components because all data would have to be stored in RDF triples and
 processed by the OWL reasoner. Furthermore, it does neither support
-synchronizing a part of the knowledge with other robots nor a virtual
-knowledge base.
+synchronizing a part of the knowledge with other robots nor computables.
 
 \subsection{Generic Robot Database with MongoDB}
 \label{sec:mongo-logging}
@@ -947,7 +952,7 @@ programming language). Keys or identifiers might be named differently
 and have to be translated.
 
 \smallskip
-\textbf{Virtual Knowledge Base:} The robot memory has to provide
+\textbf{Computables:} The robot memory has to provide
 access to virtual knowledge. This is knowledge that is not stored in
 the robot memory directly, but computed on demand. This allows
 accessing knowledge through the robot memory that is otherwise
@@ -1080,8 +1085,8 @@ Update-, and Query-manager which is an intermediate component that
 realizes most of the robot memorys functionality by modifying and
 enhancing queries, storage and update requests before applying them to
 MongoDB. If a query asks for virtual knowledge, the manager forwards
-it to the virtual knowledge base, which
-manages which virtual knowledge is provided by which application and
+it to the computable manager, which
+manages which computable is provided by which application and
 requests the computation on demanded. The
 component responsible for event-triggers receives and manages
 registrations of applications that want to be notified in the case of
@@ -1110,7 +1115,7 @@ current world model stored in the robot memory. Finally the Application
 layer contains all components using the robot memory either through
 the Interface provider or directly through the C++
 interface. Application components can also register event-triggers and
-provide computation functions for the virtual knowledge base. The
+provide computation functions for the computables. The
 knowledge acquisition filling the robot memory is divided between the
 applications using the robot memory. Additionally the Initializer
 module can provide the initial knowledge from a file (e.g. for the
@@ -1198,16 +1203,15 @@ queries~\cite{mongodb,RoboDB}, and is also highly expressive when
 using additional JavaScript functions or the MapReduce
 paradigm. MongoDB queries can easily be parsed (e.g. from a string) by
 using the MongoDB C++ API. The resulting object can be analyzed and
-modified for example to add key-value pairs or to check if virtual
-knowledge is queried.
+modified for example to add key-value pairs or to check if computables are queried.
 
 This provides the starting point for the Storage-, Update-, and
 Query-manager. When adding new documents, the
 \texttt{robot\_memory\_info} sub-document can be added to store
 additional meta information. When querying documents, this information
 can be removed out by appending an additional filter. To detect
-queries for virtual knowledge, the manager can analyze the fields of
-the query to check if there is virtual knowledge provided for it.
+queries for computables, the manager can analyze the fields of
+the query to check if there is a computable provided for it.
 For example when a query contains the field \texttt{type:
   "distance"} and there is a application that provides computation
 functions for distances between two objects, the query can be forwarded
@@ -1221,7 +1225,7 @@ and functions, the computation function writes the the result into a
 separate collection the query can be executed on with MongoDB. This
 already works in an early prototype, which executes queries from
 interface messages either on the MongoDB directly or in case of
-virtual knowledge about other interfaces, generates the knowledge from
+computables about other interfaces, generates the knowledge from
 the blackboard on demand and then executes the query.
 
 To implement event-trigger, a registration function needs to be
@@ -1232,8 +1236,8 @@ afterwards execute a more complex query on the database. The
 egistration also specifies whether the callback
 function is called if the query result changes, returns no document, or
 is not empty. How events on
-virtual knowledge work has to be evaluated. For example, it would be
-possible to compute the virtual knowledge and check for the event in
+computables work has to be evaluated. For example, it would be
+possible to compute the knowledge and check for the event in
 certain intervals while monitoring the computation time.
 
 Modules extend the functionality of the robot memory. They can use
@@ -1274,8 +1278,7 @@ would be the CLIPS function which queries all orders that have not
 ended yet, by creating the query using string concatenation to fill in
 the current game-time. The result would be a list of pointers to document
 objects represented as instances of CLIPS templates. Similarly there
-can be functions for registering events and providing virtual
-knowledge.
+can be functions for registering events and providing computables.
 
 The Domain Creator for CLIPS can implemented by loading a list of
 CLIPS files as usual and filling the fact-base with additional initial
@@ -1300,6 +1303,7 @@ memory can be used in the RCLL and on the domestic service robot.
 On the other hand the thesis will give a quantitative
 analysis of the robot memory's performance and scalability.
 
+\todo{sed virtualKB/computables}
 The qualitative evaluation analyzes how well the robot memory can be
 used in the RCLL and domestic service robot domains, how useful it is,
 and where difficulties are. This mainly includes the expressiveness
