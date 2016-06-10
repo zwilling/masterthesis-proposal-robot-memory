@@ -380,7 +380,7 @@ plugins~\cite{LLSF-Sim}.
 %% to the same interface. Furthermore, the blackboard architecture
 %% simplifies debugging because the current communication between two
 %% plugins, determined by the state of the interface, can be viewed and
-%% logged at runtime.
+%% logged at run-time.
 To send commands to an interface writer, e.g. a
 motor command to the motor controller, readers can send messages to
 the interface.
@@ -537,21 +537,15 @@ This way the strengths of both PDDL and CLIPS are combined.
 representation and reasoning in dynamic domains~\cite{Golog}. It
 allows representing world states as terms called
 \emph{situations}. These are used in functions yielding new situations
-to
-
-and relations
-to represent facts of the environment in 
-
- (e.g. $holding(x,s)$ is a fluent representing if
-object $x$ is hold by the robot in situation $s$.) \emph{Actions} can
-lead to new situations (e.g. $s'=do(pickup(x),s)$) and are modeled
-with \emph{precondition axioms} (e.g. $Poss(pickup(x),s) \equiv
-\forall y [\neg holding(y,s)]$). The value of relational fluents after
-performing actions is defined by \emph{successor state axioms}
-(e.g. $Poss(drop(x),s) \supset [broken(x,do(a,s)) \equiv a=drop(x)
-  \wedge fragile(x) \vee broken(x,s) \wedge \neg a=repair(x)]$).
-called
-\emph{fluents}
+(e.g. for the situation resulting from performing an action in a
+situation). Relations using situations are called \emph{fluents} and
+describe some property in a situation. \emph{Actions} are also
+represented by terms and are modeled with preconditions and
+effects. If an action is possible in a situation is defined by a
+sentence, the \emph{precondition axiom}. The \emph{successor state
+  axiom} is a sentence describing fluents in the situation resulting
+from performing the action in a situation satisfying the precondition
+axiom.
 
 Golog as a high-level programming language features imperative
 programming constructs such as procedures, conditions, and loops as
@@ -578,14 +572,17 @@ useful as additional persistent and distributed knowledge storage
 (e.g. for saving the context during an interrupt~\cite{Gesche-Thesis}).
 
 \subsubsection{Motion Planners}
-Another kind of widely used planner in robotics are motion
-planners. They usually plan the motion of a robotic arm to reach a
-certain goal position where an object should be grabbed or placed. A
-motion planner needs to find a trajectory from the initial position to
+Another kind of widely used planners in robotics are geometric motion
+planners. They usually plan the motion of a robotic arm or the path
+of a driving robot to reach a certain goal position where an object
+should be grabbed or the robot wants to go to. Thus they use geometric
+knowledge in contrast to logical reasoners and planners focusing on
+symbolic knowledge.
+A motion planner needs to find a trajectory from the initial position to
 the goal position, taking joints of the arm into account and avoiding
 collisions with objects in the environment. A widely used motion
-planner is MoveIt which is available for ROS and the PR2
-robot~\cite{MoveIt}. Another motion planner already integrated into
+planner framework is MoveIt! which is available for ROS~\cite{MoveIt}.
+Another motion planner framework already integrated into
 Fawkes is OpenRave~\cite{OpenRave}. These planners could benefit from
 using a robot memory by accessing and sharing information about
 objects and obstacles in the environment and by informing other
@@ -601,10 +598,11 @@ the form of continuous positions and time related events.
 %% are central tasks of this thesis, the choise of a database
 %% implementation is important.
 MongoDB is a \emph{document-oriented}
-database which fits particularly well for application in this thesis. It
-provides many useful features which would take a large effort to
-implement manually, has proven as powerful and scalable data
-storage~\cite{mongodb,RoboDB}, and is widely used. In contrast to
+database which fits particularly well for the application in this thesis. It
+provides many useful features such as flexible data structures, aggregation,
+and distribution over multiple machines, which would take a large effort to
+implement manually. It has proven as powerful and scalable data
+storage~\cite{mongodb,RoboDB} and is widely used. In contrast to
 relational databases, document-oriented ones store entities called
 \emph{documents} consisting of key-value pairs.
 \begin{figure}
@@ -626,7 +624,7 @@ relational databases, document-oriented ones store entities called
   \end{minipage}
   \begin{minipage}{0.4\linewidth}
 \begin{lstlisting}[style=SmallJSON,
-  caption={MongoDB query for the document in \reflst{lst:mongo-document}},
+  caption={MongoDB query yielding the document in \reflst{lst:mongo-document}},
   label=lst:mongo-query,
   framexleftmargin=2pt, xleftmargin=10pt,
  morekeywords={}, numbers=none]
@@ -640,7 +638,7 @@ db.positions.find(
 \end{lstlisting}
   \end{minipage}
 \end{figure}
-\reflst{lst:mongo-document} shows such a document
+\reflst{lst:mongo-document} shows such a document.
 %used for storing the position of a robot.
 The different
 values can be accessed by their key and can have different types, such
@@ -650,9 +648,9 @@ contrast to relational databases, there is no predefined schema that
 enforces the structure of documents. However, documents with similar
 structure are usually grouped into \emph{collections}. Therefore the
 documents inserted in a collection implicitly define the structure
-during runtime. This allows a flexible use of the database because
+during run-time. This allows a flexible use of the database because
 applications are not limited to a fixed schema and can, for example,
-add key-value pairs during runtime when additional information needs
+add key-value pairs during run-time when additional information needs
 to be stored.
 %% Furthermore, this simlyfies development in which the
 %% document structure tends to change often. Even if there are documents
@@ -668,15 +666,13 @@ are up to date, thus with a timestamp greater than the given
 one. Multiple key-value pairs in a query are conjunctive.
 Values can be checked and compared as in the example
 with a variety of operators such as \textit{not}, \textit{or},
-\textit{and}, \textit{equals}, and \textit{greater than}. These
-queries can be evaluated very quickly, especially when \emph{Indexing}
+\textit{equals}, \textit{greater than}, etc. These
+queries can be evaluated very quickly, especially when \emph{indexing}
 is used, a database feature that manages indexes for a combination of
-document keys.
-%todo continue shortening
-For more complex queries it is
+document keys. For more complex queries it is
 possible to add arbitrary JavaScript functions with the \textit{where}
 operator to check if documents match the query. Furthermore, it is
-possible to aggregate results using the \emph{Map-Reduce} paradigm
+possible to aggregate results using the \emph{Map-Reduce}\todo{reference} paradigm
 which maps resulting documents to intermediate documents which are
 then reduced until the end-result is found. For example this allows
 querying for the nearest visible object by getting all visible
@@ -696,7 +692,7 @@ process that distributes a database onto multiple machines.
 One MongoDB instance called \emph{Master} initially
 copies the database  to other instances called \emph{Slaves}.
 Afterwards, all modifications to the master database, which are
-stored in a separate collection called \emph{Oplog}, are forwarded to
+stored in a separate collection called \emph{operations log (oplog)}, are forwarded to
 the slave to keep them synchronized and consistent.
 %% This is often used
 %% in web-services to distribute read-queries and their computation on
@@ -706,7 +702,7 @@ computed by Master and Slave instances, modifying queries are
 forwarded to the Master to guarantee consistency.
 MongoDB can also group multiple
 instances into a \emph{Replica Sets} which automatically manages
-the master election when necessary. Using replication,
+the master election when necessary. \todo{sharding} Using replication,
 multiple robots can robustly share a common and consistent world
 model. Robot specific knowledge can be kept in a separate and not
 replicated collection to avoid unneeded communication.
@@ -720,7 +716,7 @@ replicated collection to avoid unneeded communication.
 %% applicaiton.
 %% There are also extensions of MongoDB providing so called \emph{Trigers} which
 %% can notify an application if something in the database changes as
-%% previouly defined. \todo{source} These Triggers use the Oplog of
+%% previouly defined. \todo{source} These Triggers use the oplog of
 %% MongoDB to find changes and are useful for planners. For example if a
 %% global planner determined a plan that is being executed and wants to
 %% be notified, if a condition changes that makes the plan invalid, to
@@ -1172,7 +1168,7 @@ has to be set up as MongoDB replica set as already described in
 \refsec{sec:mongodb}. This ensures that no unnecessary data is sent
 over the network. The other problems of a distributed database such as
 consistency, master election and synchronization are solved by
-MongoDB. The back-end also contains the Oplog of MongoDB, a separate
+MongoDB. The back-end also contains the operations log (oplog) of MongoDB, a separate
 capped collection containing a list of all changes to the database
 with a timestamp. This can also be accessed by the robot memory to
 analyze changes (e.g. for event-trigger).
@@ -1230,7 +1226,7 @@ the blackboard on demand and then executes the query.
 
 To implement event-trigger, a registration function needs to be
 provided that takes a callback function for notification and a query
-to define the event. This query can check the Oplog first whether
+to define the event. This query can check the oplog first whether
 there are changed documents with relevant key-value pairs and
 afterwards execute a more complex query on the database. The
 egistration also specifies whether the callback
