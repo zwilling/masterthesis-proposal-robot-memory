@@ -148,8 +148,8 @@ of the thesis with the RoboCup application domain and the used
 software in \refsec{sec:background}. \refsec{sec:related} presents
 related work and in \refsec{sec:approach} the approach of the thesis
 is shown with the goals of the robot memory, the architecture,
-implementation, and evaluation considerations. We conclude with a
-summery in \refsec{sec:summery}.
+implementation. Evaluation considerations are presented in \refsec{sec:eval}.
+We conclude with a summery in \refsec{sec:summery}.
 
 
 \section{Background}
@@ -912,19 +912,17 @@ architecture which describes in which components the robot memory is
 organized and how they interact with each other. Afterwards, we
 describe how the implementation is planned, especially for the robot
 memory and interfaces for planners, reasoners and other
-components. We finish the presentation of the approach with a section
-about evaluation and give a time schedule for the thesis.
+components.
 
 \subsection{Goals}
 \label{sec:goals}
 
-This subsection presents the goals of this thesis and why we want to
-achieve them:
+This subsection presents the goals of this thesis:
 
 \smallskip
 \textbf{Flexible Storage and Retrieval:} The robot memory has to
-provide a service for storing, updating, removing, and querying so that
-different components can use the robot memory to provide knowledge,
+provide a service for storing, updating, removing, and querying knowledge
+so that different components can use the robot memory to provide knowledge,
 use it as a source, or collaborate using the same memory. It should be
 flexible enough to store any kind of data, information, knowledge, and
 wisdom of the DIKW hierarchy in any structure. For example the robot
@@ -1301,30 +1299,71 @@ responsibility of the PDDL planner. For example it could incorporate into the
 event, that plan execution state changed to aborted or finished or
 that a machine used in the plan is out of order.
 
-\subsection{Evaluation}
+\section{Evaluation}
 \label{sec:eval}
-This subsection covers the evaluation of the proposed thesis. On the
-one hand a qualitative analysis should show if and how well the robot
-memory can be used in the RCLL and on the domestic service robot.
-On the other hand the thesis will give a quantitative
-analysis of the robot memory's performance and scalability.
+This section covers the evaluation of the proposed thesis. We will
+evaluate the robot memory qualitatively in both application domains,
+the RCLL and RoboCup@Home league, and quantitatively.
+
+The qualitative evaluation analyzes how well the robot memory can be
+used, how useful it is, and where difficulties are. It also includes
+the expressiveness and convenience of representing and querying
+knowledge, the integration into planner and reasoner languages, and
+the shared access to the same world model in the robot memory across
+different applications of the same robot and between different
+robots. To perform the qualitiative evaluation, we will implement
+prototypes using main features of the robot memory. These prototypes
+act as proof of concept without implementing complete domain solutions
+which would extend the scope of the thesis.
+%
+The general storage and query features of the robot memory will be
+evaluated in the RCLL context with a CLIPS agent that stores the world
+model in the robot memory and keeps it up to date. This shows how well
+the robot memory can be integrated in a reasoner and which
+expresiveness can be reached. In a second step, the world model should
+be synchronized between a multi-robot team to evaluate how well the
+shared robot memory works in a distributed system.
+%
+The planner specific view of the robot memory will be evaluated with a
+PDDL planner in the RCLL domain. The robot-memory-PDDL interface
+should generate a PDDL problem description from a world model stored
+in the robot memory. The resulting plan should be stored in the robot
+memory and queryable by CLIPS.
+%
+To evaluate event-triggers, we will register events depending on
+changes of the RCLL world model that could make a generated plan
+infeasable. These events should then be triggered during an RCLL
+game. This should show how useful and expressive registered events can
+be.
+% 
+These prototypes should show if the robot memory allows knowledge
+sharing between multiple planners and reasoners. A related thesis,
+which is in preperation, wants to utilize PDDL for global task
+planning and CLIPS for execution to achieve more efficient multi-robot
+behavior in the RCLL. It could benefit from using the robot memory and
+yield further evaluation results.
+
+To further evaluate how well the robot memory works in a hybrid
+reasoning context with motion planners and symbolic planners, we will
+also develop a RoboCup@Home related prototype using computables. Here
+the robot memory should hold knowledge and transform it into symbolic
+or spatio-temporal knowledge (e.g. if the robot's coordinates are
+stored and a reasoner asks for the room the robot is in).
+
+
+
+\begin{enumerate}
+\item @Home
+\item qualitative
+\item quantitative darein
+\item How exactly
+\item persistent-long time storage @home observed object positions
+\item computables @home
+\item expressiveness
+\item @home motionplanner pos reasoner room
+\end{enumerate}
 
 \todo{sed virtualKB/computables}
-The qualitative evaluation analyzes how well the robot memory can be
-used in the RCLL and domestic service robot domains, how useful it is,
-and where difficulties are. This mainly includes the expressiveness
-and convenience of representing and querying knowledge, the
-integration into planner and reasoner languages, and the collaborative
-access to the same world model in the robot memory across different
-applications of the same robot and between different
-robots. Furthermore it needs to be analyzed how well the virtual
-knowledge base fits into the robot memory and if there are differences
-between querying virtual knowledge or stored knowledge for the
-application. For event-triggers it needs to be evaluated how
-expressive the events can be and if the events also work properly on
-virtual knowledge. Other important evaluation aspects are the
-usability of the domain creation and the expandability of the robot
-memory for new functionality such as the proposed modules.
 
 In the quantitative evaluation, the performance and scalability of the
 robot memory are analyzed. Especially the relation of query
@@ -1338,6 +1377,11 @@ account. For the robot memory distributed over multiple robots, the
 response times for storing knowledge and updates times between
 applying a change on the Master and having it available on Slaves are
 important.
+
+\section{Conclusion}
+\label{sec:conclusion}
+In the proposed thesis, we want to develop a robot memory for Fawkes,
+which stores knowledge and can execute queries to retrieve it.
 
 \subsection{Schedule}
 \begin{table}
@@ -1355,11 +1399,8 @@ RCLL and in @Home. The robot-memory itself and both applications are
 then evaluated and the rest of the time is spent on the written
 thesis.
 
-\section{Summery}
+\section{summery}
 \label{sec:summery}
-In the proposed thesis, we want to develop a robot memory for Fawkes,
-which stores knowledge and can execute queries to retrieve it. 
-
 \begin{itemize}
 \item Challenges
 \item Impact
