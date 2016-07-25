@@ -963,8 +963,9 @@ distance of two objects, it is better to compute the result on demand
 than to store all distances between each two objects in the memory and
 to keep them updated. When components using the robot memory can also
 provide computables to the robot memory, this adds a lot of
-versatility and expandability.
-%TODO: caching
+versatility and expandability. To lower the computational effort of
+processing the same querry frequently it would be possible to add
+caching for computed knowledge.
 %% For example it would be possible to add
 %% a commonsense reasoner similar to KnowRob or ORO providing computables
 %% to the robot memory. Queries for this commonsense knowledge would then
@@ -976,11 +977,12 @@ versatility and expandability.
 should be able to distribute parts of the knowledge over multiple
 robots, which can then share a common world model necessary for
 collaboration. The concept is similar to multiple planners sharing a
-world model with the difference that the components on a multi-robot
-system work simultaneously and the additional difficulty to
-synchronize the robot memory between the robots. Such a distributed
-robot-memory is necessary in many multi-robot domains, especially the
-RCLL.%%  where the whole robot team needs to know the world model
+world model on the same machine with the difference that the
+components on a multi-robot system work simultaneously and the
+additional difficulty of message loss and keeping consistency. Such a
+distributed robot-memory is necessary in many multi-robot domains,
+especially in the RoboCup Logistics League (RCLL).
+%%  where the whole robot team needs to know the world model
 %% (e.g. where other robots placed intermediate products) and what other
 %% robots intend to achieve at the moment.
 %% If the distribution of the
@@ -994,41 +996,33 @@ latices.
 
 \smallskip
 \textbf{Spatio-Temporal Grounding:} It is often desirable to ground
-stored knowledge based on location and time because this allows many
-applications such as spatio-temporal clustering, using old
-observations to deal with the assignment problem, and learn
-distributions (e.g. at which day-times objects can be found at which
-positions). Thus the robot memory has to be able to store knowledge
-tagged with spatio-temporal information and consider this information
-while querying.
+stored knowledge based on location and time because this is the
+prerequisite for many applications such as spatio-temporal clustering
+and learning distributions (e.g. at which day-times objects can be
+found at which positions\todo{cite debul proposal}). Thus the robot
+memory has to be able to store knowledge tagged with spatio-temporal
+information and consider this information while querying.
 
 \smallskip
 \textbf{Event Triggers:} The robot memory should be able to notify
-components about relevant  changes in the memory.
-These notifications are called \emph{event-triggers} and should
-automatically be sent after a component registers an event it wants to
-be notified about. These events include appearances of new instances
-of a specific knowledge type, modifications and deletions of it, as
-well as sentences becoming true or queries returning documents. The
-balance of expressiveness versus performance still needs to be
-found. A use case in which event triggers are especially useful are
-when planners want to be notified when their plan becomes unfeasible
-and re-planning is necessary. In this case, the planner could, for
-example, register events for the plan execution being aborted or
-preconditions of the plan becoming false.
+components about relevant changes in the memory.  These notifications
+are called \emph{event-triggers} and should automatically be sent
+after a component registers an event it wants to be notified
+about. These events include appearances of new instances of a specific
+knowledge type, modifications and deletions of it, as well as
+sentences becoming true or queries returning documents. The balance of
+expressiveness versus performance still needs to be found. An examle
+use case, in which event triggers are useful, is updating planner
+predicates.
 
 \smallskip
 \textbf{Modular Extensions:} The robot memory should be expandable
-with various modules implementing additional functionality. An
-interesting example module could introduce knowledge decay for
-removing knowledge with exceeded lifetimes. This would allow
-differentiating short-term knowledge and long-term knowledge. Other
-modules could, for example, add confidence values or abstraction
-levels to stored knowledge. Furthermore, extensions such as robot
-memory initialization from a saved file, saving parts of the memory to
-a file and a logging facility similar to the generic robot database
-would be useful.
-
+with modules to implement additional functionality. An example module
+could introduce knowledge decay for removing knowledge with exceeded
+lifetimes. This would allow differentiating short-term knowledge and
+long-term knowledge. Other modules could, for example, reset a part of
+the robot memory to an initial state or add confidence values to
+stored knowledge.
 
 \smallskip
 \textbf{Persistent Storage:} To profit from long-time knowledge and to
@@ -1042,9 +1036,9 @@ memory.
 \textbf{Human Interface and Visualization:} An important factor in the
 development of a robotic systems is the accessibility of underlying
 components for easier debugging and modeling. Therefore the robot
-memory needs to provide an interface for developers to monitor the
-state of the robot memory and to modify it. A visualization would also
-be desirable to analyze spatio-temporal data efficiently.
+memory needs to provide an interface for developers to introspect and
+modify the state represented in the robot memory. A visualization
+would also be desirable to analyze spatio-temporal data efficiently.
 
 
 \subsection{Architecture}
