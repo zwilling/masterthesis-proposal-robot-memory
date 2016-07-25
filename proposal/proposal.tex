@@ -1088,9 +1088,9 @@ registrations of applications that want to be notified in the case of
 an event. It uses the Query-manager to check if events happen and
 notifies applications accordingly. Additional modules can be added to
 extend the functionality of the Storage-, Update-, and
-Query-manager. %% These extensions can use the Command
-%% Pattern~\cite{design-patterns} and to work process compositionally and
-%% dynamically.
+Query-manager.
+%% These extensions can use the Command Pattern~\cite{design-patterns}
+%% and to work process compositionally and dynamically.
 Between the robot memory and a planner (or reasoner) components is the
 Application Interface layer. For each planner language, it includes a
 Interface Provider component, which makes the function of the robot
@@ -1138,12 +1138,12 @@ C++ interface of the robot memory.
 
 \subsubsection{Back-End}
 \label{sec:back-end}
-The back-end is realized with MongoDB, acts as storage of the robot
+The back-end is realized with MongoDB. It acts as storage of the robot
 memory, and executes queries. The representation of stored knowledge
 utilizes the document structure of MongoDB with key-value pairs and
 nested sub-documents. This allows a very flexible storage of
-knowledge-pieces with any additional properties needed by the
-application.
+knowledge-pieces in the structure induced by the application and
+expandable by robot memory information.
 \begin{wrapfigure}{r}{0.47\textwidth}
 \begin{lstlisting}[style=SmallJSON,
   caption={Representation of a knowledge piece in the back-end},
@@ -1152,7 +1152,7 @@ application.
  morekeywords={}, numbers=none]
  {
    _id: ObjectId("983e7c49h5"),
-   robot_memory_info:
+   _robot_memory_info:
    {
      persistent: true,
      decay_time: ISODate("2016-05-19T
@@ -1166,23 +1166,24 @@ application.
 \end{lstlisting}
 \end{wrapfigure}
 An example document stored in the back-end is shown in
-\reflst{lst:backend}.
-It contains knowledge about a bottle of milk as it could be needed by
-a planner with additional information where it should be stored
-later. Additionally the document contains meta information needed by
-the robot memory (e.g. if the document should be stored persistently
-or removed at restart and when it should be dropped because it's
-use-time has expired). The MongoDB back-end also manages the
-distribution of knowledge between multiple robots. A part of the robot
-memory is only locally relevant. The other part that should be shared
-has to be set up as MongoDB replica set as already described in
-\refsec{sec:mongodb}. This ensures that no unnecessary data is sent
-over the network. The other problems of a distributed database such as
-consistency, master election and synchronization are solved by
-MongoDB. The back-end also contains the operations log (oplog) of MongoDB, a separate
-capped collection containing a list of all changes to the database
-with a timestamp. This can also be accessed by the robot memory to
-analyze changes (e.g. for event-trigger).
+\reflst{lst:backend}.  It contains knowledge about a bottle of milk as
+it could be needed by a planner with additional information where it
+should be stored later. Additionally the document contains meta
+information needed by the robot memory (e.g. if the document should be
+stored persistently or removed at restart and when it should be
+dropped because it's use-time has expired). The MongoDB back-end also
+manages the distribution of knowledge between multiple robots. A part
+of the robot memory is only locally relevant. The other part that
+should be shared has to be set up as MongoDB replica set as already
+described in \refsec{sec:mongodb}. This ensures that no unnecessary
+data is sent over the network. The other problems of a distributed
+database such as consistency, master election and synchronization are
+solved by MongoDB using replication. The back-end also contains the
+operations log (oplog) of MongoDB, a separate
+%% capped
+collection containing a list of all changes to the database with a
+timestamp. This can also be accessed by the robot memory to analyze
+changes (e.g. for event-trigger).
 
 \subsubsection{Robot Memory}
 \label{sec:impl-memory}
