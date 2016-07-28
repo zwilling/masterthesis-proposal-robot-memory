@@ -149,7 +149,7 @@ software in \refsec{sec:background}. \refsec{sec:related} presents
 related work and in \refsec{sec:approach} the approach of the thesis
 is shown with the goals of the robot memory, the architecture,
 implementation. Evaluation considerations are presented in \refsec{sec:eval}.
-We conclude with a summary in \refsec{sec:summary}.
+We conclude with a summary and the time-schedule in \refsec{sec:conclusion}.
 
 
 \section{Background}
@@ -1324,10 +1324,12 @@ which would extend the scope of the thesis.
 The general storage and query features of the robot memory will be
 evaluated in the RCLL context with a CLIPS agent that stores the world
 model in the robot memory and keeps it up to date. This shows how well
-the robot memory can be integrated in a reasoner and which
-expresiveness can be reached. In a second step, the world model should
-be synchronized between a multi-robot team to evaluate how well the
-shared robot memory works in a distributed system.
+the robot memory can be integrated in a reasoner.
+%
+In a second step, the world model should be synchronized between a
+multi-robot team to evaluate how well the shared robot memory works in
+a distributed system. This includes an analysis of the network
+throughput and robustness to package loss.
 %
 The planner specific view of the robot memory will be evaluated with a
 PDDL planner in the RCLL domain. The robot-memory-PDDL interface
@@ -1353,40 +1355,32 @@ reasoning context with motion planners and symbolic planners, we will
 also develop a RoboCup@Home related prototype using computables. Here
 the robot memory should hold knowledge and transform it into symbolic
 or spatio-temporal knowledge (e.g. if the robot's coordinates are
-stored and a reasoner asks for the room the robot is in).
+stored and a reasoner asks for the room the robot is in). Thus a
+computable has to compute the symbolic knowledge from the
+spatio-temporal one or vice versa. Quantitatively, computables have to
+be evaluated by comparing the times between giving the query and
+receiving the results with and without computables taking the
+computation time, either on demand or on changing data.
 
-
-
-\begin{enumerate}
-\item @Home
-\item qualitative
-\item quantitative darein
-\item How exactly
-\item persistent-long time storage @home observed object positions
-\item computables @home
-\item expressiveness
-\item @home motionplanner pos reasoner room
-\end{enumerate}
-
-\todo{sed virtualKB/computables}
-
-In the quantitative evaluation, the performance and scalability of the
-robot memory are analyzed. Especially the relation of query
-computation-time depending on database size and query complexity is
-important. Furthermore, the CPU and memory usage of the robot memory
-have to be analyzed as well as the size of the database on the hard
-drive. Also the performance of querying the virtual knowledge base
-needs to be evaluated and compared to querying non virtual knowledge
-taking the computation time for the virtual knowledge itself into
-account. For the robot memory distributed over multiple robots, the
-response times for storing knowledge and updates times between
-applying a change on the Master and having it available on Slaves are
-important.
+To analyze how the query computation increases with increasing query
+expressiveness and database scale, we want to implement a simple
+tidying up scenario. The robot memory models a scene with current
+object placements and object storage positions in increasing
+amount. The queries start simple (e.g. where is the storage place for
+the red cup) and get more complex (e.g. which objects are not at their
+storage position). Furthermore, the CPU and memory usage of the robot
+memory have to be analyzed as well as the size of the database on the
+hard drive.
 
 \section{Conclusion}
 \label{sec:conclusion}
 In the proposed thesis, we want to develop a robot memory for Fawkes,
 which stores knowledge and can execute queries to retrieve it.
+\todo[inline]{finish}
+\begin{itemize}
+\item Challenges
+\item Impact
+\end{itemize}
 
 \subsection{Schedule}
 \begin{table}
@@ -1403,13 +1397,6 @@ iteratively improved to implement all other features needed in the
 RCLL and in @Home. The robot-memory itself and both applications are
 then evaluated and the rest of the time is spent on the written
 thesis.
-
-\section{summary}
-\label{sec:summary}
-\begin{itemize}
-\item Challenges
-\item Impact
-\end{itemize}
 
 
 \bibliographystyle{plain}
