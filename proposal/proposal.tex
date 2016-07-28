@@ -149,7 +149,7 @@ software in \refsec{sec:background}. \refsec{sec:related} presents
 related work and in \refsec{sec:approach} the approach of the thesis
 is shown with the goals of the robot memory, the architecture,
 implementation. Evaluation considerations are presented in \refsec{sec:eval}.
-We conclude with a summery in \refsec{sec:summery}.
+We conclude with a summary in \refsec{sec:summary}.
 
 
 \section{Background}
@@ -1049,7 +1049,7 @@ functionality is organized in smaller components and how these
 components interact with each other. The architecture contains
 standard concepts of software engineering, most importantly a layered
 architecture, functional abstraction, and data
-abstraction~\cite{software-architecture}, to allow reusability and
+abstraction~\cite{software-architecture}\todo{nagl ref?}, to allow reusability and
 adaptability to changing requirements and use cases.
 %% functional abstraction,
 %% %% (e.g. of the different processes happening during storing and
@@ -1193,68 +1193,69 @@ typical database.
 %% applications storing and querying knowledge and the MongoDB back-end
 %% is an important part of the thesis because most of the functions
 %% exceeding a typical database are realized here.
-A central question is
-which query language should be used between applications and the robot
-memory because this determines the expressiveness and has a large impact
-on the performance. We choose to use the query language of MongoDB as
-it is already  used between the robot memory and the back-end. This has many
-advantages compared to using other query languages such as SQL,
-SPARQL, XQuery, and JSONiq. The query language of MongoDB is obviously
-well suited for a document oriented database, requires no translation
-before application on the database and is very flexible for extending
-and modifying queries because queries are structured as documents with
-key-value fields and can be nested or executed in
-sequence. Furthermore it is an intuitive query language, has been
-proven as efficient for usual and well designed
-queries~\cite{mongodb,RoboDB}, and is also highly expressive when
-using additional JavaScript functions or the MapReduce
-paradigm. MongoDB queries can easily be parsed (e.g. from a string) by
-using the MongoDB C++ API. The resulting object can be analyzed and
-modified for example to add key-value pairs or to check if computables are queried.
+A central question is which query language should be used between
+applications and the robot memory because this determines the
+expressiveness and has a large impact on the performance. We choose to
+use the query language of MongoDB as it is already used between the
+robot memory and the back-end. This has many advantages compared to
+using other query languages such as SQL, SPARQL,
+XQuery~\cite{query-languages}, and JSONiq~\cite{jsoniq}.
+%
+For the application view, the query language of MongoDB is a good
+choice because it is an intuitive query language, has been proven as
+efficient for usual and well designed queries, and is also highly
+expressive when using additional JavaScript functions or the MapReduce
+paradigm~\cite{mongodb,RoboDB}. For the robot memory, it requires no
+translation before application on the database and is very flexible
+for extending and modifying queries because queries are structured as
+documents with key-value fields and can be nested or executed in
+sequence. Furthermore, MongoDB queries can easily be parsed (e.g. from
+a string) by using the MongoDB C++ API. The resulting object can be
+analyzed and modified for example to add key-value pairs or to check
+if computables are queried.
 
 This provides the starting point for the Storage-, Update-, and
 Query-manager. When adding new documents, the
 \texttt{robot\_memory\_info} sub-document can be added to store
 additional meta information. When querying documents, this information
-can be removed out by appending an additional filter. To detect
-queries for computables, the manager can analyze the fields of
-the query to check if there is a computable provided for it.
-For example when a query contains the field \texttt{type:
-  "distance"} and there is a application that provides computation
-functions for distances between two objects, the query can be forwarded
-with the additional parameters, the two objects.
-When some fields are missing
-(e.g. only one object is given) the application may have to compute
-all distances, so that the query can afterwards be executed on the set
-of results (e.g. to find the nearest one with some property). To
-execute the query as a usual query with arbitrary filters, aggregation
-and functions, the computation function writes the the result into a
-separate collection the query can be executed on with MongoDB. This
-already works in an early prototype, which executes queries from
-interface messages either on the MongoDB directly or in case of
-computables about other interfaces, generates the knowledge from
-the blackboard on demand and then executes the query.
+can be removed by using a filter. To detect queries for computables,
+the manager can analyze the fields of the query to check if there is a
+computable provided for it.  For example when a query contains the
+field \texttt{type:"distance"} and there is a application that
+provides computation functions for distances between two objects, the
+query can be forwarded with the additional parameters, the two
+objects.  When some fields are missing (e.g. only one object is given)
+the application may have to compute all distances, so that the query
+can afterwards be executed on the set of results (e.g. to find the
+nearest one with some property). To execute the query as a usual query
+with arbitrary filters, aggregation and functions, the computation
+function writes the the result into a separate collection the query
+can be executed on with MongoDB. We have verified this concept using a
+prototype, which executes queries from interface messages either on
+the MongoDB directly or in case of computables about other interfaces,
+generates the knowledge from the blackboard on demand and then
+executes the query.
 
-To implement event-trigger, a registration function needs to be
-provided that takes a callback function for notification and a query
-to define the event. This query can check the oplog first whether
-there are changed documents with relevant key-value pairs and
-afterwards execute a more complex query on the database. The
-egistration also specifies whether the callback
-function is called if the query result changes, returns no document, or
-is not empty. How events on
-computables work has to be evaluated. For example, it would be
-possible to compute the knowledge and check for the event in
-certain intervals while monitoring the computation time.
+To implement event-triggers, a registration function needs to be
+provided that takes a notification function and a query to define the
+event. This query can check the oplog first whether there are changed
+documents with relevant key-value pairs and afterwards execute a more
+complex query on the database. The registration also specifies whether
+the callback function is called if the query result changes, returns
+no document, or is not empty. Whether event-triggers on computables
+perform well, has to be evaluated. It would be possible to allow
+events only on knowledge in the database or to compute the knowledge
+and check for the event in certain intervals while monitoring the
+computation time.
 
-Modules extend the functionality of the robot memory. They can use
-multiple hook-points for implementation. For example, a knowledge decay
-module could use loop-hook-point to remove documents with exceeded
-lifetimes in certain intervals and an initialization module can use a
-hook-point at startup. Further hook-points would be at
-query-modification time (e.g. to add additional meta-information) and
-at query-result-return time (e.g. to filter or modify resulting
-documents).
+Modules extend the functionality of the robot memory. For
+implementation, they can be called periodically or with hook-points at
+major steps of the robot memory such as initialization and query
+execution. For example, a knowledge decay module could use cronjob to
+remove documents with exceeded lifetimes in certain intervals. Further
+hook-points would be at query-modification time (e.g. to add
+additional meta-information) and at query-result-return time (e.g. to
+filter or modify resulting documents).
 
 \subsubsection{Planner/Reasoner}
 \label{sec:impl-planner}
@@ -1287,11 +1288,12 @@ the current game-time. The result would be a list of pointers to document
 objects represented as instances of CLIPS templates. Similarly there
 can be functions for registering events and providing computables.
 
-The Domain Creator for CLIPS can implemented by loading a list of
-CLIPS files as usual and filling the fact-base with additional initial
-facts. For example, a domain creator implemented in the CLIPS language
-could execute the query function in \reflst{lst:clips-rm} and assert
-all orders as facts into the fact base.
+The Domain Creator for CLIPS can implemented by creating the initial
+fact-base with a static list of facts with additional facts resulting
+from a set of queries. For example, a domain creator implemented in
+the CLIPS language could execute the query function in
+\reflst{lst:clips-rm} and assert all orders as facts into the fact
+base.
 %% possibility to also generate rules form robot memory
 
 CLIPS could use event-triggers to be notified when there is a new PDDL
@@ -1402,8 +1404,8 @@ RCLL and in @Home. The robot-memory itself and both applications are
 then evaluated and the rest of the time is spent on the written
 thesis.
 
-\section{summery}
-\label{sec:summery}
+\section{summary}
+\label{sec:summary}
 \begin{itemize}
 \item Challenges
 \item Impact
