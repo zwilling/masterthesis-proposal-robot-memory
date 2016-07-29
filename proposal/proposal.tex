@@ -906,13 +906,13 @@ website\footnote{\url{http://www.open-ease.org/}}.
 \section{Approach}
 \label{sec:approach}
 This section presents the approach of the proposed thesis. It starts
-with the goals we want to achieve with the robot memory.
-It follows an overview of the
+with the goals we want to achieve with the robot memory and a
+theoretical foundation of the robot memory and how knowledge is
+transfered into a planner or reasoner. It follows an overview of the
 architecture which describes in which components the robot memory is
 organized and how they interact with each other. Afterwards, we
 describe how the implementation is planned, especially for the robot
-memory and interfaces for planners, reasoners and other
-components.
+memory and interfaces for planners, reasoners and other components.
 
 \subsection{Goals}
 \label{sec:goals}
@@ -1039,6 +1039,72 @@ components for easier debugging and modeling. Therefore the robot
 memory needs to provide an interface for developers to introspect and
 modify the state represented in the robot memory. A visualization
 would also be desirable to analyze spatio-temporal data efficiently.
+
+\subsection{Theoratical Foundation}
+\label{sec:formalism}
+In this subsection, we lay the theoretical foundation for the robot
+memory and the integration into planner and reasoner formalisms. For
+this proposal we focus on the integration into Golog.
+
+The formal definition of the robot memory describes how knowledge is
+represented and depends on the definition of computables. Because the
+robot memory document oriented, we first define documents and their
+key-value pairs. This definition is derived from the specification of
+the Binary JavaScript Object Notation
+(BSON)\footnote{\url{http://bsonspec.org/spec.html}} used in MongoDB.
+Because documents can be nested, we define them by induction. Unnested
+documents are defined as follows:
+\begin{enumerate}
+\item \textbf{Keys} are strings $\mathcal{K} := \Sigma^*$, where
+  $\Sigma$ contains all valid symbols.
+\item  \textbf{Atomic values} $\mathcal{V}_0$ are constants containing
+  integers, floating point numbers, and strings.
+\item \textbf{Unnested key-value pairs:} $\mathcal{P}_0:=\mathcal{K}\times\mathcal{V}_0$
+\item \textbf{Unnested documents} are sets of key-value pairs with
+  unique keys and thus included in the power set of $\mathcal{P}_0$:\\
+  $\mathcal{D}_0:=\{
+  d\in\mathbb{P}(\mathcal{P}_0)|
+  \forall (k,v),(k',v')\in d , k\neq k' \vee (k,v)=(k',v')
+  \}$
+\end{enumerate}
+Values and documents with a nesting depth up to $n$ with $n>=1$ can be
+defined as follows:
+\begin{enumerate}
+\item  \textbf{Values:} $\mathcal{V}_n := \mathcal{V}_{n-1} \cup \mathcal{D}_{n-1}$
+\item \textbf{Key-value pairs:} $\mathcal{P}_n:=\mathcal{K}\times\mathcal{V}_n$
+\item \textbf{Documents:}
+  $\mathcal{D}_n:=\{
+  d\in\mathbb{P}(\mathcal{P}_n)|
+  \forall (k,v),(k',v')\in d , k\neq k' \vee (k,v)=(k',v')
+  \}$
+\end{enumerate}
+This yields the set of all \textbf{finitely nested documents}
+$\mathcal{D}=\cup_{n\in\mathbb{N}}\mathcal{D}_n$. Infinite nesting and
+documents containing themself are not considered because they are not
+supported by the underlaying database implementation.
+\\
+A \textbf{database} $\mathcal{DB}$ is a set of documents with unique object
+identifiers, which are a special key-value pair: \todo{unique ids rauskürzen?}
+\begin{align*}
+\mathcal{DB} \subset & \{d\in\mathcal {D} | ("\_id",v)\in d\},\\
+& \text{where } \forall d,d' \in \mathcal{DB} \text{ with } ("\_id",v)\in
+d \text{ and } ("\_id",v')\in d' , d=d' \vee v\neq v'
+\end{align*}
+\textbf{Queries} are represented by documents $q\in\mathcal{D}$ and yield a set
+of documents $r\subset\mathcal{DB}$ as result when executed in a database according a
+specification (e.g. of MongoDB~\cite{mongodb}).
+\\
+A \textbf{computable} $f$ is a function mapping a query document to a
+set of computed documents
+$$f: \mathcal{D} \rightarrow \mathbb{P}(\mathcal{D})\text{.}$$
+\\
+With these preliminaries, we can now define a \textbf{robot memory} as tuple
+of a database~$\mathcal{DB}$ and a set of computables~$\mathcal{C}$:
+$$\mathcal{RM}=(\mathcal{DB},\mathcal{C})$$
+\\
+The set of documents \textbf{memorized} by the robot memory consists
+of underlying database and all computable documents:
+$$mem(\mathcal{RM})=DB \cup \bigcup_{f\in\mathcal{C}}f(\mathcal{D})$$
 
 
 \subsection{Architecture}
