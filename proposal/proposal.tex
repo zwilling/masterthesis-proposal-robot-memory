@@ -701,7 +701,7 @@ computed by Master and Slave instances, modifying queries are
 forwarded to the Master to guarantee consistency.
 MongoDB can also group multiple
 instances into a \emph{Replica Sets} which automatically manages
-the master election when necessary. \todo{sharding} Using replication,
+the master election when necessary. Using replication,
 multiple robots can robustly share a common and consistent world
 model. Robot specific knowledge can be kept in a separate and not
 replicated collection to avoid unneeded communication.
@@ -802,7 +802,7 @@ knowledge needs a lot of manual extension and verification before it
 can be used~\cite{KnowRob-Web}. Encyclopedic knowledge often lacks
 action information needed by the robot. %% (e.g. how to grab tools) and
 %% action recipes require human text understanding
-\todo{executive integration}
+%% \todo{executive integration}
 %
 Furthermore large ontologies limit the performance of KnowRob because
 of the Prolog implementation and general complexity. In contrast to
@@ -828,7 +828,7 @@ the back-end storage and front end socket server for querying. These
 modules add features such as events that notify external components
 about changes.
 %%  (e.g. if instances of certain classes are added or modified).
-\todo{executive integration}
+%% \todo{executive integration}
 Another module adds representations of alternative perspectives that
 should allow understanding the point of view of other agents.
 For example when a human asks a robot to bring the
@@ -998,7 +998,7 @@ latices.
 stored knowledge based on location and time because this is the
 prerequisite for many applications such as spatio-temporal clustering
 and learning distributions (e.g. at which day-times objects can be
-found at which positions\todo{cite debul proposal}). Thus the robot
+found at which positions~\cite{deebul}). Thus the robot
 memory has to be able to store knowledge tagged with spatio-temporal
 information and consider this information while querying.
 
@@ -1043,13 +1043,10 @@ would also be desirable to analyze spatio-temporal data efficiently.
 \label{sec:formalism}
 In this subsection, we lay the theoretical foundation for the robot
 memory and the integration into planner and reasoner languages. For
-this proposal we focus on the integration into PDDL. The theoretical
-foundation can be used to formalize the integration into Golog, but
-this exceeds the scope of the proposed thesis.
-
+this proposal we focus on the integration into PDDL. 
 The formal definition of the robot memory describes how knowledge is
 represented and depends on the definition of computables. Because the
-robot memory document oriented, we first define documents and their
+robot memory is document oriented, we first define documents and their
 key-value pairs. This definition is derived from the specification of
 the Binary JavaScript Object Notation
 (BSON)\footnote{\url{http://bsonspec.org/spec.html}} used in MongoDB.
@@ -1084,13 +1081,14 @@ $\mathcal{D}=\cup_{n\in\mathbb{N}}\mathcal{D}_n$. Infinite nesting and
 documents containing themself are not considered because they are not
 supported by the underlaying database implementation.
 \\
-A \textbf{database} $\mathcal{DB}$ is a set of documents with unique object
-identifiers, which are a special key-value pair: \todo{unique ids rauskürzen?}
-\begin{align*}
-\mathcal{DB} \subset & \{d\in\mathcal {D} | ("\_id",v)\in d\},\\
-& \text{where } \forall d,d' \in \mathcal{DB} \text{ with } ("\_id",v)\in
-d \text{ and } ("\_id",v')\in d' , d=d' \vee v\neq v'
-\end{align*}
+A \textbf{database} is a set of documents $\mathcal{DB} \subset \mathcal{D}$.
+%% with unique object
+%% identifiers, which are a special key-value pair:
+%% \begin{align*}
+%% \mathcal{DB} \subset & \{d\in\mathcal{D} | ("\_id",v)\in d\},\\
+%% & \text{where } \forall d,d' \in \mathcal{DB} \text{ with } ("\_id",v)\in
+%% d \text{ and } ("\_id",v')\in d' , d=d' \vee v\neq v'
+%% \end{align*}
 \textbf{Queries} are represented by documents $q\in\mathcal{D}$ and yield a set
 of documents $r\subset\mathcal{DB}$ as result when executed in a database according a
 specification (e.g. of MongoDB~\cite{mongodb}).
@@ -1098,11 +1096,11 @@ specification (e.g. of MongoDB~\cite{mongodb}).
 A \textbf{computable} $f$ is a function mapping a query document to a
 set of computed documents
 $$f: \mathcal{D} \rightarrow \mathbb{P}(\mathcal{D})\text{.}$$
-\\
+%
 With these preliminaries, we can now define a \textbf{robot memory} as tuple
 of a database~$\mathcal{DB}$ and a set of computables~$\mathcal{C}$:
 $$\mathcal{RM}=(\mathcal{DB},\mathcal{C})$$
-\\
+%
 The set of documents \textbf{memorized} by the robot memory consists
 of the underlying database and all computable documents:
 $$mem(\mathcal{RM})=DB \cup \bigcup_{f\in\mathcal{C}}f(\mathcal{D})$$
@@ -1136,26 +1134,30 @@ the corresponding constant:
 $$map_f(v)=v, v \in \mathcal{V} \setminus \mathcal{D}$$
 Otherwise the value is a sub-document, whis is mapped to a function term:
 \begin{align*}
-  map_f(d)=f(map_f(v_1), ..., map_f(v_n)),& \text{ iff } f \text{ is a n-array function in } \mathcal{F},\\
-  &("function", name_{function}(f))\in d,\\
-  &\forall i \in \{1..n\} (name_{func-atr}(f,i), v_i)\in d\\
-  map_f(d)=nil_f, otherwise\text{~~~~~~~~~~~~~~~}
+  map_f(d)= &\text{ }f(map_f(v_1), ..., map_f(v_n)), \text{ iff } f \text{ is a n-array function in } \mathcal{F},\\
+  &("function", name_{function}(f))\in d,
+  \forall i \in \{1..n\} (name_{func-atr}(f,i), v_i)\in d\\
+  map_f(d)= &\text{ } nil_f, otherwise\text{~~~~~~~~~~~~~~~}
 \end{align*}
 where $nil_f$ is a new constant used for unmapable documents.
 Similarly documents can be mapped to predicates as follows:
 \begin{align*}
-  map_p(d)=p(map_f(v_1), ..., map_f(v_n)),& \text{ iff } p \text{ is a n-array predicate in } \mathcal{R},\\
-  &("predicate", name_{predicate}(p))\in d,\\
-  &\forall i \in \{1..n\} (name_{pre-atr}(p,i), v_i)\in d\\
-  map_p(d)=nil_p, otherwise\text{~~~~~~~~~~~~~~~}
+  map_p(d)=&\text{ }p(map_f(v_1), ..., map_f(v_n)), \text{ iff } p \text{ is a n-array predicate in } \mathcal{R},\\
+  &("predicate", name_{predicate}(p))\in d,
+  \forall i \in \{1..n\} (name_{pre-atr}(p,i), v_i)\in d\\
+  map_p(d)=& \text{ }nil_p, otherwise\text{~~~~~~~~~~~~~~~}
 \end{align*}
 For example is
 \begin{align*}
 map_p&(\{("predicate", "at"),("at\_object", "cup"),("at\_room",
 "kitchen")\})\\
-&= at(map_f("cup"), map_f("kitchen")) = at(cup, kitchen)
+&= at(map_f("cup"), map_f("kitchen")) = at(cup, kitchen) \text{.}
 \end{align*}
-
+This theoretical foundation of the robot memory and the mapping of
+queried documents into predicates is the basis for the generation of
+PDDL problem descriptions. In future work, this can also be used to
+formalize the integration of the robot memory into Golog, but this
+exceeds the scope of the proposed thesis.
 
 \subsection{Architecture}
 \label{sec:arch}
@@ -1165,7 +1167,7 @@ functionality is organized in smaller components and how these
 components interact with each other. The architecture contains
 standard concepts of software engineering, most importantly a layered
 architecture, functional abstraction, and data
-abstraction~\cite{software-architecture}\todo{nagl ref?}, to allow
+abstraction~\cite{software-architecture}, to allow
 reusability and adaptability to changing requirements and use cases.
 %% functional abstraction,
 %% %% (e.g. of the different processes happening during storing and
