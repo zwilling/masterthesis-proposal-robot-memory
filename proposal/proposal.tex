@@ -65,16 +65,16 @@ and treats mental issues by encouraging Frank to work on challenging
 projects. To realize this vision of intelligent and helpful robots, a
 couple of challenges have to be solved. The proposed thesis focuses on
 the challenges of building a robot memory required in many
-applications. For example domestic robots serving breakfast need it to
-know which items belong on the table, where they are stored, and how
-to clean up afterwards. Intelligent factory robots need to know where
-resources are placed, what products are ordered, and which actions
-need to be executed to reach a goal.
+applications. For example domestic robots serving breakfast need a
+robot memory to know which items belong on the table, where they are
+stored, and how to clean up afterwards. Intelligent factory robots
+need to know where resources are placed, what products are ordered,
+and which actions need to be executed to reach a goal.
 
 The basic requirements of a robot memory are representing and storing
 knowledge and providing it again when being queried. With knowledge,
-we mean the generalization of the whole
-Data-Information-Knowledge-Wisdom (DIK) hierarchy~\cite{DIKW} ranging
+we mean the generalization of the
+Data-Information-Knowledge-Wisdom (DIKW) hierarchy~\cite{DIKW} ranging
 from point clouds (data) to cluster positions (information), derived
 object positions and action recipes (knowledge), and learned
 probability distributions (wisdom). This includes spatio-temporal
@@ -93,19 +93,17 @@ the current world model updated by a reasoner).
 A general and shared robot memory, as intended in this thesis, can
 centrally manage the robot's knowledge and supply or generate
 specialized knowledge bases used by planners and reasoners. This
-allows planners and reasoners to be closer integrated and consistent
-because they can utilize shared knowledge and state estimations only
-have to be done once for the robot memory instead for every component
-needing it. Supplying or generating a specialized knowledge base
-requires filtering the robot memory because only a part is relevant
-for the specialized knowledge base and transforming the knowledge to
-be usable in the planner or reasoner language and in the required form
-(e.g. spatio-temporal or symbolic). Thus the robot memory simplifies
-hybrid reasoning by providing qualitative and quantitative
+allows planners and reasoners to be closer integrated and have world
+models consistent to each other because they can utilize shared
+knowledge and state estimations only have to be done once. Supplying
+or generating a specialized knowledge base requires filtering the
+robot memory, when only a part is relevant, and transforming the
+knowledge into the required form (e.g. spatio-temporal or symbolic) to
+be usable in the planner or reasoner language. Thus the robot memory
+simplifies hybrid reasoning by providing qualitative and quantitative
 representations of knowledge. The robot memory is also required to
 provide a persistent and scalable long time storage to be usable in
-real world domains where the complex environment requires to memorize
-many facts and the robot's memory should not be reset during a
+complex environments, where the robot should keep the memory during a
 restart.
 %
 The robot memory can also be used for multiple robots sharing common
@@ -115,41 +113,42 @@ object). This frees executives from implementing their own messaging
 and synchronization which is usually laborious in reasoner programming
 languages.
 
-Two additional features of the robot memory are
-\emph{computables} and
-\emph{event-triggers}.  The concept of computables allows
-computing certain knowledge on demand instead of storing it directly
-in the robot memory. Imagine a query for the distance of two
-objects. This can be computed rather quickly but storing all distances
-between each two dynamic objects and keeping them up do date is a lot
-of unnecessary effort. Moreover computables allows deriving
-symbolic from spatio-temporal knowledge.  Event-triggers should notify
-components when a previously defined conditions of the robot memory
-apply. This is especially useful for planners which can be notified
-when their plan becomes infeasible because some precondition is no
-longer satisfied.
+Two main features of the robot memory are \emph{computables} and
+\emph{event-triggers}.  The concept of computables allows computing
+knowledge on demand instead of storing it staticly in the robot
+memory. Imagine a query for the distance of two objects. This can be
+computed rather quickly but storing all distances between each two
+dynamic objects and keeping them up do date is a lot of unnecessary
+effort. Moreover computables allows deriving symbolic from
+spatio-temporal knowledge. Event-triggers should notify components
+when a previously defined conditions of the robot memory apply. This
+can be used to keep a world model updated without polling or to wait
+for core complex situations. For example a reasoner executing a
+production plan could register to be notified when a machine is out of
+order, what makes the plan is infeasable.
 
 The robot memory is designed for the Fawkes Robot Software Framework
 with the document-oriented database MongoDB as a basis.  The thesis
 focuses on two applications which can especially profit from the robot
 memory and will be used for evaluation. On the one hand, the robot
-memory should be used on logistics robots of the RoboCup Logistics
+memory should be used by logistics robots of the RoboCup Logistics
 League (RCLL). Here it should share the world model between reasoners
 running on multiple robots collaborating in a team and provide the
 shared world model in PDDL for the use in a global planner. On the
 other hand, the robot memory should be used on a domestic service
-robot related to the RoboCup@Home league where the robot memory is
+robot related to the RoboCup@Home league. Here the robot memory is
 needed as flexible and scalable long-time storage used by different
-components depending on spatio-temporal or symbolic representations of
-stored knowledge.
+components depending on either spatio-temporal or symbolic
+representations of stored knowledge.
 
 In the following, the proposal gives an overview over the background
 of the thesis with the RoboCup application domain and the used
 software in \refsec{sec:background}. \refsec{sec:related} presents
 related work and in \refsec{sec:approach} the approach of the thesis
-is shown with the goals of the robot memory, the architecture,
-implementation. Evaluation considerations are presented in \refsec{sec:eval}.
-We conclude with a summary and the time-schedule in \refsec{sec:conclusion}.
+is shown with the goals of the robot memory, it's theoretical
+foundation, the architecture, and implementation. Evaluation
+considerations are presented in \refsec{sec:eval}.  We conclude with a
+summary and the time-schedule in \refsec{sec:conclusion}.
 
 
 \section{Background}
@@ -402,19 +401,21 @@ expressive querying, and event-triggers.
 \label{sec:planners}
 This subsection gives an overview of planners and reasoners which are
 going to benefit from the robot memory. For the variety of these, we
-give four examples which should use the robot memory to achieve new or
+give three examples which should use the robot memory to achieve new or
 improved functionality and to evaluate this thesis. The example
 planner and reasoner systems are \emph{CLIPS}, a rule-based production
 system, the \emph{Planning Domain Definition Language (PDDL)}, which
 incorporates a family of planning formalisms into a standard
-programming language, \emph{Golog}, a high-level programming language
-based on the Situation Calculus, and \emph{Motion Planners} finding
+programming language,
+%% \emph{Golog}, a high-level programming language
+%% based on the Situation Calculus,
+and \emph{Motion Planners} finding
 collision free actuation plans.
 %% These examples are representatives for often
 %% used types of planners and reasoners. However, the robot memory should
 %% not be limited to these examples and provide a general C++ interface.
 
-\subsubsection{CLIPS rules engine} The reasoner currently used by
+\subsubsection{CLIPS Rules Engine} The reasoner currently used by
 Carologistics in the RCLL
 to implement the high-level game agent is the rule-based production
 system CLIPS~\cite{CLIPS-RM}. It uses forward chaining based on the Rete
@@ -457,7 +458,7 @@ It consists of a
 list of patterns that have to be matched by facts in the fact-base. For the
 antecedent in \reflst{lst:clips-rule} there have to be fitting
 \texttt{state}, \texttt{visible}, and \texttt{position} facts with
-matching constants and variables started with questionmarks.
+matching constants and variables started with question marks.
 The consequent is written behind the antecedent and
 defines the procedure to execute when the rule is
 activated. It usually modifies the fact-base by retracting and
@@ -532,44 +533,44 @@ memory so that PDDL can access the world model with all changes applied.
 This way the strengths of both PDDL and CLIPS are combined.
 
 
-\subsubsection{Golog} Golog is a high-level programming language based on the
-\emph{Situation Calculus}, a first order logic formalism for knowledge
-representation and reasoning in dynamic domains~\cite{Golog}. It
-allows representing world states as terms called
-\emph{situations}. These are used in functions yielding new situations
-(e.g. for the situation resulting from performing an action in a
-situation). Relations using situations are called \emph{fluents} and
-describe some property in a situation. \emph{Actions} are also
-represented by terms and are modeled with preconditions and
-effects. If an action is possible in a situation is defined by a
-sentence, the \emph{precondition axiom}. The \emph{successor state
-  axiom} is a sentence describing fluents in the situation resulting
-from performing the action in a situation satisfying the precondition
-axiom.
+%% \subsubsection{Golog} Golog is a high-level programming language based on the
+%% \emph{Situation Calculus}, a first order logic formalism for knowledge
+%% representation and reasoning in dynamic domains~\cite{Golog}. It
+%% allows representing world states as terms called
+%% \emph{situations}. These are used in functions yielding new situations
+%% (e.g. for the situation resulting from performing an action in a
+%% situation). Relations using situations are called \emph{fluents} and
+%% describe some property in a situation. \emph{Actions} are also
+%% represented by terms and are modeled with preconditions and
+%% effects. If an action is possible in a situation is defined by a
+%% sentence, the \emph{precondition axiom}. The \emph{successor state
+%%   axiom} is a sentence describing fluents in the situation resulting
+%% from performing the action in a situation satisfying the precondition
+%% axiom.
 
-Golog as a high-level programming language features imperative
-programming constructs such as procedures, conditions, and loops as
-well as nondeterministic branching. There are multiple dialects of
-Golog which add features needed for robotic
-applications. ConGolog~\cite{ConGolog} adds concurrency and
-interrupts, IndiGolog~\cite{IndiGolog} adds on-line execution of
-programs and sensing actions, which determine the value of a fluent
-during execution, and ReadyLog~\cite{ferrein08ras} extends IndiGolog
-to support robot decision making in dynamic real-time domains. With these
-dialects, Golog has been found useful for robot applications in
-multiple domains such as domestic service robots. By providing an
-interface to the robot memory, the strength of Golog, the highly
-expressive behavior specification, can be combined with other
-approaches to compensate the weaknesses, e.g. inefficient
-planning~\cite{Golog-Planning}. There already are approaches to
-combine Golog an PDDL into a continuous planning framework that uses
-PDDL for planning and Golog for execution and expanding placeholder
-actions into sub-plans based on current information unavailable during
-initial planning~\cite{ContPlanGolog}. It is implemented with a
-translation between PDDL and
-Golog~\cite{Golog-PDDL-Trans}. Furthermore, the robot memory could be
-useful as additional persistent and distributed knowledge storage
-(e.g. for saving the context during an interrupt~\cite{Gesche-Thesis}).
+%% Golog as a high-level programming language features imperative
+%% programming constructs such as procedures, conditions, and loops as
+%% well as nondeterministic branching. There are multiple dialects of
+%% Golog which add features needed for robotic
+%% applications. ConGolog~\cite{ConGolog} adds concurrency and
+%% interrupts, IndiGolog~\cite{IndiGolog} adds on-line execution of
+%% programs and sensing actions, which determine the value of a fluent
+%% during execution, and ReadyLog~\cite{ferrein08ras} extends IndiGolog
+%% to support robot decision making in dynamic real-time domains. With these
+%% dialects, Golog has been found useful for robot applications in
+%% multiple domains such as domestic service robots. By providing an
+%% interface to the robot memory, the strength of Golog, the highly
+%% expressive behavior specification, can be combined with other
+%% approaches to compensate the weaknesses, e.g. inefficient
+%% planning~\cite{Golog-Planning}. There already are approaches to
+%% combine Golog an PDDL into a continuous planning framework that uses
+%% PDDL for planning and Golog for execution and expanding placeholder
+%% actions into sub-plans based on current information unavailable during
+%% initial planning~\cite{ContPlanGolog}. It is implemented with a
+%% translation between PDDL and
+%% Golog~\cite{Golog-PDDL-Trans}. Furthermore, the robot memory could be
+%% useful as additional persistent and distributed knowledge storage
+%% (e.g. for saving the context during an interrupt~\cite{Gesche-Thesis}).
 
 \subsubsection{Motion Planners}
 Another kind of widely used planners in robotics are geometric motion
@@ -806,7 +807,7 @@ action information needed by the robot. %% (e.g. how to grab tools) and
 %
 Furthermore large ontologies limit the performance of KnowRob because
 of the Prolog implementation and general complexity. In contrast to
-the robot memory intendet in this thesis, KnowRob focuses on common
+the robot memory intended in this thesis, KnowRob focuses on common
 sense reasoning instead of an efficient and flexible on-line
 back-end. It does not support sharing knowledge between multiple
 robots and has a too strong focus on data only usable for reasoning
@@ -819,7 +820,7 @@ time to learn the distribution where they can be found).
 \label{sec:oro}
 The OpenRobots Ontology (ORO) is an open source knowledge processing
 framework for robotics~\cite{Oro}. It is designed to enable human-robot
-interaction by featureing commonsense ontologies similar to KnowRob and
+interaction by featuring commonsense ontologies similar to KnowRob and
 modeling the human point of view. It also uses RDF triples and OWL ontologies.
 The triple storage is implemented in Jena, a Java toolkit for RDF, and the
 inference with Pellet, a Java OWL reasoner. Besides knowledge storing,
@@ -907,7 +908,7 @@ website\footnote{\url{http://www.open-ease.org/}}.
 This section presents the approach of the proposed thesis. It starts
 with the goals we want to achieve with the robot memory and a
 theoretical foundation of the robot memory and how knowledge is
-transfered into a planner or reasoner. It follows an overview of the
+transferred into a planner or reasoner. It follows an overview of the
 architecture which describes in which components the robot memory is
 organized and how they interact with each other. Afterwards, we
 describe how the implementation is planned, especially for the robot
@@ -933,7 +934,7 @@ even large datasets such as remembered sights of objects.
 The robot memory has to allow multiple components to collaborate by
 consistently sharing a common database. This should especially be used
 to share a common world model between different kinds of planners and
-reasoners.  This allows combining them with their specialided
+reasoners.  This allows combining them with their specialized
 strengths (e.g. generating plans in PDDL and executing them in CLIPS).
 It avoids inconsistencies because the knowledge used by the planner or
 reasoner is generated by the robot memory and thus only one state
@@ -963,7 +964,7 @@ than to store all distances between each two objects in the memory and
 to keep them updated. When components using the robot memory can also
 provide computables to the robot memory, this adds a lot of
 versatility and expandability. To lower the computational effort of
-processing the same querry frequently it would be possible to add
+processing the same query frequently it would be possible to add
 time-bounded caching for computed knowledge.
 %% For example it would be possible to add
 %% a commonsense reasoner similar to KnowRob or ORO providing computables
@@ -1010,7 +1011,7 @@ after a component registers an event it wants to be notified
 about. These events include appearances of new instances of a specific
 knowledge type, modifications and deletions of it, as well as
 sentences becoming true or queries returning documents. The balance of
-expressiveness versus performance still needs to be found. An examle
+expressiveness versus performance still needs to be found. An example
 use case, in which event triggers are useful, is updating planner
 predicates.
 
@@ -1039,7 +1040,7 @@ memory needs to provide an interface for developers to introspect and
 modify the state represented in the robot memory. A visualization
 would also be desirable to analyze spatio-temporal data efficiently.
 
-\subsection{Theoratical Foundation}
+\subsection{Theoretical Foundation}
 \label{sec:formalism}
 In this subsection, we lay the theoretical foundation for the robot
 memory and the integration into planner and reasoner languages. For
@@ -1078,8 +1079,8 @@ defined as follows:
 \end{enumerate}
 This yields the set of all \textbf{finitely nested documents}
 $\mathcal{D}=\cup_{n\in\mathbb{N}}\mathcal{D}_n$. Infinite nesting and
-documents containing themself are not considered because they are not
-supported by the underlaying database implementation.
+documents containing themselves are not considered because they are not
+supported by the underlying database implementation.
 \\
 A \textbf{database} is a set of documents $\mathcal{DB} \subset \mathcal{D}$.
 %% with unique object
@@ -1107,7 +1108,7 @@ $$mem(\mathcal{RM})=DB \cup \bigcup_{f\in\mathcal{C}}f(\mathcal{D})$$
 
 To integrate the robot memory into PDDL, we need to define the
 \textbf{mapping functions} $map_d$ between documents and predicates, and
-$map_v$ between values and terms. As prequisite, the connection
+$map_v$ between values and terms. As prerequisite, the connection
 between key-names in documents and predicates, functions, and their
 attributes needs to be defined. Let $\mathcal{R}$ be the \textbf{set
   of predicate symbols} and $\mathcal{F}$ be the \textbf{set of function
@@ -1132,14 +1133,14 @@ Now we can define the mapping of values in documents to terms as
 follows. Values which are no sub-documents can be mapped directly to
 the corresponding constant:
 $$map_f(v)=v, v \in \mathcal{V} \setminus \mathcal{D}$$
-Otherwise the value is a sub-document, whis is mapped to a function term:
+Otherwise the value is a sub-document, which is mapped to a function term:
 \begin{align*}
   map_f(d)= &\text{ }f(map_f(v_1), ..., map_f(v_n)), \text{ iff } f \text{ is a n-array function in } \mathcal{F},\\
   &("function", name_{function}(f))\in d,
   \forall i \in \{1..n\} (name_{func-atr}(f,i), v_i)\in d\\
   map_f(d)= &\text{ } nil_f, otherwise\text{~~~~~~~~~~~~~~~}
 \end{align*}
-where $nil_f$ is a new constant used for unmapable documents.
+where $nil_f$ is a new constant used for not mappable documents.
 Similarly documents can be mapped to predicates as follows:
 \begin{align*}
   map_p(d)=&\text{ }p(map_f(v_1), ..., map_f(v_n)), \text{ iff } p \text{ is a n-array predicate in } \mathcal{R},\\
@@ -1192,11 +1193,11 @@ Robot Memory, Application Interface, and Application. The Back-End
 contains a databases for storing knowledge and executing
 queries. There is a private part and a shared part distributed between
 multiple robots using the same architecture. This distribution can
-utilize the replication features of the databese. The Robot
+utilize the replication features of the database. The Robot
 Memory-layer contains the central functions that distinguish the robot
 memory from a pure database. It contains the Storage-, Update-, and
 Query-manager which is an intermediate component that realizes most of
-the robot memorys functionality by modifying and enhancing queries,
+the robot memory's functionality by modifying and enhancing queries,
 storage and update requests before applying them to the database. If a
 query asks for virtual knowledge, the manager forwards it to the
 computable manager, which manages which computable is provided by
@@ -1233,8 +1234,8 @@ starts in the application requesting storage, modification, or
 querying of knowledge (over the language specific interface). The
 Storage-, Update-, and Query-manager forwards the request enhanced
 with management information to the database. For queries, the result
-is transfered back on the reversed path of the query request. For
-computables, the only difference in the dataflow is the knwledge
+is transferred back on the reversed path of the query request. For
+computables, the only difference in the data flow is the knowledge
 computation before executing the query in the database. The Storage-,
 Update-, and Query-manager additionally initiates the knowledge
 computation via the Computables Manager, which forwards the query to
@@ -1382,7 +1383,7 @@ of the Interface Provider and the usage of the robot memory in the
 planning language. As an example for the various planners and
 reasoners, we focus here on CLIPS. The Interface Provider for CLIPS
 can be realized as CLIPS-feature in Fawkes as it was already done for
-providing CLIPS access to the blackboard, Profobuf-messaging and the
+providing CLIPS access to the blackboard, Protobuf-messaging and the
 navgraph. The CLIPS \emph{robot-memory feature} will be implemented in C++
 and provides the CLIPS environment with functions that call C++
 functions of the robot-memory feature. For example \reflst{lst:clips-rm}
@@ -1434,7 +1435,7 @@ the expressiveness and convenience of representing and querying
 knowledge, the integration into planner and reasoner languages, and
 the shared access to the same world model in the robot memory across
 different applications of the same robot and between different
-robots. To perform the qualitiative evaluation, we will implement
+robots. To perform the qualitative evaluation, we will implement
 prototypes using main features of the robot memory. These prototypes
 act as proof of concept without implementing complete domain solutions
 which would extend the scope of the thesis.
@@ -1456,14 +1457,15 @@ in the robot memory. The resulting plan should be stored in the robot
 memory and queryable by CLIPS.
 %
 To evaluate event-triggers, we will register events depending on
-changes of the RCLL world model that could make a generated plan
-infeasable. These events should then be triggered during an RCLL
-game. This should show how useful and expressive registered events can
-be.
+changes of the RCLL world model that need to be updated in the local
+CLIPS agent. Furthermore we want to try more complex events, which
+could be used to trigger actions in the @Home domain (e.g. the space
+occupied by objects in the dishwasher is high enough to start it).
+This should show how useful and expressive registered events can be.
 % 
 These prototypes should show if the robot memory allows knowledge
 sharing between multiple planners and reasoners. A related thesis,
-which is in preperation, wants to utilize PDDL for global task
+which is in preparation, wants to utilize PDDL for global task
 planning and CLIPS for execution to achieve more efficient multi-robot
 behavior in the RCLL. It could benefit from using the robot memory and
 yield further evaluation results.
