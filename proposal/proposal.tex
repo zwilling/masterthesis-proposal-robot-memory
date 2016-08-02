@@ -661,29 +661,28 @@ query functions also use document structure. An example query is
 shown in \reflst{lst:mongo-query}. It searches for all documents in
 the collection \texttt{positions}
 %of the current database
-that have matching  values for \texttt{type} and \texttt{position}, and
+that have matching values for \texttt{type} and \texttt{position}, and
 are up to date, thus with a timestamp greater than the given
-one. Multiple key-value pairs in a query are conjunctive.
-Values can be checked and compared as in the example
-with a variety of operators such as \textit{not}, \textit{or},
-\textit{equals}, \textit{greater than}, etc. These
-queries can be evaluated very quickly, especially when \emph{indexing}
-is used, a database feature that manages indexes for a combination of
-document keys. For more complex queries it is
+one. Multiple key-value pairs in a query are conjunctive.  Values can
+be checked and compared as in the example with a variety of operators
+such as \textit{not}, \textit{or}, \textit{equals}, \textit{greater
+  than}, etc. These queries can be evaluated very quickly, especially
+when \emph{indexing} is used, a database feature that manages indexes
+for a combination of document keys. For more complex queries it is
 possible to add arbitrary JavaScript functions with the \textit{where}
 operator to check if documents match the query. Furthermore, it is
-possible to aggregate results using the \emph{Map-Reduce}\todo{reference} paradigm
-which maps resulting documents to intermediate documents which are
-then reduced until the end-result is found. For example this allows
-querying for the nearest visible object by getting all visible
-objects, mapping their position to a distance and reducing them to the
-nearest one by dropping more distant ones when comparing them.  The
-higher expressiveness of these queries comes with the price of slower
-computation. However, the computational effort can be reduced by
-formulating queries smartly. Many usual queries,
-e.g. \reflst{lst:mongo-query}, can be formulated without using
-\textit{where} operators. Furthermore, complex queries can be nested
-to filter documents first with a fast query and execute the
+possible to aggregate results using the \emph{Map-Reduce}
+paradigm~\cite{mapreduce} which maps resulting documents to
+intermediate documents which are then reduced until the end-result is
+found. For example this allows querying for the nearest visible object
+by getting all visible objects, mapping their position to a distance
+and reducing them to the nearest one by dropping more distant ones
+when comparing them.  The higher expressiveness of these queries comes
+with the price of slower computation. However, the computational
+effort can be reduced by formulating queries smartly. Many usual
+queries, e.g. \reflst{lst:mongo-query}, can be formulated without
+using \textit{where} operators. Furthermore, complex queries can be
+nested to filter documents first with a fast query and execute the
 computationally costly query only on the remaining documents.
 %
 An especially useful feature of MongoDB which allows sharing knowledge
@@ -1043,8 +1042,10 @@ would also be desirable to analyze spatio-temporal data efficiently.
 \subsection{Theoratical Foundation}
 \label{sec:formalism}
 In this subsection, we lay the theoretical foundation for the robot
-memory and the integration into planner and reasoner formalisms. For
-this proposal we focus on the integration into Golog.
+memory and the integration into planner and reasoner languages. For
+this proposal we focus on the integration into PDDL. The theoretical
+foundation can be used to formalize the integration into Golog, but
+this exceeds the scope of the proposed thesis.
 
 The formal definition of the robot memory describes how knowledge is
 represented and depends on the definition of computables. Because the
@@ -1103,8 +1104,57 @@ of a database~$\mathcal{DB}$ and a set of computables~$\mathcal{C}$:
 $$\mathcal{RM}=(\mathcal{DB},\mathcal{C})$$
 \\
 The set of documents \textbf{memorized} by the robot memory consists
-of underlying database and all computable documents:
+of the underlying database and all computable documents:
 $$mem(\mathcal{RM})=DB \cup \bigcup_{f\in\mathcal{C}}f(\mathcal{D})$$
+
+To integrate the robot memory into PDDL, we need to define the
+\textbf{mapping functions} $map_d$ between documents and predicates, and
+$map_v$ between values and terms. As prequisite, the connection
+between key-names in documents and predicates, functions, and their
+attributes needs to be defined. Let $\mathcal{R}$ be the \textbf{set
+  of predicate symbols} and $\mathcal{F}$ be the \textbf{set of function
+  symbols}, then
+%
+$$name_{predicate}: \mathcal{R} \rightarrow \mathcal{K}
+\text{ and } name_{function}: \mathcal{F} \rightarrow \mathcal{K}$$
+%
+map to the strings used in document keys
+(e.g. $name_{predicate}(\text{at})="\text{at}"$). The functions
+%
+$$ name_{func-atr}: \mathcal{R} \times \mathbb{N} \rightarrow
+\mathcal{K}
+\text{ and } name_{pre-atr}: \mathcal{F} \times \mathbb{N} \rightarrow
+\mathcal{K}$$
+%
+map the attributes in the predicate or function to a key
+name (e.g. $name_{pre-atr}(\text{at},1)="\text{object}"$ and
+$name_{pre-atr}(\text{at},2)="\text{room}"$).
+\\
+Now we can define the mapping of values in documents to terms as
+follows. Values which are no sub-documents can be mapped directly to
+the corresponding constant:
+$$map_f(v)=v, v \in \mathcal{V} \setminus \mathcal{D}$$
+Otherwise the value is a sub-document, whis is mapped to a function term:
+\begin{align*}
+  map_f(d)=f(map_f(v_1), ..., map_f(v_n)),& \text{ iff } f \text{ is a n-array function in } \mathcal{F},\\
+  &("function", name_{function}(f))\in d,\\
+  &\forall i \in \{1..n\} (name_{func-atr}(f,i), v_i)\in d\\
+  map_f(d)=nil_f, otherwise\text{~~~~~~~~~~~~~~~}
+\end{align*}
+where $nil_f$ is a new constant used for unmapable documents.
+Similarly documents can be mapped to predicates as follows:
+\begin{align*}
+  map_p(d)=p(map_f(v_1), ..., map_f(v_n)),& \text{ iff } p \text{ is a n-array predicate in } \mathcal{R},\\
+  &("predicate", name_{predicate}(p))\in d,\\
+  &\forall i \in \{1..n\} (name_{pre-atr}(p,i), v_i)\in d\\
+  map_p(d)=nil_p, otherwise\text{~~~~~~~~~~~~~~~}
+\end{align*}
+For example is
+\begin{align*}
+map_p&(\{("predicate", "at"),("at\_object", "cup"),("at\_room",
+"kitchen")\})\\
+&= at(map_f("cup"), map_f("kitchen")) = at(cup, kitchen)
+\end{align*}
 
 
 \subsection{Architecture}
@@ -1115,8 +1165,8 @@ functionality is organized in smaller components and how these
 components interact with each other. The architecture contains
 standard concepts of software engineering, most importantly a layered
 architecture, functional abstraction, and data
-abstraction~\cite{software-architecture}\todo{nagl ref?}, to allow reusability and
-adaptability to changing requirements and use cases.
+abstraction~\cite{software-architecture}\todo{nagl ref?}, to allow
+reusability and adaptability to changing requirements and use cases.
 %% functional abstraction,
 %% %% (e.g. of the different processes happening during storing and
 %% %% querying)
