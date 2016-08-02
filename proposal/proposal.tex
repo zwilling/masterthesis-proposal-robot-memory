@@ -1014,14 +1014,14 @@ expressiveness versus performance still needs to be found. An examle
 use case, in which event triggers are useful, is updating planner
 predicates.
 
-\smallskip
-\textbf{Modular Extensions:} The robot memory should be expandable
-with modules to implement additional functionality. An example module
-could introduce knowledge decay for removing knowledge with exceeded
-lifetimes. This would allow differentiating short-term knowledge and
-long-term knowledge. Other modules could, for example, reset a part of
-the robot memory to an initial state or add confidence values to
-stored knowledge.
+%% \smallskip
+%% \textbf{Modular Extensions:} The robot memory should be expandable
+%% with modules to implement additional functionality. An example module
+%% could introduce knowledge decay for removing knowledge with exceeded
+%% lifetimes. This would allow differentiating short-term knowledge and
+%% long-term knowledge. Other modules could, for example, reset a part of
+%% the robot memory to an initial state or add confidence values to
+%% stored knowledge.
 
 \smallskip
 \textbf{Persistent Storage:} To profit from long-time knowledge and to
@@ -1204,9 +1204,9 @@ which application and requests the computation on demanded. The
 component responsible for event-triggers receives and manages
 registrations of applications that want to be notified in the case of
 an event. It uses the Query-manager to check if events happen and
-notifies applications accordingly. Additional modules can be added to
-extend the functionality of the Storage-, Update-, and
-Query-manager.
+notifies applications accordingly. Additionally the Storage-, Update-,
+and Query-manager can initialize the robot memory (e.g. to setup the
+world model for a new RCLL game).
 %% These extensions can use the Command Pattern~\cite{design-patterns}
 %% and to work process compositionally and dynamically.
 Between the robot memory and a planner (or reasoner) components is the
@@ -1366,14 +1366,14 @@ events only on knowledge in the database or to compute the knowledge
 and check for the event in certain intervals while monitoring the
 computation time.
 
-Modules extend the functionality of the robot memory. For
-implementation, they can be called periodically or with hook-points at
-major steps of the robot memory such as initialization and query
-execution. For example, a knowledge decay module could use cronjob to
-remove documents with exceeded lifetimes in certain intervals. Further
-hook-points would be at query-modification time (e.g. to add
-additional meta-information) and at query-result-return time (e.g. to
-filter or modify resulting documents).
+%% The robot memory . For
+%% implementation, they can be called periodically or with hook-points at
+%% major steps of the robot memory such as initialization and query
+%% execution. For example, a knowledge decay module could use cronjob to
+%% remove documents with exceeded lifetimes in certain intervals. Further
+%% hook-points would be at query-modification time (e.g. to add
+%% additional meta-information) and at query-result-return time (e.g. to
+%% filter or modify resulting documents).
 
 \subsubsection{Planner/Reasoner}
 \label{sec:impl-planner}
