@@ -1431,14 +1431,13 @@ the RCLL and RoboCup@Home league, and quantitatively.
 
 The qualitative evaluation analyzes how well the robot memory can be
 used, how useful it is, and where difficulties are. It also includes
-the expressiveness and convenience of representing and querying
-knowledge, the integration into planner and reasoner languages, and
-the shared access to the same world model in the robot memory across
-different applications of the same robot and between different
-robots. To perform the qualitative evaluation, we will implement
-prototypes using main features of the robot memory. These prototypes
-act as proof of concept without implementing complete domain solutions
-which would extend the scope of the thesis.
+analyzing the expressiveness and convenience of representing and
+querying knowledge, the integration into planner and reasoner
+languages, and the shared access to the robot memory across different
+applications and robots. To perform the qualitative evaluation, we
+will implement prototypes using main features of the robot
+memory. These prototypes act as proof of concept without implementing
+complete domain solutions which would extend the scope of the thesis.
 %
 The general storage and query features of the robot memory will be
 evaluated in the RCLL context with a CLIPS agent that stores the world
@@ -1482,7 +1481,7 @@ be evaluated by comparing the times between giving the query and
 receiving the results with and without computables taking the
 computation time, either on demand or on changing data.
 
-To analyze how the query computation increases with increasing query
+To analyze how the query computation time increases with increasing query
 expressiveness and database scale, we want to implement a simple
 tidying up scenario. The robot memory models a scene with current
 object placements and object storage positions in increasing
@@ -1511,12 +1510,13 @@ which stores knowledge and can execute queries to retrieve it.
   \label{tab:gantt}
 \end{table}
 The time-schedule of the thesis is shown in \reftab{tab:gantt}. The
-first part focuses on developing a robot-memory prototype with a CLIPS
-interface and a virtual knowledge base. This prototype is then
+first part focuses on developing a robot-memory prototype with the
+CLIPS interface, infrastructure for computables, and fundamental
+connection to perception components. This prototype is then
 iteratively improved to implement all other features needed in the
-RCLL and in @Home. The robot-memory itself and both applications are
-then evaluated and the rest of the time is spent on the written
-thesis.
+RCLL and in RoboCup@Home domain. The robot-memory itself and both
+applications are then evaluated and the rest of the time is spent on
+the written report.
 
 
 \bibliographystyle{plain}
