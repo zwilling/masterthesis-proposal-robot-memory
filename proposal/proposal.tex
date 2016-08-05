@@ -166,17 +166,17 @@ the RoboCup Logistics League (RCLL) and the RoboCup@Home league.
 On the other hand, we present
 the most important software for the proposed thesis,
 the robot software framework Fawkes, planners and
-reasoners which should benefit from using the robot memory and
+reasoners, which should benefit from using the robot memory, and
 the database MongoDB used in the back-end of the robot memory.
 
 \subsection{RoboCup}
 \label{sec:robocup}
 \emph{RoboCup} is an international robotics competition founded to
 foster research in the field of robotics and artificial
-intelligence.~\cite{RoboCup-Paper}. It provides standardized problems as a
-platform to foster and compare research results. Research
-teams from all over the world compete in different leagues to
-benchmark their robotic system. RoboCup provides a research
+intelligence~\cite{RoboCup-Paper}. It provides standardized problems as a
+platform to foster and compare research results.
+Teams from all over the world compete in different leagues to
+benchmark their robotic systems. RoboCup provides a research
 test-bed, in which participating teams implement new approaches and
 make them robust against the challenges of the real world
 complexity. Furthermore, the competition leads to comparison and
@@ -213,11 +213,11 @@ application domain of robotics and artificial intelligence.
 The \emph{RoboCup Logistics League (RCLL)}\footnote{RoboCup Logistics
   League website: \url{http://www.robocup-logistics.org}}
 is an industry-oriented competition.  It tackles
-the problem of production logistics in a smart factory where mobile
+the problem of production logistics in a smart factory, where mobile
 robots have to plan, execute, and optimize the material and production
 flow between machines to produce and deliver products according to
-dynamic orders. Competing teams deploy a group of three robots
-which have to build ordered products autonomously by interacting with
+dynamic orders. Each competing team deploys a group of three robots
+that has to build ordered products autonomously by interacting with
 \emph{Modular Production Machines (MPS)} and transporting work pieces
 between these machines.
 \begin{wrapfigure}{r}{0.3\textwidth}
@@ -229,8 +229,8 @@ between these machines.
   \label{fig:rcll}
 \end{wrapfigure}
 \reffig{fig:rcll} shows an RCLL robot filling
-a machine which mounts colored rings on work pieces. The robots are
-based on the Festo Robotino 3 platform which uses a holonomic drive,
+a machine that mounts colored rings on work pieces. The robots are
+based on the Festo Robotino 3 platform, which uses a holonomic drive,
 and can be extended and programmed by the teams. The robot shown in
 \reffig{fig:rcll} was built by the Carologistics team and uses a
 laser range finder for localization, a custom made gripper for
@@ -238,12 +238,12 @@ handling work pieces, and several cameras for detection of markers and
 light-signals mounted on the machines~\cite{Carologistics2015,chapter-cps}. The
 game is controlled by a software component called \emph{referee box
   (refbox)} which randomizes the machine placement in the factory and
-the production orders, communicates with the competing robots,
-controls the machines, and awards points.
+the production orders, communicates with competing robots,
+controls machines, and awards points.
 
 The game consists of two phases~\cite{LLSF-Rules-2015}. In the first
 phase, the \emph{exploration phase}, the robots have to roam the
-factory to find randomly placed machines which are used later.
+factory to find randomly placed machines, which are used later.
 %% By detecting the light signal shown by the machines, the robots can
 %% determine the machine-type. For correct reports of discovered machines
 %% to the refbox the team is awarded points, for incorrect ones points
@@ -270,15 +270,15 @@ are build from colored cups with optionally mounted rings and a
 colored cap.
 %% \reffig{fig:prod-chain} shows the production chain to
 %% build a high complexity product.
-There are four different machine
-types. The \emph{base-station (BS)} provides new bases, the colored
-cups, as raw resource. The \emph{ring stations (RS)} mounts colored
-rings on a work piece
+There are four different machine types. The \emph{base-station (BS)}
+provides new bases, the colored cups, as raw resource. The \emph{ring
+  stations (RS)} mounts colored rings on a work piece,
 %after preparing it with a varying amount ofbases.
-The \emph{cap-station (CS)} mounts %black or grey
-caps to finish a product
+the \emph{cap-station (CS)} mounts
+%black or grey
+caps to finish a product, and
 %after loading it with a cap form a shelf first.
-The \emph{delivery-station (DS)} is used to deliver products.
+the \emph{delivery-station (DS)} is used to deliver products.
 
 A major challenge of the RCLL lies in the fully autonomous task
 planning and coordination of the multi-robot system in the dynamic
@@ -294,7 +294,7 @@ environment with spatial information and time constraints.
 To cope with these challenges, a
 multi-robot decision making is necessary and therefore a mechanism to
 share knowledge about the world model between the robots. This can be
-done by the robot memory which also allows combining a global planner
+done by the robot memory, which also allows combining a global planner
 for finding plans and a reasoner for plan execution.
 
 \subsubsection{RoboCup@Home League}
@@ -331,10 +331,12 @@ knowledge to incomplete task descriptions given by humans.
 
 Important challenges in the @Home league are acting robustly in a
 dynamic and only partial observable domestic environment and hybrid
-reasoning with qualitative and quantitative information.
+reasoning with symbolic and spatio-temporal information.
 The robot memory can help here because it allows to collect a lot
 of knowledge about the concrete domestic environment and, for example,
-log object observations to learn their spatio-temporal distribution.
+log object observations to learn their distribution~\cite{deebul}.
+Furthermore, it can help with hybrid reasoning by transforming
+spatio-temporal knowledge into symbolic knowledge with computables.
 %% Furthermore, detecting and manipulating objects in a personal
 %% environment can be difficult because the space the robot acts in, for
 %% example the frige, can be very clouded.
@@ -342,22 +344,22 @@ log object observations to learn their spatio-temporal distribution.
 \subsection{Fawkes Robot Software Framework}
 \label{sec:fawkes}
 The basis for the proposed thesis is the robot software framework
-\emph{Fawkes}\footnote{\url{http://www.fawkesrobotics.org}}
+\emph{Fawkes}\footnote{\url{http://www.fawkesrobotics.org}}, which is
 available as Open Source~\cite{FawkesDesign,Fawkes-RCLL-2014}.
 %and developed at the Knowledge-based Systems
 %Group\footnote{\url{http://www.kbsg.rwth-aachen.de}} (KBSG) at RWTH
 %Aachen University
 It is designed to work with
 various robots in different domains and follows a component-based
-software design which separates functional entities into individual
+software design, which separates functional entities into individual
 software modules~\cite{component}. This enables reusing
 software solutions for robotic problems such as localization,
-perception, reasoning, and behavior execution. The compiled
+perception, reasoning, and behavior execution. Compiled
 components can be loaded as \emph{plugins} at run-time.
 %
 Plugin activity is organized in threads
 %to make use of multi-core architectures. The threads
-which can be run continuously ore hooked into
+that can be run continuously ore hooked into
 the main-loop of Fawkes to order the execution into a
 \emph{sense-think-act} cycle.
 %This guarantees that higher-level components can use the latest data.
@@ -367,16 +369,16 @@ long.
 % Ros blabla from BA?
 Features in Fawkes are provided as \textit{aspects}. These are
 based on aspect-oriented programming~\cite{aspect_oriented} and give
-access to a particular feature. Threads that need to use a feature can
+access to particular features. Threads that need to use a feature can
 inherit from the corresponding aspect. For example, there are aspects
 for accessing logging, timing, and specific external libraries~\cite{tnthesis}.
 
 The communication between plugins is realized with a \emph{hybrid blackboard}
 paradigm. The blackboard lists structured entries called
-\emph{interfaces} which contain qualitative and quantitative information.
+\emph{interfaces}, which contain qualitative and quantitative information.
 Interfaces can be
 provided by one plugin at a time, the writer, and read by other
-plugins, the readers. This allows a very flexible communication
+plugins, the readers. This allows a flexible communication
 because the interface is independent from the concrete writer and readers.
 For example, sensor and actor plugins can be exchanged by simulation
 plugins~\cite{LLSF-Sim}.
@@ -392,13 +394,13 @@ motor command to the motor controller, readers can send messages to
 the interface.
 
 As a communication infrastructure between different components, the
-blackboard is a limited possibility to realize a robot memory.
+blackboard has only limited possibility to realize a robot memory.
 %shared between multiple planners and reasoners in the current version of
 %Fawkes.
 Indeed the blackboard works well for providing information and
 sending commands, though there are limitations for this
 application. The size and structure of blackboard interfaces is fixed, and
-thus does not allow to dynamically represent more information.
+thus does not allow to dynamically represent more or other information.
 %% , such as positions
 %% of detected objects, than initially defined.
 Furthermore the blackboard does not support long-time memory,
@@ -1498,14 +1500,26 @@ hard drive.
 
 \section{Conclusion}
 \label{sec:conclusion}
-In the proposed thesis, we want to develop a robot memory for Fawkes,
-which stores knowledge and can execute queries to retrieve it.
+In the proposed master thesis, we develop the conceptual and
+architectural design of a generic robot memory
+
+
 \todo[inline]{finish}
 \begin{itemize}
+\item RM compact
+\item background roocup, application rcll @home, fawkes, planner reasoner clips
+  pddl motion planer, mongodb
+\item related work 
 \item Challenges
 \item Impact
 \item Contribution/Conzept
 \end{itemize}
+
+%% The contributions of the proposed thesis include the conceptual and
+%% architectural design of a generic robot memory to share knowledge
+%% between different knowledge based systems and multiple robots and to
+%% allow hybrid reasoning based on a capable and efficient storage of
+%% spatio-temporal and symbolic knowledge.
 
 \subsection{Schedule}
 \begin{table}
