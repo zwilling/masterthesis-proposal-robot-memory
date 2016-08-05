@@ -79,8 +79,8 @@ we mean the generalization of the Data-Information-Knowledge-Wisdom
 (DIKW) hierarchy~\cite{DIKW} ranging from point clouds (data) to
 cluster positions (information), derived object positions and action
 recipes (knowledge), and learned probability distributions
-(wisdom). This includes spatio-temporal knowledge such as position
-coordinates with time-stamps as well as symbolic knowledge (e.g. in
+(wisdom). This includes spatio-temporal knowledge, such as position
+coordinates with time-stamps, as well as symbolic knowledge (e.g. in
 which room the robot currently is). Stored knowledge is used by
 planners and reasoners, knowledge based systems (KBS), to implement
 robot behavior. These are often specialized and have different
@@ -200,7 +200,7 @@ application domain of robotics and artificial intelligence.
 %%   League} with robots solving different challenges in desaster
 %% scenarios and \emph{RoboCup@Work} with robots operating in an
 %% industrial scenario to perform identification, handling and
-%% transporting tasks with work related objects such as skrews and
+%% transporting tasks with work related objects, such as skrews and
 %% nuts. The \emph{RoboCup Logistics League (RCLL)} which features
 %% logistics robots in a production scenario and the \emph{RoboCup@Home}
 %% leage featuring service robots in a domestic environment are presented
@@ -319,7 +319,7 @@ research in the area of domestic service robots, to build a research
 community and to envision autonomous multi-purpose robots helping
 humans and especially elder people in the personal life.
 
-The competition consists of multiple sub-tasks
+The competition consists of multiple sub-tasks,
 such as finding and manipulating objects, navigation tasks,
 remembering persons, wait on tables, acting as
 nurse, and an open challenge~\cite{athome-rules}.
@@ -353,7 +353,7 @@ It is designed to work with
 various robots in different domains and follows a component-based
 software design, which separates functional entities into individual
 software modules~\cite{component}. This enables reusing
-software solutions for robotic problems such as localization,
+software solutions for robotic problems, such as localization,
 perception, reasoning, and behavior execution. Compiled
 components can be loaded as \emph{plugins} at run-time.
 %
@@ -609,7 +609,7 @@ the form of continuous positions and time related events.
 %% implementation is important.
 MongoDB is a \emph{document-oriented}
 database which fits particularly well for the application in this thesis. It
-provides many useful features such as flexible data structures, aggregation,
+provides many useful features, such as flexible data structures, aggregation,
 and distribution over multiple machines, which would take a large effort to
 implement manually. It has proven as powerful and scalable data
 storage~\cite{mongodb,RoboDB} and is widely used. In contrast to
@@ -764,7 +764,7 @@ KnowRob is an open source knowledge processing system for
 cognition-enabled robots~\cite{KnowRob,KnowRob-Representation}. It is
 designed to store knowledge about the environment and set it into
 relation to common sense knowledge to understand vaguely described
-tasks such as "set the table". For representation and inference of knowledge,
+tasks, such as "set the table". For representation and inference of knowledge,
 KnowRob uses Description Logic and approaches of the semantic web.
 %% , an effort to make websites machine understandable,
 Each small piece of
@@ -778,7 +778,7 @@ setting objects or classes of objects into relation. The graph can be
 represented with multiple RDF triples, where the subject and object
 are nodes and the predicate is a directed edge from the subject to the
 object. In these ontologies it is possible to represent common sense
-knowledge such as "milk is-a perishable", "refrigerator
+knowledge, such as "milk is-a perishable", "refrigerator
 storage-place-for perishable", and "refrigerator is-a
 box-container". Thus a robot asked to bring milk could infer that the
 milk is stored in the refrigerator which needs to be opened first
@@ -803,7 +803,7 @@ inference with ontologies intuitive.
 %% implementing and computing the other components algorithms in Prolog.
 To understand the robots environment large and detailed ontologies are
 necessary. KnowRob features acquiring and connecting these from
-various sources such as online common sense databases, the cloud-based
+various sources, such as online common sense databases, the cloud-based
 robot infrastructure RoboEarth and websites for
 deriving object information from internet shops and action recipes
 from how-to websites giving step by step instructions.
@@ -869,7 +869,7 @@ logged data can later be queried by the robot or a developer. This
 allows better evaluation and fault analysis because the data would
 otherwise be disposed and logging of the whole
 Data-Information-Knowledge-Wisdom (DIKW) hierarchy~\cite{DIKW} enables
-retracing processes such as from point clouds (data) to cluster
+retracing processes, such as from point clouds (data) to cluster
 positions (information) to object positions (knowledge) combined from
 multiple clues to learning results (wisdom). This work already
 implemented a basic connection to MongoDB in Fawkes for storing
@@ -936,7 +936,7 @@ use it as a source, or collaborate using the same memory. It should be
 flexible enough to store any kind of data, information, knowledge, and
 wisdom of the DIKW hierarchy in any structure. For example the robot
 memory should be able to store a world model, perception results and
-even large datasets such as remembered sights of objects.
+even large datasets, such as remembered sights of objects.
 
 \smallskip
 \textbf{Consistent Knowledge Sharing Between Knowledge Based Systems:}
@@ -1004,7 +1004,7 @@ latices.
 \smallskip
 \textbf{Spatio-Temporal Grounding:} It is often desirable to ground
 stored knowledge based on location and time because this is the
-prerequisite for many applications such as spatio-temporal clustering
+prerequisite for many applications, such as spatio-temporal clustering
 and learning distributions (e.g. at which day-times objects can be
 found at which positions~\cite{deebul}). Thus the robot
 memory has to be able to store knowledge tagged with spatio-temporal
@@ -1033,7 +1033,7 @@ predicates.
 
 \smallskip
 \textbf{Persistent Storage:} To profit from long-time knowledge and to
-operate robots over long time as necessary in intended domains
+operate robots over long time as necessary in intended domains,
 such as the domestic service, the knowledge needs to be stored
 persistently. This way, it is not lost when restarting a robot or
 repeating an experiment depending on knowledge stored in the robot
@@ -1304,7 +1304,7 @@ of the robot memory is only locally relevant. The other part that
 should be shared has to be set up as MongoDB replica set as already
 described in \refsec{sec:mongodb}. This ensures that efficient
 networking code is used. The other problems of a distributed
-database such as consistency, master election, and synchronization are
+database, such as consistency, master election, and synchronization are
 solved by MongoDB using replication. The back-end also contains the
 operations log (oplog) of MongoDB, a separate
 %% capped
@@ -1325,7 +1325,7 @@ applications and the robot memory because this determines the
 expressiveness and has a large impact on the performance. We choose to
 use the query language of MongoDB as it is already used between the
 robot memory and the back-end. This has many advantages compared to
-using other query languages such as SQL, SPARQL,
+using other query languages, such as SQL, SPARQL,
 XQuery~\cite{query-languages}, and JSONiq~\cite{jsoniq}.
 %
 For the application view, the query language of MongoDB is a good
@@ -1501,25 +1501,51 @@ hard drive.
 \section{Conclusion}
 \label{sec:conclusion}
 In the proposed master thesis, we develop the conceptual and
-architectural design of a generic robot memory
+architectural design of a generic robot memory and implement it in
+Fawkes with MongoDB. The envisioned robot memory is a generic,
+capable, and efficient long-time storage for knowledge, which is the
+basis for memorizing a complex environment and thus for reasoning in
+it. The robot memory is a knowledge sharing system, on the one hand,
+for multiple knowledge based systems and, on the other hand, for
+multiple robots working collaboratively. Therefore it allows a
+consistent and tight integration of planners and reasoners while
+avoiding multiple state estimations for each KBS. The robot memory is
+a hybrid reasoning tool that allows storig spatio-temporal knowledge
+and transforming it on demand into symbolic knowledge.
 
+In contrast to existing knowledge processing systems, such as KnowRob
+and ORO, the concept of the robot memory decouples the storage of
+knowledge and reasoning on it and is based on a document-oriented
+representation. As we want to show in the evaluation of the thesis,
+this allows more efficient and scalable querying and tighter
+integration of multiple KBS and robots teams.
 
-\todo[inline]{finish}
-\begin{itemize}
-\item RM compact
-\item background roocup, application rcll @home, fawkes, planner reasoner clips
-  pddl motion planer, mongodb
-\item related work 
-\item Challenges
-\item Impact
-\item Contribution/Conzept
-\end{itemize}
+The architecture of the robot memory builds on top of a database
+system and contains components for dispatching and enhancing queries
+and storage requests, computables providing knowledge computed on
+demand, and event-triggers for notifications about changes. There are
+interfaces components, which provide the functionality of the robot
+memory for KBS by giving access in the used languages and transforming
+query results into the appropriate form. Applications using the robot
+memory can store and query knowledge, provide computables for other
+components, and use event trigers.
 
-%% The contributions of the proposed thesis include the conceptual and
-%% architectural design of a generic robot memory to share knowledge
-%% between different knowledge based systems and multiple robots and to
-%% allow hybrid reasoning based on a capable and efficient storage of
-%% spatio-temporal and symbolic knowledge.
+Challenges of the thesis include the conceptual tuning of the
+document-oriented knowledge representation and querying to achieve a
+balance between expressiveness and computation time, the design of
+computables in a document-oriented system to allow on demand
+computation of knowledge in an efficient and still powerfull way, and
+the robust knowledge sharing in a distributed multi-robot system.
+
+The main part of the thesis focuses on the robot memory as back-end of
+a robot system and foundation for future applications, such as a
+thesis in preperation about global PDDL planning in the RCLL with
+CLIPS as executive. Nevertheless we will use the RCLL and RoboCup@Home
+application domains to implement prototypes utilizing the robot memory
+and working as proof of concept for qualitative evaluation and basis
+for quantitative evaluation. For these two application domains, we
+will connect the robot memory to CLIPS, PDDL, and various perception
+components.
 
 \subsection{Schedule}
 \begin{table}
