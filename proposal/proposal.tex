@@ -58,19 +58,33 @@
 \section{Introduction}
 \label{sec:introduction}
 
-In the science fiction comedy-drama Robot \&
-Frank~\cite{robot-and-frank}, a domestic service robot supports and
-takes care of the demential, old man Frank to allow him a happy and
-meaningful life. The robot cooks healthy food, helps in the household,
-and treats mental issues by encouraging Frank to work on challenging
-projects. To realize this vision of intelligent and helpful robots, a
-couple of challenges have to be solved. The proposed thesis focuses on
-the challenges of building a robot memory required in many
-applications. For example domestic robots serving breakfast need a
-robot memory to know which items belong on the table, where they are
-stored, and how to clean up afterwards. Intelligent factory robots
-need to know where resources are placed, what products are ordered,
-and which actions need to be executed to reach a goal.
+
+As autonomous robots are about to advance into more and more complex
+and unstructured domains, multiple challenges arise. One of the
+challenges is allowing them to grasp their environment and make smart
+decisions based on their knowledge. To solve this, robots have to
+memorize observations and gained knowledge about the environment and
+provide this knowledge to reasoning and planning systems. When
+multiple reasoning and planning systems are used and when multiple
+robots should work in collaboration, memorized knowledge has to be
+shared. The aim of the proposed thesis is to design and implement a
+robot memory that is capable of storing and querying knowledge,
+sharing it between multiple systems and robots, and allowing hybrid
+reasoning on it.
+
+%% In the science fiction comedy-drama Robot \&
+%% Frank~\cite{robot-and-frank}, a domestic service robot supports and
+%% takes care of the demential, old man Frank to allow him a happy and
+%% meaningful life. The robot cooks healthy food, helps in the household,
+%% and treats mental issues by encouraging Frank to work on challenging
+%% projects. To realize this vision of intelligent and helpful robots, a
+%% couple of challenges have to be solved. The proposed thesis focuses on
+%% the challenges of building a robot memory required in many
+%% applications. For example domestic robots serving breakfast need a
+%% robot memory to know which items belong on the table, where they are
+%% stored, and how to clean up afterwards. Intelligent factory robots
+%% need to know where resources are placed, what products are ordered,
+%% and which actions need to be executed to reach a goal.
 
 The basic requirements of a robot memory are representing and storing
 knowledge and providing it again when being queried. With knowledge,
@@ -1509,9 +1523,9 @@ it. The robot memory is a knowledge sharing system, on the one hand,
 for multiple knowledge based systems and, on the other hand, for
 multiple robots working collaboratively. Therefore it allows a
 consistent and tight integration of planners and reasoners while
-avoiding multiple state estimations for each KBS. The robot memory is
-a hybrid reasoning tool that allows storig spatio-temporal knowledge
-and transforming it on demand into symbolic knowledge.
+avoiding multiple state estimations. The robot memory is a hybrid
+reasoning tool that allows storing spatio-temporal knowledge and
+transforming it on demand into symbolic knowledge.
 
 In contrast to existing knowledge processing systems, such as KnowRob
 and ORO, the concept of the robot memory decouples the storage of
@@ -1521,25 +1535,26 @@ this allows more efficient and scalable querying and tighter
 integration of multiple KBS and robots teams.
 
 The architecture of the robot memory builds on top of a database
-system and contains components for dispatching and enhancing queries
-and storage requests, computables providing knowledge computed on
-demand, and event-triggers for notifications about changes. There are
-interfaces components, which provide the functionality of the robot
-memory for KBS by giving access in the used languages and transforming
-query results into the appropriate form. Applications using the robot
-memory can store and query knowledge, provide computables for other
-components, and use event trigers.
+system. It contains components for dispatching and enhancing queries
+and storage requests, for knowledge computed on demand, and for
+event-triggers notifying about changes. There are interface
+components, which provide the functionality of the robot memory for
+KBS by giving access in the used languages and transforming query
+results into the appropriate form. Applications using the robot memory
+can store and query knowledge, provide computables for other
+components, and use event triggers.
 
 Challenges of the thesis include the conceptual tuning of the
 document-oriented knowledge representation and querying to achieve a
-balance between expressiveness and computation time, the design of
-computables in a document-oriented system to allow on demand
-computation of knowledge in an efficient and still powerfull way, and
-the robust knowledge sharing in a distributed multi-robot system.
+balance between expressiveness and computation time. Further
+challenges are the design of computables in a document-oriented system
+to allow on demand computation of knowledge in an efficient and still
+powerful way, and the robust knowledge sharing in a distributed
+multi-robot system.
 
 The main part of the thesis focuses on the robot memory as back-end of
 a robot system and foundation for future applications, such as a
-thesis in preperation about global PDDL planning in the RCLL with
+thesis in preparation about global PDDL planning in the RCLL with
 CLIPS as executive. Nevertheless we will use the RCLL and RoboCup@Home
 application domains to implement prototypes utilizing the robot memory
 and working as proof of concept for qualitative evaluation and basis
