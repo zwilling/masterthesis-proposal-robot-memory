@@ -1,0 +1,49 @@
+\lstdefinelanguage{Yaml}
+{
+  keywords={true,false,null,y,n},
+  sensitive=false,
+  comment=[l]{\#},
+  morecomment=[s]{/*}{*/},
+  morestring=[b]',
+  morestring=[b]",
+}
+
+% default style
+\lstdefinestyle{Yaml}
+{
+  language=Yaml,
+  basicstyle=\YAMLkeystyle,
+  breaklines=true,
+  showstringspaces=false,
+  %keywordstyle=\bfseries,
+  keywordstyle=\color{Mulberry},
+  %frame=lines,
+  %belowcaptionskip=8pt,
+  emphstyle=\itshape,
+  %numbers=left,
+  stepnumber=1,
+  %backgroundcolor=\color{blue!10},
+  rulecolor=\color{blue!50},
+  fillcolor=\color{blue!20},
+  %framexleftmargin=18pt,
+  %xleftmargin=18pt,
+  stringstyle=\color{BitterSweet},
+  %stringstyle=\color{BrickRed},
+  commentstyle=\color{BrickRed},
+  escapechar=\%
+  % emph={getup, servo, depends_skills},
+  %emphstyle=\underbar,
+  %numbers=left,
+  %stepnumber=1,
+  %%stringstyle=\ttfamily, % typewriter type for strings
+}
+\lstdefinestyle{SmallYaml}{
+  style=Yaml,
+  basicstyle=\ttfamily\footnotesize,
+  numbersep=6pt,
+}
+\lstdefinestyle{ReallySmallYaml}{
+  style=Yaml,
+  basicstyle=\ttfamily\tiny,
+  numbersep=5pt,
+}

@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   version="1.0"
+   baseProfile="full"
+   id="body"
+   width="896.79785"
+   height="1058.5275"
+   viewBox="0 0 1 1"
+   preserveAspectRatio="none"
+   sodipodi:version="0.32"
+   inkscape:version="0.46"
+   sodipodi:docname="lua-logo-nolabel.svg"
+   inkscape:output_extension="org.inkscape.output.svg.inkscape">
+  <metadata
+     id="metadata2463">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <defs
+     id="defs2461">
+    <inkscape:perspective
+       sodipodi:type="inkscape:persp3d"
+       inkscape:vp_x="0 : 360 : 1"
+       inkscape:vp_y="0 : 1000 : 0"
+       inkscape:vp_z="720 : 360 : 1"
+       inkscape:persp3d-origin="360 : 240 : 1"
+       id="perspective2465" />
+  </defs>
+  <sodipodi:namedview
+     inkscape:window-height="805"
+     inkscape:window-width="1020"
+     inkscape:pageshadow="2"
+     inkscape:pageopacity="0.0"
+     guidetolerance="10.0"
+     gridtolerance="10.0"
+     objecttolerance="10.0"
+     borderopacity="1.0"
+     bordercolor="#666666"
+     pagecolor="#ffffff"
+     id="base"
+     showgrid="false"
+     inkscape:zoom="0.81527778"
+     inkscape:cx="360"
+     inkscape:cy="583.35945"
+     inkscape:window-x="345"
+     inkscape:window-y="155"
+     inkscape:current-layer="body" />
+  <title
+     id="title2444">SVG drawing</title>
+  <desc
+     id="desc2446">This was produced by version 4.2 of GNU libplot, a free library for exporting 2-D vector graphics.</desc>
+  <rect
+     id="background"
+     x="0.11604327"
+     y="0.22714125"
+     width="1"
+     height="1"
+     style="fill:#ffffff;stroke:none" />
+  <g
+     id="content"
+     transform="matrix(1.1388704e-3,0,0,-1.1388704e-3,-4.383683e-2,1.0321981)"
+     xml:space="preserve"
+     stroke-miterlimit="10.433"
+     fill-rule="even-odd"
+     font-style="normal"
+     font-variant="normal"
+     font-weight="normal"
+     font-stretch="normal"
+     font-size-adjust="none"
+     letter-spacing="normal"
+     word-spacing="normal"
+     style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;letter-spacing:normal;word-spacing:normal;text-anchor:start;fill:none;fill-opacity:1;stroke:#000000;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:10.43299961;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1">
+<path
+   d="M 874.04,512 L 873.57,530.63 L 872.17,549.02 L 869.87,567.13 L 866.68,584.96 L 862.64,602.48 L 857.76,619.66 L 852.07,636.48 L 845.59,652.92 L 838.34,668.96 L 830.34,684.57 L 821.62,699.73 L 812.21,714.42 L 802.11,728.61 L 791.37,742.29 L 779.99,755.43 L 768,768 L 755.43,779.99 L 742.29,791.37 L 728.61,802.11 L 714.42,812.21 L 699.73,821.62 L 684.57,830.34 L 668.96,838.34 L 652.92,845.59 L 636.48,852.07 L 619.66,857.76 L 602.48,862.64 L 584.96,866.68 L 567.13,869.87 L 549.02,872.17 L 530.63,873.57 L 512,874.04 C 312.05,874.04 149.96,711.95 149.96,512 C 149.96,312.05 312.05,149.96 512,149.96 C 711.95,149.96 874.04,312.05 874.04,512 z"
+   id="path2450"
+   style="fill:#00007f;fill-rule:nonzero;stroke:#00007f;stroke-width:0" />
+<path
+   d="M 768,661.96 L 767.86,667.42 L 767.45,672.8 L 766.78,678.11 L 765.85,683.33 L 764.66,688.46 L 763.23,693.49 L 761.57,698.42 L 759.67,703.24 L 757.54,707.93 L 755.2,712.5 L 752.65,716.95 L 749.89,721.25 L 746.93,725.41 L 743.79,729.41 L 740.45,733.26 L 736.94,736.94 L 733.26,740.45 L 729.41,743.79 L 725.41,746.93 L 721.25,749.89 L 716.95,752.65 L 712.5,755.2 L 707.93,757.54 L 703.24,759.67 L 698.42,761.57 L 693.49,763.23 L 688.46,764.66 L 683.33,765.85 L 678.11,766.78 L 672.8,767.45 L 667.42,767.86 L 661.96,768 C 603.4,768 555.92,720.52 555.92,661.96 C 555.92,603.4 603.4,555.92 661.96,555.92 C 720.52,555.92 768,603.4 768,661.96 z"
+   id="path2452"
+   style="fill:#ffffff;fill-rule:nonzero;stroke:#ffffff;stroke-width:0" />
+<path
+   d="M 980.08,874.04 L 979.94,879.5 L 979.53,884.88 L 978.86,890.19 L 977.92,895.41 L 976.74,900.54 L 975.31,905.57 L 973.64,910.5 L 971.74,915.31 L 969.62,920.01 L 967.28,924.58 L 964.73,929.02 L 961.97,933.33 L 959.01,937.48 L 955.86,941.49 L 952.53,945.34 L 949.02,949.02 L 945.34,952.53 L 941.49,955.86 L 937.48,959.01 L 933.33,961.97 L 929.02,964.73 L 924.58,967.28 L 920.01,969.62 L 915.31,971.74 L 910.5,973.64 L 905.57,975.31 L 900.54,976.74 L 895.41,977.92 L 890.19,978.86 L 884.88,979.53 L 879.5,979.94 L 874.04,980.08 C 815.48,980.08 768,932.6 768,874.04 C 768,815.48 815.48,768 874.04,768 C 932.6,768 980.08,815.48 980.08,874.04 z"
+   id="path2454"
+   style="fill:#00007f;fill-rule:nonzero;stroke:#00007f;stroke-width:0" />
+<text
+   transform="matrix(16.292,0,0,-16.292,240.25,330.98)"
+   font-size="20px"
+   id="text2456"
+   style="font-size:20px;fill:#ffffff;stroke:none;font-family:'Helvetica,sans-serif'">Lua</text>
+
+<path
+   d="M 929.06,724.5 L 935.16,712.08 L 940.88,699.51 L 946.22,686.78 L 951.18,673.92 L 955.75,660.93 L 959.94,647.82 L 963.74,634.6 L 967.14,621.27 L 970.16,607.85 L 972.78,594.34 L 975,580.76 L 976.82,567.11 L 978.24,553.4 L 979.26,539.64 L 979.87,525.84 L 980.08,512 C 980.08,253.49 770.51,43.922 512,43.922 C 253.49,43.922 43.922,253.49 43.922,512 C 43.922,770.51 253.49,980.08 512,980.08 C 602.49,980.08 691.04,953.85 766.93,904.56"
+   id="path2458"
+   style="stroke:#7f7f7f;stroke-width:10.86100006;stroke-dasharray:40.847" />
+</g></svg>

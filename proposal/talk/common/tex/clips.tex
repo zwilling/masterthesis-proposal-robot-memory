@@ -1,0 +1,97 @@
+\lstdefinelanguage{CLIPS}{
+  keywordsprefix=?,
+  %keywordsprefix=\$,
+  alsoletter={?=-<>*\$},
+  keywordstyle=\color{Mulberry!80!black}\bfseries,
+  keywords=[2]{deffunction, deftemplate, defrule, deffacts, defgeneric,
+    defmodule, defadvice, defglobal, defmethod, definstance, defclass},
+  keywordstyle=[2]\color{BrickRed!70!blue}\bfseries,
+  keywords=[3]{slot, multislot, type, default, default-dynamic,
+                      extends, crlf, range, nil, if, then, else, while,
+                      not, or, switch, case, and, reset,
+                      assert, test, declare, salience, return, bind, modify,
+                      retract, explicit, unique, node-index-hash,
+                      halt, printout, =>, <-},
+  keywordstyle=[3]\color{darkgray}\bfseries,
+  keywords=[4]{subsetp,progn, progn$, not, node-index-hash, create$,
+    append$, length$, printout},%
+  keywordstyle=[4]\color{gray}\bfseries,
+  %identifierstyle=\color{black},
+  sensitive=false,
+  comment=[l]{;},
+  commentstyle=\color{purple}\ttfamily,
+  stringstyle=\color{red}\ttfamily,
+  morestring=[b]"
+}
+
+
+\lstdefinestyle{CLIPS}
+{
+  language=CLIPS,
+  basicstyle=\footnotesize\ttfamily\vspace{0.2cm},
+  breaklines=true,
+  showstringspaces=false,
+  %keywordstyle=\bfseries,
+  %keywordstyle=\color{Mulberry},
+  frame=lines,
+  belowcaptionskip=-3pt,
+  emphstyle=\itshape,
+  numbers=left,
+  stepnumber=1,
+  backgroundcolor=\color{gray!10},
+  rulecolor=\color{gray!80},
+  fillcolor=\color{gray!10},
+  framexleftmargin=16pt,
+  xleftmargin=16pt,
+  %stringstyle=\color{BitterSweet},
+  stringstyle=\color{BrickRed},
+  commentstyle=\color{BrickRed},
+  escapechar=\%
+  % emph={getup, servo, depends_skills},
+  %emphstyle=\underbar,
+  %numbers=left,
+  %stepnumber=1,
+  %%stringstyle=\ttfamily, % typewriter type for strings
+}
+
+\lstdefinestyle{SmallCLIPS}{
+  style=CLIPS,
+  basicstyle=\ttfamily\footnotesize,
+  numbersep=6pt,
+}
+\lstdefinestyle{ReallySmallCLIPS}{
+  style=CLIPS,
+  basicstyle=\ttfamily\scriptsize,
+  numbersep=5pt,
+}
+
+\lstdefinestyle{ReallySmallCLIPSNoFrame}{
+  style=CLIPS,
+  basicstyle=\ttfamily\scriptsize,
+  numbersep=5pt,
+  frame=none,
+  backgroundcolor=\color{white},
+  framextopmargin=0pt,
+  framexbottommargin=0pt
+}
+
+\lstdefinestyle{SuperSmallCLIPSNoFrame}{
+  style=CLIPS,
+  basicstyle=\ttfamily\fontsize{10pt}{10pt}\selectfont,
+  numbers=none,
+  frame=none,
+  backgroundcolor=\color{white},
+  framextopmargin=0pt,
+  framexbottommargin=0pt,
+  framexleftmargin=-2pt, xleftmargin=-2pt,
+}
+
+\lstdefinestyle{SmallCLIPSNoFrame}{
+  style=CLIPS,
+  basicstyle=\ttfamily\footnotesize,
+  numbersep=5pt,
+  frame=none,
+  backgroundcolor=\color{white},
+  framextopmargin=0pt,
+  framexbottommargin=0pt
+}

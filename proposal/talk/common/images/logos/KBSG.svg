@@ -1,0 +1,617 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="791.93988"
+   height="313.55295"
+   id="svg2"
+   sodipodi:version="0.32"
+   inkscape:version="0.48.1 r9760"
+   version="1.0"
+   sodipodi:docname="KBSG.svg"
+   inkscape:output_extension="org.inkscape.output.svg.inkscape">
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="0.7"
+     inkscape:cx="319.92189"
+     inkscape:cy="47.354003"
+     inkscape:document-units="px"
+     inkscape:current-layer="layer3"
+     width="1052.3622px"
+     height="744.09449px"
+     inkscape:window-width="1270"
+     inkscape:window-height="953"
+     inkscape:window-x="0"
+     inkscape:window-y="26"
+     showguides="true"
+     inkscape:guide-bbox="true"
+     showgrid="true"
+     fit-margin-top="0"
+     fit-margin-left="0"
+     fit-margin-right="0"
+     fit-margin-bottom="0"
+     inkscape:window-maximized="0" />
+  <defs
+     id="defs4">
+    <marker
+       inkscape:stockid="Arrow2Mstart"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="Arrow2Mstart"
+       style="overflow:visible">
+      <path
+         id="path4296"
+         style="font-size:12px;fill-rule:evenodd;stroke-width:0.625;stroke-linejoin:round"
+         d="M 8.7185878,4.0337352 -2.2072895,0.01601326 8.7185884,-4.0017078 c -1.7454984,2.3720609 -1.7354408,5.6174519 -6e-7,8.035443 z"
+         transform="scale(0.6,0.6)"
+         inkscape:connector-curvature="0" />
+    </marker>
+    <linearGradient
+       inkscape:collect="always"
+       id="linearGradient6741">
+      <stop
+         style="stop-color:#800000;stop-opacity:1;"
+         offset="0"
+         id="stop6743" />
+      <stop
+         style="stop-color:#800000;stop-opacity:0;"
+         offset="1"
+         id="stop6745" />
+    </linearGradient>
+    <linearGradient
+       id="linearGradient5456">
+      <stop
+         id="stop5458"
+         offset="0"
+         style="stop-color:#800000;stop-opacity:1;" />
+      <stop
+         id="stop5460"
+         offset="1"
+         style="stop-color:#800000;stop-opacity:0;" />
+    </linearGradient>
+    <marker
+       inkscape:stockid="StopS"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="StopS"
+       style="overflow:visible">
+      <path
+         id="path3351"
+         d="M 0,5.65 0,-5.65"
+         style="fill:none;stroke:#000000;stroke-width:1pt"
+         transform="scale(0.2,0.2)"
+         inkscape:connector-curvature="0" />
+    </marker>
+    <marker
+       inkscape:stockid="Torso"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="Torso"
+       style="overflow:visible">
+      <g
+         id="g3388"
+         transform="scale(0.7,0.7)">
+        <path
+           id="path3390"
+           d="m -4.7792281,-3.239542 c 2.350374,0.3659393 5.30026732,1.9375477 5.03715532,3.62748546 C -0.00518779,2.0778819 -2.2126741,2.6176539 -4.5630471,2.2517169 -6.9134221,1.8857769 -8.521035,0.75201414 -8.257922,-0.93792336 -7.994809,-2.6278615 -7.1296041,-3.6054813 -4.7792281,-3.239542 z"
+           style="fill:none;stroke:#000000;stroke-width:1.25;marker-start:none;marker-mid:none;marker-end:none"
+           inkscape:connector-curvature="0" />
+        <path
+           id="path3392"
+           d="M 4.4598789,0.08866574 C -2.5564571,-4.378332 5.2248769,-3.9061806 -0.84829578,-8.7197331"
+           style="fill:none;stroke:#000000;stroke-width:1pt;marker-end:none"
+           inkscape:connector-curvature="0" />
+        <path
+           id="path3394"
+           d="M 4.9298719,0.05752074 C -1.3872731,1.7494689 1.8027579,5.4782079 -4.9448731,7.5462725"
+           style="fill:none;stroke:#000000;stroke-width:1pt;marker-start:none;marker-end:none"
+           inkscape:connector-curvature="0" />
+        <rect
+           id="rect3396"
+           transform="matrix(0.527536,-0.849533,0.887668,0.460484,0,0)"
+           y="-1.7408575"
+           x="-10.391706"
+           height="2.7608147"
+           width="2.6366582"
+           style="fill-rule:evenodd;stroke-width:1pt;marker-end:none" />
+        <rect
+           id="rect3398"
+           transform="matrix(0.671205,-0.741272,0.790802,0.612072,0,0)"
+           y="-7.9629307"
+           x="4.9587269"
+           height="2.8614161"
+           width="2.7327356"
+           style="fill-rule:evenodd;stroke-width:1pt;marker-end:none" />
+        <path
+           id="path3400"
+           transform="matrix(0,-1.109517,1.109517,0,25.96648,19.71619)"
+           d="m 16.779951,-28.685045 a 0.60731727,0.60731727 0 1 1 -1.214634,0 0.60731727,0.60731727 0 1 1 1.214634,0 z"
+           sodipodi:ry="0.60731727"
+           sodipodi:rx="0.60731727"
+           sodipodi:cy="-28.685045"
+           sodipodi:cx="16.172634"
+           style="fill:#ff0000;fill-opacity:0.75;fill-rule:evenodd;stroke:#000000;stroke-width:1pt;marker-start:none;marker-end:none"
+           sodipodi:type="arc" />
+        <path
+           id="path3402"
+           transform="matrix(0,-1.109517,1.109517,0,26.8245,16.99126)"
+           d="m 16.779951,-28.685045 a 0.60731727,0.60731727 0 1 1 -1.214634,0 0.60731727,0.60731727 0 1 1 1.214634,0 z"
+           sodipodi:ry="0.60731727"
+           sodipodi:rx="0.60731727"
+           sodipodi:cy="-28.685045"
+           sodipodi:cx="16.172634"
+           style="fill:#ff0000;fill-opacity:0.75;fill-rule:evenodd;stroke:#000000;stroke-width:1pt;marker-start:none;marker-end:none"
+           sodipodi:type="arc" />
+      </g>
+    </marker>
+    <marker
+       inkscape:stockid="RazorWire"
+       id="RazorWire"
+       refX="0"
+       refY="0"
+       orient="auto">
+       style=&quot;overflow:visible&quot;&gt;
+      <path
+   id="path3408"
+   transform="scale(0.8,0.8)"
+   style="fill:#808080;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:0.1pt"
+   d="m 0.02272727,-0.74009011 0,1.4375 -7.78124997,2.31250001 18.4374997,0 -7.1874997,-2.31250001 0,-1.4375 7.2499997,-2.15624999 -18.4687497,0 7.74999997,2.15624999 z"
+   inkscape:connector-curvature="0" />
+</marker>
+    <marker
+       style="overflow:visible"
+       inkscape:stockid="InfiniteLineEnd"
+       id="InfiniteLineEnd"
+       refX="0"
+       refY="0"
+       orient="auto">
+      <g
+         id="g3411">
+        <circle
+           id="circle3413"
+           r="0.80000001"
+           cy="0"
+           cx="3"
+           sodipodi:cx="3"
+           sodipodi:cy="0"
+           sodipodi:rx="0.80000001"
+           sodipodi:ry="0.80000001" />
+        <circle
+           id="circle3415"
+           r="0.80000001"
+           cy="0"
+           cx="6.5"
+           sodipodi:cx="6.5"
+           sodipodi:cy="0"
+           sodipodi:rx="0.80000001"
+           sodipodi:ry="0.80000001" />
+        <circle
+           id="circle3417"
+           r="0.80000001"
+           cy="0"
+           cx="10"
+           sodipodi:cx="10"
+           sodipodi:cy="0"
+           sodipodi:rx="0.80000001"
+           sodipodi:ry="0.80000001" />
+      </g>
+    </marker>
+    <marker
+       style="overflow:visible"
+       inkscape:stockid="InfiniteLineStart"
+       id="InfiniteLineStart"
+       refX="0"
+       refY="0"
+       orient="auto">
+      <g
+         id="g3420"
+         transform="translate(-13,0)">
+        <circle
+           id="circle3422"
+           r="0.80000001"
+           cy="0"
+           cx="3"
+           sodipodi:cx="3"
+           sodipodi:cy="0"
+           sodipodi:rx="0.80000001"
+           sodipodi:ry="0.80000001"
+           d="M 3.8,0 C 3.8,0.44182781 3.4418278,0.80000001 3,0.80000001 2.5581722,0.80000001 2.2,0.44182781 2.2,0 c 0,-0.44182781 0.3581722,-0.80000001 0.8,-0.80000001 0.4418278,0 0.8,0.3581722 0.8,0.80000001 z" />
+        <circle
+           id="circle3424"
+           r="0.80000001"
+           cy="0"
+           cx="6.5"
+           sodipodi:cx="6.5"
+           sodipodi:cy="0"
+           sodipodi:rx="0.80000001"
+           sodipodi:ry="0.80000001"
+           d="M 7.3,0 C 7.3,0.44182781 6.9418278,0.80000001 6.5,0.80000001 6.0581722,0.80000001 5.7,0.44182781 5.7,0 c 0,-0.44182781 0.3581722,-0.80000001 0.8,-0.80000001 0.4418278,0 0.8,0.3581722 0.8,0.80000001 z" />
+        <circle
+           id="circle3426"
+           r="0.80000001"
+           cy="0"
+           cx="10"
+           sodipodi:cx="10"
+           sodipodi:cy="0"
+           sodipodi:rx="0.80000001"
+           sodipodi:ry="0.80000001"
+           d="M 10.8,0 C 10.8,0.44182781 10.441828,0.80000001 10,0.80000001 9.5581722,0.80000001 9.2,0.44182781 9.2,0 c 0,-0.44182781 0.3581722,-0.80000001 0.8,-0.80000001 0.441828,0 0.8,0.3581722 0.8,0.80000001 z" />
+      </g>
+    </marker>
+    <marker
+       inkscape:stockid="Arrow2Send"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="Arrow2Send"
+       style="overflow:visible">
+      <path
+         id="path3271"
+         style="font-size:12px;fill-rule:evenodd;stroke-width:0.625;stroke-linejoin:round"
+         d="M 8.7185878,4.0337352 -2.2072895,0.01601326 8.7185884,-4.0017078 c -1.7454984,2.3720609 -1.7354408,5.6174519 -6e-7,8.035443 z"
+         transform="matrix(-0.3,0,0,-0.3,0.69,0)"
+         inkscape:connector-curvature="0" />
+    </marker>
+    <marker
+       inkscape:stockid="Arrow1Mend"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="Arrow1Mend"
+       style="overflow:visible">
+      <path
+         id="path3247"
+         d="M 0,0 5,-5 -12.5,0 5,5 0,0 z"
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1pt;marker-start:none"
+         transform="matrix(-0.4,0,0,-0.4,-4,0)"
+         inkscape:connector-curvature="0" />
+    </marker>
+    <marker
+       inkscape:stockid="Arrow1Lstart"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="Arrow1Lstart"
+       style="overflow:visible">
+      <path
+         id="path3238"
+         d="M 0,0 5,-5 -12.5,0 5,5 0,0 z"
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1pt;marker-start:none"
+         transform="matrix(0.8,0,0,0.8,10,0)"
+         inkscape:connector-curvature="0" />
+    </marker>
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient6741"
+       id="linearGradient6747"
+       x1="-4.7079687"
+       y1="724.56152"
+       x2="938.43176"
+       y2="326.09348"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(0.9948652,0,0,-1.5517516,2.8186442,1124.9903)" />
+  </defs>
+  <metadata
+     id="metadata7">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="BackgroundFX"
+     id="layer1"
+     inkscape:groupmode="layer"
+     style="display:none"
+     transform="translate(-139.05524,-233.65249)">
+    <path
+       style="font-size:300px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:center;line-height:100%;writing-mode:lr-tb;text-anchor:middle;fill:#808080;fill-opacity:1;stroke:#000000;stroke-width:23.55257034;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;display:inline;font-family:Sans"
+       d="m 113.13342,231.03028 849.36201,0 0,222.95427 -849.36201,0 0,-222.95427"
+       id="path2243"
+       sodipodi:nodetypes="ccccc"
+       inkscape:connector-curvature="0" />
+  </g>
+  <g
+     inkscape:groupmode="layer"
+     id="layer6"
+     inkscape:label="TextBG"
+     style="display:none"
+     transform="translate(-139.05524,-233.65249)">
+    <rect
+       style="fill:none;stroke:#8b0000;stroke-width:23;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:0;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0;display:inline"
+       id="rect2253"
+       width="843.58478"
+       height="316.37042"
+       x="113.49337"
+       y="210.44501"
+       inkscape:export-filename="/home/stf/work/web/logo_KBSG.png"
+       inkscape:export-xdpi="300"
+       inkscape:export-ydpi="300" />
+  </g>
+  <g
+     inkscape:groupmode="layer"
+     id="layer15"
+     inkscape:label="TextSub"
+     style="display:inline"
+     transform="translate(-139.05524,-233.65249)">
+    <flowRoot
+       style="font-size:42px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:center;line-height:100%;writing-mode:lr-tb;text-anchor:middle;display:inline;font-family:Sans"
+       id="flowRoot2316"
+       xml:space="preserve"
+       transform="translate(-149.34124,354.83771)"
+       inkscape:export-filename="/home/stf/work/web/logo_KBSG.png"
+       inkscape:export-xdpi="300"
+       inkscape:export-ydpi="300"><flowRegion
+         id="flowRegion2318"><rect
+           style="font-size:42px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:center;line-height:100%;writing-mode:lr-tb;text-anchor:middle;font-family:Sans"
+           id="rect2320"
+           width="1020.0001"
+           y="149.80876"
+           x="172.85715"
+           height="374.28574" /></flowRegion><flowPara
+         id="flowPara2328">Knowledge-Based Systems Group</flowPara></flowRoot>  </g>
+  <g
+     inkscape:groupmode="layer"
+     id="layer3"
+     inkscape:label="Text_&lt;"
+     style="display:inline"
+     transform="translate(-139.05524,-233.65249)">
+    <path
+       style="font-size:300px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:center;line-height:100%;writing-mode:lr-tb;text-anchor:middle;display:inline;font-family:Sans"
+       d="m 193.67536,315.72074 72.96226,-79.83398 58.76419,0 -94.52227,103.56445 104.25057,115.13672 -63.36542,0 -78.08933,-86.13281"
+       id="flowRoot2236"
+       sodipodi:nodetypes="ccccccc"
+       inkscape:export-filename="/home/stf/work/web/logo_KBSG.png"
+       inkscape:export-xdpi="300"
+       inkscape:export-ydpi="300"
+       inkscape:connector-curvature="0" />
+  </g>
+  <g
+     inkscape:groupmode="layer"
+     id="layer13"
+     inkscape:label="Text_K"
+     style="display:none"
+     transform="translate(-139.05524,-233.65249)">
+    <flowRoot
+       style="font-size:300px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:center;line-height:100%;writing-mode:lr-tb;text-anchor:middle;display:inline;font-family:Sans"
+       id="flowRoot2293"
+       xml:space="preserve"
+       transform="translate(-457.05552,64.83771)"
+       inkscape:export-filename="/home/stf/work/web/logo_KBSG.png"
+       inkscape:export-xdpi="300"
+       inkscape:export-ydpi="300"><flowRegion
+         id="flowRegion2295"><rect
+           style="font-size:300px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:center;line-height:100%;writing-mode:lr-tb;text-anchor:middle;font-family:Sans"
+           id="rect2297"
+           width="1020.0001"
+           y="149.80876"
+           x="172.85715"
+           height="374.28574" /></flowRegion><flowPara
+         id="flowPara2299">K</flowPara></flowRoot>  </g>
+  <g
+     inkscape:groupmode="layer"
+     id="layer10"
+     inkscape:label="Text_B"
+     style="display:inline"
+     transform="translate(-139.05524,-233.65249)">
+    <flowRoot
+       style="font-size:300px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:center;line-height:100%;writing-mode:lr-tb;text-anchor:middle;display:inline;font-family:Sans"
+       id="flowRoot2237"
+       xml:space="preserve"
+       transform="translate(-249.34124,64.97042)"
+       inkscape:export-filename="/home/stf/work/web/logo_KBSG.png"
+       inkscape:export-xdpi="300"
+       inkscape:export-ydpi="300"><flowRegion
+         id="flowRegion2239"><rect
+           style="font-size:300px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:center;line-height:100%;writing-mode:lr-tb;text-anchor:middle;font-family:Sans"
+           id="rect2241"
+           width="1020.0001"
+           y="149.80876"
+           x="172.85715"
+           height="374.28574" /></flowRegion><flowPara
+         id="flowPara2249">B</flowPara></flowRoot>  </g>
+  <g
+     inkscape:groupmode="layer"
+     id="layer11"
+     inkscape:label="Text_S"
+     style="display:inline"
+     transform="translate(-139.05524,-233.65249)">
+    <flowRoot
+       style="font-size:300px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:center;line-height:100%;writing-mode:lr-tb;text-anchor:middle;display:inline;font-family:Sans"
+       id="flowRoot2256"
+       xml:space="preserve"
+       transform="matrix(1.0467426,0,0,0.9732887,-83.83614,71.720558)"
+       inkscape:export-filename="/home/stf/work/web/logo_KBSG.png"
+       inkscape:export-xdpi="300"
+       inkscape:export-ydpi="300"><flowRegion
+         id="flowRegion2258"><rect
+           style="font-size:300px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:center;line-height:100%;writing-mode:lr-tb;text-anchor:middle;font-family:Sans"
+           id="rect2260"
+           width="1020.0001"
+           y="149.80876"
+           x="172.85715"
+           height="374.28574" /></flowRegion><flowPara
+         id="flowPara2262">S</flowPara></flowRoot>  </g>
+  <g
+     inkscape:groupmode="layer"
+     id="layer12"
+     inkscape:label="Text_G"
+     style="display:inline"
+     transform="translate(-139.05524,-233.65249)">
+    <flowRoot
+       style="font-size:300px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:center;line-height:100%;writing-mode:lr-tb;text-anchor:middle;display:inline;font-family:Sans"
+       id="flowRoot2272"
+       xml:space="preserve"
+       transform="matrix(0.9661962,0,0,0.9732887,173.57658,72.312304)"
+       inkscape:export-filename="/home/stf/work/web/logo_KBSG.png"
+       inkscape:export-xdpi="300"
+       inkscape:export-ydpi="300"><flowRegion
+         id="flowRegion2274"><rect
+           style="font-size:300px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:center;line-height:100%;writing-mode:lr-tb;text-anchor:middle;font-family:Sans"
+           id="rect2276"
+           width="1020.0001"
+           y="149.80876"
+           x="172.85715"
+           height="374.28574" /></flowRegion><flowPara
+         id="flowPara2278">G</flowPara></flowRoot>  </g>
+  <g
+     inkscape:groupmode="layer"
+     id="layer8"
+     inkscape:label="TextOverlay"
+     style="display:none"
+     transform="translate(-139.05524,-233.65249)">
+    <path
+       style="font-size:300px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:center;line-height:100%;writing-mode:lr-tb;text-anchor:middle;fill:#ffffff;display:inline;font-family:Sans"
+       d="m 135.96885,234.3276 57.6563,0 0,221.73161 -57.6563,0 0,-221.73161"
+       id="path2223"
+       sodipodi:nodetypes="ccccc"
+       inkscape:export-filename="/home/stf/work/web/logo_KBSG.png"
+       inkscape:export-xdpi="300"
+       inkscape:export-ydpi="300"
+       inkscape:connector-curvature="0" />
+  </g>
+  <g
+     inkscape:groupmode="layer"
+     id="layer9"
+     inkscape:label="Text_!"
+     style="display:inline"
+     transform="translate(-139.05524,-233.65249)">
+    <flowRoot
+       style="font-size:300px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:center;line-height:100%;writing-mode:lr-tb;text-anchor:middle;fill:#800000;display:inline;font-family:Sans"
+       id="flowRoot2213"
+       xml:space="preserve"
+       transform="matrix(1.1251912,0,0,1.0046189,-597.37311,64.31695)"
+       inkscape:export-filename="/home/stf/work/web/logo_KBSG.png"
+       inkscape:export-xdpi="300"
+       inkscape:export-ydpi="300"><flowRegion
+         id="flowRegion2215"><rect
+           style="font-size:300px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:center;line-height:100%;writing-mode:lr-tb;text-anchor:middle;fill:#800000;font-family:Sans"
+           id="rect2217"
+           width="1020.0001"
+           y="149.80876"
+           x="172.85715"
+           height="374.28574" /></flowRegion><flowPara
+         id="flowPara2221">!</flowPara></flowRoot>  </g>
+  <g
+     inkscape:groupmode="layer"
+     id="layer2"
+     inkscape:label="Text_¬"
+     style="display:none"
+     transform="translate(-139.05524,-233.65249)">
+    <path
+       style="font-size:144px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:100%;writing-mode:lr-tb;text-anchor:start;fill:#800000;display:inline;font-family:Nimbus Sans L"
+       d="m 249.97874,323.82367 0,27.55119 59.36696,0.004 0.074,24.83825 25.67533,0.12322 -0.17857,-51.77763 -84.58054,0"
+       id="flowRoot2232"
+       sodipodi:nodetypes="ccccccc"
+       inkscape:connector-curvature="0" />
+  </g>
+  <g
+     inkscape:groupmode="layer"
+     id="layer4"
+     inkscape:label="Text_: links"
+     style="display:none"
+     transform="translate(-139.05524,-233.65249)">
+    <flowRoot
+       xml:space="preserve"
+       id="flowRoot2265"
+       style="font-size:175px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:start;line-height:100%;writing-mode:lr-tb;text-anchor:start;fill:#800000;font-family:Nimbus Sans L"
+       transform="translate(461.74746,233.68112)"><flowRegion
+         id="flowRegion2267"><rect
+           id="rect2269"
+           width="237.85713"
+           height="215.71428"
+           x="335.71429"
+           y="24.094482"
+           style="font-size:175px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:start;line-height:100%;writing-mode:lr-tb;text-anchor:start;fill:#800000;font-family:Nimbus Sans L" /></flowRegion><flowPara
+         id="flowPara2296">:</flowPara></flowRoot>  </g>
+  <g
+     inkscape:groupmode="layer"
+     id="layer5"
+     inkscape:label="Text_-"
+     style="display:none"
+     transform="translate(-139.05524,-233.65249)">
+    <flowRoot
+       xml:space="preserve"
+       id="flowRoot2286"
+       style="font-size:200px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:start;line-height:100%;writing-mode:lr-tb;text-anchor:start;fill:#800000;display:inline;font-family:Nimbus Sans L"
+       transform="matrix(1.9124934,0,0,1.6620299,174.76811,133.8921)"><flowRegion
+         id="flowRegion2288"><rect
+           id="rect2290"
+           width="237.85713"
+           height="215.71428"
+           x="335.71429"
+           y="24.094482"
+           style="font-size:200px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:start;line-height:100%;writing-mode:lr-tb;text-anchor:start;fill:#800000;font-family:Nimbus Sans L" /></flowRegion><flowPara
+         id="flowPara2294">-</flowPara></flowRoot>  </g>
+  <g
+     inkscape:groupmode="layer"
+     id="layer7"
+     inkscape:label="Text_: rechts"
+     style="display:none"
+     transform="translate(-139.05524,-233.65249)">
+    <flowRoot
+       xml:space="preserve"
+       id="flowRoot2300"
+       style="font-size:300px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:start;line-height:100%;writing-mode:lr-tb;text-anchor:start;fill:#800000;font-family:Nimbus Sans L"
+       transform="translate(577.44237,163.82178)"><flowRegion
+         id="flowRegion2302"><rect
+           id="rect2304"
+           width="284.28571"
+           height="310.66861"
+           x="335.71429"
+           y="24.094482"
+           style="font-size:300px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:start;line-height:100%;writing-mode:lr-tb;text-anchor:start;fill:#800000;font-family:Nimbus Sans L" /></flowRegion><flowPara
+         id="flowPara2306">:</flowPara></flowRoot>  </g>
+  <g
+     inkscape:groupmode="layer"
+     id="layer14"
+     inkscape:label="Text_."
+     style="display:none"
+     transform="translate(-139.05524,-233.65249)">
+    <path
+       style="font-size:300px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:center;line-height:100%;writing-mode:lr-tb;text-anchor:middle;fill:#800000;display:inline;font-family:Sans"
+       d="m 940.66706,401.48451 59.33624,0 0,52.38931 -59.33624,0 0,-52.38931"
+       id="flowRoot2313"
+       sodipodi:nodetypes="ccccc"
+       inkscape:connector-curvature="0" />
+  </g>
+  <g
+     inkscape:groupmode="layer"
+     id="layer16"
+     inkscape:label="Text_^"
+     style="display:inline"
+     transform="translate(-139.05524,-233.65249)">
+    <flowRoot
+       xml:space="preserve"
+       id="flowRoot2323"
+       style="font-size:200px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:start;line-height:100%;writing-mode:lr-tb;text-anchor:start;fill:#800000;display:inline;font-family:Nimbus Sans L"
+       transform="matrix(14.493492,0,0,0.9885949,-4799.5493,354.48081)"><flowRegion
+         id="flowRegion2325"><rect
+           id="rect2327"
+           width="237.85713"
+           height="215.71428"
+           x="335.71429"
+           y="24.094482"
+           style="font-size:200px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:start;line-height:100%;writing-mode:lr-tb;text-anchor:start;fill:#800000;font-family:Nimbus Sans L" /></flowRegion><flowPara
+         id="flowPara2329">-</flowPara></flowRoot>  </g>
+</svg>

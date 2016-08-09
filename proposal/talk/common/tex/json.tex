@@ -1,0 +1,55 @@
+\lstdefinelanguage{JavaScript}{
+  keywords={typeof, new, true, false, catch, function, return, null, catch, switch, var, if, in, while, do, else, case, break},
+  keywordstyle=\color{blue}\bfseries,
+  ndkeywords={class, export, boolean, throw, implements, import}, %, this
+  ndkeywordstyle=\color{darkgray}\bfseries,
+  identifierstyle=\color{black},
+  sensitive=false,
+  comment=[l]{//},
+  morecomment=[s]{/*}{*/},
+  commentstyle=\color{purple}\ttfamily,
+  stringstyle=\color{red}\ttfamily,
+  morestring=[b]',
+  morestring=[b]"
+}
+
+\lstdefinestyle{JSON}
+{
+  language=JavaScript,
+  morekeywords={interface,field,message,comment},
+  basicstyle=\footnotesize\ttfamily\vspace{0.2cm},
+  breaklines=true,
+  showstringspaces=false,
+  %keywordstyle=\bfseries,
+  keywordstyle=\color{Mulberry},
+  frame=lines,
+  belowcaptionskip=8pt,
+  emphstyle=\itshape,
+  numbers=left,
+  stepnumber=1,
+  backgroundcolor=\color{blue!10},
+  rulecolor=\color{blue!50},
+  fillcolor=\color{blue!20},
+  framexleftmargin=16pt,
+  xleftmargin=16pt,
+  %stringstyle=\color{BitterSweet},
+  stringstyle=\color{BrickRed},
+  commentstyle=\color{BrickRed},
+  escapechar=\%
+  % emph={getup, servo, depends_skills},
+  %emphstyle=\underbar,
+  %numbers=left,
+  %stepnumber=1,
+  %%stringstyle=\ttfamily, % typewriter type for strings
+}
+
+\lstdefinestyle{SmallJSON}{
+  style=JSON,
+  basicstyle=\ttfamily\footnotesize,
+  numbersep=6pt,
+}
+\lstdefinestyle{ReallySmallJSON}{
+  style=JSON,
+  basicstyle=\ttfamily\tiny,
+  numbersep=5pt,
+}
