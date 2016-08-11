@@ -54,22 +54,202 @@
 \begin{frame}
   \frametitle{Problem Description - Proposed Solution}
   \begin{columns}
-    \begin{column}{\textwidth - 4.5cm}
-Problems existing appraoches
-generic
-in kbs
+    \begin{column}{0.55\textwidth}
+  \begin{description}[]
+  \item[Problems existing approaches]<uncover@1-> \hfill \\
+    \begin{itemize}
+        \item Static data structure
+        \item Memory intertwined in single Knowledge Based System
+        \item Locality
+        \item Multiple state estimations, inconsistencies
+        \item Spatio-Temporal vs. Symbolic
+        \item Not scalable, efficient
+        \item Not persistent
+    \end{itemize}
+  \end{description}
     \end{column}
-    \begin{column}{4.5cm}
+    \begin{column}{0.5\textwidth}
+  \begin{description}[]
+  \item[Proposed Robot Memory]<uncover@2-> \hfill \\
+    \begin{itemize}
+        \item Generic representation 
+        \item Decoupled Memory from sources and consumers
+        \item Distributed for robot teams
+        \item Central, consistent storage\\\hfill
+        \item On demand computation
+        \item Scalable basis
+        \item Persistent
+    \end{itemize}
+  \end{description}
     \end{column}
   \end{columns}
 \end{frame}
 
-\section{Background}
-
+\begin{frame}
+  \frametitle{Idea Computables?}
+\end{frame}
 
 \section{Related Work}
+
+\begin{frame}
+  \frametitle{Related Work: Knowledge Processing Systems}
+  \begin{description}[]
+  \item[KnowRob]<uncover@1-> \hfill \\
+    \begin{itemize}
+    \item Common sense reasoning with ontologies
+          %explain with example (graph, rdf, milk)
+    \item Virtual knowledge base to interface perception
+    \item Based on Prolog
+    \end{itemize}
+  \smallskip
+  \item[OpenRobots Ontology (ORO)]<uncover@2-> \hfill \\
+    \begin{itemize}
+    \item Focus on human-robot interaction with ontologies
+    \item Modular architecture (knowledge decay, categorization)
+          %for short time memory, find missing information
+    \item Events notifying about changes
+    \end{itemize}
+  \end{description}
+  \begin{block}{}<uncover@3->
+  \begin{itemize}
+  \item Not aplicable for multi-robot systems
+  \item Scalability, efficiency concerns
+  \item Missing events/knowledge computation on demand
+  \end{itemize}
+  \end{block}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Related Work: Knowledge Processing Systems}
+  \begin{description}[]
+  \item[Generic Robot Database with MongoDB]<uncover@1-> \hfill \\
+    \begin{itemize}
+    \item Data logging for evaluation and fault analysis
+    \item Generic and scalable storage with MongoDB
+    \item Integration in Fawkes and ROS
+    \end{itemize}
+  \smallskip
+  \item[Open-EASE]<uncover@2-> \hfill \\
+    \begin{itemize}
+    \item Combination of KnowRob and\\
+          the Generic Robot Database with MongoDB
+    \item Focus on eLearning platform\\
+          (e.g. replay sensor input from database log)
+    \end{itemize}
+  \end{description}
+\end{frame}
+
+\section{Background}
+
+\begin{frame}
+  \frametitle{Background: Application Domains}
+  \begin{columns}
+    \begin{column}{0.5\textwidth}
+    \begin{flushleft}
+    \includegraphics[width=0.5\textwidth]{../img/rcll-feld}
+    \end{flushleft}
+  \begin{description}[]
+  \item[RoboCup Logistics League] \hfill \\
+    \begin{itemize}
+    \item Production logistics\\ in smart factory
+    \item[$\Rightarrow$] Share world model
+    \begin{itemize}
+    \item[$\rightarrow$] between robots
+    \item[$\rightarrow$] between global planner and reasoner executive
+    \end{itemize}
+    \end{itemize}
+  \end{description}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+    \begin{flushright}
+    \includegraphics[width=0.5\textwidth]{../img/pr2-kbsg-kitchen}
+    \end{flushright}
+  \begin{description}[]
+  \item[RoboCup@Home]<uncover@2-> \hfill \\
+    \begin{itemize}
+    \item Domestic service robots
+    \item[$\Rightarrow$] Collect knowledge about concrete environment
+    \item[$\Rightarrow$] Hybrid reasoning with spatio-temporal knowledge
+    \item[$\Rightarrow$] Persistent storage
+    \end{itemize}
+  \end{description}    
+    \end{column}
+  \end{columns}
+  
+\end{frame}
+
+\begin{frame}
+  \frametitle{Background: Planners and Reasoners}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Background: Fawkes}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Background: MongoDB}
+\end{frame}
+
+
 \section{Approach}
 \subsection{Goals}
+
+\begin{frame}
+  \frametitle{Goals}
+  \begin{description}[]
+  \item[Generic Storage and Retrieval]<uncover@1-> \hfill \\
+    \begin{itemize}
+    %\item Bla
+    \end{itemize}
+  \smallskip
+  \item[Knowledge Sharing Between Knowledge Based Systems]<uncover@1-> \hfill \\
+    \begin{itemize}
+    %\item Bla
+    \end{itemize}
+  \smallskip
+  \item[Special Views for Different Components]<uncover@1-> \hfill \\
+    \begin{itemize}
+    %\item Bla
+    \end{itemize}
+  \smallskip
+  \item[Knowledge Computation on Demand]<uncover@1-> \hfill \\
+    \begin{itemize}
+    %\item Bla
+    \end{itemize}
+  \end{description}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Goals (2)}
+  \begin{description}[]
+  \item[Shared Knowledge for Multi-Robot Systems]<uncover@1-> \hfill \\
+    \begin{itemize}
+    %\item Bla
+    \end{itemize}
+  \smallskip
+  \item[Spatio-Temporal Grounding]<uncover@1-> \hfill \\
+    \begin{itemize}
+    %\item Bla
+    \end{itemize}
+  \smallskip
+  \item[Event Triggers]<uncover@1-> \hfill \\
+    \begin{itemize}
+    %\item Bla
+    \end{itemize}
+  \smallskip
+  \item[Persistent Storage]<uncover@1-> \hfill \\
+    \begin{itemize}
+    %\item Bla
+    \end{itemize}
+  \smallskip
+  \item[Human Interface and Visualization]<uncover@1-> \hfill \\
+    \begin{itemize}
+    %\item Bla
+    \end{itemize}
+  \end{description}
+\end{frame}
+
 \subsection{Theoretical Foundation}
 \subsection{Architecture}
 \subsection{Implementation}
