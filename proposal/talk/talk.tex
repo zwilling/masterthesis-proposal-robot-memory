@@ -433,6 +433,28 @@ db.positions.find(
 \subsection{Implementation}
 \begin{frame}
   \frametitle{Implementation}
+  \begin{description}[]
+  \item[Back-End] \hfill \\
+    \begin{itemize}
+    \item Realized with MongoDB
+    \item Replication for multi-robot distribution
+    \end{itemize}
+  \smallskip
+  \item[Robot Memory] \hfill \\
+    \begin{itemize}
+    \item Query enhancing, adding meta information (e.g. decay time)
+    \item Dispatching raw DB queries and queries for computables
+    \item Computables: forward query $\rightarrow$ compute results $\rightarrow$ \\
+          cache results in DB $\rightarrow$ execute query on results
+    \item Event-trigger with MongoDB OpLog
+    \end{itemize}
+  \smallskip
+  \item[Planner/Reasoner] \hfill \\
+    \begin{itemize}
+    \item Provide interface to robot memory\\
+          (store/query features in CLIPS, domain creator in PDDL)
+    \end{itemize}
+  \end{description}  
 \end{frame}
 
 \section{Evaluation}
