@@ -3,6 +3,8 @@
 \input{../../listings/json.tex}
 
 \usepackage{todonotes}
+\usepackage{booktabs}
+\newcommand{\tabitem}{~~\llap{\textcolor{FawkesOrange}{\textbullet}}~~}
 
 \hypersetup{
   pdftitle      = {RobotMemory-Proposal-Talk},
@@ -91,12 +93,7 @@
   \end{columns}
 \end{frame}
 
-\begin{frame}
-  \frametitle{Idea Computables?}
-\end{frame}
-
 \section{Related Work}
-
 \begin{frame}
   \frametitle{Related Work: Knowledge Processing Systems}
   \begin{description}[]
@@ -460,6 +457,29 @@ db.positions.find(
 \section{Evaluation}
 \begin{frame}
   \frametitle{Evaluation}
+  %qualitative and quantitative
+  \begin{tabular}{l|l}
+  \textcolor{FawkesOrange}{\textbf{Prototype}} & \textcolor{FawkesOrange}{\textbf{Evaluation}}\\
+  \hline
+  \tabitem RCLL CLIPS agent & \tabitem Representing and querying\\
+                            & \tabitem Usability\\
+                            & \tabitem Reasoner integration\\
+  \hline
+  \tabitem RCLL world model sync & \tabitem Network throughput\\
+                                 & \tabitem Event-trigger\\
+  \hline
+  \tabitem RCLL PDDL            & \tabitem Planner integration\\
+  ~~~      domain creation      & \tabitem Knowledge Sharing\\
+                                & ~~~~Planner-Reasoner\\
+  \hline
+  \tabitem @Home Computables & \tabitem Knowledge Sharing\\
+  ~~~~                       & ~~~~Reasoner-Motion Planner\\
+                             & \tabitem Hybrid Reasoning\\
+  \hline
+  \tabitem @Home Tidy up scenatio & \tabitem Scalability\\
+                                  & \tabitem Expressiveness vs.\\
+                                  & ~~~~Computation Speed\\
+\end{tabular}
 \end{frame}
 
 \section{Challenges}
