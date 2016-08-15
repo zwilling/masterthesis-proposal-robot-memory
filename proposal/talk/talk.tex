@@ -2,6 +2,8 @@
 \input{../../listings/clips.tex}
 \input{../../listings/json.tex}
 
+\usepackage{todonotes}
+
 \hypersetup{
   pdftitle      = {RobotMemory-Proposal-Talk},
   pdfauthor     = {Frederik Zwilling},
@@ -22,6 +24,7 @@
 \date[Aug 16th 2016]{Aug 16th 2016 -- Master Thesis Proposal}
 
 \begin{document}
+\shorthandoff{"} % aus "o kein ö machen
 
 \frame[plain]{\titlepage}
 \addtocounter{framenumber}{-1}
@@ -210,6 +213,7 @@
   \begin{column}{0.17\linewidth}
   \includegraphics[width=\textwidth]{../img/CLIPS}
   \vspace{3.4cm}
+  \includegraphics[width=\textwidth]{../img/openrave}
   \end{column}
   \end{columns}
 \end{frame}
@@ -329,6 +333,94 @@ db.positions.find(
 \subsection{Theoretical Foundation}
 \begin{frame}
   \frametitle{Theoretical Foundation}
+\begin{description}[]
+  \item[Definition of documents representing knowledge] \hfill \\
+  \small e.g.~$\{("object","cup"),("room","kitchen"),("position",{\scriptstyle\{("x",8),("y",4)\}})\}$
+  \begin{enumerate}
+\item \textbf{Keys:} $\mathcal{K} := \Sigma^*$
+\item  \textbf{Atomic values:} $\mathcal{V}_0$ are constants
+\item \textbf{Unnested key-value pairs:} $\mathcal{P}_0:=\mathcal{K}\times\mathcal{V}_0$
+\item \textbf{Unnested documents:} \vspace{-0.3cm}
+%are sets of key-value pairs with unique keys and thus included in the power set of $\mathcal{P}_0$:\\
+\begin{align*}
+\mathcal{D}_0:=\{
+  d\in\mathbb{P}(\mathcal{P}_0)|
+  \forall (k,v),(k',v')\in d , k\neq k' \vee (k,v)=(k',v')
+  \}
+\end{align*}
+\end{enumerate}
+  \item[With nesting] \hfill \\
+  \begin{enumerate}
+\item  \textbf{Values:} $\mathcal{V}_n := \mathcal{V}_{n-1} \cup \mathcal{D}_{n-1}$
+\item \textbf{Key-Value Pairs:} $\mathcal{P}_n:=\mathcal{K}\times\mathcal{V}_n$
+\item \textbf{Documents:} \vspace{-0.3cm}
+\begin{align*}
+  \mathcal{D}_n:=\{
+  d\in\mathbb{P}(\mathcal{P}_n)|
+  \forall (k,v),(k',v')\in d , k\neq k' \vee (k,v)=(k',v')
+  \}
+\end{align*}
+\end{enumerate}
+  \end{description}
+  \textbf{Boundedly nested documents:} $\mathcal{D}=\cup_{n\in\{1..b\}}\mathcal{D}_n$\\
+  \textbf{Values:} $\mathcal{V}=\cup_{n\in\{1..b\}}\mathcal{V}_n$, with nesting bound $b$
+\end{frame}
+
+\begin{frame}
+  \frametitle{Theoretical Foundation}
+  \begin{description}[]
+  \item[Definition Robot Memory] \hfill \\
+    \begin{enumerate}
+      \item \textbf{Database:} finite set $\mathcal{DB} \subset \mathcal{D}$
+      \item \textbf{Query:} represented by document $q\in\mathcal{D}$\\
+      yields set of documents $r\subset\mathcal{DB}$ as result\\
+      e.g. $q=\{("object","cup"),("room","kitchen")\}$
+      \item \textbf{Computable:} $f: \mathcal{D} \rightarrow \mathbb{P}(\mathcal{D})$
+      % providing computable knowledge on demand
+      %computability and termination ensured by providing component
+      \item \textbf{Set of Computables:} $\mathcal{C}$
+      \item \textbf{Robot Memory:} $\mathcal{RM}=(\mathcal{DB},\mathcal{C})$
+      \item \textbf{Memorized Documents:} $mem(\mathcal{RM})=DB \cup \bigcup_{f\in\mathcal{C}}f(\mathcal{D})$
+    \end{enumerate}
+  \end{description}  
+\end{frame}
+
+\begin{frame}
+  \frametitle{Theoretical Foundation}
+    \begin{description}[]
+  \item[Mapping into PDDL] \hfill \\
+\vspace{-0.5cm}
+\small\begin{align*}
+\text{e.g. } map_p&(\{("predicate", "at"),("object", "cup"),("room","kitchen")\})\\
+             &= at(map_f("cup"), map_f("kitchen")) = at(cup, kitchen) \text{.}
+\end{align*}
+  \begin{enumerate}
+      \item \textbf{Predicate symbols} $\mathcal{R}$, \textbf{Function symbols} $\mathcal{F}$
+      \item \textbf{Name mapping:}
+      \begin{align*}
+        name_{pred}: \mathcal{R} \rightarrow \Sigma^* &\text{ and } name_{func}: \mathcal{F} \rightarrow \Sigma^*\\
+        %injective, disjunct
+        name_{pred-atr}: \mathcal{F} \times \mathbb{N} \rightarrow \mathcal{K} &\text{ and } name_{func-atr}: \mathcal{R} \times \mathbb{N} \rightarrow
+\mathcal{K}
+      \end{align*}
+      \only<1>{
+      \item \textbf{Map to function term:}
+      \begin{align*}
+        map_f(v)= &\text{ }v, v \in \mathcal{V} \setminus \mathcal{D}\\
+        map_f(d)= &\text{ }f(map_f(v_1), ..., map_f(v_n)), \text{ iff } f \text{ is a n-array function in } \mathcal{F},\\
+  ("functio&n", name_{func}(f))\in d, \forall i \in \{1..n\} (name_{func-atr}(f,i), v_i)\in d\\
+  map_f(d)= &\text{ } nil_f, otherwise
+      \end{align*}}
+      \only<2>{
+      \item \textbf{Map to function term}
+      \item \textbf{Map to predicate:}
+      \begin{align*}
+        map_p(d)=&\text{ }p(map_f(v_1), ..., map_f(v_n)), \text{ iff } p \text{ is a n-array predicate in } \mathcal{R},\\
+  ("predica&te", name_{pred}(p))\in d, \forall i \in \{1..n\} (name_{pred-atr}(p,i), v_i)\in d\\
+  map_p(d)=& \text{ }nil_p, otherwise
+      \end{align*}}
+    \end{enumerate}
+  \end{description}
 \end{frame}
 
 \subsection{Architecture}
