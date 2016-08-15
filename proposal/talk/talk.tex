@@ -62,9 +62,9 @@
 \begin{frame}
   \frametitle{Problem Description - Proposed Solution}
   \begin{columns}
-    \begin{column}{0.55\textwidth}
+    \begin{column}{0.58\textwidth}
   \begin{description}[]
-  \item[Problems existing approaches]<uncover@1-> \hfill \\
+  \item[Problems of existing approaches]<uncover@1-> \hfill \\
     \begin{itemize}
         \item Static data structure
         \item Memory intertwined in single Knowledge Based System
@@ -76,7 +76,7 @@
     \end{itemize}
   \end{description}
     \end{column}
-    \begin{column}{0.5\textwidth}
+    \begin{column}{0.48\textwidth}
   \begin{description}[]
   \item[Proposed Robot Memory]<uncover@2-> \hfill \\
     \begin{itemize}
@@ -97,51 +97,58 @@
 \begin{frame}
   \frametitle{Related Work: Knowledge Processing Systems}
   \begin{description}[]
-  \item[KnowRob]<uncover@1-> \hfill \\
+  \item[KnowRob/OpenRobots Ontology (ORO)]<uncover@1-> \hfill \\
     \begin{itemize}
     \item Common sense reasoning with ontologies
           %explain with example (graph, rdf, milk)
-    \item Virtual knowledge base to interface perception
-    \item Based on Prolog
-    \end{itemize}
-  \smallskip
-  \item[OpenRobots Ontology (ORO)]<uncover@2-> \hfill \\
-    \begin{itemize}
-    \item Focus on human-robot interaction with ontologies
-    \item Modular architecture (knowledge decay, categorization)
-          %for short time memory, find missing information
-    \item Events notifying about changes
+    \item Virtual knowledge base to interface perception/\\
+          Events notifying about changes
+    \item Based on Prolog/Java
     \end{itemize}
   \end{description}
-  \begin{block}{}<uncover@3->
+  \begin{block}{}<uncover@2->
   \begin{itemize}
   \item Not applicable for multi-robot systems
   \item Scalability, efficiency concerns
   \item Missing events/knowledge computation on demand
   \end{itemize}
   \end{block}
-\end{frame}
-
-
-\begin{frame}
-  \frametitle{Related Work}
-  \begin{description}[]
-  \item[Generic Robot Database with MongoDB]<uncover@1-> \hfill \\
+  \begin{description}
+  %% \item[OpenRobots Ontology (ORO)]<uncover@1-> \hfill \\
+  %%   \begin{itemize}
+  %%   \item Focus on human-robot interaction with ontologies
+  %%   \item Modular architecture (knowledge decay, categorization)
+  %%         %for short time memory, find missing information
+  %%   \item Events notifying about changes
+  %%   \end{itemize}
+  \item[Generic Robot Database with MongoDB]<uncover@3-> \hfill \\
     \begin{itemize}
     \item Data logging for evaluation and fault analysis
     \item Generic and scalable storage with MongoDB
     \item Integration in Fawkes and ROS
     \end{itemize}
-  \smallskip
-  \item[Open-EASE]<uncover@2-> \hfill \\
-    \begin{itemize}
-    \item Combination of KnowRob and\\
-          the Generic Robot Database with MongoDB
-    \item Focus on eLearning platform\\
-          (e.g. replay sensor input from database log)
-    \end{itemize}
   \end{description}
 \end{frame}
+
+%% \begin{frame}
+%%   \frametitle{Related Work}
+%%   \begin{description}[]
+%%   \item[Generic Robot Database with MongoDB]<uncover@1-> \hfill \\
+%%     \begin{itemize}
+%%     \item Data logging for evaluation and fault analysis
+%%     \item Generic and scalable storage with MongoDB
+%%     \item Integration in Fawkes and ROS
+%%     \end{itemize}
+%%   \smallskip
+%%   \item[Open-EASE]<uncover@2-> \hfill \\
+%%     \begin{itemize}
+%%     \item Combination of KnowRob and\\
+%%           the Generic Robot Database with MongoDB
+%%     \item Focus on eLearning platform\\
+%%           (e.g. replay sensor input from database log)
+%%     \end{itemize}
+%%   \end{description}
+%% \end{frame}
 
 \section{Background}
 
@@ -165,11 +172,12 @@
   \end{description}
     \end{column}
     \begin{column}{0.5\textwidth}
+    \pause
     \begin{flushright}
     \includegraphics[width=0.5\textwidth]{../img/pr2-kbsg-kitchen}
     \end{flushright}
   \begin{description}[]
-  \item[RoboCup@Home]<uncover@2-> \hfill \\
+  \item[RoboCup@Home] \hfill \\
     \begin{itemize}
     \item Domestic service robots
     \item[$\Rightarrow$] Collect knowledge about concrete environment
@@ -193,13 +201,13 @@
   \item Fact base and condition-action rules
   \item[$\Rightarrow$] Good for world model reasoning and\\ execution monitoring
   \end{itemize}
-  \item[Planning Domain Definition Language] \hfill \\
+  \item[Planning Domain Definition Language]<uncover@2-> \hfill \\
   \begin{itemize}
   \item Standardized language for planning problems
   \item Domain description and problem description
   \item[$\Rightarrow$] Good for finding global plans
   \end{itemize}
-  \item[Motion Planners] \hfill \\
+  \item[Motion Planners]<uncover@3-> \hfill \\
   \begin{itemize}
   \item Robot arm, locomotion collision avoidance
   \item Depend on spatio-temporal data
@@ -210,6 +218,7 @@
   \begin{column}{0.17\linewidth}
   \includegraphics[width=\textwidth]{../img/CLIPS}
   \vspace{3.4cm}
+  \pause\pause
   \includegraphics[width=\textwidth]{../img/openrave}
   \end{column}
   \end{columns}
@@ -260,7 +269,7 @@ db.positions.find(
   })
 \end{lstlisting}
 \end{columns}
-
+\pause
   \begin{itemize}
     \item Distributable with Replica Sets
     \item Expressive querying with JavaScript, MapReduce
@@ -274,56 +283,19 @@ db.positions.find(
 
 \begin{frame}
   \frametitle{Goals}
-  \begin{description}[]
-  \item[Generic Storage and Retrieval]<uncover@1-> \hfill \\
-    \begin{itemize}
-    %\item Bla
-    \end{itemize}
-  \smallskip
-  \item[Knowledge Sharing Between Knowledge Based Systems]<uncover@1-> \hfill \\
-    \begin{itemize}
-    %\item Bla
-    \end{itemize}
-  \smallskip
-  \item[Special Views for Different Components]<uncover@1-> \hfill \\
-    \begin{itemize}
-    %\item Bla
-    \end{itemize}
-  \smallskip
-  \item[Knowledge Computation on Demand]<uncover@1-> \hfill \\
-    \begin{itemize}
-    %\item Bla
-    \end{itemize}
-  \end{description}
-\end{frame}
-
-\begin{frame}
-  \frametitle{Goals (2)}
-  \begin{description}[]
-  \item[Shared Knowledge for Multi-Robot Systems]<uncover@1-> \hfill \\
-    \begin{itemize}
-    %\item Bla
-    \end{itemize}
-  \smallskip
-  \item[Spatio-Temporal Grounding]<uncover@1-> \hfill \\
-    \begin{itemize}
-    %\item Bla
-    \end{itemize}
-  \smallskip
-  \item[Event Triggers]<uncover@1-> \hfill \\
-    \begin{itemize}
-    %\item Bla
-    \end{itemize}
-  \smallskip
-  \item[Persistent Storage]<uncover@1-> \hfill \\
-    \begin{itemize}
-    %\item Bla
-    \end{itemize}
-  \smallskip
-  \item[Human Interface and Visualization]<uncover@1-> \hfill \\
-    \begin{itemize}
-    %\item Bla
-    \end{itemize}
+\begin{description}[]
+  \item[What should the robot memory be capable of?] \hfill \\
+  \begin{itemize}
+    \item Generic Storage and Retrieval
+    \item Knowledge Sharing Between Knowledge Based Systems
+    %% \item Special Views for Different Components
+    \item Knowledge Computation on Demand
+    \item Shared Knowledge for Multi-Robot Systems
+    %% \item Spatio-Temporal Grounding
+    \item Event Triggers
+    \item Persistent Storage
+    %% \item Human Interface and Visualization
+  \end{itemize}
   \end{description}
 \end{frame}
 
@@ -333,6 +305,7 @@ db.positions.find(
 \begin{description}[]
   \item[Definition of documents representing knowledge] \hfill \\
   \small e.g.~$\{("object","cup"),("room","kitchen"),("position",{\scriptstyle\{("x",8),("y",4)\}})\}$
+  \pause
   \begin{enumerate}
 \item \textbf{Keys:} $\mathcal{K} := \Sigma^*$
 \item  \textbf{Atomic values:} $\mathcal{V}_0$ are constants
@@ -359,6 +332,7 @@ db.positions.find(
 \end{align*}
 \end{enumerate}
   \end{description}
+  \pause
   \textbf{Boundedly nested documents:} $\mathcal{D}=\cup_{n\in\{1..b\}}\mathcal{D}_n$\\
   \textbf{Values:} $\mathcal{V}=\cup_{n\in\{1..b\}}\mathcal{V}_n$, with nesting bound $b$
 \end{frame}
@@ -391,6 +365,7 @@ db.positions.find(
 \text{e.g. } map_p&(\{("predicate", "at"),("object", "cup"),("room","kitchen")\})\\
              &= at(map_f("cup"), map_f("kitchen")) = at(cup, kitchen) \text{.}
 \end{align*}
+\pause
   \begin{enumerate}
       \item \textbf{Predicate symbols} $\mathcal{R}$, \textbf{Function symbols} $\mathcal{F}$
       \item \textbf{Name mapping:}
@@ -400,7 +375,7 @@ db.positions.find(
         name_{pred-atr}: \mathcal{F} \times \mathbb{N} \rightarrow \mathcal{K} &\text{ and } name_{func-atr}: \mathcal{R} \times \mathbb{N} \rightarrow
 \mathcal{K}
       \end{align*}
-      \only<1>{
+      \only<1-2>{
       \item \textbf{Map to function term:}
       \begin{align*}
         map_f(v)= &\text{ }v, v \in \mathcal{V} \setminus \mathcal{D}\\
@@ -408,7 +383,7 @@ db.positions.find(
   ("functio&n", name_{func}(f))\in d, \forall i \in \{1..n\} (name_{func-atr}(f,i), v_i)\in d\\
   map_f(d)= &\text{ } nil_f, otherwise
       \end{align*}}
-      \only<2>{
+      \only<3>{
       \item \textbf{Map to function term}
       \item \textbf{Map to predicate:}
       \begin{align*}
@@ -437,6 +412,7 @@ db.positions.find(
     \item Replication for multi-robot distribution
     \end{itemize}
   \smallskip
+  \pause
   \item[Robot Memory] \hfill \\
     \begin{itemize}
     \item Query enhancing, adding meta information (e.g. decay time)
@@ -446,6 +422,7 @@ db.positions.find(
     \item Event-trigger with MongoDB Oplog
     \end{itemize}
   \smallskip
+  \pause
   \item[Planner/Reasoner] \hfill \\
     \begin{itemize}
     \item Provide interface to robot memory\\
@@ -462,11 +439,9 @@ db.positions.find(
   \textcolor{FawkesOrange}{\textbf{Prototype}} & \textcolor{FawkesOrange}{\textbf{Evaluation}}\\
   \hline
   \tabitem RCLL CLIPS agent & \tabitem Representing and querying\\
-                            & \tabitem Usability\\
-                            & \tabitem Reasoner integration\\
-  \hline
-  \tabitem RCLL world model sync & \tabitem Network throughput\\
-                                 & \tabitem Event-trigger\\
+  ~~~~with world model sync & \tabitem Reasoner integration\\
+                            & \tabitem Network throughput\\
+                                 %% & \tabitem Event-trigger\\
   \hline
   \tabitem RCLL PDDL            & \tabitem Planner integration\\
   ~~~      domain creation      & \tabitem Knowledge Sharing\\
@@ -493,13 +468,14 @@ db.positions.find(
 
   \bigskip
 
-  % Fewer longer keywords
   \begin{itemize}
   \item Document-oriented representation and querying
   \item Theoretical and architectural design
+  \item Interfaces for knowledge based systems
   \item Computables for on demand knowledge computation
-  \item Implementation with MongoDB in Fawkes
+  %% \item Implementation with MongoDB in Fawkes
   \item RCLL and @Home as application and evaluation domains
+  \item Foundation for future projects
   \end{itemize}
 \end{frame}
 
