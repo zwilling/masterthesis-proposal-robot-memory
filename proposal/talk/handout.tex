@@ -1,0 +1,484 @@
+\input{common/tex/header}
+\input{../../listings/clips.tex}
+\input{../../listings/json.tex}
+
+\usepackage{todonotes}
+\usepackage{booktabs}
+\newcommand{\tabitem}{~~\llap{\textcolor{FawkesOrange}{\textbullet}}~~}
+
+\hypersetup{
+  pdftitle      = {RobotMemory-Proposal-Talk},
+  pdfauthor     = {Frederik Zwilling},
+  pdfkeywords   = {robotics, artificial intelligence, robot memory, logistics, RCLL, @Home},
+  pdfsubject    = {Master Thesis Proposal Talk}
+  %hidelinks    = true
+}
+
+\title[Robot Memory] {A Document-Oriented Robot Memory\\ for
+  Knowledge Sharing and Hybrid Reasoning\\ on Mobile Robots}
+\author[Zwilling]{
+  \textbf{Frederik Zwilling}\\
+  ~Adviser: Tim Niemueller\\
+  ~Supervisors: Prof. Lakemeyer, PhD., Prof. Dr. Jarke
+}
+\def\projecturl{}
+
+\date[Aug 16th 2016]{Aug 16th 2016 -- Master Thesis Proposal}
+
+\begin{document}
+\shorthandoff{"} % aus "o kein ö machen
+
+\frame[plain]{\titlepage}
+\addtocounter{framenumber}{-1}
+%% \begin{frame}
+%%   \tableofcontents[]
+%% \end{frame}
+%% \addtocounter{framenumber}{-1}
+
+\section{Motivation}
+
+\begin{frame}
+  \frametitle{Motivation}
+  \Large{Why do robots need a memory?}
+  \vspace{1cm}
+  \begin{columns}
+    \begin{column}{0.5\textwidth}
+    \includegraphics[width=\textwidth]{../img/rcll-feld}
+%% Logistics robots in the RCLL (everyone familiar?)
+%% need memory to model the state of the world (e.g. product location, orders done)
+%% multi-robot locks, tasks being done
+%% share knowledge to collaborate
+    \end{column}
+    \begin{column}{0.5\textwidth}
+    \includegraphics[width=\textwidth]{../img/pr2-kbsg-kitchen}
+%% Domestic service robot
+%% need memory to model the state of the world (e.g. object locations, user preferences)
+%% object sights to derive spatio-temporal distribution (Deebul)
+%% persistent storage (rebooting)
+    \end{column}
+  \end{columns}
+%\pause
+  \begin{block}{} \centering\bfseries Robot Memory: Component for knowledge storing and querying 
+  \end{block}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Problem Description - Proposed Solution}
+  \begin{columns}
+    \begin{column}{0.58\textwidth}
+  \begin{description}[]
+  \item[Problems of existing approaches] \hfill \\
+    \begin{itemize}
+        \item Static data structure
+        \item Memory intertwined in single Knowledge Based System
+        \item Locality
+        \item Multiple state estimations, inconsistencies
+        \item Spatio-Temporal vs. Symbolic
+        \item Not scalable, efficient
+        \item Not persistent
+    \end{itemize}
+  \end{description}
+    \end{column}
+    \begin{column}{0.48\textwidth}
+  \begin{description}[]
+  \item[Proposed Robot Memory] \hfill \\
+    \begin{itemize}
+        \item Generic representation 
+        \item Decoupled Memory from sources and consumers
+        \item Distributed for robot teams
+        \item Consistent storage\\\hfill
+        \item On demand computation
+        \item Scalable basis
+        \item Persistent
+    \end{itemize}
+  \end{description}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\section{Related Work}
+\begin{frame}
+  \frametitle{Related Work: Knowledge Processing Systems}
+  \begin{description}[]
+  \item[KnowRob/OpenRobots Ontology (ORO)] \hfill \\
+    \begin{itemize}
+    \item Common sense reasoning with ontologies
+          %explain with example (graph, rdf, milk)
+    \item Virtual knowledge base to interface perception/\\
+          Events notifying about changes
+    \item Based on Prolog/Java
+    \end{itemize}
+  \end{description}
+  \begin{block}{}
+  \begin{itemize}
+  \item Not applicable for multi-robot systems
+  \item Scalability, efficiency concerns
+  \item Missing events/knowledge computation on demand
+  \end{itemize}
+  \end{block}
+  \begin{description}
+  %% \item[OpenRobots Ontology (ORO)]<uncover@1-> \hfill \\
+  %%   \begin{itemize}
+  %%   \item Focus on human-robot interaction with ontologies
+  %%   \item Modular architecture (knowledge decay, categorization)
+  %%         %for short time memory, find missing information
+  %%   \item Events notifying about changes
+  %%   \end{itemize}
+  \item[Generic Robot Database with MongoDB] \hfill \\
+    \begin{itemize}
+    \item Data logging for evaluation and fault analysis
+    \item Generic and scalable storage with MongoDB
+    \item Integration in Fawkes and ROS
+    \end{itemize}
+  \end{description}
+\end{frame}
+
+%% \begin{frame}
+%%   \frametitle{Related Work}
+%%   \begin{description}[]
+%%   \item[Generic Robot Database with MongoDB]<uncover@1-> \hfill \\
+%%     \begin{itemize}
+%%     \item Data logging for evaluation and fault analysis
+%%     \item Generic and scalable storage with MongoDB
+%%     \item Integration in Fawkes and ROS
+%%     \end{itemize}
+%%   \smallskip
+%%   \item[Open-EASE]<uncover@2-> \hfill \\
+%%     \begin{itemize}
+%%     \item Combination of KnowRob and\\
+%%           the Generic Robot Database with MongoDB
+%%     \item Focus on eLearning platform\\
+%%           (e.g. replay sensor input from database log)
+%%     \end{itemize}
+%%   \end{description}
+%% \end{frame}
+
+\section{Background}
+
+\begin{frame}
+  \frametitle{Background: Application Domains}
+  \begin{columns}
+    \begin{column}{0.5\textwidth}
+    \begin{flushleft}
+    \includegraphics[width=0.7\textwidth]{../img/rcll-feld}
+    \end{flushleft}
+  \begin{description}[]
+  \item[RoboCup Logistics League] \hfill \\
+    \begin{itemize}
+    \item Production logistics\\ in smart factory
+    \item Share world model
+    \begin{itemize}
+    \item between robots
+    \item between global planner and reasoner executive
+    \end{itemize}
+    \end{itemize}
+  \end{description}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+    %\pause
+    \begin{flushright}
+    \includegraphics[width=0.7\textwidth]{../img/pr2-kbsg-kitchen}
+    \end{flushright}
+  \begin{description}[]
+  \item[RoboCup@Home] \hfill \\
+    \begin{itemize}
+    \item Domestic service robots
+    \item Collect knowledge about concrete environment
+    \item Hybrid reasoning with spatio-temporal knowledge
+    \item Persistent storage
+    \end{itemize}
+  \end{description}    
+    \end{column}
+  \end{columns}
+  
+\end{frame}
+
+\begin{frame}
+  \frametitle{Background: Planners and Reasoners}
+  \begin{columns}
+  \begin{column}{0.83\linewidth}
+  \begin{description}[]
+  \item[CLIPS Rules Engine] \hfill \\
+  \begin{itemize}
+  \item First-Order Logic forward chaining systems
+  \item Fact base and condition-action rules
+  \item[$\Rightarrow$] Good for world model reasoning and\\ execution monitoring
+  \end{itemize}
+  \item[Planning Domain Definition Language (PDDL)] \hfill \\
+  \begin{itemize}
+  \item Standardized language for planning problems
+  \item Find action sequence through heuristic search
+  \item[$\Rightarrow$] Good for finding global plans
+  \end{itemize}
+  \item[Motion Planners] \hfill \\
+  \begin{itemize}
+  \item Robot arm, locomotion collision avoidance
+  \item Depend on geometric data
+  \end{itemize}
+  \end{description}
+  \end{column}
+  \begin{column}{0.17\linewidth}
+  \includegraphics[width=\textwidth]{../img/CLIPS}
+  \vspace{3.4cm}
+  %\pause%\pause
+  \includegraphics[width=\textwidth]{../img/openrave}
+  \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Background: Fawkes}
+  \includegraphics[width=0.2\textwidth]{../img/fawkes}  
+  \begin{itemize}
+    \item Robot Software Framework
+    \item Component-based software design
+    \item Blackboard communication infrastructure\\ with specific interfaces
+    \item[$\Rightarrow$] Has no generic memory for knowledge sharing
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Background: MongoDB}
+  \includegraphics[width=0.3\textwidth]{../img/mongodb}
+  \begin{itemize}
+    \item Document-oriented database
+    \item Scalable, powerful and widely used
+    \item Generic, schema-less data structure with key-value pairs
+  \end{itemize}
+\begin{columns}
+\column[]{0.55\textwidth}
+\begin{lstlisting}[style=ReallySmallJSON,
+  framexleftmargin=2pt, xleftmargin=2pt,
+ morekeywords={}, numbers=none]
+ {
+   type: "position",
+   name: "robot1",
+   translation: {x:2.5, y:1.0, z:0.0},
+   rotation: {x:0.0, y:0.0, z:0.0, w:1.0},
+   timestamp : ISODate("2016-05-19T15:26:34")
+ }
+\end{lstlisting}
+\column[]{0.5\textwidth}
+\begin{lstlisting}[style=ReallySmallJSON,
+  framexleftmargin=2pt, xleftmargin=10pt,
+ morekeywords={}, numbers=none]
+db.positions.find(
+  {
+    type: "position",
+    name: "robot1",
+    timestamp : {"$gt":
+      ISODate("2016-05-19T15:26:34")}
+  })
+\end{lstlisting}
+\end{columns}
+%\pause
+  \begin{itemize}
+    \item Distributable with Replica Sets
+    \item Expressive querying with JavaScript, MapReduce
+    \item[$\Rightarrow$] Allows generic, scalable robot memory
+  \end{itemize}
+\end{frame}
+
+
+\section{Approach}
+\subsection{Goals}
+
+\begin{frame}
+  \frametitle{Goals}
+\begin{description}[]
+  \item[What should the robot memory be capable of?] \hfill \\
+  \begin{itemize}
+    \item Generic storage and retrieval
+    \item Knowledge sharing between knowledge based systems
+    %% \item Special Views for Different Components
+    \item \textit{Computables:} Knowledge computation on demand\\ for hybrid reasoning
+    \item Shared knowledge for multi-robot systems
+    %% \item Spatio-Temporal Grounding
+    \item \textit{Event Triggers:} Update notifications
+    \item Persistent storage
+    %% \item Human Interface and Visualization
+  \end{itemize}
+  \end{description}
+\end{frame}
+
+\subsection{Theoretical Foundation}
+\begin{frame}
+  \frametitle{Theoretical Foundation}
+\begin{description}[]
+  \item[Definition of documents representing knowledge] \hfill \\
+  \small e.g.~$\{("object","cup"),("room","kitchen"),("position",{\scriptstyle\{("x",8),("y",4)\}})\}$
+  %\pause
+  \begin{enumerate}
+\item \textbf{Keys:} $\mathcal{K} := \Sigma^*$
+\item  \textbf{Atomic values:} $\mathcal{V}_0$ are constants
+\item \textbf{Unnested key-value pairs:} $\mathcal{P}_0:=\mathcal{K}\times\mathcal{V}_0$
+\item \textbf{Unnested documents:} \vspace{-0.3cm}
+%are sets of key-value pairs with unique keys and thus included in the power set of $\mathcal{P}_0$:\\
+\begin{align*}
+\mathcal{D}_0:=\{
+  d\in\mathbb{P}(\mathcal{P}_0)|
+  \forall (k,v),(k',v')\in d , k\neq k' \vee (k,v)=(k',v')
+  \}
+\end{align*}
+\end{enumerate}
+  \item[With nesting] \hfill \\
+  \begin{enumerate}
+\item  \textbf{Values:} $\mathcal{V}_n := \mathcal{V}_{n-1} \cup \mathcal{D}_{n-1}$
+\item \textbf{Key-Value Pairs:} $\mathcal{P}_n:=\mathcal{K}\times\mathcal{V}_n$
+\item \textbf{Documents:} \vspace{-0.3cm}
+\begin{align*}
+  \mathcal{D}_n:=\{
+  d\in\mathbb{P}(\mathcal{P}_n)|
+  \forall (k,v),(k',v')\in d , k\neq k' \vee (k,v)=(k',v')
+  \}
+\end{align*}
+\end{enumerate}
+  \end{description}
+  %\pause
+  \textbf{Finitely nested documents:} $\mathcal{D}=\cup_{n\in\{0..b\}}\mathcal{D}_n$\\
+  \textbf{Values:} $\mathcal{V}=\cup_{n\in\{0..b\}}\mathcal{V}_n$, with nesting bound $b$
+\end{frame}
+
+\begin{frame}
+  \frametitle{Theoretical Foundation}
+  \begin{description}[]
+  \item[Definition Robot Memory] \hfill \\
+    \begin{enumerate}
+      \item \textbf{Database:} finite set $\mathcal{DB} \subset \mathcal{D}$
+      \item \textbf{Query:} represented by document $q\in\mathcal{D}$\\
+      yields set of documents $r\subset\mathcal{DB}$ as result\\
+      e.g. $q=\{("object","cup"),("room","kitchen")\}$
+      \item \textbf{Computable:} $f: \mathcal{D} \rightarrow \mathbb{P}(\mathcal{D})$
+      % providing computable knowledge on demand
+      %computability and termination ensured by providing component
+      \item \textbf{Set of Computables:} $\mathcal{C}$
+      \item \textbf{Robot Memory:} $\mathcal{RM}=(\mathcal{DB},\mathcal{C})$
+      \item \textbf{Memorized Documents:} $mem(\mathcal{RM})=\mathcal{DB} \cup \bigcup_{f\in\mathcal{C}}f(\mathcal{D})$
+    \end{enumerate}
+  \end{description}  
+\end{frame}
+
+\begin{frame}
+  \frametitle{Theoretical Foundation}
+    \begin{description}[]
+  \item[Mapping into PDDL] \hfill \\
+\vspace{-0.5cm}
+\small\begin{align*}
+\text{e.g. } map_p&(\{("predicate", "at"),("object", "cup"),("room","kitchen")\})\\
+             &= at(map_f("cup"), map_f("kitchen")) = at(cup, kitchen) \text{.}
+\end{align*}
+%\pause
+  \begin{enumerate}
+      \item \textbf{Predicate symbols} $\mathcal{R}$, \textbf{Function symbols} $\mathcal{F}$
+      \item \textbf{Name mapping:}
+      \begin{align*}
+        name_{pred}: \mathcal{R} \rightarrow \Sigma^* &\text{ and } name_{func}: \mathcal{F} \rightarrow \Sigma^*\\
+        %injective, disjunct
+        name_{pred-atr}: \mathcal{R} \times \mathbb{N} \rightarrow \mathcal{K} &\text{ and } name_{func-atr}: \mathcal{F} \times \mathbb{N} \rightarrow
+\mathcal{K}
+      \end{align*}
+  %%     \only<1-2>{
+  %%     \item \textbf{Map to predicate:}
+  %%     \begin{align*}
+  %%       map_p(d)=&\text{ }p(map_f(v_1), ..., map_f(v_n)), \text{ iff } p \text{ is a n-array predicate in } \mathcal{R},\\
+  %% ("predica&te", name_{pred}(p))\in d, \forall i \in \{1..n\} (name_{pred-atr}(p,i), v_i)\in d\\
+  %% map_p(d)=& \text{ }nil_p, otherwise
+  %%     \end{align*}}
+      \only<1->{
+      \item \textbf{Map to predicate}
+      \item \textbf{Map to function term:}
+      \begin{align*}
+        map_f(v)= &\text{ }v, v \in \mathcal{V}_0\\
+        map_f(d)= &\text{ }f(map_f(v_1), ..., map_f(v_n)), \text{ iff } f \text{ is a n-array function in } \mathcal{F},\\
+  ("functio&n", name_{func}(f))\in d, \forall i \in \{1..n\} (name_{func-atr}(f,i), v_i)\in d\\
+  map_f(d)= &\text{ } nil_f, otherwise
+      \end{align*}}
+    \end{enumerate}
+  \end{description}
+\end{frame}
+
+\subsection{Architecture}
+\begin{frame}
+  \frametitle{Architecture}
+  \center
+  \includegraphics[width=0.8\textwidth]{../architecture.pdf}
+\end{frame}
+
+\subsection{Implementation}
+\begin{frame}
+  \frametitle{Implementation}
+  \begin{description}[]
+  \item[Back-End] \hfill \\
+    \begin{itemize}
+    \item Realized with MongoDB
+    \item Replication for multi-robot distribution
+    \end{itemize}
+  \smallskip
+  %\pause
+  \item[Robot Memory] \hfill \\
+    \begin{itemize}
+    \item Query enhancing, adding meta information (e.g. decay time)
+    \item Dispatching raw DB queries and queries for computables
+    \item Computables: forward query $\rightarrow$ compute results $\rightarrow$ \\
+          cache results in DB $\rightarrow$ execute query on results
+    \item Event-trigger with MongoDB Oplog
+    \end{itemize}
+  \smallskip
+  %\pause
+  \item[Planner/Reasoner] \hfill \\
+    \begin{itemize}
+    \item Provide interface to robot memory\\
+          (store/query features in CLIPS, domain creator in PDDL)
+    \end{itemize}
+  \end{description}  
+\end{frame}
+
+\section{Evaluation}
+\begin{frame}
+  \frametitle{Evaluation}
+  %qualitative and quantitative
+  \begin{tabular}{l|l}
+  \textcolor{FawkesOrange}{\textbf{Prototype}} & \textcolor{FawkesOrange}{\textbf{Evaluation}}\\
+  \hline
+  \tabitem RCLL CLIPS agent & \tabitem Representing and querying\\
+  ~~~~with world model sync & \tabitem Reasoner integration\\
+                            & \tabitem Network throughput\\
+                                 %% & \tabitem Event-trigger\\
+  \hline
+  \tabitem RCLL PDDL            & \tabitem Planner integration\\
+  ~~~      domain creation      & \tabitem Knowledge Sharing\\
+                                & ~~~~Planner-Reasoner\\
+  \hline
+  \tabitem @Home Computables & \tabitem Knowledge Sharing\\
+  ~~~~                       & ~~~~Reasoner-Motion Planner\\
+                             & \tabitem Hybrid Reasoning\\
+  \hline
+  \tabitem @Home Tidy up scenario & \tabitem Scalability\\
+                                  & \tabitem Expressiveness vs.\\
+                                  & ~~~~Computation Speed\\
+\end{tabular}
+\end{frame}
+
+\section{Conclusion}
+\begin{frame}
+  \frametitle{Conclusion and Questions}
+
+  \begin{block}{} \centering\bfseries The generic robot memory is capable of
+    efficiently storing and querying arbitrary symbolic or geometric information
+    and allows consistent knowledge sharing.
+  \end{block}
+
+  \bigskip
+
+  \begin{itemize}
+  \item Document-oriented representation and querying
+  \item Theoretical and architectural design
+  \item Interfaces for knowledge based systems
+  \item Computables for on demand knowledge computation
+  %% \item Implementation with MongoDB in Fawkes
+  \item RCLL and @Home as application and evaluation domains
+  \item Foundation for future projects
+  \end{itemize}
+\end{frame}
+
+\end{document}
