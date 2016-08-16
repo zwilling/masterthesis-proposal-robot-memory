@@ -57,6 +57,9 @@
 %% persistent storage (rebooting)
     \end{column}
   \end{columns}
+\pause
+  \begin{block}{} \centering\bfseries Robot Memory: Component for knowledge storing and querying 
+  \end{block}
 \end{frame}
 
 \begin{frame}
@@ -201,7 +204,7 @@
   \item Fact base and condition-action rules
   \item[$\Rightarrow$] Good for world model reasoning and\\ execution monitoring
   \end{itemize}
-  \item[Planning Domain Definition Language]<uncover@2-> \hfill \\
+  \item[Planning Domain Definition Language (PDDL)]<uncover@2-> \hfill \\
   \begin{itemize}
   \item Standardized language for planning problems
   \item Find action sequence through heuristic search
@@ -332,8 +335,8 @@ db.positions.find(
 \end{enumerate}
   \end{description}
   \pause
-  \textbf{Finitely nested documents:} $\mathcal{D}=\cup_{n\in\{1..b\}}\mathcal{D}_n$\\
-  \textbf{Values:} $\mathcal{V}=\cup_{n\in\{1..b\}}\mathcal{V}_n$, with nesting bound $b$
+  \textbf{Finitely nested documents:} $\mathcal{D}=\cup_{n\in\{0..b\}}\mathcal{D}_n$\\
+  \textbf{Values:} $\mathcal{V}=\cup_{n\in\{0..b\}}\mathcal{V}_n$, with nesting bound $b$
 \end{frame}
 
 \begin{frame}
@@ -350,7 +353,7 @@ db.positions.find(
       %computability and termination ensured by providing component
       \item \textbf{Set of Computables:} $\mathcal{C}$
       \item \textbf{Robot Memory:} $\mathcal{RM}=(\mathcal{DB},\mathcal{C})$
-      \item \textbf{Memorized Documents:} $mem(\mathcal{RM})=DB \cup \bigcup_{f\in\mathcal{C}}f(\mathcal{D})$
+      \item \textbf{Memorized Documents:} $mem(\mathcal{RM})=\mathcal{DB} \cup \bigcup_{f\in\mathcal{C}}f(\mathcal{D})$
     \end{enumerate}
   \end{description}  
 \end{frame}
@@ -371,24 +374,24 @@ db.positions.find(
       \begin{align*}
         name_{pred}: \mathcal{R} \rightarrow \Sigma^* &\text{ and } name_{func}: \mathcal{F} \rightarrow \Sigma^*\\
         %injective, disjunct
-        name_{pred-atr}: \mathcal{F} \times \mathbb{N} \rightarrow \mathcal{K} &\text{ and } name_{func-atr}: \mathcal{R} \times \mathbb{N} \rightarrow
+        name_{pred-atr}: \mathcal{R} \times \mathbb{N} \rightarrow \mathcal{K} &\text{ and } name_{func-atr}: \mathcal{F} \times \mathbb{N} \rightarrow
 \mathcal{K}
       \end{align*}
       \only<1-2>{
-      \item \textbf{Map to function term:}
-      \begin{align*}
-        map_f(v)= &\text{ }v, v \in \mathcal{V} \setminus \mathcal{D}\\
-        map_f(d)= &\text{ }f(map_f(v_1), ..., map_f(v_n)), \text{ iff } f \text{ is a n-array function in } \mathcal{F},\\
-  ("functio&n", name_{func}(f))\in d, \forall i \in \{1..n\} (name_{func-atr}(f,i), v_i)\in d\\
-  map_f(d)= &\text{ } nil_f, otherwise
-      \end{align*}}
-      \only<3>{
-      \item \textbf{Map to function term}
       \item \textbf{Map to predicate:}
       \begin{align*}
         map_p(d)=&\text{ }p(map_f(v_1), ..., map_f(v_n)), \text{ iff } p \text{ is a n-array predicate in } \mathcal{R},\\
   ("predica&te", name_{pred}(p))\in d, \forall i \in \{1..n\} (name_{pred-atr}(p,i), v_i)\in d\\
   map_p(d)=& \text{ }nil_p, otherwise
+      \end{align*}}
+      \only<3>{
+      \item \textbf{Map to predicate}
+      \item \textbf{Map to function term:}
+      \begin{align*}
+        map_f(v)= &\text{ }v, v \in \mathcal{V}_0\\
+        map_f(d)= &\text{ }f(map_f(v_1), ..., map_f(v_n)), \text{ iff } f \text{ is a n-array function in } \mathcal{F},\\
+  ("functio&n", name_{func}(f))\in d, \forall i \in \{1..n\} (name_{func-atr}(f,i), v_i)\in d\\
+  map_f(d)= &\text{ } nil_f, otherwise
       \end{align*}}
     \end{enumerate}
   \end{description}

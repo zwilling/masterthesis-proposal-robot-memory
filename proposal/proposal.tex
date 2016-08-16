@@ -1097,8 +1097,8 @@ defined as follows:
   \}$
 \end{enumerate}
 This yields the set of all \textbf{boundedly nested documents}
-$\mathcal{D}=\cup_{n\in\{1..b\}}\mathcal{D}_n$ with nesting bound $b$.
-The set of all values is $\mathcal{V}=\cup_{n\in\{1..b\}}\mathcal{V}_n$.
+$\mathcal{D}=\cup_{n\in\{0..b\}}\mathcal{D}_n$ with nesting bound $b$.
+The set of all values is $\mathcal{V}=\cup_{n\in\{0..b\}}\mathcal{V}_n$.
   Infinite nesting and
 documents containing themselves are not considered because they can
 not properly be mapped into most KBS formalisms.
@@ -1157,7 +1157,7 @@ $name_{pred-atr}(\text{at},2)="\text{room}"$).
 Now we can define the mapping of values in documents to terms as
 follows. Values that are no sub-documents can be mapped directly to
 the corresponding constant:
-$$map_f(v)=v, v \in \mathcal{V} \setminus \mathcal{D}$$
+$$map_f(v)=v, v \in \mathcal{V}_0$$
 Otherwise the value is a sub-document, which is mapped to a function term:
 \begin{align*}
   map_f(d)= &\text{ }f(map_f(v_1), ..., map_f(v_n)), \text{ iff } f \text{ is a n-array function in } \mathcal{F},\\
