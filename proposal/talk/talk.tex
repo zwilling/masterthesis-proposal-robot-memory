@@ -83,7 +83,7 @@
         \item Generic representation 
         \item Decoupled Memory from sources and consumers
         \item Distributed for robot teams
-        \item Central, consistent storage\\\hfill
+        \item Consistent storage\\\hfill
         \item On demand computation
         \item Scalable basis
         \item Persistent
@@ -157,16 +157,16 @@
   \begin{columns}
     \begin{column}{0.5\textwidth}
     \begin{flushleft}
-    \includegraphics[width=0.5\textwidth]{../img/rcll-feld}
+    \includegraphics[width=0.7\textwidth]{../img/rcll-feld}
     \end{flushleft}
   \begin{description}[]
   \item[RoboCup Logistics League] \hfill \\
     \begin{itemize}
     \item Production logistics\\ in smart factory
-    \item[$\Rightarrow$] Share world model
+    \item Share world model
     \begin{itemize}
-    \item[$\rightarrow$] between robots
-    \item[$\rightarrow$] between global planner and reasoner executive
+    \item between robots
+    \item between global planner and reasoner executive
     \end{itemize}
     \end{itemize}
   \end{description}
@@ -174,15 +174,15 @@
     \begin{column}{0.5\textwidth}
     \pause
     \begin{flushright}
-    \includegraphics[width=0.5\textwidth]{../img/pr2-kbsg-kitchen}
+    \includegraphics[width=0.7\textwidth]{../img/pr2-kbsg-kitchen}
     \end{flushright}
   \begin{description}[]
   \item[RoboCup@Home] \hfill \\
     \begin{itemize}
     \item Domestic service robots
-    \item[$\Rightarrow$] Collect knowledge about concrete environment
-    \item[$\Rightarrow$] Hybrid reasoning with spatio-temporal knowledge
-    \item[$\Rightarrow$] Persistent storage
+    \item Collect knowledge about concrete environment
+    \item Hybrid reasoning with spatio-temporal knowledge
+    \item Persistent storage
     \end{itemize}
   \end{description}    
     \end{column}
@@ -204,14 +204,13 @@
   \item[Planning Domain Definition Language]<uncover@2-> \hfill \\
   \begin{itemize}
   \item Standardized language for planning problems
-  \item Domain description and problem description
+  \item Find action sequence through heuristic search
   \item[$\Rightarrow$] Good for finding global plans
   \end{itemize}
   \item[Motion Planners]<uncover@3-> \hfill \\
   \begin{itemize}
   \item Robot arm, locomotion collision avoidance
-  \item Depend on spatio-temporal data
-  \item[$\Rightarrow$] Good for motion planning
+  \item Depend on geometric data
   \end{itemize}
   \end{description}
   \end{column}
@@ -286,14 +285,14 @@ db.positions.find(
 \begin{description}[]
   \item[What should the robot memory be capable of?] \hfill \\
   \begin{itemize}
-    \item Generic Storage and Retrieval
-    \item Knowledge Sharing Between Knowledge Based Systems
+    \item Generic storage and retrieval
+    \item Knowledge sharing between knowledge based systems
     %% \item Special Views for Different Components
-    \item Knowledge Computation on Demand
-    \item Shared Knowledge for Multi-Robot Systems
+    \item \textit{Computables:} Knowledge computation on demand\\ for hybrid reasoning
+    \item Shared knowledge for multi-robot systems
     %% \item Spatio-Temporal Grounding
-    \item Event Triggers
-    \item Persistent Storage
+    \item \textit{Event Triggers:} Update notifications
+    \item Persistent storage
     %% \item Human Interface and Visualization
   \end{itemize}
   \end{description}
@@ -333,7 +332,7 @@ db.positions.find(
 \end{enumerate}
   \end{description}
   \pause
-  \textbf{Boundedly nested documents:} $\mathcal{D}=\cup_{n\in\{1..b\}}\mathcal{D}_n$\\
+  \textbf{Finitely nested documents:} $\mathcal{D}=\cup_{n\in\{1..b\}}\mathcal{D}_n$\\
   \textbf{Values:} $\mathcal{V}=\cup_{n\in\{1..b\}}\mathcal{V}_n$, with nesting bound $b$
 \end{frame}
 
@@ -462,8 +461,8 @@ db.positions.find(
   \frametitle{Conclusion and Questions}
 
   \begin{block}{} \centering\bfseries The generic robot memory is capable of
-    efficiently storing arbitrary symbolic or geometric information
-    and allows consistent knowledge sharing and hybrid reasoning.
+    efficiently storing and querying arbitrary symbolic or geometric information
+    and allows consistent knowledge sharing.
   \end{block}
 
   \bigskip
