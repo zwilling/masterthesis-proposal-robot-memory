@@ -1075,7 +1075,7 @@ documents are defined as follows:
 \begin{enumerate}
 \item \textbf{Keys} are strings $\mathcal{K} := \Sigma^*$, where
   $\Sigma$ contains all valid characters.
-\item  \textbf{Atomic values} $\mathcal{V}_0$ are constants containing
+\item  \textbf{Atomic values} $\mathcal{V}_0$ is a countable infinite set of constants with
   integers, floating point numbers, and strings.
 \item \textbf{Unnested key-value pairs:} $\mathcal{P}_0:=\mathcal{K}\times\mathcal{V}_0$
 \item \textbf{Unnested documents} are sets of key-value pairs with
@@ -1096,9 +1096,9 @@ defined as follows:
   \forall (k,v),(k',v')\in d , k\neq k' \vee (k,v)=(k',v')
   \}$
 \end{enumerate}
-This yields the set of all \textbf{boundedly nested documents}
-$\mathcal{D}=\cup_{n\in\{0..b\}}\mathcal{D}_n$ with nesting bound $b$.
-The set of all values is $\mathcal{V}=\cup_{n\in\{0..b\}}\mathcal{V}_n$.
+This yields the set of all \textbf{finitely nested documents}
+$\mathcal{D}=\cup_{n\in\mathbb{N}}\mathcal{D}_n$.
+The set of all values is $\mathcal{V}=\cup_{n\in\mathbb{N}}\mathcal{V}_n$.
   Infinite nesting and
 documents containing themselves are not considered because they can
 not properly be mapped into most KBS formalisms.
@@ -1112,7 +1112,7 @@ A \textbf{database} is a finite set of documents $\mathcal{DB} \subset \mathcal{
 %% d \text{ and } ("\_id",v')\in d' , d=d' \vee v\neq v'
 %% \end{align*}
 \textbf{Queries} are represented by documents $q\in\mathcal{D}$ and yield a set
-of documents $r\subset\mathcal{DB}$ as result when executed in a database according a
+of documents $r\subseteq\mathcal{DB}$ as result when executed in a database according a
 specification (e.g. of MongoDB~\cite{mongodb}). For example, the query
 $\{("object","cup"),("room","kitchen")\}$ yields all documents containing these
 key-value pairs and thus all cups in the kitchen.
