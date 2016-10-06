@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<cdtprojectproperties>
+<section name="org.eclipse.cdt.internal.ui.wizards.settingswizards.IncludePaths">
+<language name="C++ Source File">
+<includepath>/home/zwilling/ros_catkin_ws/install_isolated/include</includepath>
+<includepath workspace_path="true">/fawkes-robotino/fawkes/src/libs</includepath>
+<includepath workspace_path="true">/fawkes-robotino/fawkes/src/plugins</includepath>
+<includepath workspace_path="true">/fawkes-robotino/src/plugins</includepath>
+<includepath>/usr/include/gazebo-5.1</includepath>
+<includepath>/usr/include/clipsmm-0.3</includepath>
+<includepath>/usr/include/sigc++-2.0/sigc++</includepath>
+<includepath>/usr/include</includepath>
+<includepath>/usr/include/sigc++-2.0</includepath>
+
+</language>
+<language name="C Source File">
+<includepath>/home/zwilling/ros_catkin_ws/install_isolated/include</includepath>
+
+</language>
+<language name="Object File">
+
+</language>
+<language name="Assembly Source File">
+<includepath>/home/zwilling/ros_catkin_ws/install_isolated/include</includepath>
+
+</language>
+</section>
+<section name="org.eclipse.cdt.internal.ui.wizards.settingswizards.Macros">
+<language name="C++ Source File">
+
+</language>
+<language name="C Source File">
+
+</language>
+<language name="Object File">
+
+</language>
+<language name="Assembly Source File">
+
+</language>
+</section>
+</cdtprojectproperties>
