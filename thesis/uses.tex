@@ -1,0 +1,93 @@
+%%%%%%%%%
+%%uses%%
+%%%%%%%%%
+\usepackage[utf8]{inputenc}
+%\usepackage[ngerman]{babel}
+%\usepackage{a4wide}
+\usepackage[margin=3.0cm, top=3.0cm, bottom=3.0cm]{geometry}
+\usepackage{setspace}
+\usepackage{graphicx}
+\usepackage{amssymb} 
+\usepackage{amsmath}
+\usepackage{mathtools}
+\usepackage{footnote}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{color}
+\usepackage[hidelinks]{hyperref}
+\usepackage{cite}
+\usepackage{setspace}
+\usepackage{pgfplots}
+\usepackage{todonotes}
+\usepackage{subfigure}
+\usepackage{siunitx}
+\usepackage{tabularx}
+\usepackage{wrapfig}
+\usepackage{url}
+\usepackage{listings}
+
+\newcommand{\reffig}[1]{Figure~\ref{#1}}
+\newcommand{\refsec}[1]{Section~\ref{#1}}
+\newcommand{\refdef}[1]{Definition~\ref{#1}}
+\newcommand{\reflst}[1]{Listing~\ref{#1}}
+\newcommand{\reftab}[1]{Table~\ref{#1}}
+
+\definecolor{Mulberry}{cmyk}{0.34,0.90,0,0.02}
+\definecolor{BrickRed}{cmyk}{0,0.89,0.94,0.28}
+\lstset{language=C++,frame=none, basicstyle=\tt}
+\input{../listings/clips.tex}
+\input{../listings/json.tex}
+
+%% \pgfplotsset{compat=1.8}
+%% \usepgfplotslibrary{statistics}
+
+\pgfplotsset{
+    box plot/.style={
+        /pgfplots/.cd,
+        black,
+        only marks,
+        mark=-,
+        mark size=1em,
+        /pgfplots/error bars/.cd,
+        y dir=plus,
+        y explicit,
+    },
+    box plot box/.style={
+        /pgfplots/error bars/draw error bar/.code 2 args={%
+            \draw  ##1 -- ++(1em,0pt) |- ##2 -- ++(-1em,0pt) |- ##1 -- cycle;
+        },
+        /pgfplots/table/.cd,
+        y index=2,
+        y error expr={\thisrowno{3}-\thisrowno{2}},
+        /pgfplots/box plot
+    },
+    box plot top whisker/.style={
+        /pgfplots/error bars/draw error bar/.code 2 args={%
+            \pgfkeysgetvalue{/pgfplots/error bars/error mark}%
+            {\pgfplotserrorbarsmark}%X
+            \pgfkeysgetvalue{/pgfplots/error bars/error mark options}%
+            {\pgfplotserrorbarsmarkopts}%
+            \path ##1 -- ##2;
+        },
+        /pgfplots/table/.cd,
+        y index=4,
+        y error expr={\thisrowno{2}-\thisrowno{4}},
+        /pgfplots/box plot
+    },
+    box plot bottom whisker/.style={
+        /pgfplots/error bars/draw error bar/.code 2 args={%
+            \pgfkeysgetvalue{/pgfplots/error bars/error mark}%
+            {\pgfplotserrorbarsmark}%
+            \pgfkeysgetvalue{/pgfplots/error bars/error mark options}%
+            {\pgfplotserrorbarsmarkopts}%
+            \path ##1 -- ##2;
+        },
+        /pgfplots/table/.cd,
+        y index=5,
+        y error expr={\thisrowno{3}-\thisrowno{5}},
+        /pgfplots/box plot
+    },
+    box plot median/.style={
+        /pgfplots/box plot
+    }
+}

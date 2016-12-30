@@ -1,0 +1,52 @@
+\documentclass[a4paper,11pt]{book}
+\include{uses}
+
+%%%%%%%%%
+%%Title%%
+%%%%%%%%%
+
+\author{Frederik Zwilling 304314}
+\title{A Document-Oriented Robot Memory for Knowledge Sharing and Hybrid Reasoning on Mobile Robots}
+\begin{document}
+\include{titlepage}
+\newpage
+\thispagestyle{empty}
+\mbox{}
+ \include{orga}
+ \frontmatter
+\include{acknowledgements}
+\newpage
+\tableofcontents
+\newpage
+\listoffigures
+\newpage
+\onehalfspace
+\mainmatter
+
+%%%%%%%%%
+%%Text%%
+%%%%%%%%
+
+%\abstract{This is the abstract.}
+
+%avoid empty pages before chapter
+%\let\cleardoublepage\clearpage
+
+\include{proposal}
+%% \include{introduction}
+%% \include{background}
+%% \include{related_work}
+%% \include{approach}
+%% \include{implementation}
+%% \include{evaluation}
+%% \include{summery_future_work}
+
+%reenable empty pages before chapter
+%\let\cleardoublepage\cleardoublepage
+\let\cleardoublepage\clearpage
+
+
+\bibliographystyle{plain}
+\bibliography{../references}
+
+\end{document}
