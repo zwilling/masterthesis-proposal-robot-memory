@@ -1,0 +1,112 @@
+\chapter{Introduction}
+\label{sec:introduction}
+
+
+As autonomous robots are about to advance into more and more complex
+and unstructured domains, multiple challenges arise. One of the
+challenges is allowing them to grasp their environment and make smart
+decisions based on their knowledge. To solve this, robots have to
+memorize observations and gained knowledge about the environment and
+provide this knowledge to reasoning and planning systems. When
+multiple reasoning and planning systems are used and when multiple
+robots should work in collaboration, memorized knowledge has to be
+shared. The aim of the proposed thesis is to design and implement a
+robot memory that is capable of storing and querying knowledge,
+sharing it between multiple systems and robots, and allowing hybrid
+reasoning on it.
+
+%% In the science fiction comedy-drama Robot \&
+%% Frank~\cite{robot-and-frank}, a domestic service robot supports and
+%% takes care of the demential, old man Frank to allow him a happy and
+%% meaningful life. The robot cooks healthy food, helps in the household,
+%% and treats mental issues by encouraging Frank to work on challenging
+%% projects. To realize this vision of intelligent and helpful robots, a
+%% couple of challenges have to be solved. The proposed thesis focuses on
+%% the challenges of building a robot memory required in many
+%% applications. For example domestic robots serving breakfast need a
+%% robot memory to know which items belong on the table, where they are
+%% stored, and how to clean up afterwards. Intelligent factory robots
+%% need to know where resources are placed, what products are ordered,
+%% and which actions need to be executed to reach a goal.
+
+Basic requirements of a robot memory are representing, storing,
+and querying knowledge. With knowledge, we mean the generalization of
+the Data-Information-Knowledge-Wisdom (DIKW)
+hierarchy~\cite{DIKW}. For example the DIKW hierarchy ranges from
+point clouds (data) to cluster positions (information), derived object
+positions (knowledge), and learned probability distributions
+(wisdom). We want to memorize spatio-temporal knowledge, such as
+positions with time-stamps, as well as symbolic knowledge (e.g. the
+room a robot is in). Memorized knowledge is used by planners and
+reasoners, knowledge based systems (KBS), to reason about the
+environment and plan actions. KBS are often specialized and have
+different strengths. For example PDDL based planners find plans
+achieving a goal, CLIPS reasoners can execute plans and update
+world models, and motion planners avoid collisions during grasping and
+driving. For complex tasks and environments, different KBS can be
+combined to utilize their specialized strengths. However this requires
+common knowledge (e.g. so that a global planner can use the current
+world model updated by a reasoner).
+%
+A general and shared robot memory, as intended in this thesis, can
+centrally manage the robot's knowledge and supply or generate
+specialized knowledge bases. This allows planners and reasoners to be
+closer integrated and have world models consistent to each other
+because they can utilize shared knowledge and state estimations only
+have to be done once. Supplying or generating a specialized knowledge
+base requires filtering the robot memory, when only a part is
+relevant, and transforming the knowledge into the required form to be
+usable in the planner or reasoner language. The robot memory
+simplifies hybrid reasoning by providing spatio-temporal and symbolic
+representations of knowledge. It is also required to provide a
+persistent and scalable long time storage.
+%% to be usable in complex environments,
+%% where the robot should keep the memory during a restart.
+%
+It can also be used for multiple robots sharing common knowledge for
+proper coordination, which is usually laborious to implement KBS
+programming languages.
+
+Two main features of the robot memory are \emph{computables} and
+\emph{event-triggers}. The concept of computables allows computing
+knowledge on demand instead of storing it staticly in the robot
+memory. Imagine a query for the distance of two objects. This can be
+computed rather quickly but storing all distances between each two
+dynamic objects and keeping them up do date is a lot of unnecessary
+effort. Moreover computables allows deriving symbolic from
+spatio-temporal knowledge. Event-triggers should notify components
+when a previously defined conditions of the robot memory apply. This
+can be used to keep a world model updated without polling or to wait
+for complex situations. For example a reasoner executing a production
+plan could register to be notified when a machine is out of order,
+what makes the plan is infeasable.
+
+Our contributions are a conceptual and architectural design of a
+generic robot memory that is capable of efficiently storing arbitrary
+symbolic or geometric information including spatio-temporal data. As a
+central component it allows to consistently share knowledge for one
+among different reasoning and planning systems and for another among
+multiple robots. Basis for the thesis will be an implementation of the
+robot memory based on the document-oriented database MongoDB using the
+Fawkes Robot Software Framework and integrating specific adapters for
+the CLIPS reasoning and PDDL planning systems. The thesis focuses on
+two applications, which can profit from the robot memory and will be
+used for evaluation. On the one hand, the robot memory should be used
+by logistics robots of the RoboCup Logistics League (RCLL). Here it
+should share the world model between reasoners running on multiple
+robots collaborating in a team and provide the shared world model in
+PDDL for the use in a global planner. On the other hand, the robot
+memory should be used on a domestic service robot related to the
+RoboCup@Home league. Here the robot memory is needed as flexible and
+scalable long-time storage used by different components depending on
+either spatio-temporal or symbolic representations of stored
+knowledge.
+
+In the following, the proposal gives an overview over the background
+of the thesis with the RoboCup application domain and the used
+software in \refsec{sec:background}. \refsec{sec:related} presents
+related work and in \refsec{sec:approach} the approach of the thesis
+is shown with the goals of the robot memory, it's theoretical
+foundation, the architecture, and implementation. Evaluation
+considerations are presented in \refsec{sec:eval}. We conclude with a
+summary and the time-schedule in \refsec{sec:conclusion}.

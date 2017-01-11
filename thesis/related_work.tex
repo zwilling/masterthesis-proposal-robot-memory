@@ -1,0 +1,163 @@
+\chapter{Related Work}
+\label{sec:related}
+This section gives an overview of the related work of the proposed
+thesis starting with the knowledge processing systems KnowRob and
+OpenRobots Ontology, which provide similar functionality. Afterwards
+we present the Generic Robot Database based on MongoDB and Fawkes, and
+Open-EASE, a combination of KnowRob and the Generic Robot Database.
+
+\section{KnowRob}
+\label{sec:knowrob}
+KnowRob is an open source knowledge processing system for
+cognition-enabled robots~\cite{KnowRob,KnowRob-Representation}. It is
+designed to store knowledge about the environment and set it into
+relation to common sense knowledge to understand vaguely described
+tasks, such as "set the table". For representation and inference of knowledge,
+KnowRob uses Description Logic and approaches of the semantic web.
+%% , an effort to make websites machine understandable,
+Each small piece of
+information is represented as a \emph{Resource Description Framework
+  (RDF) triple} (e.g. $rdf(robot, holding, cup)$) that are composed
+of a subject, predicate, and object. A set of these RDF triples in a
+network can compose commonsense knowledge based on the
+\emph{Web Ontology Language (OWL)}. It uses
+\emph{ontologies}, which can roughly be described as directed graphs
+setting objects or classes of objects into relation. The graph can be
+represented with multiple RDF triples, where the subject and object
+are nodes and the predicate is a directed edge from the subject to the
+object. In these ontologies, it is possible to represent common sense
+knowledge, such as "milk is-a perishable", "refrigerator
+storage-place-for perishable", and "refrigerator is-a
+box-container". Thus a robot asked to bring milk could infer that the
+milk is stored in the refrigerator, which needs to be opened first
+since it is a box-like container. To be able to interface with
+perception, KnowRob uses a concept called
+\emph{virtual knowledge base}. It allows computing needed information
+on demand instead of storing everything providently. Thus special
+queries can be forwarded to other components that compute the answer
+efficiently.
+%% Especially for perception based on sensor data or
+%% transformation of spatial relations, this is advantageous compared
+%% to continuously computing the results for all possible queries and
+%% storing them.
+The concept inspired the usage of computables in this thesis.  The
+implementation and interface of KnowRob is based on the logic
+programming language Prolog, what makes representing RDF triples and
+inference with ontologies intuitive.
+%% KnowRob implements it with Prolog predicates
+%% called \emph{Computables} which call C++ functions of other
+%% components. This indeed slows down the computation of a query but is
+%% more efficient than continuously computing and storing the results or
+%% implementing and computing the other components algorithms in Prolog.
+To understand the robots environment, large and detailed ontologies are
+necessary. KnowRob features acquiring and connecting these from
+various sources, such as online common sense databases, the cloud-based
+robot infrastructure RoboEarth~\cite{roboearth} and websites for
+deriving object information from internet shops and action recipes
+from how-to websites giving step by step instructions.
+However, it has been found that this acquired
+knowledge needs a lot of manual extension and verification before it
+can be used~\cite{KnowRob-Web}. Encyclopedic knowledge often lacks
+action information needed by the robot. %% (e.g. how to grab tools) and
+%% action recipes require human text understanding
+%% \todo{executive integration}
+%
+Furthermore large ontologies limit the performance of KnowRob because
+of the Prolog implementation and general complexity. In contrast to
+the robot memory intended in this thesis, KnowRob focuses on common
+sense reasoning instead of an efficient and flexible on-line
+back-end. It does not support sharing knowledge between multiple
+robots and has a too strong focus on data only usable for reasoning
+components. Although it can also represent spatio-temporal knowledge,
+we have performance and scalability concerns with Prolog handling
+larger data-sets (e.g. for storing locations of found object over long
+time to learn the distribution where they can be found).
+
+\section{OpenRobots Ontology (ORO)}
+\label{sec:oro}
+The OpenRobots Ontology (ORO) is an open source knowledge processing
+framework for robotics~\cite{Oro}. It is designed to enable human-robot
+interaction by featuring commonsense ontologies similar to KnowRob and
+modeling the human point of view. It also uses RDF triples and OWL ontologies.
+The triple storage is implemented in Jena, a Java toolkit for RDF, and the
+inference with Pellet, a Java OWL reasoner. Besides knowledge storing,
+querying and reasoning, ORO features a modular architecture between
+the back-end storage and front end socket server for querying. These
+modules add features such as events that notify external components
+about changes.
+%%  (e.g. if instances of certain classes are added or modified).
+%% \todo{executive integration}
+Another module adds representations of alternative perspectives that
+should allow understanding the point of view of other agents.
+For example when a human asks a robot to bring the
+cup, there are two cups on a table and the robot should infer which
+cup is meant by knowing that the other cup is occluded from the human's
+point of view. Furthermore ORO features categorization to find
+differences between objects (e.g. to ask if the blue cup or the red
+cup was meant in a vague task description) and memory profiles for
+distinguishing long-term knowledge and short-term knowledge that is
+removed when the lifetime of a fact expires. Although these are useful
+features and we want to realize the concepts of events and memory
+profiles in this thesis, we do not use ORO as a basis. Due to its
+focus on human-robot interaction and commonsense reasoning, it is not
+suitable for representing large amounts of data for non-reasoning
+components because all data would have to be stored in RDF triples and
+processed by the OWL reasoner. Furthermore, it does neither support
+synchronizing a part of the knowledge with other robots nor knowledge
+computable on demand.
+
+\section{Generic Robot Database with MongoDB}
+\label{sec:mongo-logging}
+There already is a generic robot database developed with MongoDB as
+data storage~\cite{RoboDB}. It is used to log data of a
+robot middleware (Fawkes and ROS) and allows, for example, fault analysis and performance
+evaluation. To achieve this, it taps into the messaging infrastructure
+in ROS and the blackboard interfaces in Fawkes to store the data one
+to one utilizing the flexibility of the schema free MongoDB. The
+logged data can later be queried by the robot or a developer. This
+allows better evaluation and fault analysis because the data would
+otherwise be disposed and logging of the whole
+Data-Information-Knowledge-Wisdom (DIKW) hierarchy~\cite{DIKW} enables
+retracing processes, such as from point clouds (data) to cluster
+positions (information) to object positions (knowledge) combined from
+multiple clues to learning results (wisdom). This work already
+implemented a basic connection to MongoDB in Fawkes for storing
+documents and executing queries, which can be used in this thesis. It
+also showed that MongoDB is a good choice because it can handle
+querying a large database and writing a lot of data efficiently while
+being flexible how and which kind of data is being represented.
+However this work lacks some important concepts needed for a robot
+memory as intended in this thesis. It is intended as logging facility
+and not as working memory holding a world model for multiple planners
+and reasoners. Therefore updating and querying mechanisms for planners
+and reasoners are missing as well as triggers, a knowledge computable
+on demand, multi-robot synchronization, a suitable front-end, ad
+integration into knowledge based systems.
+
+\section{Open-EASE}
+\label{sec:openease}
+Open-EASE is a knowledge processing service for robots and AI
+researchers~\cite{OpenEASE}. It is based on and combines
+KnowRob~\cite{KnowRob} and the Generic Robot Database with MongoDB in
+ROS~\cite{RoboDB}. It is designed as a web service accessible by
+robots via a socket connection and by humans via a web browser. It
+uses KnowRob for commonsense reasoning and storing the world model of
+a robot. The Generic Robot Database is used to log data about robots
+or humans performing manipulation tasks. This data can then be
+accessed by using the virtual knowledge base concept to learn from
+human demonstration and analyze faults. The focus of Open-EASE also is
+on providing the recorded data and access to KnowRob to humans using
+the web interface. This allows using Open-EASE as eLearning tool for
+students, who can explore and experiment with the data and system on
+the robot. Furthermore it fosters reproducing experiment results
+(e.g. for reviews) and visualizing them. Although the system is
+accessible from multiple users and robots, which can query the same
+Open-EASE instance, it is focused on single robot data and non
+collaborative processes because each user operates in his private
+container with individual knowledge base. This makes sense in the
+context of student exercises, but is not suitable for multi-robot
+systems or multiple knowledge based systems sharing knowledge. If the
+system is also usable or being extended for cooperating robots or
+planners exchanging knowledge over the web service is not mentioned in
+current publications or on the project
+website\footnote{\url{http://www.open-ease.org/}}.
