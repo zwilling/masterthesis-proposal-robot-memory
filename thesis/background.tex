@@ -13,24 +13,24 @@ Section~\ref{sec:databases}.
 
 \section{Mobile Robotics and Reasoning}
 \label{sec:mobile-robotics}
-A robot is \textit{a machine capable of automatically carrying out a
+A robot is \emph{a machine capable of automatically carrying out a
   complex series of movements}~\cite{robot-dict} and belongs to the
-group of \textit{cyber physical systems (CPS)}, which can be defined
-as \textit{computing elements combined with physical sensing and
+group of \emph{cyber physical systems (CPS)}, which can be defined
+as \emph{computing elements combined with physical sensing and
   interaction}~\cite{chapter-cps}. In contrast to mounted assembly
 line robots, we focus in this thesis on autonomous mobile robots, thus
-robots that are \textit{capable of moving in their environment} and
-are \textit{capable of operating without any form of external control
+robots that are \emph{capable of moving in their environment} and
+are \emph{capable of operating without any form of external control
   for extended periods of time}~\cite{autonomous-robots}. These robots
 interact with their environment to fulfill a specific task they are
-designed for. They are \textit{agents}, which utilize a
-\textit{sense-think-act cycle}. Sensors are used to percieve the
+designed for. They are \emph{agents}, which utilize a
+\emph{sense-think-act cycle}. Sensors are used to percieve the
 environment, a computation device to decide what to do, and actuators
 to interact with the environment. How a autonomous mobile robots can
-acts depending on its sensing depends on its \textit{agent
+acts depending on its sensing depends on its \emph{agent
   architecture}. Russell and Norvig differentiate the class of simple
-\textit{reflex agents} and the class of more advanced
-\textit{model-based, goal-based, and learning
+\emph{reflex agents} and the class of more advanced
+\emph{model-based, goal-based, and learning
   agents}~\cite{aimodern}. Reflex agents can only use the current
 perception to compute how to react and are thus limited in their
 capabilities because they can not remember anything from previous
@@ -40,7 +40,7 @@ complex behavior.
 
 \subsection{Robot Memories}
 \label{sec:robot-memories}
-We define a \textit{robot memory} as a system that memorizes the
+We define a \emph{robot memory} as a system that memorizes the
 internal state of a robot between two or more sense-think-act
 cycles. In the case of a model-based agent, it can include a model of
 the robots environment to compensate for partial observability of the
@@ -48,9 +48,9 @@ domain. A goal-based agent remembers the given goal to achieve in the
 environment and a learning agent remembers what was learned from
 previous observations~\cite{aimodern}.
 
-Physically, a robot memory can be stored on \textit{volatile} or
-\textit{non-volatile} devices that can be read and written. A volatile
-device, such as \textit{Random-access memory (RAM)}, can only store
+Physically, a robot memory can be stored on \emph{volatile} or
+\emph{non-volatile} devices that can be read and written. A volatile
+device, such as \emph{Random-access memory (RAM)}, can only store
 information as long as it is powered. Usually, RAM acts as storage
 when the internal state of the robot is represented by variables in
 the programming language(s) used to implement the behavior of the
@@ -58,31 +58,32 @@ robot.  A non-volatile device, such as a hard disk drive, also keps
 the information when it is not powered. Also a combination of volatile
 and non-volatile devices can be used for storage as in this thesis. A
 robot memory that is stored on a non-volatile device is called
-\textit{persistent}.
+\emph{persistent}.
 
 \subsection{Knowledge Sharing}
 \label{sec:knowledge-sharing}
 A robot memory is not necessarily limited to a single robot. In a
-\textit{multiagent system}, a system that is composed of multiple
+\emph{multiagent system}, a system that is composed of multiple
 interacting agents~\cite{multiagentsystems}, the agents can share
 their internal state. In this case, the robot memory is called
-\textit{distributed}. Furthermore, we will also call a system composed
-of multiple interacting autonomous mobile robots a \textit{multi-robot
+\emph{distributed}. Furthermore, we will also call a system composed
+of multiple interacting autonomous mobile robots a \emph{multi-robot
   system}. Similarly, a robot memory can also be shared on a single
 robot between multiple agent programs that each implement a part of
 the robots behavior. The architecture of a multiagent system can be
-\textit{centralized} or \textit{distributed}. In the centralized one,
+\emph{centralized} or \emph{distributed}. In the centralized one,
 a central unit stores all relevant information and/or decides which
 actions each agent should execute. In the distributed one, the
 relevant information is stored and synchronized on all agents and/or
 each agents makes it's own decisions. This also introduces the need of
-\textit{consistency}, which requires that information stored in a
+\emph{consistency}, which requires that information stored in a
 distributed system does not represents contradicting assumptions.
 \todo[inline]{Mention Master-Slave vs. Peer-to-peer?}
 \todo[inline]{Give Example (RoboEarth)?}
 
 \subsection{Reasoning}
 \label{sec:reasoning}
+\todo[inline]{Write}
 
 \section{RoboCup}
 \label{sec:robocup}
@@ -282,7 +283,7 @@ Fawkes softly guarantees loop times by
 monitoring and eventually pausing and resuming threads running for too
 long.
 % Ros blabla from BA?
-Features in Fawkes are provided as \textit{aspects}. These are
+Features in Fawkes are provided as \emph{aspects}. These are
 based on aspect-oriented programming~\cite{aspect_oriented} and give
 access to particular features. Threads that need to use a feature can
 inherit from the corresponding aspect. For example, there are aspects
@@ -323,34 +324,39 @@ expressive querying, and event-triggers.
 
 \section{Planners and Reasoners}
 \label{sec:planners}
-This subsection gives an overview of planners and reasoners, which are
-going to benefit from the robot memory. For the variety of these, we
-give three examples that should use the robot memory to achieve new or
-improved functionality and to evaluate this thesis. The example
-knowledge based systems are \emph{CLIPS}, a rule-based production
-system, the \emph{Planning Domain Definition Language (PDDL)}, which
-incorporates a family of planning formalisms into a standard
-programming language,
-%% \emph{Golog}, a high-level programming language
-%% based on the Situation Calculus,
-and \emph{Motion Planners} finding
-collision free actuation plans.
-%% These examples are representatives for often
-%% used types of planners and reasoners. However, the robot memory should
-%% not be limited to these examples and provide a general C++ interface.
+This section gives an overview of planners and reasoners benefitting
+from the robot memory. We introduce three systems that belong to
+different fields of planning and reasoning: These are \emph{CLIPS}, a
+rule-based production system, the \emph{Planning Domain Definition
+  Language (PDDL)}, which incorporates a family of planning formalisms
+into a standard programming language, and OpenRave, a \emph{Motion
+  Planner} finding collision free actuation plans.  These examples are
+representatives for often used types of planners and
+reasoners. However, the robot memory is not limited to these because
+it provides a general C++ interface, which can be used to integrate it
+into more knowledge based systems. These three use the robot memory
+to achieve new or improved functionality and are used to evaluate this
+thesis.
 
-\subsection{CLIPS Rules Engine} The reasoner currently used by
-Carologistics in the RCLL to implement the high-level game agent is
-implemented in the rule-based production system
-CLIPS~\cite{CLIPS-RM}. It uses forward chaining based on the Rete
-algorithm~\cite{Rete} and basically consists of a fact-base, which is
-a working memory with small pieces of information, a knowledge base
-with rules and procedures, and an inference engine working with the
-knowledge base on the fact-base. The pieces of information in the
-fact-base are called facts and consist of a name and a key-value
+\subsection{CLIPS Rules Engine}
+The CLIPS Rules Engine belongs to the class of \emph{rule-based
+  production systems}, which can be defined as knowledge based system
+using forward chaining based on the \emph{Rete
+  algorithm}~\cite{aimodern}. The Rete algorithm efficiently detemines
+which preconditions of forward chaining rules can be matched by the
+knowledge base, even with a large number of rules and facts by
+constructing a dataflow graph and keeping partitial
+matches~\cite{Rete}. CLIPS is the basis of the currently used reasoner
+by the Carologistics team in the RCLL and implements the high-level
+game agent. The basic building blocks of the CLIPS Rules Engine are a
+\emph{fact-base}, which is a working memory with small pieces of
+information, a \emph{knowledge base} with rules and procedures, and an
+\emph{inference engine} working with the knowledge base on the
+fact-base~\cite{CLIPS-RM}. The pieces of information in the fact-base
+are called \emph{facts} and consist of a name and a key-value
 structure defined in a template for \emph{unordered facts}
-(e.g. \textit{(position~(name~robot1)~(translation~2.5~1.0~0.0)}) or
-an ordered list of values for \emph{ordered facts}.
+(e.g. \emph{(position~(name~robot1)~(translation~2.5~1.0~0.0)}) or an
+ordered list of values for \emph{ordered facts}.
 \begin{figure}
 \begin{lstlisting}[showlines,style=ReallySmallCLIPS, caption={CLIPS
     rule to change a robots state when the object it searched for is visible.},
@@ -384,115 +390,91 @@ have to be fitting \texttt{state}, \texttt{visible}, and
 start with question marks. The consequent is written behind the
 antecedent and defines the procedure to execute when the rule is
 activated. It usually modifies the fact-base by retracting and
-asserting facts, for example to exchange the \texttt{state} fact.  The
+asserting facts, for example to exchange the \texttt{state} fact. The
 inference engine checks which rule antecedents are satisfied and puts
-only them on the \emph{agenda}.  Which rule of the agenda is executed,
+only them on the \emph{agenda}. Which rule of the agenda is executed,
 is determined by a conflict resolution strategy such as highest
-priority or earliest on the agenda.  The consequent of the chosen rule
+priority or earliest on the agenda. The consequent of the chosen rule
 is executed and the inference engine checks again. \emph{Functions}
 encode procedural knowledge, can have side effects, and also be
 implemented in C++.
 
 The Carologistics RCLL agent implemented in CLIPS represents its
 knowledge about the world, the \emph{world model}, in its
-fact-base. It chooses actions to take by using a
-technique called \emph{Incremental Reasoning}~\cite{CLIPS-Agent}:
-Whenever the robot is idle, it searches for the
-next best task and executes it.
-%% For each task there is a rule with its
-%% preconditions in the antecedent and the actions to take in the
-%% consequent. There are also rules for modifying the world model
-%% (e.g. after finishing actions or getting new sensor data), task
-%% execution, coordination with other robots and more.
-The coordination
-of the robot team includes synchronizing their world model
-%% , so each
-%% robot knows what other robots noticed and changed in the environment,
-and resource allocation.
-%% to ensure no two robots try to use the same
-%% machine at a time or try to achieve the same goal by choosing a
-%% redundant task.
-This coordination is currently implemented in CLIPS rules using Google
-Protocol Buffers (Protobuf) messages. Alternatively, this could also
-be done by using a distributed robot memory that contains the world
-model in a distributed database. This would be advantageous because
-the database already provides efficient synchronization and the
-implementation of the synchronization in CLIPS increases the agent's
-complexity.
-%% and is not convenient because the language focuses on reasoning
-%% instead of messaging and data synchronization.
+fact-base. It chooses actions to take by using a technique called
+\emph{Incremental Reasoning}~\cite{CLIPS-Agent}: Whenever the robot is
+idle, it searches for the next best task and executes it.  For each
+task there is a rule with its preconditions in the antecedent and the
+actions to take in the consequent. There are also rules for modifying
+the world model (e.g. after finishing actions or getting new sensor
+data), task execution, coordination with other robots and more.  The
+coordination of the robot team includes synchronizing their world
+model and resource allocation. Because of the synchronization, each
+robot knows what other robots noticed and changed in the
+environment. The resource allocation ensures that no two robots try to
+use the same machine at a time or try to achieve the same goal by
+choosing a redundant task. This coordination was already implemented
+in CLIPS rules using Google Protocol Buffers (Protobuf)
+messages. During this thesis, we developed an alternative
+implementation based on the distributed robot memory that contains the
+world model in a distributed database. On the one hand, this provides
+an easy possibility to access the world model outside of clips. On the
+other hand, this is advantageous
+because the database already provides efficient synchronization and
+the removing the synchonization from CLIPS decreases the
+agent's complexity.
+% , especially because CLIPS is an inconvinient language for data
+% synchronization. \todo{because}
 
 
-\subsection{Planning Domain Definition Language (PDDL)} PDDL is a
-standardized language for planning problems~\cite{PDDL}. It allows
-modeling the nature and behavior of a domain as well as the
-\emph{actions} possible to perform in a \emph{domain
-  description}. With an additional \emph{problem description}, which
-defines the problem to solve, it can be given to a PDDL planner that
-typically searches for a totally or partially ordered sequence of actions, the
-\emph{plan}, to solve the problem.
-%% \todo{action example}
-%% \reflst{lsf:pddl-action} shows an example action contained in a domain
-%% description.
-Actions consist of preconditions and effects.  There are
-various versions and extensions of PDDL which introduce new concepts
-and features. For example, PDDL~2.1~\cite{PDDL2.1} adds numeric values and
+\subsection{Planning Domain Definition Language (PDDL)}
+\todo[inline]{review} PDDL is a standardized language for planning
+problems~\cite{PDDL}. It allows modeling the nature and behavior of a
+domain as well as the \emph{actions} possible to perform in a
+\emph{domain description}. An additional \emph{problem description}
+defines the problem to solve. Both together can be given to a PDDL
+planner that typically searches for a totally or partially ordered
+sequence of actions, the \emph{plan}, to solve the problem.
+\begin{figure}
+\begin{lstlisting}[showlines,style=ReallySmallCLIPS, caption={CLIPS
+    rule to change a robots state when the object it searched for is visible.},
+  label=lsf:pddl-action,
+  emph={skill, args, state, target, res},
+  emphstyle=\bfseries\color{green!80!black},
+  emph={[2]\?skill, \$\?args, wait-for-lock, \?target, use,
+  WAIT-FOR-LOCK, SKILL-EXECUTION, running},
+  emphstyle={[2]\bfseries\color{blue!80!black}},
+  morekeywords={action, parameters, precondition, effect}]
+(:action pickup
+  :parameters (?ob)
+  :precondition (and (clear ?ob) (on-table ?ob) (arm-empty))
+  :effect (and (holding ?ob) (not (clear ?ob)) (not (on-table ?ob)) 
+               (not (arm-empty))))
+\end{lstlisting}
+\end{figure}
+\todo[inline]{action example}
+\reflst{lsf:pddl-action} shows an example action contained in a domain
+description.
+Actions consist of preconditions and effects.  There are various
+versions and extensions of PDDL which introduce new concepts and
+features. For example, PDDL~2.1~\cite{PDDL2.1} adds numeric values and
 continuous actions. This allows finding plans in continuous
 environments where, for example, distances and travel times
 matter. PDDL has the advantage of being able to find complete and
-optimal or efficient plans depending on the model. However, this comes with the
-drawbacks of high computational effort for larger domains and the
-problem of adopting to events during plan execution. For example when
-the domain is not fully observable, the robot could sense changes in
-the environment or fail executing an action. This would require
+optimal or efficient plans depending on the model. However, this comes
+with the drawbacks of high computational effort for larger domains and
+the problem of adopting to events during plan execution. For example
+when the domain is not fully observable, the robot could sense changes
+in the environment or fail executing an action. This would require
 notifying the planner, incorporating the changes in PDDL and
-re-planning. To solve this problem, the robot memory should allow combining PDDL with an
-execution in CLIPS. Then PDDL generates an efficient and complete plan
-with coarse actions and CLIPS executes the plan action for action,
-while monitoring the execution and updating the world model according
-to perceived changes. This world model is written into the robot
-memory so that PDDL can access the world model with all changes applied.
-This way the strengths of both PDDL and CLIPS can be combined.
-
-
-%% \subsection{Golog} Golog is a high-level programming language based on the
-%% \emph{Situation Calculus}, a first order logic formalism for knowledge
-%% representation and reasoning in dynamic domains~\cite{Golog}. It
-%% allows representing world states as terms called
-%% \emph{situations}. These are used in functions yielding new situations
-%% (e.g. for the situation resulting from performing an action in a
-%% situation). Relations using situations are called \emph{fluents} and
-%% describe some property in a situation. \emph{Actions} are also
-%% represented by terms and are modeled with preconditions and
-%% effects. If an action is possible in a situation is defined by a
-%% sentence, the \emph{precondition axiom}. The \emph{successor state
-%%   axiom} is a sentence describing fluents in the situation resulting
-%% from performing the action in a situation satisfying the precondition
-%% axiom.
-
-%% Golog as a high-level programming language features imperative
-%% programming constructs such as procedures, conditions, and loops as
-%% well as nondeterministic branching. There are multiple dialects of
-%% Golog which add features needed for robotic
-%% applications. ConGolog~\cite{ConGolog} adds concurrency and
-%% interrupts, IndiGolog~\cite{IndiGolog} adds on-line execution of
-%% programs and sensing actions, which determine the value of a fluent
-%% during execution, and ReadyLog~\cite{ferrein08ras} extends IndiGolog
-%% to support robot decision making in dynamic real-time domains. With these
-%% dialects, Golog has been found useful for robot applications in
-%% multiple domains such as domestic service robots. By providing an
-%% interface to the robot memory, the strength of Golog, the highly
-%% expressive behavior specification, can be combined with other
-%% approaches to compensate the weaknesses, e.g. inefficient
-%% planning~\cite{Golog-Planning}. There already are approaches to
-%% combine Golog an PDDL into a continuous planning framework that uses
-%% PDDL for planning and Golog for execution and expanding placeholder
-%% actions into sub-plans based on current information unavailable during
-%% initial planning~\cite{ContPlanGolog}. It is implemented with a
-%% translation between PDDL and
-%% Golog~\cite{Golog-PDDL-Trans}. Furthermore, the robot memory could be
-%% useful as additional persistent and distributed knowledge storage
-%% (e.g. for saving the context during an interrupt~\cite{Gesche-Thesis}).
+re-planning. To solve this problem, the robot memory should allow
+combining PDDL with an execution in CLIPS. Then PDDL generates an
+efficient and complete plan with coarse actions and CLIPS executes the
+plan action for action, while monitoring the execution and updating
+the world model according to perceived changes. This world model is
+written into the robot memory so that PDDL can access the world model
+with all changes applied.  This way the strengths of both PDDL and
+CLIPS can be combined.  \todo[inline]{example planners (ff)}
 
 \subsection{Motion Planners}
 Another kind of widely used planners in robotics are geometric motion
@@ -590,11 +572,11 @@ that have matching values for \texttt{type} and \texttt{position}, and
 are up to date, thus with a timestamp greater than the given
 one. Multiple key-value pairs in a query are conjunctive.  Values can
 be checked and compared as in the example with a variety of operators
-such as \textit{not}, \textit{or}, \textit{equals}, \textit{greater
+such as \emph{not}, \emph{or}, \emph{equals}, \emph{greater
   than}, etc. These queries can be evaluated very quickly, especially
 when \emph{indexing} is used, a database feature that manages indexes
 for a combination of document keys. For more complex queries, it is
-possible to add arbitrary JavaScript functions with the \textit{where}
+possible to add arbitrary JavaScript functions with the \emph{where}
 operator to check if documents match the query. Furthermore, it is
 possible to aggregate results using the \emph{Map-Reduce}
 paradigm~\cite{mapreduce}, which maps resulting documents to
@@ -606,7 +588,7 @@ when comparing them.  The higher expressiveness of these queries comes
 with the price of slower computation. However, the computational
 effort can be reduced by formulating queries smartly. Many usual
 queries, e.g. \reflst{lst:mongo-query}, can be formulated without
-using \textit{where} operators. Furthermore, complex queries can be
+using \emph{where} operators. Furthermore, complex queries can be
 nested to filter documents first with a fast query and execute the
 computationally costly query only on the remaining documents.
 %
