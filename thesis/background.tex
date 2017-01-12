@@ -205,7 +205,6 @@ combining a global planner for finding plans and a reasoner for plan
 execution.
 
 \subsection{RoboCup@Home League}
-\todo[inline]{review}
 The RoboCup@Home league is a competition about domestic service
 robots~\cite{wisspeintner2009robocup}. Robots have to assist
 humans in a wide variety of everyday tasks. These tasks include
@@ -243,18 +242,31 @@ reasoning with symbolic and spatio-temporal information.
 The robot memory can help here because it allows to collect a lot
 of knowledge about the concrete domestic environment and, for example,
 log object observations to learn their distribution~\cite{deebul}.
+\todo[inline]{check deebul ref}
 Furthermore, it can help with hybrid reasoning by transforming
 spatio-temporal knowledge into symbolic knowledge with computables.
-%% Furthermore, detecting and manipulating objects in a personal
-%% environment can be difficult because the space the robot acts in, for
-%% example the frige, can be very clouded.
-
+Furthermore, detecting and manipulating objects in a personal
+environment can be difficult because the space the robot acts in, for
+example the frige, can be very clouded.
+\todo[inline]{introduce ceasar?}
 
 \section{Robot Software Frameworks}
-\todo[inline]{review}
 \label{sec:robot-software-frameworks}
+A \emph{robot software framework} can be defined as design and
+implementation of a middleware for the implementation of a robot
+control software~\cite{tnthesis}. \todo[inline]{add orcos ref 'desing
+  and implementation'} It provides basic functionality,
+infrastructure, and tools to develop robot software. Furthermore, it
+can define a standard for component interfaces that allows building on
+a variety of Open Source solutions for robotic problems. In the
+following, we introduce the widely used Robot Operating System and
+Fawkes, which is used in this thesis.
+\subsection{Robot Operating System}
+\label{sec:ros}
+\todo[inline]{write}
 \subsection{Fawkes}
 \label{sec:fawkes}
+\todo[inline]{review}
 The basis for the proposed thesis is the robot software framework
 \emph{Fawkes}\footnote{\url{http://www.fawkesrobotics.org}}, which is
 available as open source~\cite{FawkesDesign,Fawkes-RCLL-2014}.
