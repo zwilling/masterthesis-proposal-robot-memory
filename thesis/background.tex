@@ -428,7 +428,7 @@ agent's complexity.
 
 
 \subsection{Planning Domain Definition Language (PDDL)}
-\todo[inline]{review} PDDL is a standardized language for planning
+PDDL is a standardized language for planning
 problems~\cite{PDDL}. It allows modeling the nature and behavior of a
 domain as well as the \emph{actions} possible to perform in a
 \emph{domain description}. An additional \emph{problem description}
@@ -436,8 +436,8 @@ defines the problem to solve. Both together can be given to a PDDL
 planner that typically searches for a totally or partially ordered
 sequence of actions, the \emph{plan}, to solve the problem.
 \begin{figure}
-\begin{lstlisting}[showlines,style=ReallySmallCLIPS, caption={CLIPS
-    rule to change a robots state when the object it searched for is visible.},
+\begin{lstlisting}[showlines,style=ReallySmallCLIPS, caption={PDDL
+      action to pick up an object from a table},
   label=lsf:pddl-action,
   emph={skill, args, state, target, res},
   emphstyle=\bfseries\color{green!80!black},
@@ -447,19 +447,25 @@ sequence of actions, the \emph{plan}, to solve the problem.
   morekeywords={action, parameters, precondition, effect}]
 (:action pickup
   :parameters (?ob)
-  :precondition (and (clear ?ob) (on-table ?ob) (arm-empty))
-  :effect (and (holding ?ob) (not (clear ?ob)) (not (on-table ?ob)) 
-               (not (arm-empty))))
+  :precondition (and (on-table ?ob) (arm-empty))
+  :effect (and (holding ?ob) (not (on-table ?ob)) (not (arm-empty)))
+)
 \end{lstlisting}
 \end{figure}
-\todo[inline]{action example}
 \reflst{lsf:pddl-action} shows an example action contained in a domain
-description.
-Actions consist of preconditions and effects.  There are various
-versions and extensions of PDDL which introduce new concepts and
-features. For example, PDDL~2.1~\cite{PDDL2.1} adds numeric values and
-continuous actions. This allows finding plans in continuous
-environments where, for example, distances and travel times
+description.  Actions can have parameters and consist of preconditions
+and effects. The precondition is a function free FOL sentence. In the
+example of the picking action, it represents that the object that
+should be picked is on the table and that the arm is empty. The effect
+is a universally quantifed and conditional, but not a full FOL
+sentence. For example disjunctions are not allowed~\cite{PDDL}. In the
+example, the effect of the action is that the arm is not empty and the
+object is now hold and not on the table any more.
+
+There are various versions and extensions of PDDL which introduce new
+concepts and features. For example, PDDL~2.1~\cite{PDDL2.1} adds
+numeric values and continuous actions. This allows finding plans in
+continuous environments where, for example, distances and travel times
 matter. PDDL has the advantage of being able to find complete and
 optimal or efficient plans depending on the model. However, this comes
 with the drawbacks of high computational effort for larger domains and
@@ -467,34 +473,49 @@ the problem of adopting to events during plan execution. For example
 when the domain is not fully observable, the robot could sense changes
 in the environment or fail executing an action. This would require
 notifying the planner, incorporating the changes in PDDL and
-re-planning. To solve this problem, the robot memory should allow
+re-planning. To solve this problem, the robot memory allows
 combining PDDL with an execution in CLIPS. Then PDDL generates an
 efficient and complete plan with coarse actions and CLIPS executes the
 plan action for action, while monitoring the execution and updating
 the world model according to perceived changes. This world model is
 written into the robot memory so that PDDL can access the world model
 with all changes applied.  This way the strengths of both PDDL and
-CLIPS can be combined.  \todo[inline]{example planners (ff)}
+CLIPS can be combined.
+
+Because PDDL is only a standardized language for formulating planning
+problems, a concrete planner program is necessary to find plans. There
+is a wide variety of planners. Many compete in the International
+Planning Competition (IPC), which provides a benchmark and ranking for
+different problem domains with different
+complexities~\cite{planning-competition}. An example of a widely used
+and successful planner in the IPC is (FF)~\cite{hoffmannFF}. FF uses
+forward state space search and a heuristic that ignores the negative
+literals in action effects.
 
 \subsection{Motion Planners}
 Another kind of widely used planners in robotics are geometric motion
-planners. They usually plan the motion of a robotic arm or the path
-of a driving robot to reach a certain goal position where an object
+planners. They usually plan the motion of a robotic arm or the path of
+a driving robot to reach a certain goal position where an object
 should be grabbed or the robot wants to go to. Thus they use geometric
 knowledge in contrast to logical reasoners and planners focusing on
-symbolic knowledge.
-A motion planner needs to find a trajectory from the initial position to
-the goal position, taking joints of the arm into account and avoiding
-collisions with objects in the environment. A widely used motion
-planner framework is MoveIt! which is available for ROS~\cite{MoveIt}.
-Another motion planner framework already integrated into
-Fawkes is OpenRave~\cite{OpenRave}. These planners could benefit from
-using a robot memory by accessing and sharing information about
-objects and obstacles in the environment and by informing other
-planners and task execution components about the outcome of a motion
-plan (e.g. about the cause that prohibited the motion). This
-especially requires the robot memory to represent hybrid knowledge in
-the form of continuous positions and time related events.
+symbolic knowledge.  A motion planner needs to find a trajectory from
+the initial position to the goal position, taking the degrees of
+freedom, e.g. the joints of the robot or the manuverablility of the
+robot base, into account and avoiding collisions with objects in the
+environment. A widely used motion planner framework is \emph{MoveIt!}
+which is available for ROS~\cite{MoveIt}. Another motion planner
+framework already integrated into Fawkes is
+\emph{OpenRave}~\cite{OpenRave}.\todo[inline]{description openrave}
+Motion planners can benefit from using a robot memory by accessing and
+sharing information about objects and obstacles in the environment.
+They can better work together with other planners and task execution
+components because they can access the same knowledge base. This
+avoids double state estimations, which can cause inconsistencies. To
+be usable by motions plannery, the robot memory has to be able to
+represent hybrid knowledge in the form of continuous positions and
+time related events.
+%% Furthermore, it has to transform or connect spatio-temporal and
+%% symbolic knowledge \todo{because}
 
 \section{Databases}
 \label{sec:databases}
