@@ -263,72 +263,83 @@ following, we introduce the widely used Robot Operating System and
 Fawkes, which is used in this thesis.
 \subsection{Robot Operating System}
 \label{sec:ros}
-\todo[inline]{write}
+\todo[inline]{rewrite} The Open Source robot software framework
+\emph{Robot Operating System (ROS)}\footnote{\url{http://www.ros.org}}
+is a widely collection of useful Open Source libraries and tools for
+the development process of robot-software.\todo[inline]{reference ros
+  widely used} It can operate on many robot platforms from different
+domains and provides a standardized integration framework~\cite{Ros}.
+\todo[inline]{cite ros book} The components integrated in ROS consists
+of processes called \emph{nodes}. These nodes can exchange information
+over a peer-to-peer communication network. There are communication
+channels called \emph{topics}. Nodes can register a publisher to send
+messages on a topic or subscriber to a specified \emph{topic} to
+recieve all messages sent on it. Messages are encoded using the 
+Google Protobuffers message protocol, which enforces a fixed message
+structure. A central process called \texttt{roscore} manages the
+registration of publishers and subscribers. It is also resposible for
+loading configurations and managing nodes.
+
+In the RCLL, ROS is used by multiple teams. \todo[inline]{rcll teams
+  ros, team description papaers}. The Carologistics team uses ROS
+primarily for and localization and visualization of sensor and
+perception data with the \texttt{rviz} package. In previous years, it
+also used the ROS package \texttt{move\_base}, which provides local
+motion planning with collision avoidance.
+
 \subsection{Fawkes}
 \label{sec:fawkes}
-\todo[inline]{review}
-The basis for the proposed thesis is the robot software framework
+\todo[inline]{check parallels} The basis for the proposed thesis is
+the robot software framework
 \emph{Fawkes}\footnote{\url{http://www.fawkesrobotics.org}}, which is
-available as open source~\cite{FawkesDesign,Fawkes-RCLL-2014}.
-%and developed at the Knowledge-based Systems
-%Group\footnote{\url{http://www.kbsg.rwth-aachen.de}} (KBSG) at RWTH
-%Aachen University
-It is designed to work with
-various robots in different domains and follows a component-based
-software design, which separates functional entities into individual
-software modules~\cite{component}. This enables reusing
-software solutions for robotic problems, such as localization,
-perception, reasoning, and behavior execution. Compiled
-components can be loaded as \emph{plugins} at run-time.
+available as open source~\cite{FawkesDesign,Fawkes-RCLL-2014} and
+developed at the Knowledge-based Systems
+Group\footnote{\url{http://www.kbsg.rwth-aachen.de}} (KBSG) at RWTH
+Aachen University.  It is designed to work with various robots in
+different domains and follows a component-based software design, which
+separates functional entities into individual software
+modules~\cite{component}. This enables reusing software solutions for
+robotic problems, such as localization, perception, reasoning, and
+behavior execution. Compiled components can be loaded as
+\emph{plugins} at run-time.
 %
-Plugin activity is organized in threads
-%to make use of multi-core architectures. The threads
-that can be run continuously ore hooked into
-the main-loop of Fawkes to order the execution into a
-\emph{sense-think-act} cycle.
-%This guarantees that higher-level components can use the latest data.
-Fawkes softly guarantees loop times by
-monitoring and eventually pausing and resuming threads running for too
-long.
-% Ros blabla from BA?
-Features in Fawkes are provided as \emph{aspects}. These are
-based on aspect-oriented programming~\cite{aspect_oriented} and give
-access to particular features. Threads that need to use a feature can
-inherit from the corresponding aspect. For example, there are aspects
-for accessing logging, timing, and specific external libraries~\cite{tnthesis}.
+Plugin activity is organized in threads to make use of multiple CPU
+cores. The threads can be run continuously or hooked into the
+main-loop of Fawkes to order the execution into a
+\emph{sense-think-act} cycle.  This ensures that higher-level
+components can use the latest perception data.  Fawkes softly
+guarantees loop times by monitoring which threads are running for too
+long and pausing them. this is a major advantage in comparison to ROS,
+because the components can be closer integrated. Features in Fawkes
+are provided as \emph{aspects}. These are based on aspect-oriented
+programming~\cite{aspect_oriented} and give access to particular
+features. Threads that need to use a feature can inherit from the
+corresponding aspect. For example, there are aspects for logging,
+transforms, and specific external libraries~\cite{tnthesis}.
 
-The communication between plugins is realized with a \emph{hybrid blackboard}
+The communication between plugins uses a \emph{hybrid blackboard}
 paradigm. The blackboard lists structured entries called
-\emph{interfaces}, which contain qualitative and quantitative information.
-Interfaces can be
-provided by one plugin at a time, the writer, and read by other
-plugins, the readers. This allows a flexible communication
-because the interface is independent from the concrete writer and readers.
-For example, sensor and actor plugins can be exchanged by simulation
-plugins~\cite{LLSF-Sim}.
-%% because the information provision in the interface is decoupled from
-%% the concrete components which use the information and plugins writing
-%% to the interfaces can be exchanged, e.g. by simulation plugins writing
-%% to the same interface. Furthermore, the blackboard architecture
-%% simplifies debugging because the current communication between two
-%% plugins, determined by the state of the interface, can be viewed and
-%% logged at run-time.
-To send commands to an interface writer, e.g. a
-motor command to the motor controller, readers can send messages to
-the interface.
+\emph{interfaces}, which contain qualitative and quantitative
+information.  Interfaces can be provided by one plugin at a time, the
+writer, and read by other plugins, the readers. This allows a flexible
+communication because the interface is independent from the concrete
+writer and readers.  For example, sensor and actor plugins can be
+exchanged by simulation plugins~\cite{Gazsim-Thesis,LLSF-Sim}.
+Furthermore, the blackboard architecture simplifies
+debugging because the current communication between two plugins,
+determined by the state of the interface, can be viewed at
+run-time. To send commands to an interface writer, e.g. a motor
+command to the motor controller, readers can send messages to the
+interface.
 
 As a communication infrastructure between different components, the
 blackboard has only limited possibility to realize a robot memory.
-%shared between multiple planners and reasoners in the current version of
-%Fawkes.
-Indeed the blackboard works well for providing information and
-sending commands, though there are limitations for this
-application. The size and structure of blackboard interfaces is fixed, and
-thus does not allow to dynamically represent more or other information.
-%% , such as positions
-%% of detected objects, than initially defined.
-Furthermore the blackboard does not support long-time memory,
-expressive querying, and event-triggers.
+Indeed the blackboard works well for providing information and sending
+commands, though there are limitations for this application. The size
+and structure of blackboard interfaces is fixed, and thus does not
+allow to dynamically represent more or other information.  Furthermore
+the blackboard does not support long-time memory, expressive querying,
+and event-triggers.  \todo[inline]{comparison to ros (ba)}
 
 \section{Planners and Reasoners}
 \label{sec:planners}
