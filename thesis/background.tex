@@ -87,50 +87,49 @@ distributed system does not represents contradicting assumptions.
 
 \section{RoboCup}
 \label{sec:robocup}
-\todo[inline]{check parallelity}
 \emph{RoboCup} is an international robotics competition founded to
 foster research in the field of robotics and artificial
-intelligence~\cite{RoboCup-Paper}. It provides standardized problems
-as a platform to compare research results. Teams from all over the
-world compete in different leagues to benchmark their algorithms and
-robotic systems. An special challenge of the RoboCup is making the
-robotic system robust against real world complexity and challenges,
-such as changing light conditions and unknown obstacles.
+intelligence~\cite{RoboCup-Paper,Gazsim-Thesis}. It provides
+standardized problems as a platform to compare research results. Teams
+compete in different leagues to benchmark their algorithms and robotic
+systems. A special challenge of the RoboCup is making the robotic
+system robust against real world complexity and challenges, such as
+changing light conditions and unknown obstacles.
 
 RoboCup features a variety of leagues, from soccer leagues in
 different sizes to rescue robots, each focusing on another aspect or
 application domain of robotics and artificial intelligence.  For
-example there are soccer simulation leagues and small soccer robots
-focusing on tactical team moves, humanoid soccer robots focusing on
-body control and limited perception, and rescue robots, both fully
-autonomous and partially tele-operated.  \todo[inline]{references rc
-  leagues} The majority of the RoboCup leagues host soccer robots in
-different sizes and complexities. The leagues range from the
-\emph{Small Size League} with small cylindrical robots and ground
-truth perception from an overhead camera to humanoid robots in teen
-size which need to have all sensors and computation devices on the
-robot. The RoboCup also features more application oriented domains,
-e.g. the \emph{Rescue League} with robots solving different challenges
-in desaster scenarios and \emph{RoboCup@Work} with robots operating in
-an industrial scenario to perform identification, handling and
-transporting tasks with work related objects, such as skrews and
-nuts. In the following, we describe the \emph{RoboCup Logistics League
-  (RCLL)}, which features logistics robots in a production scenario,
-and the \emph{RoboCup@Home} leage featuring service robots in a
-domestic environment in more detail. These two leagues are used as
-application and evaluation domains of the thesis.
+example there are soccer simulation leagues~\cite{simspark_old} and
+small soccer robots focusing on tactical team moves, humanoid soccer
+robots focusing on body control and limited perception, and rescue
+robots, both fully autonomous and partially tele-operated. The
+majority of the RoboCup leagues host soccer robots in different sizes
+and complexities. The leagues range from the \emph{Small Size League}
+with small cylindrical robots and ground truth perception from an
+overhead camera~\cite{rc-ssl} to humanoid robots in teen size which
+need to have all sensors and computation devices on the
+robot~\cite{rc-book}. The RoboCup also features more application
+oriented domains, e.g. the \emph{Rescue League} with robots solving
+different challenges in desaster scenarios~\cite{rc-rescue} and
+\emph{RoboCup@Work} with robots operating in an industrial scenario to
+perform identification, handling and transporting tasks with work
+related objects, such as skrews and nuts~\cite{rc-work}. In the
+following, we describe the \emph{RoboCup Logistics League (RCLL)},
+which features logistics robots in a production scenario, and the
+\emph{RoboCup@Home} leage featuring service robots in a domestic
+environment in more detail. These two leagues are used as application
+and evaluation domains of the thesis.
 
 \subsection{RoboCup Logistics League}
 
 The \emph{RoboCup Logistics League (RCLL)}\footnote{RoboCup Logistics
   League website: \url{http://www.robocup-logistics.org}} is an
-industry-oriented competition~\cite{LLSF-Rules-2016}.
-\todo[inline]{cite rcll mps paper} It tackles the problem of
-production logistics in a smart factory, where mobile robots have to
-plan, execute, and optimize the material and production flow between
-machines to produce and deliver products according to dynamic
-orders. Each competing team deploys a group of three robots that has
-to build ordered products autonomously by interacting with
+industry-oriented competition~\cite{LLSF-Rules-2016}. It tackles the
+problem of production logistics in a smart factory, where mobile
+robots have to plan, execute, and optimize the material and production
+flow between machines to produce and deliver products according to
+dynamic orders. Each competing team deploys a group of three robots
+that has to build ordered products autonomously by interacting with
 \emph{Modular Production Machines (MPS)} and transporting work pieces
 between these machines.
 \begin{wrapfigure}{r}{0.3\textwidth}
@@ -242,7 +241,6 @@ reasoning with symbolic and spatio-temporal information.
 The robot memory can help here because it allows to collect a lot
 of knowledge about the concrete domestic environment and, for example,
 log object observations to learn their distribution~\cite{deebul}.
-\todo[inline]{check deebul ref}
 Furthermore, it can help with hybrid reasoning by transforming
 spatio-temporal knowledge into symbolic knowledge with computables.
 Furthermore, detecting and manipulating objects in a personal
@@ -254,43 +252,40 @@ example the frige, can be very clouded.
 \label{sec:robot-software-frameworks}
 A \emph{robot software framework} can be defined as design and
 implementation of a middleware for the implementation of a robot
-control software~\cite{tnthesis}. \todo[inline]{add orcos ref 'desing
-  and implementation'} It provides basic functionality,
+control software~\cite{tnthesis,orocos}. It provides basic functionality,
 infrastructure, and tools to develop robot software. Furthermore, it
 can define a standard for component interfaces that allows building on
 a variety of Open Source solutions for robotic problems. In the
 following, we introduce the widely used Robot Operating System and
-Fawkes, which is used in this thesis.
+Fawkes~\cite{Gazsim-Thesis}, which is used in this thesis.
 \subsection{Robot Operating System}
 \label{sec:ros}
-\todo[inline]{rewrite} The Open Source robot software framework
-\emph{Robot Operating System (ROS)}\footnote{\url{http://www.ros.org}}
-is a widely collection of useful Open Source libraries and tools for
-the development process of robot-software.\todo[inline]{reference ros
-  widely used} It can operate on many robot platforms from different
+The Open Source robot software framework \emph{Robot Operating System
+  (ROS)}\footnote{\url{http://www.ros.org}} is a widely collection of
+useful Open Source libraries and tools for the development process of
+robot-software. It can operate on many robot platforms from different
 domains and provides a standardized integration framework~\cite{Ros}.
 \todo[inline]{cite ros book} The components integrated in ROS consists
 of processes called \emph{nodes}. These nodes can exchange information
 over a peer-to-peer communication network. There are communication
 channels called \emph{topics}. Nodes can register a publisher to send
 messages on a topic or subscriber to a specified \emph{topic} to
-recieve all messages sent on it. Messages are encoded using the 
-Google Protobuffers message protocol, which enforces a fixed message
+recieve all messages sent on it. Messages are encoded using the Google
+Protobuffers message protocol, which enforces a fixed message
 structure. A central process called \texttt{roscore} manages the
 registration of publishers and subscribers. It is also resposible for
 loading configurations and managing nodes.
 
-In the RCLL, ROS is used by multiple teams. \todo[inline]{rcll teams
-  ros, team description papaers}. The Carologistics team uses ROS
-primarily for and localization and visualization of sensor and
-perception data with the \texttt{rviz} package. In previous years, it
-also used the ROS package \texttt{move\_base}, which provides local
-motion planning with collision avoidance.
+In the RCLL, ROS is used by multiple teams~\cite{rc-2014}. The
+Carologistics team uses ROS primarily for and localization and
+visualization of sensor and perception data with the \texttt{rviz}
+package. In previous years, it also used the ROS package
+\texttt{move\_base}, which provides local motion planning with
+collision avoidance.
 
 \subsection{Fawkes}
 \label{sec:fawkes}
-\todo[inline]{check parallels} The basis for the proposed thesis is
-the robot software framework
+The basis for the proposed thesis is the robot software framework
 \emph{Fawkes}\footnote{\url{http://www.fawkesrobotics.org}}, which is
 available as open source~\cite{FawkesDesign,Fawkes-RCLL-2014} and
 developed at the Knowledge-based Systems
@@ -339,7 +334,7 @@ commands, though there are limitations for this application. The size
 and structure of blackboard interfaces is fixed, and thus does not
 allow to dynamically represent more or other information.  Furthermore
 the blackboard does not support long-time memory, expressive querying,
-and event-triggers.  \todo[inline]{comparison to ros (ba)}
+and event-triggers.
 
 \section{Planners and Reasoners}
 \label{sec:planners}
@@ -523,8 +518,13 @@ freedom, e.g. the joints of the robot or the manuverablility of the
 robot base, into account and avoiding collisions with objects in the
 environment. A widely used motion planner framework is \emph{MoveIt!}
 which is available for ROS~\cite{MoveIt}. Another motion planner
-framework already integrated into Fawkes is
-\emph{OpenRave}~\cite{OpenRave}.\todo[inline]{description openrave}
+framework already integrated into Fawkes is the \emph{Open Robotics
+  and Animation Virtual Envi- ronment
+  (OpenRave)}~\cite{OpenRave}. Because OpenRAVE focuses on high-level
+commands as input and it already integrates the motion planning as
+well as visualization and simulation, it is a convinient choise for a
+motion planner in Fawkes.
+
 Motion planners can benefit from using a robot memory by accessing and
 sharing information about objects and obstacles in the environment.
 They can better work together with other planners and task execution
@@ -538,20 +538,159 @@ time related events.
 
 \section{Databases}
 \label{sec:databases}
+Since storing, keeping and retrieving knowledge of the robot memory
+are central tasks of this thesis, the choise of a database system is
+important. In the following, we present the three popular database
+technologies, namely relational, graph-based and document oriented
+databases. Because we choose the document oriented technology, we
+introduce implementations of it in
+\refsec{sec:documentdbs}. Especially MongoDB, the database
+implementation used as a basis in this thesis, is presented in
+\refsec{sec:mongodb}.
+
+\subsection{Database Technologies}
+\label{sec:db-designs}
+There are multiple database technologies, which determine how data is
+represented and organized. Thus they require different algorithms for
+storing and querying and lead to different properties, such as
+runtime, flexibility, scalability, and crosslinkability.
+
+\subsubsection{Relational}
+\label{sec:relational}
+Relational databases are a classic and broadly used database
+technology for highly structured data. They are based on the
+\emph{relational model}, introduced by
+Codd~\cite{database-designs,relational}. The relational model
+structures data into \emph{relations}, which can be described as
+tables with attributes as columns and data entries as rows.
+\begin{table}[ht]
+  \begin{minipage}[b]{0.3\linewidth}\centering
+  \begin{tabular}{ l|l|l }
+    Id & Name & Age\\
+    \hline
+    A & Alice & 23\\
+    B & Bob & 26\\
+  \end{tabular}
+  \\\vspace{0.2cm}
+  (a) Relation Persons
+\end{minipage}
+\hspace{0.5cm}
+\begin{minipage}[b]{0.3\linewidth}
+\centering
+  \begin{tabular}{ l|l }
+    Id & Title\\
+    \hline
+    1 & Artificial Intelligence\\
+    2 & Multi Agent Systems \\
+  \end{tabular}
+  \\\vspace{0.2cm}
+  (b) Relation Books
+\end{minipage}
+\hspace{0.5cm}
+\begin{minipage}[b]{0.3\linewidth}
+\centering
+  \begin{tabular}{ c|c }
+    Person & Book\\
+    \hline
+    A & 1\\
+    A & 2\\
+  \end{tabular}
+  \\\vspace{0.2cm}
+  (c) Relation Borrowed
+\end{minipage}
+  \caption{Example for a relational database model about a
+    library}
+  \label{tab:relational-example}
+\end{table}
+\reftab{tab:relational-example} shows an example of a relational
+database model of a library. Most relation contain a \emph{primary
+  key}, a unique value to identify a row in the relation (e.g. the
+\texttt{Id} columns in \reftab{tab:relational-example}). These keys
+can be used as so called \emph{foreign keys} in other relations to
+link multiple relations, such as in
+\reftab{tab:relational-example}(c). In which relations a database is
+structured and which attributes relations contain is defined by the
+\emph{schema} of the database. To interact with a database management
+system folowing the relational model, the \emph{Structured Query
+  Language (SQL)} can be used. SQL is a formal language to insert,
+update, and delete rows, change the database schema, and search the
+database~\cite{database-def}. Queries can contain conditions for
+attributes and group, sort, and agregate results. An especially useful
+feature of relational databases and SQL is joining multiple relations
+by using foreign keys. For example, this allows listing the titles of
+borrowed books together with the name of the borrower from
+\reftab{tab:relational-example}.
+
+\subsubsection{Graph-Based}
+\label{sec:graph-design}
+Graph-based databases model data structures as graphs with nodes and
+edges~\cite{graphdbs}. Nodes usually represent entities and edges
+relations between them. Nodes and edges can have properties, such as a
+name. This allows for example to model a family trees with persons as
+node, direct relation as edges, and names as properties of persons. In
+comparison the to relational databases, there is no database schema
+because the structure is intrinsicly defined by the contained
+data. Thus graph-based databases are called \emph{schema-free}. They
+are well suited for domains with transitive relations, such as 'is
+related to', and other problems that can be reduced to graph theory
+problems, such as connectivity, because algorithms from graph theory
+can directly operate on the graph. Thus costly join opperations, which
+would be neccessary in relational databases, can be
+avoided~\cite{graphcomparison}. A graph-based data model that is
+widely used in robotics is the \emph{Resource Description Framework
+  (RDF)}~\cite{KnowRob-Representation,Oro,OpenEASE}. It represents
+information as triples (e.g. $rdf(robot, holding, cup)$) that are
+composed of a subject, predicate, and object~\cite{rdf}. Subjects and
+objects are represented by nodes and predicates by edges. The query
+language for RDF databases that is proposed as standart by the World
+Wide Web Consortium is \emph{SPARQL}. It provides operations that are
+similar to SQL extended by graph traversal features.
+
+\subsubsection{Document-Oriented}
+\label{sec:documene-design}
+Document-oriented databases store entities called \emph{documents}
+consisting of key-value
+pairs~\cite{mongodb,document-comparison,document-description}. In
+contrast to relational databases, they are schema-free. Thus there is
+no predefined schema that enforces the structure of
+documents. However, documents with similar structure are usually
+grouped into \emph{collections}. The different values can be accessed
+by their key and can have different types, such as strings, numbers,
+complex objects (e.g. dates) and nested sub-documents
+(e.g. translation containing 3D coordinates). Therefore the documents
+inserted in a collection implicitly define the structure during
+run-time. This allows a flexible use of the database because
+applications are not limited to a fixed schema and can, for example,
+add key-value pairs during run-time when additional information needs
+to be stored. Furthermore, this simlyfies development in which the
+document structure tends to change often. Even if there are documents
+with different structure, the application can choose to retrieve only
+certain documents by giving a specialized query. Each document also
+contains a unique key, similar to a primary key in relational
+databases.
+\todo[inline]{query languages?}
+\todo[inline]{enhance}
+
+\subsection{Document-Oriented Implementations}
+\label{sec:documentdbs}
+intro bla, mongodb in next subsection because of more detail
+
+\subsubsection{CouchDB}
+\label{sec:couchdb}
+\todo[inline]{check ref: document-comparison}
+
+\subsubsection{ArangoDB}
+\label{sec:arangodb}
+
+
 \subsection{MongoDB}
 \label{sec:mongodb}
-
-%% Since storing, keeping and retrieving knowledge of the robot memory
-%% are central tasks of this thesis, the choise of a database
-%% implementation is important.
-MongoDB is a \emph{document-oriented}
-database that fits particularly well for the application in this thesis. It
-provides many useful features, such as flexible data structures, aggregation,
-and distribution over multiple machines, which would take a large effort to
-implement manually. It has proven as powerful and scalable data
-storage~\cite{mongodb,RoboDB} and is widely used. In contrast to
-relational databases, document-oriented ones store entities called
-\emph{documents} consisting of key-value pairs.
+MongoDB is a \emph{document-oriented} database that fits particularly
+well for the application in this thesis. It provides many useful
+features, such as flexible data structures, aggregation, and
+distribution over multiple machines, which would take a large effort
+to implement manually. It has proven as powerful and scalable data
+storage and is widely used~\cite{mongodb,RoboDB}.
 \begin{figure}
   \begin{minipage}{0.6\linewidth}
 \begin{lstlisting}[style=SmallJSON,
@@ -585,104 +724,65 @@ db.positions.find(
   \end{minipage}
   \vspace{-0.8cm}
 \end{figure}
-\reflst{lst:mongo-document} shows such a document.
-%used for storing the position of a robot.
-The different
-values can be accessed by their key and can have different types, such
-as strings, numbers, complex objects (e.g. dates) and nested
-sub-documents (e.g. translation containing 3D coordinates). In
-contrast to relational databases, there is no predefined schema that
-enforces the structure of documents. However, documents with similar
-structure are usually grouped into \emph{collections}. Therefore the
-documents inserted in a collection implicitly define the structure
-during run-time. This allows a flexible use of the database because
-applications are not limited to a fixed schema and can, for example,
-add key-value pairs during run-time when additional information needs
-to be stored.
-%% Furthermore, this simlyfies development in which the
-%% document structure tends to change often. Even if there are documents
-%% with different structure, the application can choose to retrieve only
-%% certain documents by giving a specialized query.
+\reflst{lst:mongo-document} shows such a document
+used for storing the position of a robot.
+
 Queries in MongoDB are similar to documents because the arguments of
-query functions also use document structure. An example query is
-shown in \reflst{lst:mongo-query}. It searches for all documents in
-the collection \texttt{positions}
-%of the current database
-that have matching values for \texttt{type} and \texttt{position}, and
-are up to date, thus with a timestamp greater than the given
-one. Multiple key-value pairs in a query are conjunctive.  Values can
-be checked and compared as in the example with a variety of operators
-such as \emph{not}, \emph{or}, \emph{equals}, \emph{greater
-  than}, etc. These queries can be evaluated very quickly, especially
-when \emph{indexing} is used, a database feature that manages indexes
-for a combination of document keys. For more complex queries, it is
-possible to add arbitrary JavaScript functions with the \emph{where}
-operator to check if documents match the query. Furthermore, it is
-possible to aggregate results using the \emph{Map-Reduce}
-paradigm~\cite{mapreduce}, which maps resulting documents to
-intermediate documents which are then reduced until the end-result is
-found. For example this allows querying for the nearest visible object
-by getting all visible objects, mapping their position to a distance
-and reducing them to the nearest one by dropping more distant ones
-when comparing them.  The higher expressiveness of these queries comes
-with the price of slower computation. However, the computational
-effort can be reduced by formulating queries smartly. Many usual
-queries, e.g. \reflst{lst:mongo-query}, can be formulated without
-using \emph{where} operators. Furthermore, complex queries can be
-nested to filter documents first with a fast query and execute the
+query functions also use document structure. An example query is shown
+in \reflst{lst:mongo-query}. It searches for all documents in the
+collection \texttt{positions} that have matching values for
+\texttt{type} and \texttt{position}, and are up to date, thus with a
+timestamp greater than the given one. Multiple key-value pairs in a
+query are conjunctive.  Values can be checked and compared as in the
+example with a variety of operators such as \emph{not}, \emph{or},
+\emph{equals}, \emph{greater than}, etc. These queries can be
+evaluated very quickly, especially when \emph{indexing} is used, a
+database feature that manages indexes for a combination of document
+keys. For more complex queries, it is possible to add arbitrary
+JavaScript functions with the \emph{where} operator to check if
+documents match the query. Furthermore, it is possible to aggregate
+results using the \emph{Map-Reduce} paradigm~\cite{mapreduce}, which
+maps resulting documents to intermediate documents which are then
+reduced until the end-result is found. For example this allows
+querying for the nearest visible object by getting all visible
+objects, mapping their position to a distance and reducing them to the
+nearest one by dropping more distant ones when comparing them.  The
+higher expressiveness of these queries comes with the price of slower
+computation. However, the computational effort can be reduced by
+formulating queries smartly. Many usual queries,
+e.g. \reflst{lst:mongo-query}, can be formulated without using
+\emph{where} operators. Furthermore, complex queries can be nested to
+filter documents first with a fast query and execute the
 computationally costly query only on the remaining documents.
 %
 An especially useful feature of MongoDB that allows sharing knowledge
 between multiple robots is \emph{replication}. Replication is a
-process that distributes a database onto multiple machines.
-One MongoDB instance called \emph{Master} initially
-copies the database  to other instances called \emph{Slaves}.
-Afterwards, all modifications to the master database, which are
-stored in a separate collection called \emph{operations log (oplog)}, are forwarded to
-the slave to keep them synchronized and consistent.
-%% This is often used
-%% in web-services to distribute read-queries and their computation on
-%% multiple machines and to keep backups.
-Read only queries can be
-computed by Master and Slave instances. Modifying queries are
-forwarded to the Master to guarantee consistency.
-MongoDB can also group multiple
-instances into a \emph{Replica Sets}, which automatically manages
-the master election when necessary. Using replication,
-multiple robots can robustly share a common and consistent world
-model. Robot specific knowledge can be kept in a separate and not
-replicated collection to avoid unneeded communication.
-%% There also exist
-%% extensions of MongoDB which implement a \emph{Multi-Master
-%%   Replication}. This would enable writing to each instance immediately
-%% and synchronizing the changes later. \todo{source} This allows faster
-%% writing especially if the Master is not available for some time but
-%% requires to resolve write conflicts and handle them in the
-%% application. Thus Master-Slave Replication is more convinient for the
-%% applicaiton.
-%% There are also extensions of MongoDB providing so called \emph{Trigers} which
-%% can notify an application if something in the database changes as
-%% previouly defined. \todo{source} These Triggers use the oplog of
-%% MongoDB to find changes and are useful for planners. For example if a
-%% global planner determined a plan that is being executed and wants to
-%% be notified, if a condition changes that makes the plan invalid, to
-%% replan.
+process that distributes a database onto multiple machines.  One
+MongoDB instance called \emph{Master} initially copies the database to
+other instances called \emph{Slaves}.  Afterwards, all modifications
+to the master database, which are stored in a separate collection
+called \emph{operations log (oplog)}, are forwarded to the slave to
+keep them synchronized and consistent.
+This is often used
+in web-services to distribute read-queries and their computation on
+multiple machines and to keep backups.
+Read only queries can be computed by Master and Slave
+instances. Modifying queries are forwarded to the Master to guarantee
+consistency.  MongoDB can also group multiple instances into a
+\emph{Replica Sets}, which automatically manages the master election
+when necessary. Using replication, multiple robots can robustly share
+a common and consistent world model. Robot specific knowledge can be
+kept in a separate and not replicated collection to avoid unneeded
+communication.
 
 MongoDB is especially well suited for this thesis because of its
 performance and scalability compared to other document-oriented
 databases with similar features. A possible alternative to MongoDB is
-the document-oriented database CouchDB~\cite{CouchDB}. CouchDB
-focuses more on distributed Systems providing a system called
-Multi-Master Replication, which allows writing to all replication instances.
-Conflicts can be solved similar to a version
-control system, thus multiple conflicting versions can be kept in
-parallel for later revision. However, MongoDB has shown to scale much
-better than CouchDB and other document-oriented databases~\cite{db-comparison}.
-
-%% \begin{itemize}
-%% \item BSON JSON format for documents
-%% \item JavaScript example
-%% \item Capped collections?
-%% \item dreieck comparison ?
-%% \item GridFS file storage?
-%% \end{itemize}
+the document-oriented database CouchDB~\cite{CouchDB}. CouchDB focuses
+more on distributed Systems providing a system called Multi-Master
+Replication, which allows writing to all replication instances.
+Conflicts can be solved similar to a version control system, thus
+multiple conflicting versions can be kept in parallel for later
+revision. However, MongoDB has shown to scale much better than CouchDB
+and other document-oriented databases~\cite{db-comparison}.
+\todo[inline]{extend? (json, JS example, capped collections, gridfs)}

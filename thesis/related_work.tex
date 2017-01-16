@@ -15,23 +15,22 @@ relation to common sense knowledge to understand vaguely described
 tasks, such as "set the table". For representation and inference of knowledge,
 KnowRob uses Description Logic and approaches of the semantic web.
 %% , an effort to make websites machine understandable,
-Each small piece of
-information is represented as a \emph{Resource Description Framework
-  (RDF) triple} (e.g. $rdf(robot, holding, cup)$) that are composed
-of a subject, predicate, and object. A set of these RDF triples in a
-network can compose commonsense knowledge based on the
-\emph{Web Ontology Language (OWL)}. It uses
-\emph{ontologies}, which can roughly be described as directed graphs
-setting objects or classes of objects into relation. The graph can be
-represented with multiple RDF triples, where the subject and object
-are nodes and the predicate is a directed edge from the subject to the
-object. In these ontologies, it is possible to represent common sense
-knowledge, such as "milk is-a perishable", "refrigerator
-storage-place-for perishable", and "refrigerator is-a
-box-container". Thus a robot asked to bring milk could infer that the
-milk is stored in the refrigerator, which needs to be opened first
-since it is a box-like container. To be able to interface with
-perception, KnowRob uses a concept called
+Each small piece of information is represented as a \emph{Resource
+  Description Framework (RDF) triple} (e.g. $rdf(robot, holding,
+cup)$) that are composed of a subject, predicate, and
+object. \todo[inline]{rdf already introduced in background}A set of
+these RDF triples in a network can compose commonsense knowledge based
+on the \emph{Web Ontology Language (OWL)}. It uses \emph{ontologies},
+which can roughly be described as directed graphs setting objects or
+classes of objects into relation. The graph can be represented with
+multiple RDF triples, where the subject and object are nodes and the
+predicate is a directed edge from the subject to the object. In these
+ontologies, it is possible to represent common sense knowledge, such
+as "milk is-a perishable", "refrigerator storage-place-for
+perishable", and "refrigerator is-a box-container". Thus a robot asked
+to bring milk could infer that the milk is stored in the refrigerator,
+which needs to be opened first since it is a box-like container. To be
+able to interface with perception, KnowRob uses a concept called
 \emph{virtual knowledge base}. It allows computing needed information
 on demand instead of storing everything providently. Thus special
 queries can be forwarded to other components that compute the answer
@@ -161,3 +160,24 @@ system is also usable or being extended for cooperating robots or
 planners exchanging knowledge over the web service is not mentioned in
 current publications or on the project
 website\footnote{\url{http://www.open-ease.org/}}.
+
+\section{MongoDB extensions}
+\begin{itemize}
+\item trigger implementation
+\item multi-master sync (pro/con)
+\end{itemize}
+There also exist extensions of MongoDB which implement a
+\emph{Multi-Master Replication}. This would enable writing to each
+instance immediately and synchronizing the changes
+later. \todo{source} This allows faster writing especially if the
+Master is not available for some time but requires to resolve write
+conflicts and handle them in the application. Thus Master-Slave
+Replication is more convinient for the applicaiton.  There are also
+extensions of MongoDB providing so called \emph{Trigers} which can
+notify an application if something in the database changes as
+previouly defined. \todo{source} These Triggers use the oplog of
+MongoDB to find changes and are useful for planners. For example if a
+global planner determined a plan that is being executed and wants to
+be notified, if a condition changes that makes the plan invalid, to
+replan.
+
