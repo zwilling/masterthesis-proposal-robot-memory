@@ -646,9 +646,9 @@ language for RDF databases that is proposed as standart by the World
 Wide Web Consortium is \emph{SPARQL}. It provides operations that are
 similar to SQL extended by graph traversal features.
 
-\subsubsection{Document-Oriented}
+\subsubsection{Document Oriented}
 \label{sec:documene-design}
-Document-oriented databases store entities called \emph{documents}
+Document oriented databases store entities called \emph{documents}
 consisting of key-value
 pairs~\cite{mongodb,document-comparison,document-description}. In
 contrast to relational databases, they are schema-free. Thus there is
@@ -667,21 +667,63 @@ document structure tends to change often. Even if there are documents
 with different structure, the application can choose to retrieve only
 certain documents by giving a specialized query. Each document also
 contains a unique key, similar to a primary key in relational
-databases.
-\todo[inline]{query languages?}
+databases. The query languages of document oriented databases are not
+so standardized as of relational databases as shown in
+\refsec{sec:documentdbs}. However, most document oriented databases
+have the usage of the \emph{JavaScript Object Notation (JSON)} format
+in common. JSON is a lightweight data-interchange format similar to
+the \emph{Extensible Markup Language (XML)}~\cite{json}. It is human
+readable and assables objects with key-value pairs. Because these
+objects can also be nested, they can represent documents. Compared to
+XML, JSON is faster and more compact~\cite{json-comparison}.
+
 \todo[inline]{enhance}
 
-\subsection{Document-Oriented Implementations}
+\subsection{Document Oriented Implementations}
 \label{sec:documentdbs}
-intro bla, mongodb in next subsection because of more detail
+There are multiple database managing systems based on the document
+oriented model. Here, we present three popular open source
+implementations that were considered for this thesis. CouchDB and
+ArangoDB are introduced in this Subsection an MongoDB is covered in
+the next Subsection in more detail.
 
 \subsubsection{CouchDB}
 \label{sec:couchdb}
-\todo[inline]{check ref: document-comparison}
+Apache CouchDB is an open source document oriented database
+software~\cite{CouchDB,document-comparison}. As incorporated in its
+name, it should be relaxing to boost the productivity by being easy to
+use. It is written in the concurrency-oriented language Erlang and
+uses the JSON format to store data. Queries in CouchDB are done with
+so called \emph{views}, which are based on JavaScript functions
+(e.g. to specify constraints, aggregation, updates). The API of
+CouchDB is based on HTTP and thus focused on web applications, but
+interfaces for other languages, such as C++, also exist. What
+seperates CouchDB from comparable database systems is its
+\emph{multiversion concurrency control}. In a distributed system,
+CouchDB does not guarantee consistency. It provides a system called
+Multi-Master Replication, which allows writing to all replication
+instances.  Conflicts can be solved similar to a version control
+system, thus multiple conflicting versions can be kept in parallel for
+later revision.
+
+\todo[inline]{mention scalability through asynchronus replication, no
+  sharding?}  o guaranteed consistency
 
 \subsubsection{ArangoDB}
 \label{sec:arangodb}
+Arango DB is an open source database managing system. What sets it
+apart from other database managing systes is that it combines document
+oriented and graph based models in a so called
+\emph{multi-model}~\cite{arango-manual,arango}. It supports the JSON
+format, but stores the data in a binary format called
+VelocityPack. The API is based on HTTP. Arango uses the unique
+\emph{Arango Query Language (AQL)}, which is inspired by SQL and
+extended by document and graph features that account for the dynamic
+schema. Queries can be enhanced with JavaScript fuctions (e.g. fo
+access graph features). Also the interface focuses on JavaScript, but
+a C++ driver exists as well.
 
+\todo[inline]{mention multiversion concurrency control?}
 
 \subsection{MongoDB}
 \label{sec:mongodb}
@@ -776,13 +818,17 @@ kept in a separate and not replicated collection to avoid unneeded
 communication.
 
 MongoDB is especially well suited for this thesis because of its
-performance and scalability compared to other document-oriented
-databases with similar features. A possible alternative to MongoDB is
-the document-oriented database CouchDB~\cite{CouchDB}. CouchDB focuses
-more on distributed Systems providing a system called Multi-Master
-Replication, which allows writing to all replication instances.
-Conflicts can be solved similar to a version control system, thus
-multiple conflicting versions can be kept in parallel for later
-revision. However, MongoDB has shown to scale much better than CouchDB
-and other document-oriented databases~\cite{db-comparison}.
+performance and scalability compared to the document-oriented
+databases CouchDB and
+ArangoDB~\cite{db-comparison,arango-vs-mongo}. Especially compared to
+CouchDB, MongoDB provides faster interaction times. This could be
+caused by the fact that queries in CouchDB purely rely on JavaScript
+functions that have to be evaluated and computed during
+querying. The query language of MongoDB also provides an additional
+syntax for simple queries for faster evaluation in C++. Compared to
+ArangoDB, MongoDB has a larger community and has more features, such
+as map-reduce and saving larger files. 
+
 \todo[inline]{extend? (json, JS example, capped collections, gridfs)}
+
+\todo[inline]{bson}
