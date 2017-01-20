@@ -732,7 +732,9 @@ well for the application in this thesis. It provides many useful
 features, such as flexible data structures, aggregation, and
 distribution over multiple machines, which would take a large effort
 to implement manually. It has proven as powerful and scalable data
-storage and is widely used~\cite{mongodb,RoboDB}.
+storage and is widely used~\cite{mongodb,RoboDB}. MongoDB uses the
+JSON format, but internaly stores and evaluates documents in the
+\emph{Binary JSON (BSON)} format.
 \begin{figure}
   \begin{minipage}{0.6\linewidth}
 \begin{lstlisting}[style=SmallJSON,
@@ -815,7 +817,20 @@ consistency.  MongoDB can also group multiple instances into a
 when necessary. Using replication, multiple robots can robustly share
 a common and consistent world model. Robot specific knowledge can be
 kept in a separate and not replicated collection to avoid unneeded
-communication.
+communication. MongoDB also fixed-size collections that are similar to
+ring buffers. These are called \emph{capped collections} and order
+documents by insertion order.
+\begin{wrapfigure}{r}{0.3\textwidth}
+  \centering
+  \includegraphics[width=0.3\textwidth]{draw/capped-collection}%
+  \caption{Sketch of capped collection of size 8 after inserting the numbers 1-10 in
+  this order.}
+  \vspace{-3mm}
+  \label{fig:capped-collection}
+\end{wrapfigure}
+As \reffig{fig:capped-collection}
+visualizes, new entries replace the oldest ones when the capped
+collection is full.
 
 MongoDB is especially well suited for this thesis because of its
 performance and scalability compared to the document-oriented
@@ -829,6 +844,4 @@ syntax for simple queries for faster evaluation in C++. Compared to
 ArangoDB, MongoDB has a larger community and has more features, such
 as map-reduce and saving larger files. 
 
-\todo[inline]{extend? (json, JS example, capped collections, gridfs)}
-
-\todo[inline]{bson}
+\todo[inline]{extend? (JS example, gridfs)}
