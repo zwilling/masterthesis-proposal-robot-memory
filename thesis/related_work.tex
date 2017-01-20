@@ -1,10 +1,13 @@
 \chapter{Related Work}
 \label{sec:related}
-This section gives an overview of the related work of the proposed
-thesis starting with the knowledge processing systems KnowRob and
-OpenRobots Ontology, which provide similar functionality. Afterwards
-we present the Generic Robot Database based on MongoDB and Fawkes, and
-Open-EASE, a combination of KnowRob and the Generic Robot Database.
+This chapter gives an overview of the related work of the thesis. We
+start with the knowledge processing systems KnowRob and OpenRobots
+Ontology, which provide similar functionality. Afterwards we present
+the Generic Robot Database based on MongoDB and Fawkes, and Open-EASE,
+a combination of KnowRob and the Generic Robot Database.
+\todo[inline]{mention added sections}
+
+\section{SQL vs. DocumentDB vs. Ontologies vs. Production System}
 
 \section{KnowRob}
 \label{sec:knowrob}
@@ -12,83 +15,81 @@ KnowRob is an open source knowledge processing system for
 cognition-enabled robots~\cite{KnowRob,KnowRob-Representation}. It is
 designed to store knowledge about the environment and set it into
 relation to common sense knowledge to understand vaguely described
-tasks, such as "set the table". For representation and inference of knowledge,
-KnowRob uses Description Logic and approaches of the semantic web.
-%% , an effort to make websites machine understandable,
-Each small piece of information is represented as a \emph{Resource
-  Description Framework (RDF) triple} (e.g. $rdf(robot, holding,
-cup)$) that are composed of a subject, predicate, and
-object. \todo[inline]{rdf already introduced in background}A set of
-these RDF triples in a network can compose commonsense knowledge based
-on the \emph{Web Ontology Language (OWL)}. It uses \emph{ontologies},
-which can roughly be described as directed graphs setting objects or
-classes of objects into relation. The graph can be represented with
-multiple RDF triples, where the subject and object are nodes and the
-predicate is a directed edge from the subject to the object. In these
-ontologies, it is possible to represent common sense knowledge, such
-as "milk is-a perishable", "refrigerator storage-place-for
-perishable", and "refrigerator is-a box-container". Thus a robot asked
-to bring milk could infer that the milk is stored in the refrigerator,
-which needs to be opened first since it is a box-like container. To be
-able to interface with perception, KnowRob uses a concept called
-\emph{virtual knowledge base}. It allows computing needed information
-on demand instead of storing everything providently. Thus special
-queries can be forwarded to other components that compute the answer
-efficiently.
-%% Especially for perception based on sensor data or
-%% transformation of spatial relations, this is advantageous compared
-%% to continuously computing the results for all possible queries and
-%% storing them.
-The concept inspired the usage of computables in this thesis.  The
-implementation and interface of KnowRob is based on the logic
-programming language Prolog, what makes representing RDF triples and
-inference with ontologies intuitive.
-%% KnowRob implements it with Prolog predicates
-%% called \emph{Computables} which call C++ functions of other
-%% components. This indeed slows down the computation of a query but is
-%% more efficient than continuously computing and storing the results or
-%% implementing and computing the other components algorithms in Prolog.
-To understand the robots environment, large and detailed ontologies are
-necessary. KnowRob features acquiring and connecting these from
-various sources, such as online common sense databases, the cloud-based
-robot infrastructure RoboEarth~\cite{roboearth} and websites for
-deriving object information from internet shops and action recipes
-from how-to websites giving step by step instructions.
-However, it has been found that this acquired
-knowledge needs a lot of manual extension and verification before it
-can be used~\cite{KnowRob-Web}. Encyclopedic knowledge often lacks
-action information needed by the robot. %% (e.g. how to grab tools) and
-%% action recipes require human text understanding
-%% \todo{executive integration}
-%
+tasks, such as "set the table". For representation and inference of
+knowledge, KnowRob uses Description Logic and approaches of the
+semantic web.  Each small piece of information is represented as a
+\emph{Resource Description Framework (RDF) triple} (e.g. $rdf(robot,
+holding, cup)$) that are composed of a subject, predicate, and
+object. A set of these RDF triples in a network can compose
+commonsense knowledge based on the \emph{Web Ontology Language
+  (OWL)}~\cite{owl}. It uses \emph{ontologies}, which can roughly be described as
+directed graphs setting objects or classes of objects into
+relation. The graph can be represented with multiple RDF triples,
+where the subject and object are nodes and the predicate is a directed
+edge from the subject to the object. In these ontologies, it is
+possible to represent common sense knowledge, such as "milk is-a
+perishable", "refrigerator storage-place-for perishable", and
+"refrigerator is-a box-container". Thus a robot asked to bring milk
+could infer that the milk is stored in the refrigerator, which needs
+to be opened first since it is a box-like container.
+
+The implementation and interface of KnowRob is based on the logic
+programming language Prolog, which makes representing RDF triples and
+inference with ontologies intuitive.  To be able to interface with
+perception, KnowRob uses a concept called \emph{virtual knowledge
+  base}. It allows computing needed information on demand instead of
+storing everything providently. Thus special queries can be forwarded
+to other components that compute the answer efficiently.  Especially
+for perception based on sensor data or transformation of spatial
+relations, this is advantageous compared to computing and storing all
+possibly needed results in the memory.  KnowRob implements it with
+Prolog predicates called \emph{Computables} which call C++ functions
+of other components. This indeed slows down the computation of a query
+but is more efficient than continuously computing and storing the
+results or implementing and computing other components algorithms in
+Prolog.  The concept inspired the usage of computables in this thesis.
+
+To understand the robots environment, large and detailed ontologies
+are necessary. KnowRob features acquiring and connecting these from
+various sources, such as online common sense databases, the
+cloud-based robot infrastructure RoboEarth~\cite{roboearth} and
+websites for deriving object information from internet shops and
+action recipes from how-to websites giving step by step instructions.
+However, it has been found that this acquired knowledge needs a lot of
+manual extension and verification before it can be used by the
+robot~\cite{KnowRob-Web}. Encyclopedic knowledge often lacks action
+information needed by the robot (e.g. how to grab tools) and
+action recipes require human text understanding.
+\todo[inline]{executive integration}
 Furthermore large ontologies limit the performance of KnowRob because
 of the Prolog implementation and general complexity. In contrast to
-the robot memory intended in this thesis, KnowRob focuses on common
+the robot memory of this thesis, KnowRob focuses on common
 sense reasoning instead of an efficient and flexible on-line
 back-end. It does not support sharing knowledge between multiple
 robots and has a too strong focus on data only usable for reasoning
 components. Although it can also represent spatio-temporal knowledge,
 we have performance and scalability concerns with Prolog handling
 larger data-sets (e.g. for storing locations of found object over long
-time to learn the distribution where they can be found).
+time to learn the distribution where they can be found). Although
+KnowRob can load ontologies from a hard drive, the memory acquired
+during runtime is not persistently stored.
 
 \section{OpenRobots Ontology (ORO)}
 \label{sec:oro}
 The OpenRobots Ontology (ORO) is an open source knowledge processing
-framework for robotics~\cite{Oro}. It is designed to enable human-robot
-interaction by featuring commonsense ontologies similar to KnowRob and
-modeling the human point of view. It also uses RDF triples and OWL ontologies.
-The triple storage is implemented in Jena, a Java toolkit for RDF, and the
-inference with Pellet, a Java OWL reasoner. Besides knowledge storing,
-querying and reasoning, ORO features a modular architecture between
-the back-end storage and front end socket server for querying. These
-modules add features such as events that notify external components
-about changes.
-%%  (e.g. if instances of certain classes are added or modified).
-%% \todo{executive integration}
+framework for robotics~\cite{Oro}. It is designed to enable
+human-robot interaction by featuring commonsense ontologies similar to
+KnowRob and modeling the human point of view. It also uses RDF triples
+and OWL ontologies.  The triple storage is implemented in Jena, a Java
+toolkit for RDF, and the inference with Pellet, a Java OWL
+reasoner. Besides knowledge storing, querying and reasoning, ORO
+features a modular architecture between the back-end storage and front
+end socket server for querying. These modules add features such as
+events that notify external components about changes (e.g. if
+instances of certain classes are added or modified).
 Another module adds representations of alternative perspectives that
 should allow understanding the point of view of other agents.
-For example when a human asks a robot to bring the
+For example when a human asks a robot to bring a
 cup, there are two cups on a table and the robot should infer which
 cup is meant by knowing that the other cup is occluded from the human's
 point of view. Furthermore ORO features categorization to find
@@ -96,20 +97,20 @@ differences between objects (e.g. to ask if the blue cup or the red
 cup was meant in a vague task description) and memory profiles for
 distinguishing long-term knowledge and short-term knowledge that is
 removed when the lifetime of a fact expires. Although these are useful
-features and we want to realize the concepts of events and memory
+features and we realized the concepts of events and memory
 profiles in this thesis, we do not use ORO as a basis. Due to its
 focus on human-robot interaction and commonsense reasoning, it is not
 suitable for representing large amounts of data for non-reasoning
 components because all data would have to be stored in RDF triples and
 processed by the OWL reasoner. Furthermore, it does neither support
 synchronizing a part of the knowledge with other robots nor knowledge
-computable on demand.
+computation on demand.
 
 \section{Generic Robot Database with MongoDB}
 \label{sec:mongo-logging}
 There already is a generic robot database developed with MongoDB as
-data storage~\cite{RoboDB}. It is used to log data of a
-robot middleware (Fawkes and ROS) and allows, for example, fault analysis and performance
+data storage~\cite{RoboDB}. It is used to log data of the robot
+middlewares Fawkes and ROS, and allows fault analysis and performance
 evaluation. To achieve this, it taps into the messaging infrastructure
 in ROS and the blackboard interfaces in Fawkes to store the data one
 to one utilizing the flexibility of the schema free MongoDB. The
@@ -121,17 +122,17 @@ retracing processes, such as from point clouds (data) to cluster
 positions (information) to object positions (knowledge) combined from
 multiple clues to learning results (wisdom). This work already
 implemented a basic connection to MongoDB in Fawkes for storing
-documents and executing queries, which can be used in this thesis. It
-also showed that MongoDB is a good choice because it can handle
-querying a large database and writing a lot of data efficiently while
-being flexible how and which kind of data is being represented.
-However this work lacks some important concepts needed for a robot
-memory as intended in this thesis. It is intended as logging facility
-and not as working memory holding a world model for multiple planners
-and reasoners. Therefore updating and querying mechanisms for planners
-and reasoners are missing as well as triggers, a knowledge computable
-on demand, multi-robot synchronization, a suitable front-end, ad
-integration into knowledge based systems.
+documents and executing queries, which can is used and extended in
+this thesis. It also shows that MongoDB is a good choice because it
+can handle querying a large database and writing a lot of data
+efficiently while being flexible regarding how and which kind of data
+is being represented.  However this work lacks some important concepts
+needed for a robot memory as intended in this thesis. It is intended
+as logging facility and not as working memory holding a world model
+for multiple planners and reasoners. Therefore updating and querying
+mechanisms for planners and reasoners are missing as well as triggers,
+a knowledge computable on demand, multi-robot synchronization, a
+suitable front-end, ad integration into knowledge based systems.
 
 \section{Open-EASE}
 \label{sec:openease}
@@ -162,22 +163,55 @@ current publications or on the project
 website\footnote{\url{http://www.open-ease.org/}}.
 
 \section{MongoDB extensions}
-\begin{itemize}
-\item trigger implementation
-\item multi-master sync (pro/con)
-\end{itemize}
-There also exist extensions of MongoDB which implement a
-\emph{Multi-Master Replication}. This would enable writing to each
-instance immediately and synchronizing the changes
-later. \todo{source} This allows faster writing especially if the
-Master is not available for some time but requires to resolve write
-conflicts and handle them in the application. Thus Master-Slave
-Replication is more convinient for the applicaiton.  There are also
-extensions of MongoDB providing so called \emph{Trigers} which can
-notify an application if something in the database changes as
-previouly defined. \todo{source} These Triggers use the oplog of
-MongoDB to find changes and are useful for planners. For example if a
-global planner determined a plan that is being executed and wants to
-be notified, if a condition changes that makes the plan invalid, to
-replan.
+\label{sec:mongodb-extensions}
+The work of this thesis uses MongoDB as a basis and extends it with
+some concepts that are important for the usage as robot memory. In
+this section, we present MongoDB extensions which are related to our
+extensions, such as triggers for notifications about changes
+in the database.
 
+\subsection{Trigger}
+\label{sec:mongodb-trigger}
+In the database jargon, a trigger is a piece of code that is
+automatically executed after a specified event, such as a change in
+the database. Thus a trigger allows the user to react to events
+without polling. Triggers are common in relational database management
+systems, such as PostgreSQL~\cite{postgresql}. MongoDB does not
+provide triggers, but there are multiple projects prividing them as
+extension (e.g.~\cite{mongodb-trigger}). A simple way to realize
+triggers on insertion events is using capped collections of MongoDB
+because they order documents by the time of
+insertion. \todo[inline]{insert, link figure of capped collection?} The lazy and
+iterative query evaluation strategy of MongoDB allows querying the
+capped collection and keeping the cursor if there are no more
+documents. After some time, the query can be continued from the
+cursors position to check all documents that were inserted in the
+meantime because they were just appended after the documents inserted
+before. Conviniently MongoDB uses a capped collection to synchronize
+changes in a replica set. This capped collection, called the
+\emph{Oplog}, can also be queried by the user and allows listening to
+changes in the replica set as described above.
+
+\subsection{Multi-Master Replication}
+\label{sec:mongodb-multi-master}
+There also exist an extensions of MongoDB which implement a
+\emph{Multi-Master Replication}. It is called \emph{MongoDB
+  MultiMaster (MMM)}\footnote{\url{https://github.com/rick446/mmm}}
+and enables writing to each instance of a distributed MongoDB
+database~\cite{mongodb-multi-master}. Changes can be immediately
+applied locally and are synchronized later to the other
+instances. This allows faster writing especially if the other
+instances are not available for some time and would be advantagous in
+the RCLL, where a clouded WiFi can lead to larger latencies. However,
+MMM is not focused on consistency and ignores write conflicts. Other
+disadvantages are increased overall communication and database
+size. This is caused by the implementation of MMM, which uses an usual
+Master-Slave replication for each instance. Each instance consists of
+one Master of these replications and Slaves for the other. MMM then
+applies changes in a Slave replication to the local Master.  To detect
+changes in a replica, MMM utilizes MongoDBs Oplog similar to this
+thesis. It queries the Oplog, which is capped collection, as described
+in the \refsec{sec:mongodb-trigger}.
+
+\todo[inline]{wirklich kein related work zu on demand computation in
+  mongodb?}
