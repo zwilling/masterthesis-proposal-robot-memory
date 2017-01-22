@@ -1,0 +1,20 @@
+Evaluation:
+
+
+RCLL sync: network throughput, robustness package loss
+RCLL trigger
+Complex tiggers: @home (e.g. dishwasher full) find expressiveness limit (vs runtime)
+Computables runtime measurements
+query computation time vs query expressiveness
+  simple: where is the storage place for the red cup
+  medium: which objects are not at their storage position (cross product/conjunction DB term)
+memory usage
+database size
+
+(Blocks world: remember block positions after put)
+
+
+Tim:
+
+Gliederung
+Theoretical Foundation - template engine
