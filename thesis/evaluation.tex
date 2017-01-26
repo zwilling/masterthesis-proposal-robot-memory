@@ -1,0 +1,54 @@
+\chapter{Evaluation}
+\label{sec:evaluation}
+This chapter presents the evaluation results of the thesis. After some
+remarks about the evaluation context in \refsec{sec:eval-context}, we
+analyze the durations of different robot memory operations in
+\refsec{sec:op-durations}. This includes comparing the durations for
+different expressiveness levels and database sizes to find a
+compromise between expressiveness and performance. Furthermore, we
+analyze the overhead of database operations introduced by robot memory
+features. In \refsec{sec:performance} we present the performance of
+the system in the already introduced application scenarios. This
+includes CPU and memory usage, network throughput, and statistics
+about robot memory operations. Qualitatively, we evaluate how well the
+features of the robot memory work, how it can support the development
+of application scenarios, and where limitations are. Furthermore, we
+present experiments regarding the compromise of expressiveness and
+performance. \todo[inline]{review mentioning of all sections}
+
+\section{Evaluation context}
+\label{sec:eval-context}
+The benchmarks presented in this chapter were performed on Fedora 23
+systems with 16 GB RAM and an Intel Core i7-3770 with eight cores at
+$3.4$Ghz. For local benchmarks everything, including Fawkes, Mongodb,
+the Gazebo simulation and ROS, ran on a single system. For distributed
+benchmarks, three identical systems were used. Each system hosted its
+own Fawkes, ROS, and Mongodb processes and one system additionally,
+hosts the Gazebo simulation.
+
+Since the robot memory runs inside the Fawkes framework and thus
+inside the Fawkes process, the performance of the robot memory can not
+directly be measured separately and is influenced by Fawkes. The
+influences are caused by other components, such as localization,
+reasoning, and collision avoidance, and by the thread management of
+Fawkes. To softly guarantee loop times for other threads, Fawkes
+suspends threads with a too long loop iteration. When measureing
+durations of robot memory operations this can increase large
+measurement values because when an operation takes longer than the
+allowed loop iteration time, the time being suspended is added to the
+measurement.
+
+\section{Robot Memory Operations}
+\label{sec:op-durations}
+\subsection{Inserts}
+\subsection{Queries}
+\subsection{Updates}
+\subsection{Computables}
+\subsection{Trigger}
+
+
+\section{Performance in evaluation scenarios}
+\label{sec:performance}
+
+\section{Qualitative Evaluation}
+\todo[inline]{refine qualitative structure}
