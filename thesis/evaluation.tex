@@ -208,16 +208,55 @@ they do not need to be removed manualy.
 
 \subsection{Computables}
 \label{sec:eval-computables}
-overhead
-performance-size-expressiveness
-scale liniar/quadratic with size
-computable insert, x*query, remove (insert+ remove once, query -x)
+Computables generate new information when it is demanded by a
+query. Thus each new query is checked by the computable manager as
+explained in \refsec{sec:queries}. \reffig{fig:computable-durations}
+shows the time needed for checking if a query demands a computable and
+for computing the results. The computable used in
+\reffig{fig:computable-durations} calculates the distance of the robot
+to the closest object in the database and yields the object's name,
+position, and distance. The measurement does not include the query
+duration to of finding the computed document. The computation time of
+the computable itself scales linear with the domain size because each
+object's distance needs to be checked. The time of the overhead does
+not depend on the domain size. The overhead includes inserting the
+original query in MongoDB, evaluating the demand query for each
+registered computable to check if the original query demands the
+computable, and a clean up operation. Furthermore, the results of the
+computable need to be inserted into the robot memory. Asynchronously
+in the main loop of the robot memory, computed documents are removed
+again. Thus the time needed for computables depends on the amount of
+registered computables, the amount of computed documents, and mainly
+the computation time needed for each matching computable itself. This
+computation time can get large if the computable solves problems with
+higher complexity. For example a computable that finds the pair of
+objects with the smallest distance to each other would scale
+quadratically with the domain size. To avoid repeated computation of
+the same data, we implemented caching for computables. As long as
+specified by the caching time, the computation step is skipped if the
+new query is identical to the query that demanded the computation
+before. The remaining overhead of the computable manager is the same.
+
 \subsection{Trigger}
 \label{sec:eval-trigger}
-overhead
-performance-size-expressiveness
-scale liniar/quadratic with size
-
+Triggers notify an application when something in the database changes
+as specified in the trigger query. For this benchmark, we registered a
+trigger on new objects in a certain location (e.g. in the laundry
+box). If trigger events happened, is checked each loop iteration of
+the robot memory by the trigger manager. Because trigger queries,
+which check for these events, are only executed on the oplog and not
+on the whole database, the time needed to check trigger depends on the
+amount of registered trigger and the amount of database changes
+(insertions, updates, and deletions). The current domain size has no
+influence. During the insertion of the $100000$ objects, the trigger
+manager checked for trigger events $2249$ times with an average
+duration of $0.27ms$. That makes $0.006ms$ per insertion. This
+duration also depends heavily on the formulation of the trigger query
+(e.g. in the case of JavaScript usage). These measurements do not
+include the computation time needed by the callback function of the
+trigger. Because the callback function is executed directly, it's
+computation time influences the loop time of the robot memory and can
+in the worst case block it.
 
 \section{Performance in evaluation scenarios}
 \label{sec:performance}
