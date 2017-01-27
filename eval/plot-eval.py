@@ -65,23 +65,48 @@ def plot_query():
         plt.figure(figsize=(8,5))
         plt.xlabel('db size (#docs)')
         plt.ylabel('duration (ms)')
-        # plt.axis([0, 100000, 0.0, 60])
+        plt.axis([0, 100000, 0.0, 300])
     
         # fill plot
-        plt.plot(sizes, durations_not_found, 'o', label='not found')
-        plt.plot(sizes, durations_found, 'o', label='found')
-        plt.plot(sizes, durations_comparison, 'o', label='comarison')
-        plt.plot(sizes, durations_comparison_all, 'o', label='comarison')
-        plt.legend(loc=4)
+        # plt.plot(sizes, durations_not_found, 'o', label='not found')
+        plt.plot(sizes, durations_found, 'o', label='find obj by name')
+        plt.plot(sizes, durations_comparison, '*', label='obj.storage != obj.place')
+        # plt.plot(sizes, durations_comparison_all, 'o', label='comare all')
+        plt.legend(loc=5)
         
         # save plot
         plt.show()
-        #pdf.savefig()
-        #plt.close()
+        # pdf.savefig()
+        # plt.close()
+        
+def plot_update():
+    # get data
+    sizes = []
+    durations = []
+    for p in col.find({"op":"remove","query.$comment.exp":"remove"}):
+        sizes.append(p["query"]["$comment"]["db-size"])
+        durations.append(p["total"] * 1000.0)
+        
+    with PdfPages('update-durations.pdf') as pdf:
+        # format plot
+        plt.figure(figsize=(8,5))
+        plt.xlabel('db size (#docs)')
+        plt.ylabel('duration (ms)')
+        plt.axis([0, 100000, 0.0, 50])
+    
+        # fill plot
+        plt.plot(sizes, durations, 'o', label='update')
+        # plt.legend(loc=5)
+        
+        # save plot
+        plt.show()
+        # pdf.savefig()
+        # plt.close()
     
         
 if __name__ == "__main__":
 
-    plot_inserts()
+    # plot_inserts()
     # plot_query()
+    plot_update()
     print "Plotted :-)"

@@ -58,7 +58,7 @@ up scenario. For each object, the robot memory contains a document
 with the object's name, current position, and the storage position it
 belongs to. Names are unique and storage positions are randomly chosen
 out of $1000$ possibilities. Objects are currently placed at their
-storage position with probability $0.05$ and random otherwise. The
+storage position with probability $0.01$ and random otherwise. The
 object's name is string to enforce string comparisons, which are
 expected to be often needed in a real scenario. For evaluation
 reasons, we do not index the collection by the s name right now
@@ -86,17 +86,17 @@ to the initialization time of the whole robot software.
 \label{sec:insertions}
 \begin{figure}
   \centering
-  \begin{subfigure}[b]{0.5\textwidth}
+  \begin{subfigure}[b]{0.49\textwidth}
     \includegraphics[width=\textwidth]{plots/insert-durations}
     \caption{Insertions}
     \label{fig:insert-durations}
   \end{subfigure}
-  \begin{subfigure}[b]{0.5\textwidth}
+  \begin{subfigure}[b]{0.49\textwidth}
     \includegraphics[width=\textwidth]{plots/query-durations}
     \caption{Queries}
     \label{fig:query-durations}
   \end{subfigure}
-  \caption[Duration of insert operations with increasing domain size]{Duration of robot memory operations with increasing domain size}
+  \caption[Duration of robot memory operations with increasing domain size]{Duration of robot memory operations with increasing domain size}
   \label{fig:eval-durations-1}
 \end{figure}
 The insertion of a new document into the robot memory is overall the
@@ -116,35 +116,102 @@ large amount of written documents and the threading in Fawkes.  The
 overhead of the robot memory compared to the duration of the raw
 MongoDB operation has an average of $0.006ms$, which is about $5.5\%$.
 The overhead is caused by verifying the collection name, deciding if
-the local or distributed database is used, and adding meta-data.  The
-robot memory overhead mesured here does not include checking if
-triggers were activated by inserting the document. This is caused by
-the asynchron and seperate checking by the trigger manager. The size
-and the complexity of insertes documnents did not make a noticable
-difference.\todo{nedd to add numbers?}
+the local or distributed database is used, adding meta-data, and
+mutual exclusion of database usage. The robot memory overhead mesured
+here does not include checking if triggers were activated by inserting
+the document. This is caused by the asynchron and seperate checking by
+the trigger manager. The size and the complexity of insertes
+documnents did not make a noticable difference.\todo{nedd to add
+  numbers?}
 
 \subsection{Queries}
 \label{sec:queries}
-batch query
-(comparison find only one/find all)
-overhead
-\todo[inline]{comparison with indexing}
-performance-size-expressiveness
-scale liniar/quadratic with size
+Queries are more complex operations than insertions and also take more
+time. \reffig{fig:query-durations} shows that query durations heavily
+depends on many factors, such as domain-size and query complexity. The
+query durations, when searching for an object by it's unique name,
+lineary depend on the domain size. The other plot shows the query
+durations for finding objects that are not at their storage location
+and thus would have to be tidyied up. The query is more complex
+because it contains a comparison between two values that is formulated
+in JavaScript. From $0$ to about $10000$ documents, also a linear
+increase can be seen. With more documents the average duration does
+not increase, because of a query evaluation trick of MongoDB. MongoDB
+lazily evaluates queries and returns a cursor to the first batch of
+documents that match the query. While the user iteratively fetches
+documents from the cursor, MongoDB continues the query evaluation if
+the batch was emptied. For the 'find object name' query, the whole
+database was searched because the unique object could not fill the
+batch. However it is possible to request a smaller batch (e.g. only
+one) document for faster computation.  \todo[inline]{comparison with
+  indexing} The overhead of the robot memory query operation does not
+depend on the domain size and has an average duration of $0.6ms$. The
+largest part of that overhead is caused by the computable manager,
+even if in this scenario no computables are registered. The computable
+manager performs a single insert and remove on a seperate collection
+to prepare checking if the query matches a computable and to clean up
+afterwards. Because of this insertion, the duration spikes observed
+for insertions can also occur for queries.  \todo[inline]{more
+  different query complexities?}  As \reffig{fig:query-durations}
+shows, the query duration heavily depends on the complexity of the
+query. Especially the expressive JavaScript functions are expensive
+compared to the MongoDB internal query language without JavaScript. By
+formulating queries smartly, complex questions can often be
+efficiently in practise. For example checking wheather the dishwasher
+is full sounds like a question that is computationally costly because
+it requires JavaScript function. But it can be formulated efficiently
+by first filtering only the objects in the dishwasher with a fast
+JavaScript-free query and then summing up the objects volume to check
+if it exceeds a given threashold. This way the costly sum computation,
+which can be done by aggregation or JavaScript, only needs to be
+computed for the few objects in the dishwasher.
+  \todo[inline]{concrete example for query formulation?}
+  \todo[inline]{aggregation/map-reduce graph?}
 
-\subsection{Updates}
+\subsection{Updates and Deletions}
 \label{sec:updates}
-also includes removes
-overhead
-performance-size-expressiveness
-scale liniar/quadratic with size
-
+\begin{figure}
+  \centering
+  \begin{subfigure}[b]{0.49\textwidth}
+    \includegraphics[width=\textwidth]{plots/update-durations}
+    \caption{Updates}
+    \label{fig:update-durations}
+  \end{subfigure}
+  \begin{subfigure}[b]{0.49\textwidth}
+    \includegraphics[width=\textwidth]{plots/computable-durations}
+    \caption{Computables}
+    \label{fig:computable-durations}
+  \end{subfigure}
+  \caption[Duration of robot memory operations with increasing domain size]{Duration of robot memory operations with increasing domain size}
+  \label{fig:eval-durations-2}
+\end{figure}
+Updates consist of a query defining what should be updated and some
+key-value pairs, which should be changed. Thus the duration of an
+update should be similar to an update plus an
+insertion. \reffig{fig:update-durations} shows the duration of
+position updates of objects with a random name. Because the used
+update operation only updates a single document, the durations are
+roughly uniformly distributed with an upper bound matching the
+duration of 'find object' queries in
+\reffig{fig:query-durations}. Thus the duration of update operations
+also scale linearly with the domain size. Duration of queries
+searching for only one document also behave as in
+\reffig{fig:update-durations}.  Because delete operations also consist
+of a query and a fast change operation, they behave similar to
+updates. The difference is that by default deletions are executed on
+all documents and updates only on a single one. For both deletions and
+updates the overhead does not depend on the database size. Both
+updates and deletions have an average overhead duration below
+$0.02ms$. In contrast to to query operations, the computable manager
+is not involved, because computed documents should not be updated and
+they do not need to be removed manualy.
 
 \subsection{Computables}
 \label{sec:eval-computables}
 overhead
 performance-size-expressiveness
 scale liniar/quadratic with size
+computable insert, x*query, remove (insert+ remove once, query -x)
 \subsection{Trigger}
 \label{sec:eval-trigger}
 overhead
