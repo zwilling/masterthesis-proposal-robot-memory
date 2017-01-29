@@ -259,9 +259,70 @@ computation time influences the loop time of the robot memory and can
 in the worst case block it.
 
 \section{Performance in evaluation scenarios}
+To evaluate the performance of the robot memory, we performed
+benchmark in multiple application scenarios. The measurements during
+the experiments were stored and plotted using benchmarks were made
+with the Round Robin Database Tool (RRD) as in~\cite{RoboDB}. The
+first scenario is a simulated RoboCup Logistics League game, in which
+the synchronization of the worldmodel between the robots was
+implemented with the robot memory.
 \label{sec:performance}
+\begin{figure}
+  \centering
+  \begin{subfigure}[b]{1\textwidth}
+    \includegraphics[width=\textwidth]{plots/rcll-local/cpu-mem}
+    \label{fig:rcll-cpu-mem}
+  \end{subfigure}
+  \begin{subfigure}[b]{1\textwidth}
+    \includegraphics[width=\textwidth]{plots/rcll-local/operations}
+    \label{fig:rcll-ops}
+  \end{subfigure}
+  \caption[Benchmark during a locally simulated RCLL game]{Benchmark during a locally simulated RCLL game}
+  \label{fig:rcll-benchmark}
+\end{figure}
+\reffig{fig:rcll-benchmark} show the CPU and memory usage, as well as
+the operations performed by MongoDB. For clarity only the CPU and
+memory usage of one Fawkes instance of the three robots is
+plotted. Both mongod processes, one for the robot local robot memory
+and one for the distributed worldmodel, have a CPU usage below $1\%$
+and a memory usage below $40MB$. This is not suprising because the
+robot's world model that needs to be synchronized in the RCLL only has
+a size of $60$ to $100$ documents with an average object size of $390$
+bytes. It only grows slowly because most of the documents are updated
+and there are few new documents for incoming orders and and workpieces
+in production. This is also shown by the MongoDB operation count shown
+in \reffig{fig:rcll-benchmark}, which matches the operation count of
+the robot memory well. The values include the database operations of
+all three robots. \reffig{fig:rcll-benchmark} shows that the mostly
+used operation is the \emph{Getmore} operation, which checks for an
+existing query cursor if there are more matching documents than in the
+previous batch. This is caused by the computable manager because it
+periodically checks the oplog for new changes that have to be reported
+to the CLIPS agent. Since the robot memory runs inside the Fawkes
+process, it's CPU and memory usage is included in the values of Fawkes
+in \reffig{fig:rcll-benchmark}. The growing memory usage of Fawkes is
+also present in benchmarks of the RCLL simulation without the robot
+memory and the CPU curve looks similar. Thus the robot memory plugin
+has no large impact on the performance in this scenario. \todo{mention
+amcl,colli, reasoning because they cause most CPU usage of Fawkes?}
+\todo[inline]{Also show RCLL graph without robot memory? (looks
+  boringly similar, but might be satisfying for the reader to verify)}
+\todo[inline]{Comparison to Synchronization with protobuf messages
+  (resyncing feature of MongoDB, not always sending whole world
+  model...)}
+The size of the database on the harddrive is about $1097MB$ for the
+distributed part and $1060MB$ for each local one. The size does not
+change noticably over time. $1GB$ of each database is occupied by the
+oplog, which has a constant size because it is a capped collection.
 
-data scenario: arm, rcll
+
+local/distributed
+
+ops:
+getmore:trigger checks, otherwise mostly updates of the worldmodel
+insertion of initial worldmodel skipped
+
+data scenario: arm
 
 \section{Qualitative Evaluation}
 \todo[inline]{refine qualitative structure}
