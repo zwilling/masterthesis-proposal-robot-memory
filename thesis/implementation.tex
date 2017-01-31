@@ -1,0 +1,177 @@
+\chapter{Implementation}
+\label{sec:impl}
+This chapter covers the considerations for the implementation. It is
+separated according to the layered architecture. Both application
+layers are represented by the planner and reasoner part, because all
+other application components (e.g. for perception) can simply use the
+C++ interface of the robot memory.
+
+\section{Back-End}
+\label{sec:back-end}
+The back-end is realized with MongoDB. It acts as storage of the robot
+memory, and executes queries. The representation of stored knowledge
+utilizes the document structure of MongoDB with key-value pairs and
+nested sub-documents. This allows a very flexible storage of
+knowledge-pieces in the structure induced by the application and
+expandable by robot memory information.
+
+\begin{wrapfigure}{r}{0.47\textwidth}
+  \vspace{-0.8cm}
+\begin{lstlisting}[style=SmallJSON,
+  caption={Representation of a knowledge piece in the back-end},
+  label=lst:backend,
+  framexleftmargin=1pt, xleftmargin=0pt,
+ morekeywords={}, numbers=none]
+ {
+   _robot_memory_info:
+   {
+     persistent: true,
+     decay_time: ISODate(
+       "2016-05-19T 23:50:00.000Z")
+   },
+   type: "object info",
+   name: "milk_1",
+   position: {x:2.5, y:1.0, z:0.0},
+   storage_place: "refrigerator"
+ }
+\end{lstlisting}
+\vspace{-14mm}
+\end{wrapfigure}
+An example document stored in the back-end is shown in
+\reflst{lst:backend}.  It contains knowledge about a bottle of milk as
+it could be needed by a planner with additional information where it
+should be stored later. Additionally the document contains meta
+information needed by the robot memory (e.g. if the document should be
+stored persistently or removed at restart and when it should be
+dropped because it's use-time has expired). The MongoDB back-end also
+manages the distribution of knowledge between multiple robots. A part
+of the robot memory is only locally relevant. The other part that
+should be shared has to be set up as MongoDB replica set as already
+described in \refsec{sec:mongodb}. This ensures that efficient
+networking code is used. The other problems of a distributed database,
+such as consistency, master election, and synchronization are solved
+by MongoDB using replication. The back-end also contains the
+operations log (oplog) of MongoDB, a separate
+%% capped
+collection containing a list of changes to the database with a
+timestamp. This can be accessed by the robot memory to analyze
+changes for event-triggers.
+
+\section{Robot Memory}
+\label{sec:impl-memory}
+The robot memory middle-layer implements most functions exceeding a
+typical database.
+%% between the
+%% applications storing and querying knowledge and the MongoDB back-end
+%% is an important part of the thesis because most of the functions
+%% exceeding a typical database are realized here.
+A central question is which query language should be used between
+applications and the robot memory because this determines the
+expressiveness and has a large impact on the performance. We choose to
+use the query language of MongoDB as it is already used between the
+robot memory and the back-end. This has many advantages compared to
+using other query languages, such as SQL, SPARQL,
+XQuery~\cite{query-languages}, and JSONiq~\cite{jsoniq}.
+\todo{move into conceptual part}
+%
+For the application view, the query language of MongoDB is a good
+choice because it is an intuitive query language, has been proven as
+efficient for usual and well designed queries, and is also highly
+expressive when using additional JavaScript functions or the MapReduce
+paradigm~\cite{mongodb,RoboDB}. For the robot memory, it requires no
+translation before application on the database and is very flexible
+for extending and modifying queries because queries are structured as
+documents with key-value fields and can be nested or executed in
+sequence. Furthermore, MongoDB queries can easily be parsed (e.g. from
+a string) by using the MongoDB C++ API. The resulting object can be
+analyzed and modified for example to add key-value pairs or to check
+if computables are queried.
+
+This provides the starting point for the Storage-, Update-, and
+Query-manager. When adding new documents, the
+\texttt{robot\_memory\_info} sub-document can be added to store
+additional meta information. When querying documents, this information
+can be removed by using a filter. To detect queries for computables,
+the manager can analyze the fields of the query to check if there is a
+computable provided for it.  For example when a query contains the
+field \texttt{type:"distance"} and there is a application that
+provides computation functions for distances between two objects, the
+query can be forwarded with the additional parameters, the two
+objects.  When some fields are missing (e.g. only one object is given)
+the application may have to compute all distances, so that the query
+can afterwards be executed on the set of results (e.g. to find the
+nearest one with some property). To execute the query as a usual query
+with arbitrary filters, aggregation, and functions, the computation
+function writes the result into a separate collection the query
+can be executed on with MongoDB. To lower the computational effort of
+processing the same query frequently it would be possible to add
+time-bounded caching for computed knowledge. We have verified this
+concept of computables using a prototype, which executes queries from
+interface messages either on the MongoDB directly or in case of
+computables about other interfaces, generates the knowledge from the
+blackboard on demand and then executes the query.
+
+To implement event-triggers, a registration function needs to be
+provided that takes a notification function and a query to define the
+event. This query can check the oplog first whether there are changed
+documents with relevant key-value pairs and afterwards execute a more
+complex query on the database. The registration also specifies whether
+the callback function is called if the query result changes, returns
+no document, or is not empty. Whether event-triggers on computables
+perform well, has to be evaluated. It would be possible to allow
+events only on knowledge in the database or to compute the knowledge
+and check for the event in certain intervals while monitoring the
+computation time.
+
+%% The robot memory . For
+%% implementation, they can be called periodically or with hook-points at
+%% major steps of the robot memory such as initialization and query
+%% execution. For example, a knowledge decay module could use cronjob to
+%% remove documents with exceeded lifetimes in certain intervals. Further
+%% hook-points would be at query-modification time (e.g. to add
+%% additional meta-information) and at query-result-return time (e.g. to
+%% filter or modify resulting documents).
+
+\section{Planner/Reasoner}
+\label{sec:impl-planner}
+The implementation on the application layer includes the development
+of the Interface Provider and the usage of the robot memory in the
+planning language. As an example for the various planners and
+reasoners, we focus here on CLIPS. The Interface Provider for CLIPS
+can be realized as CLIPS-feature in Fawkes as it was already done for
+providing CLIPS access to the blackboard, Protobuf-messaging and the
+navgraph. The CLIPS \emph{robot-memory feature} will be implemented in C++
+and provides the CLIPS environment with functions that call C++
+functions of the robot-memory feature. For example \reflst{lst:clips-rm}
+\begin{figure}
+  \begin{lstlisting}[showlines,style=ReallySmallCLIPS, caption={CLIPS function to execute a query},
+  label=lst:clips-rm,
+  emph={skill, args, state, target, res},
+  emphstyle=\bfseries\color{green!80!black},
+  emph={[2]\?skill, \$\?args, wait-for-lock, \?target, use,
+  WAIT-FOR-LOCK, SKILL-EXECUTION, running},
+  emphstyle={[2]\bfseries\color{blue!80!black}},
+  morekeywords={retract, assert, modify, skill-call, skill-to-execute,
+    wait-for-lock}]
+(rm-query "database.collection"
+          (str-cat "{type:'order', end-time:{$gt:" ?gametime "}}"))
+\end{lstlisting} %$ This is just to fix Emacs highlighting due to dollar sign in code above
+\end{figure}
+would be the CLIPS function, which queries all orders that have not
+ended yet, by creating the query using string concatenation to fill in
+the current game-time. The result would be a list of pointers to document
+objects represented as instances of CLIPS templates. Similarly there
+can be functions for registering events and providing computables.
+
+The Domain Creator for CLIPS can be implemented by creating the initial
+fact-base with a static list of facts and additional facts resulting
+from a set of queries. For example, a domain creator implemented in
+the CLIPS language could execute the query function in
+\reflst{lst:clips-rm} and assert all orders as facts into the fact
+base.
+%% possibility to also generate rules form robot memory
+
+CLIPS could use event-triggers to be notified when there is a new PDDL
+plan in the robot memory that should be executed or when the world
+model has changed in the robot memory and thus facts in CLIPS have to
+be updated.
