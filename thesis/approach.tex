@@ -299,6 +299,9 @@ updating, and removing removing.
 
 \section{Robot Memory Concepts}
 \label{sec:concepts}
+This section presents the concepts behind important aspects of the
+robot memory in more detail.
+
 \subsection{Knowledge Based System Interface}
 \subsection{Computables}
 \subsection{Trigger}
@@ -306,8 +309,7 @@ updating, and removing removing.
 
 \section{Architecture}
 \label{sec:architecture}
-\todo[inline]{add interaction/dataflow examples/sketches}
-This subsection presents the architecture of the robot memory and
+This section presents the architecture of the robot memory and
 explains its design considerations. It shows how the intended
 functionality is organized in smaller components and how these
 components interact with each other. The architecture contains
@@ -322,71 +324,70 @@ reusability and adaptability to changing requirements and use cases.
 %% %%  (e.g. of stored knowledge which is
 %% %% more specialized internally than visible from a using
 %% %% application)
-
 \reffig{fig:arch} shows the architecture of the robot
 memory and is explained in the following.
 \begin{figure}
   \centering
-  \includegraphics[width=0.9\textwidth]{architecture.pdf}
+  \includegraphics[width=\textwidth]{architecture.pdf}
   \vspace{-5mm}
-  \caption{Software architecture of the Robot Memory}
+  \caption[Software architecture of the Robot Memory]{Software architecture of the Robot Memory}
   \label{fig:arch}
   \vspace{-5mm}
 \end{figure}
 The architecture organizes all components into four layers: Back-End,
 Robot Memory, Application Interface, and Application. The Back-End
-contains a database for storing knowledge and executing
-queries. There is a private part and a shared part distributed between
-multiple robots using the same architecture. This distribution can
-utilize the replication features of the database. The Robot
-Memory-layer contains the central functions that distinguish the robot
-memory from a pure database. It contains the Storage-, Update-, and
-Query-manager, which is an intermediate component that realizes most of
-the robot memory's functionality by modifying and enhancing queries,
-storage, and update requests before applying them to the database. If a
-query asks for knowledge provided by a computable, the manager forwards it to the
-computable manager, which manages which computable is provided by
-which application and requests the computation on demanded. The
-component responsible for event-triggers receives and manages
-registrations of applications that want to be notified in the case of
-an event. It uses the Query-manager to check if events happen and
-notifies applications accordingly. Additionally the Storage-, Update-,
-and Query-manager can initialize the robot memory (e.g. to setup the
-world model for a new RCLL game).
-%% These extensions can use the Command Pattern~\cite{design-patterns}
-%% and to work process compositionally and dynamically.
-Between the robot memory and a planner or reasoner components is the
-Application Interface layer. For each KBS, it includes a
+contains databases for storing knowledge and executing queries. There
+is a local private database, which is private to the robot, and a
+shared database distributed between multiple robots using the same
+architecture. This distribution can utilize the replication features
+of the database. The Robot Memory-layer contains the central functions
+that distinguish the robot memory from a pure database. It contains
+the operation manager, which is used to execute store, update, query,
+and delete operations. The operation manager is an intermediate
+component that realizes most of the robot memory's functionality by
+modifying and enhancing queries, storage, and update requests before
+applying them to the database. The operation manager also handles the
+database interaction and distinguishes if operations should be
+executed on the local or the shared database.  If a query asks for
+knowledge provided by a computable, the operation manager forwards it
+to the computable manager. The computable manager keeps a record of
+which computable is provided by which application and requests the
+demanded computation. The component responsible for triggers
+receives and manages registrations of applications that want to be
+notified in the case of an event. It listens to logged changes in the
+databases to check if events happen and notifies applications
+accordingly. Additionally the operation manager can initialize the
+robot memory (e.g. to setup the world model for a new RCLL game).
+Between the robot memory and a planner or reasoner components, there
+is the Application Interface layer. For each KBS, it includes an
 Interface Provider component, which makes the function of the robot
 memory available to the KBS and the special programming language
-used. It is not necessary for components that can directly use the C++
-interface of the robot memory. The responsibilities of the interface
-provider also include transforming query results in the appropriate
-format used by the KBS and eventually renaming key-names if they
-have be mapped to match the names used in the KBS
-model. Because languages and concepts of knowledge based systems can be
-very different, each KBS needs a separate Interface
-Provider. The Interface Provider can also contain a domain creator,
-which creates an initial state (e.g. a problem definition or initial
-fact base) from a template and additional knowledge resulting from
-queries. Finally the Application layer contains all components using
-the robot memory either through the Interface provider or directly
-through the robot memory interface. Application components can also
-register event-triggers and provide computation functions for
-computables. The sources and consumers of knowledge stored in the
-robot memory are the applications using it. The ordinary data flow
-starts in the application requesting storage, modification, or
-querying of knowledge (over the language specific interface). The
-Storage-, Update-, and Query-manager forwards the request enhanced
-with management information to the database. For queries, the result
-is transferred back on the reversed path of the query request. For
-computables, the only difference in the data flow is the knowledge
-computation before executing the query in the database. The Storage-,
-Update-, and Query-manager additionally initiates the knowledge
-computation via the Computables Manager, which forwards the query to
-the application providing the specific computable. The application
-then computes and stores the result in the robot memory, where it is
-queried afterwards.
-%% Additionally the Initializer module can
-%% provide the initial knowledge from a file (e.g. for the world model of
-%% a new RCLL game).
+used. It is not necessary for components that can directly use the
+interface of the robot memory (available in C++). The responsibilities
+of the interface provider also include transforming query results in
+the appropriate format used by the KBS and eventually renaming
+key-names if they have be mapped to match the names used in the KBS
+model. Because languages and concepts of knowledge based systems can
+be very different, each KBS needs a separate Interface Provider. The
+Interface Provider can also contain a domain creator, which creates an
+initial state (e.g. a problem definition or initial fact base) from a
+template and additional knowledge resulting from queries. Finally the
+Application layer contains all components using the robot memory
+either through the Interface provider or directly through the robot
+memory interface. KBS can also register triggers through their
+interface provider and perception components can provide computation
+functions for computables. The sources and consumers of knowledge
+stored in the robot memory are the applications using it. The ordinary
+data flow starts in the application requesting storage, modification,
+or querying of knowledge (over the language specific interface). The
+operation manager forwards the request enhanced with management
+information to the database. For queries, the result is transferred
+back on the reversed path of the query request. For computables, the
+only difference in the data flow is the knowledge computation before
+executing the query in the database. The operation manager
+additionally initiates the knowledge computation via the Computables
+Manager, which forwards the query to the application providing the
+specific computable. The documents resulting from the computable are
+then stored by the computables manager in the robot memory, where it
+is queried afterwards.
+\todo[inline]{add dataflow examples as UML sequence diagram?}
