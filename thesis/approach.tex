@@ -126,21 +126,22 @@ would also be desirable to analyze spatio-temporal data efficiently.
 
 \section{Theoretical Foundation}
 \label{sec:formalism}
-In this subsection, we lay the theoretical foundation of the robot
-memory and the integration into knowledge based systems. For
-this proposal, we focus on the integration into PDDL. 
-The formal definition of the robot memory describes how knowledge is
-represented and depends on the definition of computables. Because the
-robot memory is document oriented, we first define documents and their
-key-value pairs. This definition is derived from the specification of
-the Binary JavaScript Object Notation
-(BSON)\footnote{\url{http://bsonspec.org/spec.html}} used in MongoDB.
-Because documents can be nested, we define them by induction. Unnested
-documents are defined as follows:
+\todo[inline]{emph mit textit oder textbf?}
+In this section, we lay the theoretical foundation of the robot memory
+and it's integration into knowledge based systems. First, we focus on
+the representation of symbolic information as it is used in KBS. Here
+we take the PDDL formalism as example. The formal definition of the
+robot memory describes how knowledge is represented and how
+computables are defined. Because the robot memory is document
+oriented, we first define documents and their key-value pairs. This
+definition is derived from the specification of the Binary JavaScript
+Object Notation (BSON)\footnote{\url{http://bsonspec.org/spec.html}}
+used in MongoDB.  Because documents can be nested, we define them by
+induction. Unnested documents are defined as follows:
 \begin{enumerate}
 \item \textbf{Keys} are strings $\mathcal{K} := \Sigma^*$, where
   $\Sigma$ contains all valid characters.
-\item  \textbf{Atomic values} $\mathcal{V}_0$ is a countable infinite set of constants with
+\item  \textbf{Atomic values} are in a countable infinite set $\mathcal{V}_0$ of constants with
   integers, floating point numbers, and strings.
 \item \textbf{Unnested key-value pairs:} $\mathcal{P}_0:=\mathcal{K}\times\mathcal{V}_0$
 \item \textbf{Unnested documents} are sets of key-value pairs with
@@ -180,12 +181,15 @@ A \textbf{database} is a finite set of documents $\mathcal{DB} \subset \mathcal{
 of documents $r\subseteq\mathcal{DB}$ as result when executed in a database according a
 specification (e.g. of MongoDB~\cite{mongodb}). For example, the query
 $\{("object","cup"),("room","kitchen")\}$ yields all documents containing these
-key-value pairs and thus all cups in the kitchen.
+key-value pairs, which represent all cups in the kitchen.
 \\
 A \textbf{computable} $f$ is a function mapping a query document to a
 set of computed documents
 $$f: \mathcal{D} \rightarrow \mathbb{P}(\mathcal{D})\text{.}$$
-The component providing the computable has to ensure that the function is computable and terminates.
+\todo[inline]{Computables might also depend on mem(RM), sensor values,
+  other computables with priority, etc} The component providing the
+computable has to ensure that the function is computable and
+terminates.
 %
 With these preliminaries, we can now define a \textbf{robot memory} as tuple
 of a database~$\mathcal{DB}$ and a set of computables~$\mathcal{C}$:
@@ -195,28 +199,30 @@ The set of documents \textbf{memorized} by the robot memory consists
 of the underlying database and all computable documents:
 $$mem(\mathcal{RM})=DB \cup \bigcup_{f\in\mathcal{C}}f(\mathcal{D})$$
 
-To integrate the robot memory into PDDL, we need to define the
+To integrate the robot memory into PDDL, we need to define a
 \textbf{mapping functions} $map_d$ between documents and predicates, and
 $map_v$ between values and terms. As prerequisite, the connection
-between key-names in documents and predicates, functions, and their
+between key-names in documents and predicates, functions, actions, and their
 attributes needs to be defined. Let $\mathcal{R}$ be the \textbf{set
-  of predicate symbols} and $\mathcal{F}$ be the \textbf{set of function
+  of predicate symbols}, $\mathcal{F}$ the \textbf{set of function
+  symbols}, and $\mathcal{A}$ the \textbf{set of actions
   symbols}, then
 %
 $$name_{pred}: \mathcal{R} \rightarrow \Sigma^*
-\text{ and } name_{func}: \mathcal{F} \rightarrow \Sigma^*$$
+\text{ , } name_{func}: \mathcal{F} \rightarrow \Sigma^*
+\text{ , and } name_{act}: \mathcal{A} \rightarrow \Sigma^*$$
 %
 map to the strings used in document keys
 (e.g. $name_{pred}(\text{at})="\text{at}"$). To ensure unambiguity,
-$name_{pred}$ and $name_{func}$ should
-be injective and their images disjunctive. The functions
+the $name$ functions should
+be injective and their images disjunctive. The function
 %
 $$ name_{func-atr}: \mathcal{R} \times \mathbb{N} \rightarrow
-\mathcal{K} \text{ and } name_{pred-atr}: \mathcal{F} \times \mathbb{N}
-\rightarrow \mathcal{K}$$
+\mathcal{K}$$
 %
-map the attributes in the predicate or function to a key
-name (e.g. $name_{pred-atr}(\text{at},1)="\text{object}"$ and
+maps the attributes in function to a key name. $name_{pred-atr}$ and
+$name_{act-atr}$ are defined accordingly
+(e.g. $name_{pred-atr}(\text{at},1)="\text{object}"$ and
 $name_{pred-atr}(\text{at},2)="\text{room}"$).
 \\
 Now we can define the mapping of values in documents to terms as
@@ -244,12 +250,43 @@ map_p&(\{("predicate", "at"),("object", "cup"),("room",
 "kitchen")\})\\
 &= at(map_f("cup"), map_f("kitchen")) = at(cup, kitchen) \text{.}
 \end{align*}
-\todo{other direction: parse resulting plan}
 This theoretical foundation of the robot memory and the mapping of
 queried documents into predicates is the basis for the generation of
-PDDL problem descriptions. In future work, this can also be used to
-formalize the integration of the robot memory into Golog, but this
-exceeds the scope of the proposed thesis.
+PDDL problem descriptions. The direction from PDDL back to the robot
+memory is limited on storing the resulting plan found by a
+planner. The plan $\mathcal{L}$ is an ordered sequence of
+parameterized actions
+$$\mathcal{L}=(a_1(v_{1,1},v_{1,2},...,v_{1,k_1}),a_2(v_{2,1},...,v_{2,k_2}),...,a_j(v_{j,1},...,v_{j,k_j}))$$,
+where $a_i$ is an action with $k_i$ parameters and $j$ is the length
+of the plan. The resulting plan is then maped into a document
+containing the actions as subdocuments:
+\begin{align*}
+  map_L(L)=&\{("plan", "success")\} \cup_{i \in \{1..j\}}\{(n_i, map_a(a_i))\}
+\end{align*}, where $\mathcal{L}$ is defined as above, $n_i$ is the
+number $i$ as string, and $map_a$ maps a parameterized action to a
+subdocument, similar to the inverse of $map_f$:
+\begin{align*}
+  map_a(a_i(v_{i,1},...,v_{i,k_i}))= &\{("action", name_{act}(a_i))\} 
+\cup_{m \in \{1..k_i\}}\{(name_{act-atr}(a_i,m), v_{i,m})\}
+\end{align*}
+If the planner can not find any plan, the result is mapped to the
+document ${("plan", "fail")\}$.
+
+For the knowledge representation in the robot memory and the
+integration into PDDL, the closed world assumption is kept. Thus if
+there is no document $d\in mem(\mathcal{RM})$ so that
+$map_p(d)=p(v_1,v_2)$, $p(v_1,v_2)$ is known to be false.
+
+Although it is not included in the theoretical foundation focused on
+PDDL, the robot memory can also map spatio-temporal information into
+other systems such as CLIPS and C++. Here, the documents in
+$mem(\mathcal{RM})$ are not directly mapped into the used
+representation of CLIPS (e.g. as facts) or C++ (e.g. as
+variables). Instead, there are functions for querying, which yield a
+set of documents, and functions to receive the value of a key-value
+pair in different types. Furthermore, there are functions to build
+documents and queries iteratively pair-by-pair and inserting,
+updating, and removing removing.
 
 \section{Robot Memory Concepts}
 \label{sec:concepts}
