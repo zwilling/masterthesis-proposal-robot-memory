@@ -177,27 +177,35 @@ A \textbf{database} is a finite set of documents $\mathcal{DB} \subset \mathcal{
 %% & \text{where } \forall d,d' \in \mathcal{DB} \text{ with } ("\_id",v)\in
 %% d \text{ and } ("\_id",v')\in d' , d=d' \vee v\neq v'
 %% \end{align*}
-\textbf{Queries} are represented by documents $q\in\mathcal{D}$ and yield a set
-of documents $r\subseteq\mathcal{DB}$ as result when executed in a database according a
-specification (e.g. of MongoDB~\cite{mongodb}). For example, the query
-$\{("object","cup"),("room","kitchen")\}$ yields all documents containing these
-key-value pairs, which represent all cups in the kitchen.
+\textbf{Queries} are represented by documents $q\in\mathcal{D}$ and
+yield a set of documents $r\subseteq\mathcal{DB}$ as result when
+executed in a database according a specification (e.g. of
+MongoDB~\cite{mongodb}). For example, the query
+$\{("object","cup"),("room","kitchen")\}$ yields all documents
+containing these key-value pairs, which represent all cups in the
+kitchen.
 \\
-A \textbf{computable} $f$ is a function mapping a query document to a
-set of computed documents
-$$f: \mathcal{D} \rightarrow \mathbb{P}(\mathcal{D})\text{.}$$
-\todo[inline]{Computables might also depend on mem(RM), sensor values,
-  other computables with priority, etc} The component providing the
-computable has to ensure that the function is computable and
-terminates.
+A \textbf{computable} $f$ is a function mapping a query document and
+the current state of the database to a set of computed documents:
+$$f: \mathcal{D}\times\mathbb{P}(\mathcal{D}) \rightarrow \mathbb{P}(\mathcal{D})$$
+The powerset of documents is in the domain of a computable because the
+result can also depend on the state of the database (e.g. a computable
+calculating the number of objects in the database). For simplicity, we
+assume that all sensor data a computable can depend on is also
+represented in the database. The component providing the computable
+has to ensure that the function is computable and terminates.
 %
 With these preliminaries, we can now define a \textbf{robot memory} as tuple
-of a database~$\mathcal{DB}$ and a set of computables~$\mathcal{C}$:
+of a database~$\mathcal{DB}$ and an ordered set of computables~$\mathcal{C}=\{f_1,...,f_n\}$:
 $$\mathcal{RM}=(\mathcal{DB},\mathcal{C})$$
 %
-The set of documents \textbf{memorized} by the robot memory consists
-of the underlying database and all computable documents:
-$$mem(\mathcal{RM})=DB \cup \bigcup_{f\in\mathcal{C}}f(\mathcal{D})$$
+The computables are ordered by a priority because a computable with
+higher priority can provide documents that are used by a computable
+with lower priority. The set of documents \textbf{memorized} by a
+robot memory without computables equals the underlying database:
+$$mem(\mathcal{(DB,\emptyset)})=\mathcal{DB}$$
+For a robot memory with computables the documents memorized are:
+$$mem((\mathcal{DB},\{f_1,..,f_n\}))=mem((\mathcal{DB},\{f_1,..,f_{n-1}\})) \cup \bigcup_{d\in\mathcal{D}}f_n(d,mem((\mathcal{DB},\{f_1,..,f_{n-1}\})))$$
 
 To integrate the robot memory into PDDL, we need to define a
 \textbf{mapping functions} $map_d$ between documents and predicates, and
@@ -256,15 +264,16 @@ PDDL problem descriptions. The direction from PDDL back to the robot
 memory is limited on storing the resulting plan found by a
 planner. The plan $\mathcal{L}$ is an ordered sequence of
 parameterized actions
-$$\mathcal{L}=(a_1(v_{1,1},v_{1,2},...,v_{1,k_1}),a_2(v_{2,1},...,v_{2,k_2}),...,a_j(v_{j,1},...,v_{j,k_j}))$$,
+$$\mathcal{L}=(a_1(v_{1,1},v_{1,2},...,v_{1,k_1}),a_2(v_{2,1},...,v_{2,k_2}),...,a_j(v_{j,1},...,v_{j,k_j})) \text{.}$$
 where $a_i$ is an action with $k_i$ parameters and $j$ is the length
 of the plan. The resulting plan is then maped into a document
 containing the actions as subdocuments:
 \begin{align*}
-  map_L(L)=&\{("plan", "success")\} \cup_{i \in \{1..j\}}\{(n_i, map_a(a_i))\}
-\end{align*}, where $\mathcal{L}$ is defined as above, $n_i$ is the
-number $i$ as string, and $map_a$ maps a parameterized action to a
-subdocument, similar to the inverse of $map_f$:
+  map_L(L)=&\{("plan", "success")\} \cup_{i \in \{1..j\}}\{(n_i, map_a(a_i))\} \text{,}
+\end{align*}
+where $\mathcal{L}$ is defined as above, $n_i$ is the number $i$ as
+string, and $map_a$ maps a parameterized action to a subdocument,
+similar to the inverse of $map_f$:
 \begin{align*}
   map_a(a_i(v_{i,1},...,v_{i,k_i}))= &\{("action", name_{act}(a_i))\} 
 \cup_{m \in \{1..k_i\}}\{(name_{act-atr}(a_i,m), v_{i,m})\}
