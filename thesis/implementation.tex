@@ -91,7 +91,12 @@ This provides the starting point for the Storage-, Update-, and
 Query-manager. When adding new documents, the
 \texttt{robot\_memory\_info} sub-document can be added to store
 additional meta information. When querying documents, this information
-can be removed by using a filter. To detect queries for computables,
+can be removed by using a filter. 
+
+\subsection{Computables}
+\todo[inline]{add: missing fields, how queries are checked, }
+
+To detect queries for computables,
 the manager can analyze the fields of the query to check if there is a
 computable provided for it.  For example when a query contains the
 field \texttt{type:"distance"} and there is a application that
