@@ -5,6 +5,7 @@ from pymongo import *
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_pdf import PdfPages
 from matplotlib.legend_handler import HandlerLine2D
+import numpy as np
 
 # config variables:
 
@@ -102,11 +103,49 @@ def plot_update():
         plt.show()
         # pdf.savefig()
         # plt.close()
+
+        
+def plot_computable():
+    # get data
+    sizes = []
+    durations_compute = []
+    durations_overhead = []
+    for p in client.eval.computables.find({"query.$comment.exp":"computable"}).sort("query.$comment.db-size",1):
+        compute = p["computables"][1]["compute"]
+        sizes.append(p["query"]["$comment"]["db-size"])
+        durations_compute.append(compute * 1000.0)
+        durations_overhead.append((p["total"]-compute) * 1000.0)
+        
+    durations_stack = np.row_stack((durations_overhead, durations_compute))
+    
+    with PdfPages('computable-durations.pdf') as pdf:
+        # format plot
+        #fig, ax = plt.subplots()
+
+        plt.figure(figsize=(8,5))
+        plt.xlabel('db size (#docs)')
+        plt.ylabel('duration (ms)')
+        plt.axis([0, 100000, 0.0, 80])
+    
+        # fill plot
+        polys = plt.stackplot(sizes, durations_stack)
+        
+        #construct legend:
+        legendProxies = []
+        for poly in polys:
+            legendProxies.append(plt.Rectangle((0, 0), 1, 1, fc=poly.get_facecolor()[0]))
+        plt.legend(legendProxies, ["overhead", "compute time"], loc=2)
+        
+        # save plot
+        # plt.show()
+        pdf.savefig()
+        plt.close()
     
         
 if __name__ == "__main__":
 
     # plot_inserts()
     # plot_query()
-    plot_update()
+    # plot_update()
+    plot_computable()
     print "Plotted :-)"
