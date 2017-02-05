@@ -379,6 +379,7 @@ on computed information and persistent information in the database of
 the robot memory.
 
 \subsection{Trigger}
+\label{sec:trigger}
 Trigger are mechanisms that invoke a callback function if a specified
 event occurs in the robot memory. The main application of triggers in
 this thesis is to notify components using the robot memory about
@@ -402,12 +403,12 @@ replan. Furthermore, triggers allow sending messages in the flexible
 document format.
 
 We note here that triggers are not intended to automatically work
-together with computables. Because to solve the complex question if
+together with computables. To solve the complex question if
 some element of the image area of an arbitrary computable function
 matches a trigger query, the computable function would have to be
 evaluated for all possible input queries. Because this contradicts the
 intention behind computables, there is no automatic evaluation of
-triggers on computables. However, because the results of computables
+triggers on computables. However, since the results of computables
 are temporarily inserted in the database, triggers do work computables
 when the computable was invoked by an external query. Thus, it is
 possible to combine triggers and computables by periodically querying
@@ -417,7 +418,34 @@ system that periodically inserts the required computation results into
 the robot memory as usual.
 
 \subsection{Knowledge Based System Interface}
+\label{sec:kbs-interface}
+
+interface to access robot memory functions from KBS
+functions: query,insert,delete,update,trigger(register+callback),
+  computable(register+call+return result)
+KBS special language, special representation
+filter: certain limitations (no floats/nesting)
+filter: relevant part of the robot memory
+translation spatio-temporal<->symbolic
+bridge between KBS concept and robot memory
+e.g. Domain creation
+
+basic filtering: query
+actual filter or rename in query
+plugin/component as interface
+
+
 \subsection{Multi-Robot Synchronization}
+\label{sec:synchronization}
+
+Distribute robot memory in multi-robot system
+Distinguish local/shared part of robot memory
+ to save bandwidth
+ensure consistency by write lock
+distributed reads
+robustness against drop out of robots
+  still operationally + no lost information
+recovery from drop out
 
 \section{Architecture}
 \label{sec:architecture}
@@ -442,7 +470,7 @@ memory and is explained in the following.
   \centering
   \includegraphics[width=\textwidth]{architecture.pdf}
   \vspace{-5mm}
-  \caption[Software architecture of the Robot Memory]{Software architecture of the Robot Memory}
+  \caption[Architecture of the Robot Memory]{Architecture of the Robot Memory}
   \label{fig:arch}
   \vspace{-5mm}
 \end{figure}
