@@ -377,7 +377,23 @@ on computed information and persistent information in the database of
 the robot memory.
 
 \subsection{Trigger}
-no trigger on computables
+Trigger are mechanisms that invoke a callback function if a specified
+event occurs in the robot memory. The main application of triggers in
+this thesis is to notify components using the robot memory about
+changes of the stored information. Furthermore, they can be used to
+check for more complex conditions each time a relevant document in the
+robot memory changes. Triggers consist of a definition of the event...
+
+mostly new doc of some type, changes, deletions
+notification about changes in the rm
+registration with definition of event
+notifications
+no trigger on not demanded computables
+avoids polling in application
+keeps world model up to date
+can be used to send messages
+rm manages and checks
+
 \subsection{Knowledge Based System Interface}
 \subsection{Multi-Robot Synchronization}
 
