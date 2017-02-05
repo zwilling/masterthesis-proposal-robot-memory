@@ -368,7 +368,9 @@ coordinates writen in the robot memory to another frame). The robot
 memory has to decide when the function of a computable needs to be
 executed given an asked query. To decide this, each computable also
 contains a definition which queries can be answered by
-it. Furthermore, each computable has a priority defining in which
+it. This definition is represented by a query. Whenever a query on the
+robot memory matches this computable query definition, the computable
+is called. Furthermore, each computable has a priority defining in which
 order computables are executed if a query can be answered by multiple
 computables. This allows computables to depend on other the results of
 other computables. The documents resulting from a computable are
@@ -382,17 +384,37 @@ event occurs in the robot memory. The main application of triggers in
 this thesis is to notify components using the robot memory about
 changes of the stored information. Furthermore, they can be used to
 check for more complex conditions each time a relevant document in the
-robot memory changes. Triggers consist of a definition of the event...
+robot memory changes. Triggers consist of a function and definition of
+the event, that should cause the function to be invoked. The robot
+memory manages the triggers, which were registered by other
+components, checks when the defined events occur, and then call the
+function. The events are defined by queries and usually define
+insertions, modifications, or deletions of documents with specific
+properties. For applications using the robot memory, triggers can be
+useful because they allow notifications in a convinient and efficient
+way. Applications do not have to implement polling and the queries
+defining events only need to be executed on changes in the database,
+instead of the whole robot memory. Examples for components utilizing
+triggers, are executives that want to be notified about changes to
+keep their internal world model up to date and planners that want to
+be notified about preconditions of their plan becoming false to
+replan. Furthermore, triggers allow sending messages in the flexible
+document format.
 
-mostly new doc of some type, changes, deletions
-notification about changes in the rm
-registration with definition of event
-notifications
-no trigger on not demanded computables
-avoids polling in application
-keeps world model up to date
-can be used to send messages
-rm manages and checks
+We note here that triggers are not intended to automatically work
+together with computables. Because to solve the complex question if
+some element of the image area of an arbitrary computable function
+matches a trigger query, the computable function would have to be
+evaluated for all possible input queries. Because this contradicts the
+intention behind computables, there is no automatic evaluation of
+triggers on computables. However, because the results of computables
+are temporarily inserted in the database, triggers do work computables
+when the computable was invoked by an external query. Thus, it is
+possible to combine triggers and computables by periodically querying
+the robot memory to activate the computable. Furthermore, it is
+possible to bypass this limitation by replacing the computable by a
+system that periodically inserts the required computation results into
+the robot memory as usual.
 
 \subsection{Knowledge Based System Interface}
 \subsection{Multi-Robot Synchronization}
