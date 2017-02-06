@@ -419,33 +419,66 @@ the robot memory as usual.
 
 \subsection{Knowledge Based System Interface}
 \label{sec:kbs-interface}
-
-interface to access robot memory functions from KBS
-functions: query,insert,delete,update,trigger(register+callback),
-  computable(register+call+return result)
-KBS special language, special representation
-filter: certain limitations (no floats/nesting)
-filter: relevant part of the robot memory
-translation spatio-temporal<->symbolic
-bridge between KBS concept and robot memory
-e.g. Domain creation
-
-basic filtering: query
-actual filter or rename in query
-plugin/component as interface
-
+The interface between knowledge based systems and the robot memory
+defines how features of the robot memory can be accessed and how the
+robot memory can be embedded in the language concepts of the KBS. The
+features of the robot memory include the basic operations, query,
+insert, delete, and update, the registration and callback for
+triggers, and the possibility to provide computables.  Depending on
+the KBS, the robot memory features have to be provided in different
+programming languages with different types of information
+representation \todo{say knowledge representation?} and
+limitations. For example, the representation as unordered facts in
+CLIPS is similar to the key-value structure of documents but does not
+allow nesting, and the representation as predicates in PDDL requires
+the mapping from documents to predicates as shown in
+\refsec{sec:formalism}. Thus, the interface has to transform documents
+into the representation and programming language used by the KBS. This
+transformation can also require deriving symbolic information
+(e.g. the room a robot is in) if the robot memory only contains
+spatio-temporal information about the position of the robot in 3D
+coordinates. Furthermore, KBS often are specialized on some area, such
+as planning or world model reasoning. Therefore, only a part of the
+information contained in the robot memory might be relevant to the
+KBS. The interface has to filter out non relevant parts.  Due to the
+difference of KBS, each KBS language requires a separate interface to
+the robot memory. This separate interface can be provided by a
+separate component using the robot memory and the environment of the
+KBS. It can also bridge to specific concepts used by the KSB, such as
+the problem definition in PDDL instead of the procedural interaction
+with the robot memory. The filtering of the relevant part of the robot
+memory can use additional query constraints or be limited to specific
+collections. It is also posible to rename keys of key-value pairs in
+documents to obtain the correct identifyers used in the KBS.
 
 \subsection{Multi-Robot Synchronization}
 \label{sec:synchronization}
+The robot memory is usable in a distributed multi-robot system. Thus
+we have to specify how this distribution works and which properties
+the distributed robot memory has. In a multi-robot system, each robot
+hosts one instance of the robot memory. These instances communicate to
+share and synchronize their memorized information. There are a shared
+and a private part of the robot memory, which are both accessible by
+the robot. The private part is only visible and usable by the robot
+hosting it and the shared part is accessible by all robots in the
+system. This enables sharing all neccessary information while saving
+bandwidth by not sending information that is not relevant for other
+robots. The shared and private part of the robot memory are separated
+as different databases. The shared part is consistent over the whole
+multi-robot system. This is ensured by having a single primary
+instance that executes adn mutually locks all write operations in the
+robot memory. Read operations can be evaluated on all instances for
+faster querying. Because the time difference between writing to the
+primary instance and propagating the change to other instances is
+expected to be small, inconsistencies caused by distributed reads are
+negligible. The distributed robot memory has to be robust against the
+drop out of robots. Thus, it has to stay operational, keep all shared
+infomration by having a copy on each robot, and reintegrate the droped
+out robot when it is started again.
 
-Distribute robot memory in multi-robot system
-Distinguish local/shared part of robot memory
- to save bandwidth
-ensure consistency by write lock
-distributed reads
-robustness against drop out of robots
-  still operationally + no lost information
-recovery from drop out
+Triggers and computables work in a distributed robot memory. However,
+the robot that wants to be notified by the trigger or that wants to
+use the computable has to register it on it's own robot memory instance.
 
 \section{Architecture}
 \label{sec:architecture}
