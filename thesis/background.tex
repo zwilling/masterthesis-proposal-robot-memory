@@ -81,17 +81,39 @@ distributed system does not represents contradicting assumptions.
 \todo[inline]{Mention Master-Slave vs. Peer-to-peer?}
 \todo[inline]{Give Example (RoboEarth)?}
 
-\subsection{Reasoning}
+\subsection{Knowledge Representation, Reasoning, and Planning}
 \label{sec:reasoning}
-\todo[inline]{Write}
-reasoning about knowledge 
-inference
-intelligence
-modelling rules how the world behaves (e.g. when executing some actions)
-logic formalism (e.g. FOL)
+According to Brachman and Levesque, \emph{reasoning} is the formal
+manipulation of symbols representing a believed propositions to
+produce representations of new ones~\cite{kr-book}. Thus, new
+knowledge can be \emph{logically infered} from other knowledge, by
+representing the propositions, which describe what is known or
+beliefed, and then performing reasoning manipulations on it.
+A simple example for logical inference is the following:
+\begin{enumerate}
+\item Ceasar is a robot
+\item All robots should have a memory
+\item Therefore, Ceasar should have a memory
+\end{enumerate}
+The field of knowledge representation deals with the question how
+propositions like these can be represented in logic formalisms, such
+as First-Order Logic (FOL). \todo[inline]{introduce FOL?}  Knowledge
+representation and reasoning are important parts of artificial
+intelligence in mobile robotics. Knowledge representation is used to
+model and memorize what a robot knows or beliefs about its
+environment and reasoning is used to infer what effects certain
+actions can have on the environment and which informations can be
+infered by made observations.
+
+
+
+rules: premises and conclusions
 planning: specification of domain, current and goal state, find sequence of parameterized actions to reach goal
   extensions optimizing some cost
 incremental reasoning: find next best action whenever idle
+robot memory source of knowledge for reasoning and storage for results  
+  
+\todo[inline]{Write}
 
 \section{RoboCup}
 \label{sec:robocup}
