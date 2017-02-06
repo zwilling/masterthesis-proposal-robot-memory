@@ -81,7 +81,7 @@ distributed system does not represents contradicting assumptions.
 \todo[inline]{Mention Master-Slave vs. Peer-to-peer?}
 \todo[inline]{Give Example (RoboEarth)?}
 
-\subsection{Knowledge Representation, Reasoning, and Planning}
+\subsection{Reasoning}
 \label{sec:reasoning}
 According to Brachman and Levesque, \emph{reasoning} is the formal
 manipulation of symbols representing a believed propositions to
@@ -95,26 +95,41 @@ A simple example for logical inference is the following:
 \item All robots should have a memory
 \item Therefore, Ceasar should have a memory
 \end{enumerate}
-The field of knowledge representation deals with the question how
-propositions like these can be represented in logic formalisms, such
-as First-Order Logic (FOL). \todo[inline]{introduce FOL?}  Knowledge
-representation and reasoning are important parts of artificial
-intelligence in mobile robotics. Knowledge representation is used to
-model and memorize what a robot knows or beliefs about its
-environment and reasoning is used to infer what effects certain
-actions can have on the environment and which informations can be
-infered by made observations.
+The field of \emph{knowledge representation} deals with the question
+how propositions like these can be represented in logic formalisms,
+such as First-Order Logic (FOL). \todo[inline]{introduce FOL?}
+Depending on the used formalism, different classes of propositions can
+be expressed and reasoning in these formalisms has a different
+computational complexity. Knowledge representation and reasoning are
+important parts of artificial intelligence in mobile
+robotics. Knowledge representation is used to model and memorize what
+a robot knows or beliefs about its environment and reasoning is used
+to infer what effects certain actions can have on the environment and
+which informations can be infered by made observations. The central
+tasks of reasoning systems used in this thesis are world model
+reasoning and incremental reasoning, which determines the next best
+action to do with a robot whenever the robot is idle. An important
+area related to reasoning is \emph{planning}. After specifying a
+domain and possible actions that can be executed in the domain,
+planning can yield a sequence of actions that have to be executed to
+reach a given goal state from an initial state. Actions are formulated
+with preconditions that have to be satisfied before action can be
+performed and effects that describe how the state changes after
+executiong the action. Depending on the formalism used by the planning
+systems, it is possible to minimize costs associated with actions,
+plan in temporily constrained environments, or plan for an multi-agent
+system.
 
+The robot memory developed in this thesis extends the capabilities of
+planning and reasoning systems by providing a back-end database for
+memorizing a large amount of information and by building a bridge
+between multiple reasoning and planning systems by tranforming
+information between their representations. \refsec{sec:planners}
+presents these systems and how they can profit from the robot memory
+in more detail.
 
-
-rules: premises and conclusions
-planning: specification of domain, current and goal state, find sequence of parameterized actions to reach goal
-  extensions optimizing some cost
-incremental reasoning: find next best action whenever idle
-robot memory source of knowledge for reasoning and storage for results  
+\todo[inline]{ definition knowledge based system}
   
-\todo[inline]{Write}
-
 \section{RoboCup}
 \label{sec:robocup}
 \todo[inline]{RoboCup logo?}
