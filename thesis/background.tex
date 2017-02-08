@@ -2,7 +2,7 @@
 \label{chap:background}
 This chapter presents the background information of the
 thesis. Section~\ref{sec:mobile-robotics} gives an introduction into the
-thesis' contxt of moble robotics and reasoning. In
+thesis' context of mobile robotics and reasoning. In
 Section~\ref{sec:robocup} we introduce the primary application and
 evaluation domains, the RoboCup Logistics League (RCLL) and the
 RoboCup@Home league. Afterwards, we present the software context with
@@ -24,7 +24,7 @@ are \emph{capable of operating without any form of external control
   for extended periods of time}~\cite{autonomous-robots}. These robots
 interact with their environment to fulfill a specific task they are
 designed for. They are \emph{agents}, which utilize a
-\emph{sense-think-act cycle}. Sensors are used to percieve the
+\emph{sense-think-act cycle}. Sensors are used to perceive the
 environment, a computation device to decide what to do, and actuators
 to interact with the environment. How a autonomous mobile robots can
 acts depending on its sensing depends on its \emph{agent
@@ -54,7 +54,7 @@ device, such as \emph{Random-access memory (RAM)}, can only store
 information as long as it is powered. Usually, RAM acts as storage
 when the internal state of the robot is represented by variables in
 the programming language(s) used to implement the behavior of the
-robot.  A non-volatile device, such as a hard disk drive, also keps
+robot.  A non-volatile device, such as a hard disk drive, also keeps
 the information when it is not powered. Also a combination of volatile
 and non-volatile devices can be used for storage as in this thesis. A
 robot memory that is stored on a non-volatile device is called
@@ -63,14 +63,14 @@ robot memory that is stored on a non-volatile device is called
 \subsection{Knowledge Sharing}
 \label{sec:knowledge-sharing}
 A robot memory is not necessarily limited to a single robot. In a
-\emph{multiagent system}, a system that is composed of multiple
+\emph{multi-agent system}, a system that is composed of multiple
 interacting agents~\cite{multiagentsystems}, the agents can share
 their internal state. In this case, the robot memory is called
 \emph{distributed}. Furthermore, we will also call a system composed
 of multiple interacting autonomous mobile robots a \emph{multi-robot
   system}. Similarly, a robot memory can also be shared on a single
 robot between multiple agent programs that each implement a part of
-the robots behavior. The architecture of a multiagent system can be
+the robots behavior. The architecture of a multi-agent system can be
 \emph{centralized} or \emph{distributed}. In the centralized one,
 a central unit stores all relevant information and/or decides which
 actions each agent should execute. In the distributed one, the
@@ -86,14 +86,14 @@ distributed system does not represents contradicting assumptions.
 According to Brachman and Levesque, \emph{reasoning} is the formal
 manipulation of symbols representing a believed propositions to
 produce representations of new ones~\cite{kr-book}. Thus, new
-knowledge can be \emph{logically infered} from other knowledge, by
+knowledge can be \emph{logically inferred} from other knowledge, by
 representing the propositions, which describe what is known or
-beliefed, and then performing reasoning manipulations on it.
+believed, and then performing reasoning manipulations on it.
 A simple example for logical inference is the following:
 \begin{enumerate}
-\item Ceasar is a robot
+\item Caesar is a robot
 \item All robots should have a memory
-\item Therefore, Ceasar should have a memory
+\item Therefore, Caesar should have a memory
 \end{enumerate}
 The field of \emph{knowledge representation} deals with the question
 how propositions like these can be represented in logic formalisms,
@@ -105,7 +105,7 @@ important parts of artificial intelligence in mobile
 robotics. Knowledge representation is used to model and memorize what
 a robot knows or beliefs about its environment and reasoning is used
 to infer what effects certain actions can have on the environment and
-which informations can be infered by made observations. The central
+which information can be inferred by made observations. The central
 tasks of reasoning systems used in this thesis are world model
 reasoning and incremental reasoning, which determines the next best
 action to do with a robot whenever the robot is idle. An important
@@ -115,15 +115,15 @@ planning can yield a sequence of actions that have to be executed to
 reach a given goal state from an initial state. Actions are formulated
 with preconditions that have to be satisfied before action can be
 performed and effects that describe how the state changes after
-executiong the action. Depending on the formalism used by the planning
+executing the action. Depending on the formalism used by the planning
 systems, it is possible to minimize costs associated with actions,
-plan in temporily constrained environments, or plan for an multi-agent
+plan in temporarily constrained environments, or plan for an multi-agent
 system.
 
 The robot memory developed in this thesis extends the capabilities of
 planning and reasoning systems by providing a back-end database for
 memorizing a large amount of information and by building a bridge
-between multiple reasoning and planning systems by tranforming
+between multiple reasoning and planning systems by transforming
 information between their representations. \refsec{sec:planners}
 presents these systems and how they can profit from the robot memory
 in more detail.
@@ -156,13 +156,13 @@ overhead camera~\cite{rc-ssl} to humanoid robots in teen size which
 need to have all sensors and computation devices on the
 robot~\cite{rc-book}. The RoboCup also features more application
 oriented domains, e.g. the \emph{Rescue League} with robots solving
-different challenges in desaster scenarios~\cite{rc-rescue} and
+different challenges in disaster scenarios~\cite{rc-rescue} and
 \emph{RoboCup@Work} with robots operating in an industrial scenario to
 perform identification, handling and transporting tasks with work
-related objects, such as skrews and nuts~\cite{rc-work}. In the
+related objects, such as screws and nuts~\cite{rc-work}. In the
 following, we describe the \emph{RoboCup Logistics League (RCLL)},
 which features logistics robots in a production scenario, and the
-\emph{RoboCup@Home} leage featuring service robots in a domestic
+\emph{RoboCup@Home} league featuring service robots in a domestic
 environment in more detail. These two leagues are used as application
 and evaluation domains of the thesis.
 
@@ -229,14 +229,14 @@ building a high complexity product.  There are four different machine
 types. The \emph{base-station (BS)} provides new bases, the colored
 cups, as raw resource. The \emph{ring stations (RS)} mounts colored
 rings on a work piece after preparing it with a varying amount of
-bases.  The \emph{cap-station (CS)} mounts black or grey caps to
+bases.  The \emph{cap-station (CS)} mounts black or gray caps to
 finish a product after loading it with a cap form a shelf first.
 Finally, the \emph{delivery-station (DS)} is used to deliver products.
 
 A major challenge of the RCLL lies in the fully autonomous task
 planning and coordination of the multi-robot system in the dynamic
 environment with spatial information and time constraints. The
-dynamism of the environment is caused by the ranomization of factory
+dynamism of the environment is caused by the randomization of factory
 layout, machine out-of-order times and ordered product composition and
 unknown obstacles, such as the other teams robots. Furthermore,
 baseline robotic challenges such as collision avoidance, perception
@@ -291,8 +291,8 @@ Furthermore, it can help with hybrid reasoning by transforming
 spatio-temporal knowledge into symbolic knowledge with computables.
 Furthermore, detecting and manipulating objects in a personal
 environment can be difficult because the space the robot acts in, for
-example the frige, can be very clouded.
-\todo[inline]{introduce ceasar?}
+example the fridge, can be very clouded.
+\todo[inline]{introduce Caesar?}
 
 \section{Robot Software Frameworks}
 \label{sec:robot-software-frameworks}
@@ -311,20 +311,20 @@ The Open Source robot software framework \emph{Robot Operating System
 useful Open Source libraries and tools for the development process of
 robot-software. It can operate on many robot platforms from different
 domains and provides a standardized integration framework~\cite{Ros}.
-\todo[inline]{cite ros book} The components integrated in ROS consists
+\todo[inline]{cite ROS book} The components integrated in ROS consists
 of processes called \emph{nodes}. These nodes can exchange information
 over a peer-to-peer communication network. There are communication
 channels called \emph{topics}. Nodes can register a publisher to send
 messages on a topic or subscriber to a specified \emph{topic} to
-recieve all messages sent on it. Messages are encoded using the Google
-Protobuffers message protocol, which enforces a fixed message
-structure. A central process called \texttt{roscore} manages the
-registration of publishers and subscribers. It is also resposible for
+receive all messages sent on it. Messages are encoded using the Google
+Protocol Buffers (Protobuf) message protocol, which enforces a fixed message
+structure. A central process called \texttt{Roscoe} manages the
+registration of publishers and subscribers. It is also responsible for
 loading configurations and managing nodes.
 
 In the RCLL, ROS is used by multiple teams~\cite{rc-2014}. The
 Carologistics team uses ROS primarily for and localization and
-visualization of sensor and perception data with the \texttt{rviz}
+visualization of sensor and perception data with the \texttt{Rviz}
 package. In previous years, it also used the ROS package
 \texttt{move\_base}, which provides local motion planning with
 collision avoidance.
@@ -384,12 +384,12 @@ and event-triggers.
 
 \section{Planners and Reasoners}
 \label{sec:planners}
-This section gives an overview of planners and reasoners benefitting
+This section gives an overview of planners and reasoners benefiting
 from the robot memory. We introduce three systems that belong to
 different fields of planning and reasoning: These are \emph{CLIPS}, a
 rule-based production system, the \emph{Planning Domain Definition
   Language (PDDL)}, which incorporates a family of planning formalisms
-into a standard programming language, and OpenRave, a \emph{Motion
+into a standard programming language, and OpenRAVE, a \emph{Motion
   Planner} finding collision free actuation plans.  These examples are
 representatives for often used types of planners and
 reasoners. However, the robot memory is not limited to these because
@@ -402,10 +402,10 @@ thesis.
 The CLIPS Rules Engine belongs to the class of \emph{rule-based
   production systems}, which can be defined as knowledge based system
 using forward chaining based on the \emph{Rete
-  algorithm}~\cite{aimodern}. The Rete algorithm efficiently detemines
+  algorithm}~\cite{aimodern}. The Rete algorithm efficiently determines
 which preconditions of forward chaining rules can be matched by the
 knowledge base, even with a large number of rules and facts by
-constructing a dataflow graph and keeping partitial
+constructing a data-flow graph and keeping partial
 matches~\cite{Rete}. CLIPS is the basis of the currently used reasoner
 by the Carologistics team in the RCLL and implements the high-level
 game agent. The basic building blocks of the CLIPS Rules Engine are a
@@ -481,7 +481,7 @@ world model in a distributed database. On the one hand, this provides
 an easy possibility to access the world model outside of clips. On the
 other hand, this is advantageous
 because the database already provides efficient synchronization and
-the removing the synchonization from CLIPS decreases the
+the removing the synchronization from CLIPS decreases the
 agent's complexity.
 % , especially because CLIPS is an inconvinient language for data
 % synchronization. \todo{because}
@@ -517,7 +517,7 @@ description.  Actions can have parameters and consist of preconditions
 and effects. The precondition is a function free FOL sentence. In the
 example of the picking action, it represents that the object that
 should be picked is on the table and that the arm is empty. The effect
-is a universally quantifed and conditional, but not a full FOL
+is a universally quantified and conditional, but not a full FOL
 sentence. For example disjunctions are not allowed~\cite{PDDL}. In the
 example, the effect of the action is that the arm is not empty and the
 object is now hold and not on the table any more.
@@ -560,15 +560,15 @@ should be grabbed or the robot wants to go to. Thus they use geometric
 knowledge in contrast to logical reasoners and planners focusing on
 symbolic knowledge.  A motion planner needs to find a trajectory from
 the initial position to the goal position, taking the degrees of
-freedom, e.g. the joints of the robot or the manuverablility of the
+freedom, e.g. the joints of the robot or the maneuverability of the
 robot base, into account and avoiding collisions with objects in the
 environment. A widely used motion planner framework is \emph{MoveIt!}
 which is available for ROS~\cite{MoveIt}. Another motion planner
 framework already integrated into Fawkes is the \emph{Open Robotics
-  and Animation Virtual Envi- ronment
-  (OpenRave)}~\cite{OpenRave}. Because OpenRAVE focuses on high-level
+  and Animation Virtual Environment
+  (OpenRAVE)}~\cite{OpenRave}. Because OpenRAVE focuses on high-level
 commands as input and it already integrates the motion planning as
-well as visualization and simulation, it is a convinient choise for a
+well as visualization and simulation, it is a convenient choice for a
 motion planner in Fawkes.
 
 Motion planners can benefit from using a robot memory by accessing and
@@ -576,7 +576,7 @@ sharing information about objects and obstacles in the environment.
 They can better work together with other planners and task execution
 components because they can access the same knowledge base. This
 avoids double state estimations, which can cause inconsistencies. To
-be usable by motions plannery, the robot memory has to be able to
+be usable by motions planners, the robot memory has to be able to
 represent hybrid knowledge in the form of continuous positions and
 time related events.
 %% Furthermore, it has to transform or connect spatio-temporal and
@@ -585,7 +585,7 @@ time related events.
 \section{Databases}
 \label{sec:databases}
 Since storing, keeping and retrieving knowledge of the robot memory
-are central tasks of this thesis, the choise of a database system is
+are central tasks of this thesis, the chaise of a database system is
 important. In the following, we present the three popular database
 technologies, namely relational, graph-based and document oriented
 databases. Because we choose the document oriented technology, we
@@ -599,7 +599,7 @@ implementation used as a basis in this thesis, is presented in
 There are multiple database technologies, which determine how data is
 represented and organized. Thus they require different algorithms for
 storing and querying and lead to different properties, such as
-runtime, flexibility, scalability, and crosslinkability.
+run-time, flexibility, scalability, and crosslinkability.
 
 \subsubsection{Relational}
 \label{sec:relational}
@@ -657,11 +657,11 @@ link multiple relations, such as in
 \reftab{tab:relational-example}(c). In which relations a database is
 structured and which attributes relations contain is defined by the
 \emph{schema} of the database. To interact with a database management
-system folowing the relational model, the \emph{Structured Query
+system following the relational model, the \emph{Structured Query
   Language (SQL)} can be used. SQL is a formal language to insert,
 update, and delete rows, change the database schema, and search the
 database~\cite{database-def}. Queries can contain conditions for
-attributes and group, sort, and agregate results. An especially useful
+attributes and group, sort, and aggregate results. An especially useful
 feature of relational databases and SQL is joining multiple relations
 by using foreign keys. For example, this allows listing the titles of
 borrowed books together with the name of the borrower from
@@ -675,20 +675,20 @@ relations between them. Nodes and edges can have properties, such as a
 name. This allows for example to model a family trees with persons as
 node, direct relation as edges, and names as properties of persons. In
 comparison the to relational databases, there is no database schema
-because the structure is intrinsicly defined by the contained
+because the structure is intrinsically defined by the contained
 data. Thus graph-based databases are called \emph{schema-free}. They
 are well suited for domains with transitive relations, such as 'is
 related to', and other problems that can be reduced to graph theory
 problems, such as connectivity, because algorithms from graph theory
-can directly operate on the graph. Thus costly join opperations, which
-would be neccessary in relational databases, can be
+can directly operate on the graph. Thus costly join operations, which
+would be necessary in relational databases, can be
 avoided~\cite{graphcomparison}. A graph-based data model that is
 widely used in robotics is the \emph{Resource Description Framework
   (RDF)}~\cite{KnowRob-Representation,Oro,OpenEASE}. It represents
 information as triples (e.g. $rdf(robot, holding, cup)$) that are
 composed of a subject, predicate, and object~\cite{rdf}. Subjects and
 objects are represented by nodes and predicates by edges. The query
-language for RDF databases that is proposed as standart by the World
+language for RDF databases that is proposed as standard by the World
 Wide Web Consortium is \emph{SPARQL}. It provides operations that are
 similar to SQL extended by graph traversal features.
 
@@ -708,7 +708,7 @@ inserted in a collection implicitly define the structure during
 run-time. This allows a flexible use of the database because
 applications are not limited to a fixed schema and can, for example,
 add key-value pairs during run-time when additional information needs
-to be stored. Furthermore, this simlyfies development in which the
+to be stored. Furthermore, this simplifies development in which the
 document structure tends to change often. Even if there are documents
 with different structure, the application can choose to retrieve only
 certain documents by giving a specialized query. Each document also
@@ -719,7 +719,7 @@ so standardized as of relational databases as shown in
 have the usage of the \emph{JavaScript Object Notation (JSON)} format
 in common. JSON is a lightweight data-interchange format similar to
 the \emph{Extensible Markup Language (XML)}~\cite{json}. It is human
-readable and assables objects with key-value pairs. Because these
+readable and assembles objects with key-value pairs. Because these
 objects can also be nested, they can represent documents. Compared to
 XML, JSON is faster and more compact~\cite{json-comparison}.
 
@@ -744,7 +744,7 @@ so called \emph{views}, which are based on JavaScript functions
 (e.g. to specify constraints, aggregation, updates). The API of
 CouchDB is based on HTTP and thus focused on web applications, but
 interfaces for other languages, such as C++, also exist. What
-seperates CouchDB from comparable database systems is its
+separates CouchDB from comparable database systems is its
 \emph{multiversion concurrency control}. In a distributed system,
 CouchDB does not guarantee consistency. It provides a system called
 Multi-Master Replication, which allows writing to all replication
@@ -752,20 +752,20 @@ instances.  Conflicts can be solved similar to a version control
 system, thus multiple conflicting versions can be kept in parallel for
 later revision.
 
-\todo[inline]{mention scalability through asynchronus replication, no
+\todo[inline]{mention scalability through asynchronous replication, no
   sharding?}  o guaranteed consistency
 
 \subsubsection{ArangoDB}
 \label{sec:arangodb}
-Arango DB is an open source database managing system. What sets it
-apart from other database managing systes is that it combines document
+ArangoDB is an open source database managing system. What sets it
+apart from other database managing systems is that it combines document
 oriented and graph based models in a so called
 \emph{multi-model}~\cite{arango-manual,arango}. It supports the JSON
 format, but stores the data in a binary format called
-VelocityPack. The API is based on HTTP. Arango uses the unique
+VelocityPack. The API is based on HTTP. ArangoDB uses the unique
 \emph{Arango Query Language (AQL)}, which is inspired by SQL and
 extended by document and graph features that account for the dynamic
-schema. Queries can be enhanced with JavaScript fuctions (e.g. fo
+schema. Queries can be enhanced with JavaScript functions (e.g. for
 access graph features). Also the interface focuses on JavaScript, but
 a C++ driver exists as well.
 
@@ -779,7 +779,7 @@ features, such as flexible data structures, aggregation, and
 distribution over multiple machines, which would take a large effort
 to implement manually. It has proven as powerful and scalable data
 storage and is widely used~\cite{mongodb,RoboDB}. MongoDB uses the
-JSON format, but internaly stores and evaluates documents in the
+JSON format, but internally stores and evaluates documents in the
 \emph{Binary JSON (BSON)} format.
 \begin{figure}
   \begin{minipage}{0.6\linewidth}

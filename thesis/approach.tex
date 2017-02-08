@@ -17,11 +17,11 @@ This section presents the design goals of the robot memory. They were
 formulated before detailing the concepts used in the robot memory and
 define what the robot memory should be capable of. The evaluation in
 \refchap{chap:evaluation} refers to these goals to analyze how well
-the implementation fullfils them.
+the implementation fulfills them.
 
 \subsection{Flexible Storage and Retrieval:} The main task of
 the robot memory is memorizing information of the robot. Memorizing
-includes storing newly obtained information, updating it accoring to
+includes storing newly obtained information, updating it according to
 changes, removing information that is no longer valid or needed, and
 remembering the information by querying it again. Thus the robot
 memory has to provide services for storing, updating, removing, and
@@ -32,7 +32,7 @@ only return the information that is asked for. It should be flexible
 enough to store any kind of data, information, knowledge, and wisdom
 of the DIKW hierarchy in any structure. For example the robot memory
 should be able to store world models, perception results and even
-large datasets, such as remembered sights of objects.
+large data-sets, such as remembered sights of objects.
 
 \subsection{Memory Sharing Between Knowledge Based Systems:}
 % original title of the goal: Consistent...
@@ -188,7 +188,7 @@ kitchen.
 A \textbf{computable} $f$ is a function mapping a query document and
 the current state of the database to a set of computed documents:
 $$f: \mathcal{D}\times\mathbb{P}(\mathcal{D}) \rightarrow \mathbb{P}(\mathcal{D})$$
-The powerset of documents is in the domain of a computable because the
+The power-set of documents is in the domain of a computable because the
 result can also depend on the state of the database (e.g. a computable
 calculating the number of objects in the database). For simplicity, we
 assume that all sensor data a computable can depend on is also
@@ -266,13 +266,13 @@ planner. The plan $\mathcal{L}$ is an ordered sequence of
 parameterized actions
 $$\mathcal{L}=(a_1(v_{1,1},v_{1,2},...,v_{1,k_1}),a_2(v_{2,1},...,v_{2,k_2}),...,a_j(v_{j,1},...,v_{j,k_j})) \text{.}$$
 where $a_i$ is an action with $k_i$ parameters and $j$ is the length
-of the plan. The resulting plan is then maped into a document
-containing the actions as subdocuments:
+of the plan. The resulting plan is then mapped into a document
+containing the actions as sub-documents:
 \begin{align*}
   map_L(L)=&\{("plan", "success")\} \cup_{i \in \{1..j\}}\{(n_i, map_a(a_i))\} \text{,}
 \end{align*}
 where $\mathcal{L}$ is defined as above, $n_i$ is the number $i$ as
-string, and $map_a$ maps a parameterized action to a subdocument,
+string, and $map_a$ maps a parameterized action to a sub-document,
 similar to the inverse of $map_f$:
 \begin{align*}
   map_a(a_i(v_{i,1},...,v_{i,k_i}))= &\{("action", name_{act}(a_i))\} 
@@ -311,7 +311,7 @@ Computables are functions that provide information or knowledge on
 demand. Thus the information provided by the computable is not stored
 directly in the database, but will be computed when some application
 asks for it. The robot memory manages the list of available
-computables and checks which coputables need to be called to answer a
+computables and checks which computables need to be called to answer a
 query. The concrete computables are provided by other components. For
 example, a vision component can register a computable that computes
 which objects are currently visible at which position. We use
@@ -327,13 +327,13 @@ computables in our robot memory for three main reasons:
 
 \item Computables decrease the computational effort that is necessary
   to collect the information contained in the robot memory. For some
-  problems, it is not appropriate to continiously compute and store
+  problems, it is not appropriate to continuously compute and store
   the results in the robot memory. Rather, it is better to compute the
-  results on demand only when it is neccessary and only with the
+  results on demand only when it is necessary and only with the
   parameters needed at the moment. One common example of these
   problems in the robotics context is perception, which can be
   computationally costly and might be needed only rarely (e.g. the
-  detection of objects on a table is only neccessary when the robot is
+  detection of objects on a table is only necessary when the robot is
   searching for something on a table). Another set of problems that
   are well suited to be solved by computables deal with values
   changing rapidly over time and a wide variety of possible
@@ -349,10 +349,10 @@ computables in our robot memory for three main reasons:
 
 \item Computables simplify hybrid reasoning by transforming
   spatio-temporal information into symbolical information and vice
-  versa. Becasue of the KBS interface and the decreased computational
+  versa. Because of the KBS interface and the decreased computational
   effort mentioned in the previous two reasons, computables are well
   suited to simplify dealing with hybrid information in KBS. For
-  example computables can provide a KBS with the infomation in which
+  example computables can provide a KBS with the information in which
   room the robot is based on the current 3D position of the robot
   stored in the robot memory. An example for the transformation of
   symbolical to geometric information is finding a free position on a
@@ -364,7 +364,7 @@ According to the formal definition of computables in
 input and returning a set of computed documents. Furthermore,
 computables can also use the documents currently provided by the robot
 memory as a basis for the computation (e.g. to transform the
-coordinates writen in the robot memory to another frame). The robot
+coordinates written in the robot memory to another frame). The robot
 memory has to decide when the function of a computable needs to be
 executed given an asked query. To decide this, each computable also
 contains a definition which queries can be answered by
@@ -374,7 +374,7 @@ is called. Furthermore, each computable has a priority defining in which
 order computables are executed if a query can be answered by multiple
 computables. This allows computables to depend on other the results of
 other computables. The documents resulting from a computable are
-temporily added to the robot memory so that a query can be evaluated
+temporarily added to the robot memory so that a query can be evaluated
 on computed information and persistent information in the database of
 the robot memory.
 
@@ -392,14 +392,14 @@ components, checks when the defined events occur, and then call the
 function. The events are defined by queries and usually define
 insertions, modifications, or deletions of documents with specific
 properties. For applications using the robot memory, triggers can be
-useful because they allow notifications in a convinient and efficient
+useful because they allow notifications in a convenient and efficient
 way. Applications do not have to implement polling and the queries
 defining events only need to be executed on changes in the database,
 instead of the whole robot memory. Examples for components utilizing
 triggers, are executives that want to be notified about changes to
 keep their internal world model up to date and planners that want to
 be notified about preconditions of their plan becoming false to
-replan. Furthermore, triggers allow sending messages in the flexible
+re-plan. Furthermore, triggers allow sending messages in the flexible
 document format.
 
 We note here that triggers are not intended to automatically work
@@ -444,12 +444,12 @@ KBS. The interface has to filter out non relevant parts.  Due to the
 difference of KBS, each KBS language requires a separate interface to
 the robot memory. This separate interface can be provided by a
 separate component using the robot memory and the environment of the
-KBS. It can also bridge to specific concepts used by the KSB, such as
+KBS. It can also bridge to specific concepts used by the KBS, such as
 the problem definition in PDDL instead of the procedural interaction
 with the robot memory. The filtering of the relevant part of the robot
 memory can use additional query constraints or be limited to specific
-collections. It is also posible to rename keys of key-value pairs in
-documents to obtain the correct identifyers used in the KBS.
+collections. It is also possible to rename keys of key-value pairs in
+documents to obtain the correct identifiers used in the KBS.
 
 \subsection{Multi-Robot Synchronization}
 \label{sec:synchronization}
@@ -461,19 +461,19 @@ share and synchronize their memorized information. There are a shared
 and a private part of the robot memory, which are both accessible by
 the robot. The private part is only visible and usable by the robot
 hosting it and the shared part is accessible by all robots in the
-system. This enables sharing all neccessary information while saving
+system. This enables sharing all necessary information while saving
 bandwidth by not sending information that is not relevant for other
 robots. The shared and private part of the robot memory are separated
 as different databases. The shared part is consistent over the whole
 multi-robot system. This is ensured by having a single primary
-instance that executes adn mutually locks all write operations in the
+instance that executes and mutually locks all write operations in the
 robot memory. Read operations can be evaluated on all instances for
 faster querying. Because the time difference between writing to the
 primary instance and propagating the change to other instances is
 expected to be small, inconsistencies caused by distributed reads are
 negligible. The distributed robot memory has to be robust against the
 drop out of robots. Thus, it has to stay operational, keep all shared
-infomration by having a copy on each robot, and reintegrate the droped
+information by having a copy on each robot, and reintegrate the dropped
 out robot when it is started again.
 
 Triggers and computables work in a distributed robot memory. However,
@@ -489,7 +489,7 @@ components interact with each other. The architecture contains
 standard concepts of software engineering, most importantly a layered
 architecture, functional abstraction, and data
 abstraction~\cite{software-architecture} to allow
-reusability and adaptability to changing requirements and use cases.
+re-usability and adaptability to changing requirements and use cases.
 %% functional abstraction,
 %% %% (e.g. of the different processes happening during storing and
 %% %% querying)
@@ -563,4 +563,4 @@ Manager, which forwards the query to the application providing the
 specific computable. The documents resulting from the computable are
 then stored by the computables manager in the robot memory, where it
 is queried afterwards.
-\todo[inline]{add dataflow examples as UML sequence diagram?}
+\todo[inline]{add data-flow examples as UML sequence diagram?}

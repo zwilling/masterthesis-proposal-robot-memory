@@ -20,10 +20,10 @@ performance. \todo[inline]{review mentioning of all sections}
 \label{sec:eval-context}
 The benchmarks presented in this chapter were performed on Fedora 23
 systems with 16 GB RAM and an Intel Core i7-3770 with eight cores at
-$3.4$~Ghz. For local benchmarks everything, including Fawkes, Mongodb,
+$3.4$~GHz. For local benchmarks everything, including Fawkes, MongoDB,
 the Gazebo simulation and ROS, ran on a single system. For distributed
 benchmarks, three identical systems were used. Each system hosted its
-own Fawkes, ROS, and Mongodb processes and one system additionally,
+own Fawkes, ROS, and MongoDB processes and one system additionally,
 hosts the Gazebo simulation.
 
 Since the robot memory runs inside the Fawkes framework and thus
@@ -32,7 +32,7 @@ directly be measured separately and is influenced by Fawkes. The
 influences are caused by other components, such as localization,
 reasoning, and collision avoidance, and by the thread management of
 Fawkes. To softly guarantee loop times for other threads, Fawkes
-suspends threads with a too long loop iteration. When measureing
+suspends threads with a too long loop iteration. When measuring
 durations of robot memory operations, this can increase large
 measurement values because if an operation takes longer than the
 allowed loop iteration time, the time being suspended is added to the
@@ -79,7 +79,7 @@ with the impact of event triggers. Operations that are performed
 rarely are not analyzed. For example dropping or restoring a collection and
 registration of triggers and computables are only performed once
 during initialization.  In the course of implementing and evaluating
-the application scenarios, their durations were not noticible compared
+the application scenarios, their durations were not noticeable compared
 to the initialization time of the whole robot software.
 
 \subsection{Insertions}
@@ -102,11 +102,11 @@ to the initialization time of the whole robot software.
 The insertion of a new document into the robot memory is overall the
 fastest operation compared to queries and
 updates. \reffig{fig:insert-durations} shows the distribution of
-insert durations with increasing domain size. It is noticible that the
+insert durations with increasing domain size. It is noticeable that the
 duration does not depend on the domain size and thus has run-time
 complexity of $O(1)$. The insertion time is small with an average of
 $0.125ms$. However, there are single outliers not present in
-\reffig{fig:insert-durations}. These outliers occur periodicly, when
+\reffig{fig:insert-durations}. These outliers occur periodically, when
 MongoDB flushes database changes from the RAM to the hard drive. We
 could reduce frequency of these outliers to one in $60s$, which is the
 default flushing frequency of MongoDB. To reach this, we had to
@@ -117,11 +117,11 @@ overhead of the robot memory compared to the duration of the raw
 MongoDB operation has an average of $0.006ms$, which is about $5.5\%$.
 The overhead is caused by verifying the collection name, deciding if
 the local or distributed database is used, adding meta-data, and
-mutual exclusion of database usage. The robot memory overhead mesured
+mutual exclusion of database usage. The robot memory overhead measured
 here does not include checking if triggers were activated by inserting
-the document. This is caused by the asynchron and seperate checking by
-the trigger manager. The size and the complexity of insertes
-documnents did not make a noticable difference.\todo{nedd to add
+the document. This is caused by the asynchronous and separate checking by
+the trigger manager. The size and the complexity of inserted
+documents did not make a noticeable difference.\todo{need to add
   numbers?}
 
 \subsection{Queries}
@@ -130,9 +130,9 @@ Queries are more complex operations than insertions and also take more
 time. \reffig{fig:query-durations} shows that query durations heavily
 depends on many factors, such as domain-size and query complexity. The
 query durations, when searching for an object by it's unique name,
-lineary depend on the domain size. The other plot shows the query
+linearly depend on the domain size. The other plot shows the query
 durations for finding objects that are not at their storage location
-and thus would have to be tidyied up. The query is more complex
+and thus would have to be tidied up. The query is more complex
 because it contains a comparison between two values that is formulated
 in JavaScript. From $0$ to about $10000$ documents, also a linear
 increase can be seen. With more documents the average duration does
@@ -148,7 +148,7 @@ one) document for faster computation.  \todo[inline]{comparison with
 depend on the domain size and has an average duration of $0.6ms$. The
 largest part of that overhead is caused by the computable manager,
 even if in this scenario no computables are registered. The computable
-manager performs a single insert and remove on a seperate collection
+manager performs a single insert and remove on a separate collection
 to prepare checking if the query matches a computable and to clean up
 afterwards. Because of this insertion, the duration spikes observed
 for insertions can also occur for queries.  \todo[inline]{more
@@ -157,12 +157,12 @@ shows, the query duration heavily depends on the complexity of the
 query. Especially the expressive JavaScript functions are expensive
 compared to the MongoDB internal query language without JavaScript. By
 formulating queries smartly, complex questions can often be
-efficiently in practise. For example checking wheather the dishwasher
+efficiently in practice. For example checking whether the dishwasher
 is full sounds like a question that is computationally costly because
 it requires JavaScript function. But it can be formulated efficiently
 by first filtering only the objects in the dishwasher with a fast
 JavaScript-free query and then summing up the objects volume to check
-if it exceeds a given threashold. This way the costly sum computation,
+if it exceeds a given threshold. This way the costly sum computation,
 which can be done by aggregation or JavaScript, only needs to be
 computed for the few objects in the dishwasher.
   \todo[inline]{concrete example for query formulation?}
@@ -204,7 +204,7 @@ updates the overhead does not depend on the database size. Both
 updates and deletions have an average overhead duration below
 $0.02ms$. In contrast to to query operations, the computable manager
 is not involved, because computed documents should not be updated and
-they do not need to be removed manualy.
+they do not need to be removed manually.
 
 \subsection{Computables}
 \label{sec:eval-computables}
@@ -244,7 +244,7 @@ as specified in the trigger query. For this benchmark, we registered a
 trigger on new objects in a certain location (e.g. in the laundry
 box). If trigger events happened, is checked each loop iteration of
 the robot memory by the trigger manager. Because trigger queries,
-which check for these events, are only executed on the oplog and not
+which check for these events, are only executed on the Oplog and not
 on the whole database, the time needed to check trigger depends on the
 amount of registered trigger and the amount of database changes
 (insertions, updates, and deletions). The current domain size has no
@@ -283,13 +283,13 @@ implemented with the robot memory.
 \reffig{fig:rcll-benchmark} show the CPU and memory usage, as well as
 the operations performed by MongoDB. For clarity only the CPU and
 memory usage of one Fawkes instance of the three robots is
-plotted. Both mongod processes, one for the robot local robot memory
+plotted. Both MongoDB processes, one for the robot local robot memory
 and one for the distributed worldmodel, have a CPU usage below $1\%$
-and a memory usage below $40MB$. This is not suprising because the
+and a memory usage below $40MB$. This is not surprising because the
 robot's world model that needs to be synchronized in the RCLL only has
 a size of $60$ to $100$ documents with an average object size of $390$
 bytes. It only grows slowly because most of the documents are updated
-and there are few new documents for incoming orders and and workpieces
+and there are few new documents for incoming orders and and work-pieces
 in production. This is also shown by the MongoDB operation count shown
 in \reffig{fig:rcll-benchmark}, which matches the operation count of
 the robot memory well. The values include the database operations of
@@ -297,7 +297,7 @@ all three robots. \reffig{fig:rcll-benchmark} shows that the mostly
 used operation is the \emph{Getmore} operation, which checks for an
 existing query cursor if there are more matching documents than in the
 previous batch. This is caused by the computable manager because it
-periodically checks the oplog for new changes that have to be reported
+periodically checks the Oplog for new changes that have to be reported
 to the CLIPS agent. Since the robot memory runs inside the Fawkes
 process, it's CPU and memory usage is included in the values of Fawkes
 in \reffig{fig:rcll-benchmark}. The growing memory usage of Fawkes is
@@ -308,18 +308,18 @@ amcl,colli, reasoning because they cause most CPU usage of Fawkes?}
 \todo[inline]{Also show RCLL graph without robot memory? (looks
   boringly similar, but might be satisfying for the reader to verify)}
 \todo[inline]{Comparison to Synchronization with protobuf messages
-  (resyncing feature of MongoDB, not always sending whole world
+  (re-syncing feature of MongoDB, not always sending whole world
   model...)}
-The size of the database on the harddrive is about $1097MB$ for the
+The size of the database on the hard-drive is about $1097MB$ for the
 distributed part and $1060MB$ for each local one. The size does not
-change noticably over time. $1GB$ of each database is occupied by the
-oplog, which has a constant size because it is a capped collection.
+change noticeably over time. $1GB$ of each database is occupied by the
+Oplog, which has a constant size because it is a capped collection.
 
 
 local/distributed
 
 ops:
-getmore:trigger checks, otherwise mostly updates of the worldmodel
+Getmore:trigger checks, otherwise mostly updates of the worldmodel
 insertion of initial worldmodel skipped
 
 data scenario: arm

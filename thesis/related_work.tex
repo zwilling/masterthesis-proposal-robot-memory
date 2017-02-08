@@ -70,7 +70,7 @@ we have performance and scalability concerns with Prolog handling
 larger data-sets (e.g. for storing locations of found object over long
 time to learn the distribution where they can be found). Although
 KnowRob can load ontologies from a hard drive, the memory acquired
-during runtime is not persistently stored.
+during run-time is not persistently stored.
 
 \section{OpenRobots Ontology (ORO)}
 \label{sec:oro}
@@ -160,7 +160,7 @@ planners exchanging knowledge over the web service is not mentioned in
 current publications or on the project
 website\footnote{\url{http://www.open-ease.org/}}.
 
-\section{Choise for Underlying Basis System}
+\section{Choice for Underlying Basis System}
 \label{sec:basis-representation}
 In this section, we compare data storage systems that can be used as a
 basis for the robot memory of this thesis and explain why we chose a
@@ -174,18 +174,18 @@ and CLIPS in particular. The information stored in the robot memory
 can be represented by facts in the volatile fact base. In these facts,
 key-value pairs can be used according to a predefined fact
 template. The main advantage of a production system is it's reasoning
-capability that allows infering more information and knowledge from
+capability that allows inferring more information and knowledge from
 what is inserted and combining it with the existing fact base. For
 example, this would allow inserting new observations and deriving an
 updated world model in clips which can later be extracted. However,
-this would be domain dependent since rules for updating and infering
+this would be domain dependent since rules for updating and inferring
 would have to be developed. Compared to other data storage systems,
 CLIPS lacks query features. By iterating over the fact base and
 comparing template names and values, fact extraction can be
 implemented. However, this would lack query features known from
-databases and probably not scale well for large datasets due to the
+databases and probably not scale well for large data-sets due to the
 lack of indexing. The rule matching capabilities of CLIPS are not
-suitable for querying because each query would reqire a new rule that
+suitable for querying because each query would require a new rule that
 changes the graph underlying the RETE algorithm and thus causes a
 large computational overhead~\cite{Rete}.
 
@@ -198,7 +198,7 @@ while answering a query because the query can be reformulated using
 backwards chaining with the ontology as a basis until a solution is
 found or there are no more possibilities. A disadvantages of this is
 the scalability with the stored data size and ontology size. For
-example, the robot memory should be able to store a large dataset
+example, the robot memory should be able to store a large data-set
 about object sights to learn their spatio-temporal
 distribution. Furthermore, the information is not stored persistently
 and can not be distributed in a multi robot system.
@@ -209,7 +209,7 @@ of reasoning. We think that they are a better basis for a robot memory
 because they allow separating the concerns of storing and remembering
 on the one hand, and reasoning, planning, and other robotic
 applications on the other hand. They are designed to work as efficient
-data storages with rich querying and distribution features. The
+data storage with rich querying and distribution features. The
 separation makes it possible for multiple systems to work with the
 robot memory and to collaborate over it. When for example the common
 sense reasoning of KnowRob should be integrated into a robot system,
@@ -217,19 +217,19 @@ the robot memory can store the required information in the database
 and provide KnowRob with the required information and
 ontologies. Furthermore, other systems such as a PDDL planner or a
 component learning object distributions from sights can also use the
-common basis in an efficient way. Before chosing a concrete database
+common basis in an efficient way. Before choosing a concrete database
 managing system, we have to decide between a relational database and a
 document-oriented database. Graph databases are not suited very well
 because the information we want to represent often does not have a
 graph structure, such as a world model of the RCLL or memorized object
 sights. Thus the main advantages of graph databases, namely searching
 and traversing a graph, are not so important.  In contrast to document
-oriented databases, relational ones provide powerfull query features,
+oriented databases, relational ones provide powerful query features,
 such as joining over multiple relations. Document oriented databases
 are schema free and thus allow a higher flexibility during development
-and runtime. This flexibility is important because representations of
+and run-time. This flexibility is important because representations of
 information on the robot tend to change during development and it is
-posible to group documents with similar purpose but different
+possible to group documents with similar purpose but different
 attributes together (e.g. facts of a world model). It also avoids
 joining over many relations by storing by storing information that
 belongs together as single document (e.g. with nesting).  Furthermore,
@@ -255,7 +255,7 @@ automatically executed after a specified event, such as a change in
 the database. Thus a trigger allows the user to react to events
 without polling. Triggers are common in relational database management
 systems, such as PostgreSQL~\cite{postgresql}. MongoDB does not
-provide triggers, but there are multiple projects prividing them as
+provide triggers, but there are multiple projects providing them as
 extension (e.g.~\cite{mongodb-trigger}). A simple way to realize
 triggers on insertion events is using capped collections of MongoDB
 because they order documents by the time of
@@ -265,7 +265,7 @@ capped collection and keeping the cursor if there are no more
 documents. After some time, the query can be continued from the
 cursors position to check all documents that were inserted in the
 meantime because they were just appended after the documents inserted
-before. Conviniently MongoDB uses a capped collection to synchronize
+before. Conveniently MongoDB uses a capped collection to synchronize
 changes in a replica set. This capped collection, called the
 \emph{Oplog}, can also be queried by the user and allows listening to
 changes in the replica set as described above.
@@ -279,7 +279,7 @@ and enables writing to each instance of a distributed MongoDB
 database~\cite{mongodb-multi-master}. Changes can be immediately
 applied locally and are synchronized later to the other
 instances. This allows faster writing especially if the other
-instances are not available for some time and would be advantagous in
+instances are not available for some time and would be advantageous in
 the RCLL, where a clouded WiFi can lead to larger latencies. However,
 MMM is not focused on consistency and ignores write conflicts. Other
 disadvantages are increased overall communication and database
@@ -287,9 +287,9 @@ size. This is caused by the implementation of MMM, which uses an usual
 Master-Slave replication for each instance. Each instance consists of
 one Master of these replications and Slaves for the other. MMM then
 applies changes in a Slave replication to the local Master.  To detect
-changes in a replica, MMM utilizes MongoDBs Oplog similar to this
+changes in a replica, MMM utilizes MongoDB's Oplog similar to this
 thesis. It queries the Oplog, which is capped collection, as described
 in the \refsec{sec:mongodb-trigger}.
 
 \todo[inline]{wirklich kein related work zu on demand computation in
-  mongodb?}
+  MongoDB?}
