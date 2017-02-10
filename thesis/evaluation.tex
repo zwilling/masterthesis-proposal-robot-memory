@@ -12,23 +12,22 @@ the system in the already introduced application scenarios. This
 includes CPU and memory usage, network throughput, and statistics
 about robot memory operations. Qualitatively, we evaluate how well the
 features of the robot memory work, how it can support the development
-of application scenarios, and where limitations are. Furthermore, we
-present experiments regarding the compromise of expressiveness and
-performance. \todo[inline]{review mentioning of all sections}
+of application scenarios, and where limitations are.
+\todo[inline]{Update preview of qualitative evaluation}
 
 \section{Evaluation context}
 \label{sec:eval-context}
 The benchmarks presented in this chapter were performed on Fedora 23
-systems with 16 GB RAM and an Intel Core i7-3770 with eight cores at
-$3.4$~GHz. For local benchmarks everything, including Fawkes, MongoDB,
+systems with 16 GB RAM and an Intel Core i7-3770 with four hyper-threading enabled cores at
+$3.4$~GHz. For local benchmarks, everything, including Fawkes, MongoDB,
 the Gazebo simulation and ROS, ran on a single system. For distributed
 benchmarks, three identical systems were used. Each system hosted its
 own Fawkes, ROS, and MongoDB processes and one system additionally,
 hosts the Gazebo simulation.
 
 Since the robot memory runs inside the Fawkes framework and thus
-inside the Fawkes process, the performance of the robot memory can not
-directly be measured separately and is influenced by Fawkes. The
+inside the Fawkes process, the performance of the robot memory is
+influenced by Fawkes and can not directly be measured separately. The
 influences are caused by other components, such as localization,
 reasoning, and collision avoidance, and by the thread management of
 Fawkes. To softly guarantee loop times for other threads, Fawkes
@@ -51,17 +50,17 @@ find out how the durations scale with increasing domain size and
 increasing complexity.
 
 The structure of the data used for this evaluation is chosen in a way
-that it is similar to information that is usually stored in a robot
-memory and that it also simplifies the analysis. The used data mimics
+to be similar to information that is usually stored in a robot
+memory. Furthermore, it should simplify the analysis. The used data mimics
 a robot's knowledge about object and their positions to solve a tidy
 up scenario. For each object, the robot memory contains a document
 with the object's name, current position, and the storage position it
 belongs to. Names are unique and storage positions are randomly chosen
-out of $1000$ possibilities. Objects are currently placed at their
-storage position with probability $0.01$ and random otherwise. The
-object's name is string to enforce string comparisons, which are
+out of $1000$ possibilities. Objects are at a random misplaced position with
+probability $0.01$ and at their proper storage position otherwise. The
+object's name is a string to enforce string comparisons, which are
 expected to be often needed in a real scenario. For evaluation
-reasons, we do not index the collection by the s name right now
+reasons, we do not index the collection by the object names right now
 because this heavily impacts the duration. An evaluation plugin in
 Fawkes generates the data and calls random operations. To analyze how
 the durations scale with the domain size, the plugin calls the
@@ -100,15 +99,15 @@ to the initialization time of the whole robot software.
   \label{fig:eval-durations-1}
 \end{figure}
 The insertion of a new document into the robot memory is overall the
-fastest operation compared to queries and
-updates. \reffig{fig:insert-durations} shows the distribution of
+fastest operation.
+\reffig{fig:insert-durations} shows the distribution of
 insert durations with increasing domain size. It is noticeable that the
 duration does not depend on the domain size and thus has run-time
 complexity of $O(1)$. The insertion time is small with an average of
 $0.125ms$. However, there are single outliers not present in
 \reffig{fig:insert-durations}. These outliers occur periodically, when
 MongoDB flushes database changes from the RAM to the hard drive. We
-could reduce frequency of these outliers to one in $60s$, which is the
+could reduce the occurrence frequency of these outliers to one in $60s$, which is the
 default flushing frequency of MongoDB. To reach this, we had to
 disable the forward logging of MongoDB, called Journaling. In this
 evaluation scenario, the outliers took about $0.3s$ because of the
@@ -128,8 +127,8 @@ documents did not make a noticeable difference.\todo{need to add
 \label{sec:queries}
 Queries are more complex operations than insertions and also take more
 time. \reffig{fig:query-durations} shows that query durations heavily
-depends on many factors, such as domain-size and query complexity. The
-query durations, when searching for an object by it's unique name,
+depend on many factors, such as domain-size and query complexity. The
+query durations, when searching for an object by its unique name,
 linearly depend on the domain size. The other plot shows the query
 durations for finding objects that are not at their storage location
 and thus would have to be tidied up. The query is more complex
@@ -140,7 +139,7 @@ not increase, because of a query evaluation trick of MongoDB. MongoDB
 lazily evaluates queries and returns a cursor to the first batch of
 documents that match the query. While the user iteratively fetches
 documents from the cursor, MongoDB continues the query evaluation if
-the batch was emptied. For the 'find object name' query, the whole
+the batch was emptied. For the \texttt{'find object name'} query, the whole
 database was searched because the unique object could not fill the
 batch. However it is possible to request a smaller batch (e.g. only
 one) document for faster computation.  \todo[inline]{comparison with
@@ -151,15 +150,14 @@ even if in this scenario no computables are registered. The computable
 manager performs a single insert and remove on a separate collection
 to prepare checking if the query matches a computable and to clean up
 afterwards. Because of this insertion, the duration spikes observed
-for insertions can also occur for queries.  \todo[inline]{more
-  different query complexities?}  As \reffig{fig:query-durations}
+for insertions can also occur for queries. As \reffig{fig:query-durations}
 shows, the query duration heavily depends on the complexity of the
 query. Especially the expressive JavaScript functions are expensive
 compared to the MongoDB internal query language without JavaScript. By
 formulating queries smartly, complex questions can often be
-efficiently in practice. For example checking whether the dishwasher
+efficient in practice. For example, checking whether the dishwasher
 is full sounds like a question that is computationally costly because
-it requires JavaScript function. But it can be formulated efficiently
+it requires a JavaScript function. But it can be formulated efficiently
 by first filtering only the objects in the dishwasher with a fast
 JavaScript-free query and then summing up the objects volume to check
 if it exceeds a given threshold. This way the costly sum computation,
@@ -187,12 +185,12 @@ computed for the few objects in the dishwasher.
 \end{figure}
 Updates consist of a query defining what should be updated and some
 key-value pairs, which should be changed. Thus the duration of an
-update should be similar to an update plus an
+update should be similar to a query plus an
 insertion. \reffig{fig:update-durations} shows the duration of
 position updates of objects with a random name. Because the used
 update operation only updates a single document, the durations are
 roughly uniformly distributed with an upper bound matching the
-duration of 'find object' queries in
+duration of \texttt{'find object'} queries in
 \reffig{fig:query-durations}. Thus the duration of update operations
 also scale linearly with the domain size. Duration of queries
 searching for only one document also behave as in
@@ -200,7 +198,7 @@ searching for only one document also behave as in
 of a query and a fast change operation, they behave similar to
 updates. The difference is that by default deletions are executed on
 all documents and updates only on a single one. For both deletions and
-updates the overhead does not depend on the database size. Both
+updates, the overhead does not depend on the database size. Both
 updates and deletions have an average overhead duration below
 $0.02ms$. In contrast to to query operations, the computable manager
 is not involved, because computed documents should not be updated and
@@ -216,7 +214,7 @@ for computing the results. The computable used in
 \reffig{fig:computable-durations} calculates the distance of the robot
 to the closest object in the database and yields the object's name,
 position, and distance. The measurement does not include the query
-duration to of finding the computed document. The computation time of
+duration of finding the computed document. The computation time of
 the computable itself scales linear with the domain size because each
 object's distance needs to be checked. The time of the overhead does
 not depend on the domain size. The overhead includes inserting the
@@ -242,7 +240,7 @@ before. The remaining overhead of the computable manager is the same.
 Triggers notify an application when something in the database changes
 as specified in the trigger query. For this benchmark, we registered a
 trigger on new objects in a certain location (e.g. in the laundry
-box). If trigger events happened, is checked each loop iteration of
+box). Wheather a trigger event happened, is checked each loop iteration of
 the robot memory by the trigger manager. Because trigger queries,
 which check for these events, are only executed on the Oplog and not
 on the whole database, the time needed to check trigger depends on the
@@ -254,14 +252,14 @@ duration of $0.27ms$. That makes $0.006ms$ per insertion. This
 duration also depends heavily on the formulation of the trigger query
 (e.g. in the case of JavaScript usage). These measurements do not
 include the computation time needed by the callback function of the
-trigger. Because the callback function is executed directly, it's
+trigger. Because the callback function is executed directly, its
 computation time influences the loop time of the robot memory and can
 in the worst case block it.
 
 \section{Performance in evaluation scenarios}
 To evaluate the performance of the robot memory, we performed
-benchmark in multiple application scenarios. The measurements during
-the experiments were stored and plotted using benchmarks were made
+benchmarks in multiple application scenarios. The measurements during
+the experiments were stored and plotted
 with the Round Robin Database Tool (RRD) as in~\cite{RoboDB}. The
 first scenario is a simulated RoboCup Logistics League game, in which
 the synchronization of the worldmodel between the robots was
@@ -280,7 +278,7 @@ implemented with the robot memory.
   \caption[Benchmark during a locally simulated RCLL game]{Benchmark during a locally simulated RCLL game}
   \label{fig:rcll-benchmark}
 \end{figure}
-\reffig{fig:rcll-benchmark} show the CPU and memory usage, as well as
+\reffig{fig:rcll-benchmark} shows the CPU and memory usage, as well as
 the operations performed by MongoDB. For clarity only the CPU and
 memory usage of one Fawkes instance of the three robots is
 plotted. Both MongoDB processes, one for the robot local robot memory
@@ -292,14 +290,14 @@ bytes. It only grows slowly because most of the documents are updated
 and there are few new documents for incoming orders and and work-pieces
 in production. This is also shown by the MongoDB operation count shown
 in \reffig{fig:rcll-benchmark}, which matches the operation count of
-the robot memory well. The values include the database operations of
+the robot memory. The values include the database operations of
 all three robots. \reffig{fig:rcll-benchmark} shows that the mostly
 used operation is the \emph{Getmore} operation, which checks for an
 existing query cursor if there are more matching documents than in the
 previous batch. This is caused by the computable manager because it
 periodically checks the Oplog for new changes that have to be reported
 to the CLIPS agent. Since the robot memory runs inside the Fawkes
-process, it's CPU and memory usage is included in the values of Fawkes
+process, its CPU and memory usage is included in the values of Fawkes
 in \reffig{fig:rcll-benchmark}. The growing memory usage of Fawkes is
 also present in benchmarks of the RCLL simulation without the robot
 memory and the CPU curve looks similar. Thus the robot memory plugin
@@ -307,22 +305,19 @@ has no large impact on the performance in this scenario. \todo{mention
 amcl,colli, reasoning because they cause most CPU usage of Fawkes?}
 \todo[inline]{Also show RCLL graph without robot memory? (looks
   boringly similar, but might be satisfying for the reader to verify)}
-\todo[inline]{Comparison to Synchronization with protobuf messages
-  (re-syncing feature of MongoDB, not always sending whole world
-  model...)}
 The size of the database on the hard-drive is about $1097MB$ for the
 distributed part and $1060MB$ for each local one. The size does not
 change noticeably over time. $1GB$ of each database is occupied by the
 Oplog, which has a constant size because it is a capped collection.
 
 
-local/distributed
+\todo[inline]{measure and plot network throughput distributed robot memory}
+\todo[inline]{Comparison of network throughput with without robot memory?
+  (re-syncing feature of MongoDB, not always sending whole world
+  model...)}
 
-ops:
-Getmore:trigger checks, otherwise mostly updates of the worldmodel
-insertion of initial worldmodel skipped
+\todo[inline]{data scenario: arm}
 
-data scenario: arm
 
 \section{Qualitative Evaluation}
 \todo[inline]{qualtitative eval: refer to goals from approach as structure}
