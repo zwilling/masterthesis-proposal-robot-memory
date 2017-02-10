@@ -1,13 +1,29 @@
 \chapter{Related Work}
 \label{chap:related}
-This chapter gives an overview of the related work of the thesis. We
-start with the knowledge processing systems KnowRob and OpenRobots
-Ontology, which provide similar functionality. Afterwards we present
-the Generic Robot Database based on MongoDB and Fawkes, and Open-EASE,
-a combination of KnowRob and the Generic Robot Database.
-\todo[inline]{mention added sections}
+This chapter gives an overview of the related work. First,
+\refsec{sec:rw-robmems} presents other robot memories with similar
+approaches and goals. In \refsec{sec:basis-representation}, we compare
+different systems that can be used as a basis for a robot memory and
+explain our choice for the document-oriented database
+MongoDB. \refsec{sec:mongodb-extensions} presents related work about
+extensions of MongoDB that are similar to the extensions we add for
+the use of MongoDB in our robot memory.
 
-\section{KnowRob}
+\section{Robot Memories}
+\label{sec:rw-robmems}
+Because a memory is an important part of a robot, there already are
+various implementations and designs for it. However, there are only
+some sophisticated robot memories that are separated into an own
+component and can be universally used by multiple other components,
+such as planners and reasoners. These robot memories with similar
+approaches and goals are presented here. We start with the knowledge
+processing systems KnowRob in \refsec{sec:knowrob} and OpenRobots
+Ontology in \refsec{sec:oro}. Afterwards we present the Generic Robot
+Database based on MongoDB and Fawkes in \refsec{sec:mongo-logging},
+and Open-EASE, a combination of KnowRob and the Generic Robot
+Database, in \refsec{sec:openease}.
+
+\subsection{KnowRob}
 \label{sec:knowrob}
 KnowRob is an open source knowledge processing system for
 cognition-enabled robots~\cite{KnowRob,KnowRob-Representation}. It is
@@ -16,8 +32,8 @@ relation to common sense knowledge to understand vaguely described
 tasks, such as "set the table". For representation and inference of
 knowledge, KnowRob uses Description Logic and approaches of the
 semantic web.  Each small piece of information is represented as a
-\emph{Resource Description Framework (RDF) triple} (e.g. $rdf(robot,
-holding, cup)$) that are composed of a subject, predicate, and
+\emph{Resource Description Framework (RDF) triple} (e.g. \texttt{rdf(robot,
+holding, cup)}) that are composed of a subject, predicate, and
 object. A set of these RDF triples in a network can compose
 commonsense knowledge based on the \emph{Web Ontology Language
   (OWL)}~\cite{owl}. It uses \emph{ontologies}, which can roughly be described as
@@ -25,9 +41,9 @@ directed graphs setting objects or classes of objects into
 relation. The graph can be represented with multiple RDF triples,
 where the subject and object are nodes and the predicate is a directed
 edge from the subject to the object. In these ontologies, it is
-possible to represent common sense knowledge, such as "milk is-a
-perishable", "refrigerator storage-place-for perishable", and
-"refrigerator is-a box-container". Thus a robot asked to bring milk
+possible to represent common sense knowledge, such as \texttt{'milk is-a
+perishable'}, \texttt{'refrigerator storage-place-for perishable'}, and
+\texttt{'refrigerator is-a box-container'}. Thus a robot asked to bring milk
 could infer that the milk is stored in the refrigerator, which needs
 to be opened first since it is a box-like container.
 
@@ -58,7 +74,7 @@ manual extension and verification before it can be used by the
 robot~\cite{KnowRob-Web}. Encyclopedic knowledge often lacks action
 information needed by the robot (e.g. how to grab tools) and
 action recipes require human text understanding.
-\todo[inline]{executive integration}
+\todo[inline]{add executive integration?}
 Furthermore large ontologies limit the performance of KnowRob because
 of the Prolog implementation and general complexity. In contrast to
 the robot memory of this thesis, KnowRob focuses on common
@@ -72,7 +88,7 @@ time to learn the distribution where they can be found). Although
 KnowRob can load ontologies from a hard drive, the memory acquired
 during run-time is not persistently stored.
 
-\section{OpenRobots Ontology (ORO)}
+\subsection{OpenRobots Ontology (ORO)}
 \label{sec:oro}
 The OpenRobots Ontology (ORO) is an open source knowledge processing
 framework for robotics~\cite{Oro}. It is designed to enable
@@ -104,22 +120,21 @@ processed by the OWL reasoner. Furthermore, it does neither support
 synchronizing a part of the knowledge with other robots nor knowledge
 computation on demand.
 
-\section{Generic Robot Database with MongoDB}
+\subsection{Generic Robot Database with MongoDB}
 \label{sec:mongo-logging}
 There already is a generic robot database developed with MongoDB as
 data storage~\cite{RoboDB}. It is used to log data of the robot
 middlewares Fawkes and ROS, and allows fault analysis and performance
 evaluation. To achieve this, it taps into the messaging infrastructure
 in ROS and the blackboard interfaces in Fawkes to store the data one
-to one utilizing the flexibility of the schema free MongoDB. The
-logged data can later be queried by the robot or a developer. This
-allows better evaluation and fault analysis because the data would
-otherwise be disposed and logging of the whole
+to one utilizing the flexibility of the MongoDB's schema
+freedom. Logged data can later be queried by the robot or a
+developer. This allows better evaluation and fault analysis because
+the data would otherwise be disposed and logging of the whole
 Data-Information-Knowledge-Wisdom (DIKW) hierarchy~\cite{DIKW} enables
-retracing processes, such as from point clouds (data) to cluster
-positions (information) to object positions (knowledge) combined from
-multiple clues to learning results (wisdom). This work already
-implemented a basic connection to MongoDB in Fawkes for storing
+retracing processes, such as from point clouds over cluster
+positions to object positions. This work already
+implements a basic connection to MongoDB in Fawkes for storing
 documents and executing queries, which can is used and extended in
 this thesis. It also shows that MongoDB is a good choice because it
 can handle querying a large database and writing a lot of data
@@ -129,13 +144,13 @@ needed for a robot memory as intended in this thesis. It is intended
 as logging facility and not as working memory holding a world model
 for multiple planners and reasoners. Therefore updating and querying
 mechanisms for planners and reasoners are missing as well as triggers,
-a knowledge computable on demand, multi-robot synchronization, a
-suitable front-end, ad integration into knowledge based systems.
+on demand computation, multi-robot synchronization, a
+suitable front-end, and integration into knowledge based systems.
 
-\section{Open-EASE}
+\subsection{Open-EASE}
 \label{sec:openease}
 Open-EASE is a knowledge processing service for robots and AI
-researchers~\cite{OpenEASE}. It is based on and combines
+researchers~\cite{OpenEASE}. It is based on a combination of
 KnowRob~\cite{KnowRob} and the Generic Robot Database with MongoDB in
 ROS~\cite{RoboDB}. It is designed as a web service accessible by
 robots via a socket connection and by humans via a web browser. It
@@ -146,8 +161,8 @@ accessed by using the virtual knowledge base concept to learn from
 human demonstration and analyze faults. The focus of Open-EASE also is
 on providing the recorded data and access to KnowRob to humans using
 the web interface. This allows using Open-EASE as eLearning tool for
-students, who can explore and experiment with the data and system on
-the robot. Furthermore it fosters reproducing experiment results
+students, who can explore and experiment with the data and the robotic
+system. Furthermore it fosters reproducing experiment results
 (e.g. for reviews) and visualizing them. Although the system is
 accessible from multiple users and robots, which can query the same
 Open-EASE instance, it is focused on single robot data and non
@@ -160,26 +175,29 @@ planners exchanging knowledge over the web service is not mentioned in
 current publications or on the project
 website\footnote{\url{http://www.open-ease.org/}}.
 
+\todo[inline]{Section for ROSPlan/MongoStore?}
+\todo[inline]{Section for RoboEarth?}
+
 \section{Choice for Underlying Basis System}
 \label{sec:basis-representation}
 In this section, we compare data storage systems that can be used as a
 basis for the robot memory of this thesis and explain why we chose a
-document oriented database and MongoDB in particular. The possible
-systems we compare here belong to the context already introduced in
+document-oriented database and MongoDB in particular. The possible
+systems we compare are introduced in
 the background and related work and are production systems,
-ontologies, relational databases, and document oriented databases.
+ontologies, relational databases, and document-oriented databases.
 
 One possibility for an underlying basis system is a production system
 and CLIPS in particular. The information stored in the robot memory
 can be represented by facts in the volatile fact base. In these facts,
 key-value pairs can be used according to a predefined fact
-template. The main advantage of a production system is it's reasoning
+template. The main advantage of a production system is its reasoning
 capability that allows inferring more information and knowledge from
 what is inserted and combining it with the existing fact base. For
 example, this would allow inserting new observations and deriving an
-updated world model in clips which can later be extracted. However,
-this would be domain dependent since rules for updating and inferring
-would have to be developed. Compared to other data storage systems,
+updated world model, which can later be extracted. However,
+this would be domain dependent because special rules for updating and inferring
+would be required. Compared to other data storage systems,
 CLIPS lacks query features. By iterating over the fact base and
 comparing template names and values, fact extraction can be
 implemented. However, this would lack query features known from
@@ -192,18 +210,17 @@ large computational overhead~\cite{Rete}.
 Ontologies and RDF triples from the Web Ontology Language are another
 possibility for a data storage system of the robot memory. Especially
 KnowRob uses these and was considered as a basis for this
-thesis. Information can be represented as RDF triples and embedded in
+thesis. Information can be represented by RDF triples and embedded in
 an ontology graph. The main advantage is, that this allows reasoning
 while answering a query because the query can be reformulated using
-backwards chaining with the ontology as a basis until a solution is
-found or there are no more possibilities. A disadvantages of this is
-the scalability with the stored data size and ontology size. For
+backwards chaining with the ontology as a basis. A disadvantage of this is
+the scalability with the sizes of the stored data and ontology. For
 example, the robot memory should be able to store a large data-set
 about object sights to learn their spatio-temporal
 distribution. Furthermore, the information is not stored persistently
 and can not be distributed in a multi robot system.
 
-Compared to the previous approaches with ontologies and production
+Compared to both previous approaches with ontologies and production
 systems, database systems focus on data storage and querying instead
 of reasoning. We think that they are a better basis for a robot memory
 because they allow separating the concerns of storing and remembering
@@ -223,27 +240,26 @@ document-oriented database. Graph databases are not suited very well
 because the information we want to represent often does not have a
 graph structure, such as a world model of the RCLL or memorized object
 sights. Thus the main advantages of graph databases, namely searching
-and traversing a graph, are not so important.  In contrast to document
-oriented databases, relational ones provide powerful query features,
-such as joining over multiple relations. Document oriented databases
+and traversing a graph, are not so important. Relational databases provide powerful query features,
+such as joining over multiple relations. Document-oriented databases
 are schema free and thus allow a higher flexibility during development
-and run-time. This flexibility is important because representations of
+and run-time. This flexibility is important because the representations of
 information on the robot tend to change during development and it is
-possible to group documents with similar purpose but different
+possible to group documents with similar purpose and different
 attributes together (e.g. facts of a world model). It also avoids
-joining over many relations by storing by storing information that
+joining over many relations by storing information that
 belongs together as single document (e.g. with nesting).  Furthermore,
-document oriented databases provide a simpler possibility to
+document-oriented databases provide a simpler possibility to
 distribute the system over multiple robots. These arguments lead to
-the choice of a document oriented database. Why we prefer MongoDB
-among other document oriented database systems was discussed in
+the choice of a document-oriented database. Why we prefer MongoDB
+among other document-oriented database systems was discussed in
 \refsec{sec:mongodb}. The main reasons are the performance,
 scalability and popularity of MongoDB as well as it's query language.
 
 \section{MongoDB Extensions}
 \label{sec:mongodb-extensions}
 The work of this thesis uses MongoDB as a basis and extends it with
-some concepts that are important for the usage as robot memory. In
+some concepts that are important for the usage in robot memory. In
 this section, we present MongoDB extensions which are related to our
 extensions, such as triggers for notifications about changes
 in the database.
@@ -256,19 +272,19 @@ the database. Thus a trigger allows the user to react to events
 without polling. Triggers are common in relational database management
 systems, such as PostgreSQL~\cite{postgresql}. MongoDB does not
 provide triggers, but there are multiple projects providing them as
-extension (e.g.~\cite{mongodb-trigger}). A simple way to realize
+extension~\cite{mongodb-trigger}. A simple way to realize
 triggers on insertion events is using capped collections of MongoDB
 because they order documents by the time of
 insertion. \todo[inline]{insert, link figure of capped collection?} The lazy and
 iterative query evaluation strategy of MongoDB allows querying the
 capped collection and keeping the cursor if there are no more
 documents. After some time, the query can be continued from the
-cursors position to check all documents that were inserted in the
+position of the cursor to check all documents that were inserted in the
 meantime because they were just appended after the documents inserted
 before. Conveniently MongoDB uses a capped collection to synchronize
-changes in a replica set. This capped collection, called the
+changes in a Replica Set. This capped collection, called the
 \emph{Oplog}, can also be queried by the user and allows listening to
-changes in the replica set as described above.
+changes in the Replica Set as described above.
 
 \subsection{Multi-Master Replication}
 \label{sec:mongodb-multi-master}
@@ -280,7 +296,7 @@ database~\cite{mongodb-multi-master}. Changes can be immediately
 applied locally and are synchronized later to the other
 instances. This allows faster writing especially if the other
 instances are not available for some time and would be advantageous in
-the RCLL, where a clouded WiFi can lead to larger latencies. However,
+the RCLL, where a clouded WiFi can lead to large latencies. However,
 MMM is not focused on consistency and ignores write conflicts. Other
 disadvantages are increased overall communication and database
 size. This is caused by the implementation of MMM, which uses an usual
@@ -291,5 +307,4 @@ changes in a replica, MMM utilizes MongoDB's Oplog similar to this
 thesis. It queries the Oplog, which is capped collection, as described
 in the \refsec{sec:mongodb-trigger}.
 
-\todo[inline]{wirklich kein related work zu on demand computation in
-  MongoDB?}
+\todo[inline]{related work zu on demand computation in MongoDB: Ontology mediated queries}

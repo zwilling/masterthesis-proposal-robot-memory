@@ -1,7 +1,7 @@
 \chapter{Approach}
 \label{chap:approach}
-This chapter presents the approach of the thesis to describe and
-explain the concepts behind the robot memory. It starts with the
+This chapter presents the approach of the thesis. It describes and
+explains the concepts behind the robot memory. It starts with the
 goals the robot memory is designed to achieve in
 \refsec{sec:goals}. \refsec{sec:formalism} introduces the theoretical
 foundation how information can be represented in the robot memory and
@@ -25,10 +25,9 @@ includes storing newly obtained information, updating it according to
 changes, removing information that is no longer valid or needed, and
 remembering the information by querying it again. Thus the robot
 memory has to provide services for storing, updating, removing, and
-querying information so that different components can use the robot
-memory to provide information, use it as a source, or collaborate
-using the same memory.  When the robot memory is queried, it should
-only return the information that is asked for. It should be flexible
+querying information.  It has to be usable by multiple components
+as information source and collaboration platform.  When the robot memory is queried, it should
+only return the information that it is asked for. It should be flexible
 enough to store any kind of data, information, knowledge, and wisdom
 of the DIKW hierarchy in any structure. For example the robot memory
 should be able to store world models, perception results and even
@@ -43,20 +42,20 @@ or each other's information. This should especially allow Knowledge
 Based Systems (KBS) to share a common world model, even if the KBS are
 of a different type. For example a planner, a world model reasoner,
 and an executive should work together using the robot memory as a
-common base. This allows combining their specialized strengths
+common basis. This allows combining their specialized strengths
 (e.g. generating efficient plans, intuitive world model reasoning, and
 robust execution). Furthermore, the robot memory should help avoiding
-inconsistencies between KBS by providing a common knowledge base base so that
+inconsistencies between KBS by providing a common knowledge base so that
 only one state estimation is necessary.
 
 \subsection{Special Views for Different Components:} Depending on the
 application of different components using the robot memory, different
 views on the stored data are necessary. For example a planning
 components needs another part of the stored data, than a component
-learning distributions of object sights. Thus component-specific
+learning distributions from object sights. Thus component-specific
 filters are necessary. Furthermore, different components need the
-stored data in different formats depending on the used programming
-language and purpose (e.g. symbolic or spatio-temporal). The robot
+stored data in different formats (e.g. symbolic or spatio-temporal)
+depending on the used programming language and purpose. The robot
 memory has to allow defining these views and then accordingly filter
 and transform the stored information. Also keys and identifiers, which
 might be named differently, have to be translatable.
@@ -207,7 +206,7 @@ $$mem(\mathcal{(DB,\emptyset)})=\mathcal{DB}$$
 For a robot memory with computables the documents memorized are:
 $$mem((\mathcal{DB},\{f_1,..,f_n\}))=mem((\mathcal{DB},\{f_1,..,f_{n-1}\})) \cup \bigcup_{d\in\mathcal{D}}f_n(d,mem((\mathcal{DB},\{f_1,..,f_{n-1}\})))$$
 
-To integrate the robot memory into PDDL, we need to define a
+To integrate the robot memory into PDDL, we need to define 
 \textbf{mapping functions} $map_d$ between documents and predicates, and
 $map_v$ between values and terms. As prerequisite, the connection
 between key-names in documents and predicates, functions, actions, and their
@@ -317,34 +316,34 @@ example, a vision component can register a computable that computes
 which objects are currently visible at which position. We use
 computables in our robot memory for three main reasons:
 \begin{itemize}
-\item Computables ease knowledge based systems to deal with
-  complex data. By using the robot memory interface, KBS can access
+\item Computables ease dealing with complex data in knowledge based
+  systems. By using the robot memory interface, KBS can access
   functions that are provided by other components and compute
   information that is difficult or impossible to compute inside the
-  KBS. For example, a KBS using a computable can ask for a closest
+  KBS. For example, a KBS using a computable can ask for the closest
   object even if the KBS does not support arithmetic operations. This
   way, KBS can bypass some expressiveness and complexity limits.
 
 \item Computables decrease the computational effort that is necessary
   to collect the information contained in the robot memory. For some
   problems, it is not appropriate to continuously compute and store
-  the results in the robot memory. Rather, it is better to compute the
+  the results in the robot memory. Rather it is better to compute the
   results on demand only when it is necessary and only with the
   parameters needed at the moment. One common example of these
   problems in the robotics context is perception, which can be
-  computationally costly and might be needed only rarely (e.g. the
+  computationally costly and might be needed only rarely. For example, the
   detection of objects on a table is only necessary when the robot is
-  searching for something on a table). Another set of problems that
+  searching for something on a table. Another set of problems that
   are well suited to be solved by computables deal with values
-  changing rapidly over time and a wide variety of possible
-  parameters. For example the transformation result of object
+  changing rapidly over time and a variety of possible
+  parameters. For example, the transformation result of object
   coordinates change rapidly while the robot is moving and there might
-  be many objects that might be transformed to the different frames
+  be many objects that have to be transformed to the different frames
   used by the robot. Thus it is impractical to compute and store the
-  positions of all objects in all frames in the robot memory and keep
+  positions of all objects in all frames and keep
   them updated. It is a better idea to provide the transforms in the
-  robot memory as computable so only the transformation only needs to
-  be done when it is needed and for the subset of objects that are
+  robot memory as computable so the transformation only needs to
+  be done when it is needed and only for the subset of objects that are
   currently needed.
 
 \item Computables simplify hybrid reasoning by transforming
@@ -353,17 +352,17 @@ computables in our robot memory for three main reasons:
   effort mentioned in the previous two reasons, computables are well
   suited to simplify dealing with hybrid information in KBS. For
   example computables can provide a KBS with the information in which
-  room the robot is based on the current 3D position of the robot
+  room the robot is based on the current 3D position
   stored in the robot memory. An example for the transformation of
   symbolical to geometric information is finding a free position on a
-  table for a planner action specifying to place an object on a table.
+  table for a planner action specifying to place an object somewhere on the table.
 \end{itemize}
 
 According to the formal definition of computables in
-\refsec{sec:formalism}, computables are a function taking a query as
+\refsec{sec:formalism}, computables are functions taking a query as
 input and returning a set of computed documents. Furthermore,
 computables can also use the documents currently provided by the robot
-memory as a basis for the computation (e.g. to transform the
+memory as basis for the computation (e.g. to transform the
 coordinates written in the robot memory to another frame). The robot
 memory has to decide when the function of a computable needs to be
 executed given an asked query. To decide this, each computable also
@@ -372,24 +371,24 @@ it. This definition is represented by a query. Whenever a query on the
 robot memory matches this computable query definition, the computable
 is called. Furthermore, each computable has a priority defining in which
 order computables are executed if a query can be answered by multiple
-computables. This allows computables to depend on other the results of
+computables. This allows computables to depend on the results of
 other computables. The documents resulting from a computable are
 temporarily added to the robot memory so that a query can be evaluated
 on computed information and persistent information in the database of
 the robot memory.
 
-\subsection{Trigger}
+\subsection{Triggers}
 \label{sec:trigger}
-Trigger are mechanisms that invoke a callback function if a specified
+Triggers are mechanisms that invoke a callback function if a specified
 event occurs in the robot memory. The main application of triggers in
 this thesis is to notify components using the robot memory about
-changes of the stored information. Furthermore, they can be used to
+changes of the stored information. Furthermore they can be used to
 check for more complex conditions each time a relevant document in the
 robot memory changes. Triggers consist of a function and definition of
 the event, that should cause the function to be invoked. The robot
-memory manages the triggers, which were registered by other
-components, checks when the defined events occur, and then call the
-function. The events are defined by queries and usually define
+memory manages triggers, which were registered by other
+components, checks when the defined events occur, and then call the according
+function. The events are defined by queries about
 insertions, modifications, or deletions of documents with specific
 properties. For applications using the robot memory, triggers can be
 useful because they allow notifications in a convenient and efficient
@@ -408,11 +407,11 @@ some element of the image area of an arbitrary computable function
 matches a trigger query, the computable function would have to be
 evaluated for all possible input queries. Because this contradicts the
 intention behind computables, there is no automatic evaluation of
-triggers on computables. However, since the results of computables
-are temporarily inserted in the database, triggers do work computables
-when the computable was invoked by an external query. Thus, it is
+triggers on computables. However since the results of computables
+are temporarily inserted in the database, triggers do work on computables
+when the computable was invoked by an external query. Thus it is
 possible to combine triggers and computables by periodically querying
-the robot memory to activate the computable. Furthermore, it is
+the robot memory to activate the computable. Furthermore it is
 possible to bypass this limitation by replacing the computable by a
 system that periodically inserts the required computation results into
 the robot memory as usual.
@@ -425,31 +424,33 @@ robot memory can be embedded in the language concepts of the KBS. The
 features of the robot memory include the basic operations, query,
 insert, delete, and update, the registration and callback for
 triggers, and the possibility to provide computables.  Depending on
-the KBS, the robot memory features have to be provided in different
-programming languages with different types of information
-representation \todo{say knowledge representation?} and
-limitations. For example, the representation as unordered facts in
-CLIPS is similar to the key-value structure of documents but does not
-allow nesting, and the representation as predicates in PDDL requires
-the mapping from documents to predicates as shown in
-\refsec{sec:formalism}. Thus, the interface has to transform documents
+the KBS, the robot memory features have to be provided in the
+appropriate programming language and representation. For example to
+provide the information contained in the key-value structure of
+documents in CLIPS, unordered facts can be used. However facts do not
+allow nesting, therefore the nesting has to be resolved
+somehow. Another example is the representation as predicates in PDDL,
+which requires the mapping from documents to predicates as shown in
+\refsec{sec:formalism}. Thus the interface has to transform documents
 into the representation and programming language used by the KBS. This
-transformation can also require deriving symbolic information
-(e.g. the room a robot is in) if the robot memory only contains
-spatio-temporal information about the position of the robot in 3D
-coordinates. Furthermore, KBS often are specialized on some area, such
-as planning or world model reasoning. Therefore, only a part of the
-information contained in the robot memory might be relevant to the
-KBS. The interface has to filter out non relevant parts.  Due to the
-difference of KBS, each KBS language requires a separate interface to
-the robot memory. This separate interface can be provided by a
-separate component using the robot memory and the environment of the
-KBS. It can also bridge to specific concepts used by the KBS, such as
-the problem definition in PDDL instead of the procedural interaction
-with the robot memory. The filtering of the relevant part of the robot
-memory can use additional query constraints or be limited to specific
-collections. It is also possible to rename keys of key-value pairs in
-documents to obtain the correct identifiers used in the KBS.
+transformation can also require deriving symbolic information from
+spatio-temporal one. An example is the room a robot is in if the robot
+memory only contains the 3D position of the robot. Furthermore KBS
+often are specialized on some area, such as planning or world model
+reasoning. Therefore only a part of the information contained in the
+robot memory might be relevant to the KBS. The interface has to filter
+out non relevant parts.
+
+Due to the difference of KBS, each KBS language requires a separate
+interface to the robot memory. This separate interface can be provided
+by a separate component using the robot memory and the environment of
+the KBS. It can also bridge to specific concepts used by the KBS, such
+as the problem definition in PDDL instead of the procedural
+interaction with the robot memory. The filtering of the relevant part
+of the robot memory can use additional query constraints or be limited
+to specific collections. It is also possible to rename keys of
+key-value pairs in documents to obtain the correct identifiers used in
+the KBS.
 
 \subsection{Multi-Robot Synchronization}
 \label{sec:synchronization}
@@ -537,7 +538,7 @@ Interface Provider component, which makes the function of the robot
 memory available to the KBS and the special programming language
 used. It is not necessary for components that can directly use the
 interface of the robot memory (available in C++). The responsibilities
-of the interface provider also include transforming query results in
+of the interface provider also include transforming query results into
 the appropriate format used by the KBS and eventually renaming
 key-names if they have be mapped to match the names used in the KBS
 model. Because languages and concepts of knowledge based systems can
