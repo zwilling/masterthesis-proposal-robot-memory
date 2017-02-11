@@ -257,6 +257,7 @@ computation time influences the loop time of the robot memory and can
 in the worst case block it.
 
 \section{Performance in evaluation scenarios}
+\label{sec:performance}
 To evaluate the performance of the robot memory, we performed
 benchmarks in multiple application scenarios. The measurements during
 the experiments were stored and plotted
@@ -264,7 +265,6 @@ with the Round Robin Database Tool (RRD) as in~\cite{RoboDB}. The
 first scenario is a simulated RoboCup Logistics League game, in which
 the synchronization of the worldmodel between the robots was
 implemented with the robot memory.
-\label{sec:performance}
 \begin{figure}
   \centering
   \begin{subfigure}[b]{1\textwidth}
@@ -316,7 +316,53 @@ Oplog, which has a constant size because it is a capped collection.
   (re-syncing feature of MongoDB, not always sending whole world
   model...)}
 
-\todo[inline]{data scenario: arm}
+
+The second scenario is the Blocks World with the Kinova Jaco arm. The
+robot memory is included in the following processes: The overhead
+vision detects tags on blocks and publishes their position on the
+blackboard. A PDDL domain generation constructs a problem description
+from symbolic information in the robot memory. A part of this
+information is provided by computables for \texttt{on-table} and
+\texttt{clear} predicates. There are also computables for the
+transformation of block positions and accessing the blackboard. The
+computables for predicates are provided by a perception plugin. This
+plugin continuously writes the block positions into the robot memory
+for demonstration purposes. This is not very efficient because
+continuously updating block positions requires executing the
+blackboard computable and transform computable very often. A
+computable that only inserts block positions when necessary would be
+more efficient.
+
+\begin{figure}
+  \centering
+  \begin{subfigure}[b]{1\textwidth}
+    \includegraphics[width=\textwidth]{plots/blocksworld/cpu-mem}
+    \label{fig:blocks-cpu-mem}
+  \end{subfigure}
+  \begin{subfigure}[b]{1\textwidth}
+    \includegraphics[width=\textwidth]{plots/blocksworld/operations}
+    \label{fig:blocks-ops}
+  \end{subfigure}
+  \caption[Benchmark during Blocks World demo]{Benchmark during Blocks World demo}
+  \label{fig:blocks-benchmark}
+\end{figure}
+\reffig{fig:blocks-benchmark} shows the CPU and memory usage as well as the
+operation count in MongoDB during the execution of two plans with 8
+and 12 actions.  \todo[inline]{explain two hills-two plan executions (amount of visible blocks?)}
+
+The amount of update operations is constant because the block
+positions and their visibility state are constantly updated. The large
+amount of queries, insertions, and deletions is mainly caused by the
+blackboard and transform computables, which are executed to update the
+block positions. The blackboard computable inserts the interface
+values into the robot memory and the transform computable queries
+these values and inserts the transformed values. For each query that
+needs to be checked by the computable manager, one insert and deletion
+is performed as well as a query for each registered computable.  The
+CPU usage of Fawkes and the CPU and memory usage of MongoDB are similar
+to the results of the RCLL benchmark.
+\todo[inline]{memory usage
+  Fawkes caused by OpenRAVE?}
 
 
 \section{Qualitative Evaluation}
