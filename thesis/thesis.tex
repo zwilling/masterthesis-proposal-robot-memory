@@ -18,8 +18,13 @@
 \newpage
 \tableofcontents
 \newpage
+%avoid empty pages before chapter
+\let\varcleardoublepage\cleardoublepage
+\let\cleardoublepage\clearpage
 \listoffigures
+\lstlistoflistings
 \newpage
+\let\cleardoublepage\varcleardoublepage
 \onehalfspace
 \mainmatter
 
@@ -28,9 +33,6 @@
 %%%%%%%%
 
 %\abstract{This is the abstract.}
-
-%avoid empty pages before chapter
-%\let\cleardoublepage\clearpage
 
 \include{introduction}
 \include{background}

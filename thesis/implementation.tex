@@ -1,22 +1,26 @@
 \chapter{Implementation}
 \label{sec:impl}
-\todo[inline]{write inmplementation, this is only the proposal into}
-\color{gray}
+In the previous chapter, we presented the approach of the thesis and
+the architecture of the robot memory. On this basis, we present
+implementation considerations in this chapter. The implementation of
+the robot memory is separated according to the layered
+architecture. \refsec{sec:back-end} presents the implementation of the
+back-end containing the MongoDB databases and \refsec{sec:impl-memory}
+presents the implementation of the robot memory with the operations-,
+trigger-, and computable manager. Both application layers are covered
+in \refsec{sec:impl-planner}. We conclude with the description of the
+evaluation scenarios and how they were implemented in
+\refsec{sec:applicationscenarios}.
 
-This chapter covers the considerations for the implementation. It is
-separated according to the layered architecture. Both application
-layers are represented by the planner and reasoner part, because all
-other application components (e.g. for perception) can simply use the
-C++ interface of the robot memory.
-
-\section{Back-End}
+\section{MongoDB Back-End}
 \label{sec:back-end}
-The back-end is realized with MongoDB. It acts as storage of the robot
-memory, and executes queries. The representation of stored knowledge
+The back-end of the robot memory is based on MongoDB databases. It
+acts as storage of the robot memory and executes insert, query,
+update, and delete operations. The representation of stored information
 utilizes the document structure of MongoDB with key-value pairs and
 nested sub-documents. This allows a very flexible storage of
-knowledge-pieces in the structure induced by the application and
-expandable by robot memory information.
+information-pieces in the structure that is induced by the application
+and can be expanded by meta information from the robot memory.
 
 \begin{wrapfigure}{r}{0.47\textwidth}
   \vspace{-0.8cm}
@@ -38,67 +42,141 @@ expandable by robot memory information.
    storage_place: "refrigerator"
  }
 \end{lstlisting}
-\vspace{-14mm}
+\vspace{-8mm}
 \end{wrapfigure}
 An example document stored in the back-end is shown in
-\reflst{lst:backend}.  It contains knowledge about a bottle of milk as
+\reflst{lst:backend}. It contains knowledge about a bottle of milk as
 it could be needed by a planner with additional information where it
 should be stored later. Additionally the document contains meta
 information needed by the robot memory (e.g. if the document should be
 stored persistently or removed at restart and when it should be
-dropped because it's use-time has expired). The MongoDB back-end also
-manages the distribution of knowledge between multiple robots. A part
-of the robot memory is only locally relevant. The other part that
-should be shared has to be set up as MongoDB replica set as already
-described in \refsec{sec:mongodb}. This ensures that efficient
-networking code is used. The other problems of a distributed database,
-such as consistency, master election, and synchronization are solved
-by MongoDB using replication. The back-end also contains the
-operations log (oplog) of MongoDB, a separate
-%% capped
-collection containing a list of changes to the database with a
-timestamp. This can be accessed by the robot memory to analyze
-changes for event-triggers.
+dropped because its use-time has expired). How these documents are
+parsed, serialized, stored, and queried again is handled by
+MongoDB. To connect to MongoDB from the robot memory, we use the
+\texttt{mongodb} plugin in Fawkes. It was developed for the
+implementation of the Generic Robot Database~\cite{RoboDB} and
+utilizes the C++ driver of MongoDB. We also extended this plugin,
+e.g. to properly connect to a distributed replica set.
+
+As the architecture in \reffig{fig:arch} shows, the MongoDB backend
+contains a local and a shared part. Each part is operated by a
+separate \texttt{mongod} instance, which is the daemon process of the
+MongoDB system. It manages data access, handles data requests, and
+performs background management operations. Each \texttt{mongod}
+instance is accessable over its unique port and can contain multiple
+databases. The databases of the robot memory that are only locally
+relevant are managed by the logal \texttt{mongod} instance. The shared
+\texttt{mongod} instance manages the distribution of shared databases
+in a multi-robot system. Thus we configured it to be part of replica
+set as already described in \refsec{sec:mongodb}. This ensures the
+efficient distribution of the databases and handles important
+distribution issues, such as Primary election, consistency, and
+synchronization.  \todo[inline]{explain why no sharding is used?}  The
+robot memory needs multiple connections to both \texttt{mongod}
+instances because single connections, as provided by the C++ driver,
+are not thread safe\todo{explain thread safe?}. Thus we use the connection manager of the
+\texttt{mongodb} Fawkes plugin to create two connections for usual
+operations, computables, and triggers.
+%
+The MongoDB back-end also contains the operations log (oplog), a
+separate capped collection containing the list of changes to the
+database with a timestamp. The oplog is accessed by the robot memory
+to analyze database changes for triggers. However, the oplog is only
+created for replicated database, because its original purpose is
+logging changes to propagate them to other instances in the Replica
+Set. Thus we also have to configure the local \texttt{mongod} instance
+as Replica Set, but this set only contains itself because its
+databases are only locally relevant.
+
+Because the robot memory requires a special configuration of the
+MongoDB deamons, we also implemented an automated setup of the
+back-end. This setup starts the \texttt{mongod} processes as
+subprocesses of Fawkes if they are not already running. Each process
+needs to be configured, most importantly, with the Replica Set name,
+the database path, where the databases are persistently stored on the
+hard-drive, and the oplog size. After the startup, the \texttt{mongod}
+instances need to be initialized, when they are started for the first
+time. Thus the automated setup sends commands for initialization of
+the Relica Set with information about the members of the
+set. Furthermore, commands for the query evaluation are send, to allow
+query evaluation on Secondaries.  \todo[inline]{Mention ignoring error
+  code when already initialized?}  When Fawkes is exited, also the
+MongoDB subprocesses are finalized again.
 
 \section{Robot Memory}
 \label{sec:impl-memory}
-The robot memory middle-layer implements most functions exceeding a
-typical database.
-%% between the
-%% applications storing and querying knowledge and the MongoDB back-end
-%% is an important part of the thesis because most of the functions
-%% exceeding a typical database are realized here.
+The robot memory middle-layer implements most functions of the robot
+memory that exceed a typical database. Because this is a central and
+large part of this thesis, we split the implementation into the query
+language in \refsec{sec:impl-query-language}, the operation manager in
+\refsec{sec:impl-opmanager}, computables in
+\refsec{sec:impl-computables}, triggers in \refsec{sec:impl-triggers},
+and unit-tests in \refsec{sec:impl-unittests}.
+
+\subsection{Query Language}
+\label{sec:impl-query-language}
 A central question is which query language should be used between
 applications and the robot memory because this determines the
 expressiveness and has a large impact on the performance. We choose to
 use the query language of MongoDB as it is already used between the
 robot memory and the back-end. This has many advantages compared to
 using other query languages, such as SQL, SPARQL,
-XQuery~\cite{query-languages}, and JSONiq~\cite{jsoniq}.
-\todo{move into conceptual part}
-%
-For the application view, the query language of MongoDB is a good
-choice because it is an intuitive query language, has been proven as
-efficient for usual and well designed queries, and is also highly
-expressive when using additional JavaScript functions or the MapReduce
-paradigm~\cite{mongodb,RoboDB}. For the robot memory, it requires no
-translation before application on the database and is very flexible
-for extending and modifying queries because queries are structured as
-documents with key-value fields and can be nested or executed in
-sequence. Furthermore, MongoDB queries can easily be parsed (e.g. from
-a string) by using the MongoDB C++ API. The resulting object can be
+XQuery~\cite{query-languages}, and JSONiq~\cite{jsoniq}.  For the
+applications using the robot memory, the query language of MongoDB is
+a good choice because it is an intuitive query language and has been
+proven as efficient for usual and well designed queries. It is also
+highly expressive when using additional JavaScript functions or the
+MapReduce paradigm~\cite{mongodb,RoboDB}. For the robot memory, it
+requires no translation before applying queries to the
+database. Furthermore it allows extending and modifying queries
+because queries are structured as documents with key-value fields and
+can be nested or executed in sequence. Another advantage of the
+MongoDB query language is that it can easily be parsed (e.g. from a
+string) by using the MongoDB C++ driver. The resulting object can be
 analyzed and modified for example to add key-value pairs or to check
 if computables are queried.
 
-This provides the starting point for the Storage-, Update-, and
-Query-manager. When adding new documents, the
-\texttt{robot\_memory\_info} sub-document can be added to store
-additional meta information. When querying documents, this information
-can be removed by using a filter. 
+\subsection{Operation Manager}
+\label{sec:impl-opmanager}
+The MongoDB query language provides the basis for the operation
+manager, which receives insert, query, update, and deletion
+requests. Received requests are analysed using the MongoDB C++ driver
+and modified before being applied to the back-end. This way, the
+operation manager can add meta information of the robot memory to
+documents and queries, and the computable manager can ground its
+decision if computables need to be executed on the contents of a
+query.
 
-\todo[inline]{expanation, why no sharding for distributed robot memory}
+The basic operations on the robot memory are insertions, queries,
+updates, and deletions. For all four, the operation specifies on which
+collection in which database the operation should be performed. The
+collection string contains both separated by a dot
+(e.g. \texttt{'robmem.worldmodel'} for the worldmodel collection in
+the robmem database). \todo{mention default value collection?}  Using
+the configurable list of shared databases, the collection string also
+specifies whether the operation should be performed on the local or
+shared \texttt{mongod} instance. Because the connections to MongoDB
+are not thread safe, the implementation of all operations guarantees
+mutual exclusion of the usage of the used connection.
 
+all exception handling
+
+insert: collection+document => add metainfo+handle exceptions
+When adding new
+documents, the \texttt{robot\_memory\_info} sub-document can be added
+to store additional meta information. When querying documents, this
+information can be removed by using a filter.
+
+query: collection+query => computable, read preference, return cursor
+update: collection+query+document => no computables
+remove: collection+query
+
+
+\todo[inline]{initialization with dump}
+
+\color{gray}
 \subsection{Computables}
+\label{sec:impl-computables}
 \todo[inline]{add: missing fields, how queries are checked, }
 
 To detect queries for computables,
@@ -121,6 +199,9 @@ interface messages either on the MongoDB directly or in case of
 computables about other interfaces, generates the knowledge from the
 blackboard on demand and then executes the query.
 
+
+\subsection{Triggers}
+\label{sec:impl-triggers}
 To implement event-triggers, a registration function needs to be
 provided that takes a notification function and a query to define the
 event. This query can check the oplog first whether there are changed
@@ -142,10 +223,20 @@ computation time.
 %% additional meta-information) and at query-result-return time (e.g. to
 %% filter or modify resulting documents).
 
-\todo[inline]{initialization with dump}
+
+
+\subsection{Unittests}
+\label{sec:impl-unittests}
+\todo[inline]{keep section?}
+cite extreme programming/unit tests
 
 \section{Planner/Reasoner}
 \label{sec:impl-planner}
+are represented by the planner and reasoner part, because all
+other application components (e.g. for perception) can simply use the
+C++ interface of the robot memory.
+
+
 The implementation on the application layer includes the development
 of the Interface Provider and the usage of the robot memory in the
 planning language. As an example for the various planners and
@@ -190,10 +281,6 @@ be updated.
 
 \todo[inline]{template engine stuff}
 \todo[inline]{examples template engine for implementation of theoretical mapping function (e.g. subdocument into function term)}
-
-\subsection{Unittests}
-\label{sec:unittests}
-\todo[inline]{keep section?}
 
 \section{Application Scenarios}
 \label{sec:applicationscenarios}
