@@ -25,6 +25,7 @@
 \usepackage{wrapfig}
 \usepackage{url}
 \usepackage{listings}
+\usepackage{newfloat}
 
 \newcommand{\reffig}[1]{Figure~\ref{#1}}
 \newcommand{\refsec}[1]{Section~\ref{#1}}
@@ -38,6 +39,9 @@
 \lstset{language=C++,frame=none, basicstyle=\tt}
 \input{../listings/clips.tex}
 \input{../listings/json.tex}
+\input{../listings/cpp.tex}
+
+\DeclareFloatingEnvironment[fileext=frm,placement={!ht},name=Listing,within=chapter]{listing}
 
 %% \pgfplotsset{compat=1.8}
 %% \usepgfplotslibrary{statistics}

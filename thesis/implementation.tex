@@ -360,32 +360,71 @@ types and ids. The other transforms documents describing 3D positions
 into other frames by using the transform aspect of Fawkes. All other
 computables have to be provided by other plugins.
 
-\color{gray}
 \subsection{Triggers}
 \label{sec:impl-triggers}
-To implement event-triggers, a registration function needs to be
-provided that takes a notification function and a query to define the
-event. This query can check the oplog first whether there are changed
-documents with relevant key-value pairs and afterwards execute a more
-complex query on the database. The registration also specifies whether
-the callback function is called if the query result changes, returns
-no document, or is not empty. Whether event-triggers on computables
-perform well, has to be evaluated. It would be possible to allow
-events only on knowledge in the database or to compute the knowledge
-and check for the event in certain intervals while monitoring the
-computation time.
+Triggers notify components about changes in the database, for example
+to keep a reasoner intern world model up to date. To register a triger
+at the trigger manager, the component has to provide the name of the
+collection that should be observed, a reference to a callback
+function, and a query defining the event in which the callback
+function should be called. An example query used for being notified
+about new or modified orders in the RCLL is \texttt{\{relation:
+  "order"\}}. This query is used to search the oplog for changes. The
+oplog is a capped collection in MongoDB, which logs all changes to
+propagate them in a Replica Set.
+\begin{wrapfigure}{r}{0.42\textwidth}
+  \vspace{-0.8cm}
+\begin{lstlisting}[style=SmallJSON,
+  caption={Document in the oplog},
+  label=lst:oplog,
+  framexleftmargin=2pt, xleftmargin=0pt,
+ morekeywords={}, numbers=none]
+{
+  ns: "syncedrobmem.clipswm",
+  ts: Timestamp(1485369072, 5),
+  op: "i",
+  o: {
+    _id : ObjectId("58c14a14"),
+    relation: "order",
+    id: 2,
+    complexity: "C0",
+    delivery-gate: 3,
+    quantity-requested: 1,
+    quantity-delivered: 0,
+    begin: 209,
+    end: 282 }
+}
+\end{lstlisting}
+\vspace{-8mm}
+\end{wrapfigure}
+\reflst{lst:oplog} shows an example document contained in the
+oplog. Besides the collaction name and timestamp of the change, it
+shows the type the causing operation (\texttt{op:"i"} stands for
+insertion) and the inserted, updated, or removed document as
+sub-document under the \texttt{o} key. For each new trigger, the
+trigger manager creates a cursor on oplog in MongoDB with the trigger
+query. Initially this cursor points to the end of the oplog (position
+3 in \reffig{fig:oplog-cursor}). Because the oplog is a capped
+collection, new changes (e.g. 4 and 5 in \reffig{fig:oplog-cursor})
+are appended behind the position the cursor points to. During the main
+loop of Fawkes, the trigger manager checks for all tailable cursors if
+there are new oplog with \texttt{o} object that match the according
+query. The cursor is forwarded simultaneously. Thus if
+\reffig{fig:oplog} shows the document labeled with 4 or 5 it would be
+returned by the query.
+\begin{wrapfigure}{r}{0.3\textwidth}
+  \centering
+  \includegraphics[width=0.3\textwidth]{draw/oplog-cursor}%
+  \caption[Tailable cursor on the oplog]{Tailable cursor on the oplog}
+  \vspace{-3mm}
+  \label{fig:oplog-cursor}
+\end{wrapfigure}
+The trigger manager then calls the callback function and passes the
+document from \reffig{fig:oplog}. This way, the application is
+notified and can react to the cange with the information contained in
+the returned document from the oplog.
 
-%% The robot memory . For
-%% implementation, they can be called periodically or with hook-points at
-%% major steps of the robot memory such as initialization and query
-%% execution. For example, a knowledge decay module could use cronjob to
-%% remove documents with exceeded lifetimes in certain intervals. Further
-%% hook-points would be at query-modification time (e.g. to add
-%% additional meta-information) and at query-result-return time (e.g. to
-%% filter or modify resulting documents).
-
-
-
+\color{gray}
 \subsection{Unittests}
 \label{sec:impl-unittests}
 \todo[inline]{keep section?}
