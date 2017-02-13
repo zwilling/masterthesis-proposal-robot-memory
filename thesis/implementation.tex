@@ -207,32 +207,160 @@ are implemented by calling the \texttt{mongodump} and
 \texttt{mongorestore} command line tools of MongoDB with appropriate
 parameters.
 
-\color{gray}
 \subsection{Computables}
 \label{sec:impl-computables}
-\todo[inline]{add: missing fields, how queries are checked, }
+Computables allow the computation of documents on demand, that is when
+a query operation asks for a document that can be provided by the
+computable. The computable manager is the entity used for registering
+and unregistering computables as well as for checking which
+computables should be executed for a query.\\
+\begin{listing}
+\refstepcounter{listing}
+\addtocounter{lstlisting}{1}
+\noindent
+\begin{minipage}[b]{.30\textwidth}
+\begin{lstlisting}[style=SmallJSON,
+  %caption={Computable Query},
+  %label=lst:comp-def,
+  framexleftmargin=5pt, xleftmargin=0pt,
+ morekeywords={}, numbers=none]
+{
+  compute: "sum",
+  x: {$exists:true},
+  y: {$exists:true}
+}
+\end{lstlisting}
+\captionof{sublisting}{Computable query defining what is computed}
+\end{minipage}%
+\hfill
+\begin{minipage}[b]{.25\textwidth}
+\begin{lstlisting}[style=SmallJSON,
+  %caption={Query requirering computable},
+  %label=lst:comp-query,
+  framexleftmargin=5pt, xleftmargin=0pt,
+ morekeywords={}, numbers=none]
+{
+  compute: "sum",
+  x: 15,
+  y: 4
+}
+\end{lstlisting}
+\captionof{sublisting}{Query requireing the computable}
+\end{minipage}%
+\hfill
+\begin{minipage}[b]{.25\textwidth}
+\begin{lstlisting}[style=SmallJSON,
+  %caption={Computed document},
+  %label=lst:comp-res,
+  framexleftmargin=5pt, xleftmargin=0pt,
+ morekeywords={}, numbers=none]
+{
+  compute: "sum",
+  x: 15,
+  y: 4,
+  sum: 19
+}
+\end{lstlisting}
+  \vspace{-0.3cm}
+\captionof{sublisting}{Resulting document}
+  \vspace{0.3cm}
+\end{minipage}%
+\caption{Queries and documents involved in a computable for addition}
+\label{lst:comp}
+\end{listing}
 
-To detect queries for computables,
-the manager can analyze the fields of the query to check if there is a
-computable provided for it.  For example when a query contains the
-field \texttt{type:"distance"} and there is a application that
-provides computation functions for distances between two objects, the
-query can be forwarded with the additional parameters, the two
-objects.  When some fields are missing (e.g. only one object is given)
-the application may have to compute all distances, so that the query
-can afterwards be executed on the set of results (e.g. to find the
-nearest one with some property). To execute the query as a usual query
-with arbitrary filters, aggregation, and functions, the computation
-function writes the result into a separate collection the query
-can be executed on with MongoDB. To lower the computational effort of
-processing the same query frequently it would be possible to add
-time-bounded caching for computed knowledge. We have verified this
-concept of computables using a prototype, which executes queries from
-interface messages either on the MongoDB directly or in case of
-computables about other interfaces, generates the knowledge from the
-blackboard on demand and then executes the query.
+\begin{wrapfigure}{r}{0.49\textwidth}
+  \vspace{-0.8cm}
+\begin{lstlisting}[style=SmallCpp,
+  caption={Function of a computable},
+  label=lst:comp-func,
+  framexleftmargin=5pt, xleftmargin=0pt,
+ morekeywords={}, numbers=none]
+std::list<mongo::BSONObj>
+compute_sum(mongo::BSONObj query,
+            std::string collection)
+{
+  std::list<mongo::BSONObj> result;
+  int x = query.getField("x").Int();
+  int y = query.getField("y").Int();
+  mongo::BSONObjBuilder b;
+  b << "compute" << "sum"
+    << "x" << x << "y" << y
+    << "sum" << x + y;
+  result.push_back(b.obj());
+  return result;
+}
+\end{lstlisting}
+\vspace{-8mm}
+\end{wrapfigure}
 
+\reflst{lst:comp} and \reflst{lst:comp-func} show how queries,
+documents, and functions are involved in a computable on the example
+of an addition computable. When some component registers a computable
+on a collection, it needs to give a reference to the function
+performing the actual computation and a definition which documents can
+be provided by the computable. This definition is specified as
+\emph{computable query}, as shown in \reflst{lst:comp}a. Whenever the
+robot memory has to answer a query (e.g. \reflst{lst:comp}b) that is
+matched by the computable query, the computable is executed. The
+referenced function for the addition computable is shown in
+\reflst{lst:comp-func} and yields a list of computed documents that,
+in this example, only contains the result shown in \reflst{lst:comp}c.
 
+The computable manager checks whether queries passed to it can be
+answered by registered computables. To check if the robot memory query
+is matched by a computable query, the robot memory query is inserted
+as document in a separate and empty collection. When this inserted
+document is returned by performing the computable query on the
+collection, the function of the computable is called. This function
+(\reflst{lst:comp-func}) takes the query causing the computation
+(\reflst{lst:comp}b) and the collection as parameters. Thus it can use
+values in the query (\texttt{x} and \texttt{y}) to determine what
+should be computed. The function then computes a list of resulting
+documents (list containing \reflst{lst:comp}c) and returns it to the
+computable manager. By defining the computable query appropriately
+(e.g. with \texttt{\$exists}), is is ensured that all values required
+by the function are provided by the query. It is also possible to
+ommit required values intentionally. For example the computable for
+blackboard interfaces in Fawkes, checks if an interface id is givien,
+and then eigther returns a document for the single interface with the
+id or all interfaces matching the interface type.
+
+After a computable returned the list of computed documents, the
+computable manager inserts these documents in the specified collection
+of the robot memory. Finally, the operation manager evaluates the
+original query as usual on the collection. The query can return computed
+documents as well as persistently stored documents. Thus the computed
+information is embedded in the already existing information. Another
+advantage of evaluating the original query on the collection, is that
+the query can have more key-value fields than required by the
+computable, for example to filter computed documents or add
+aggregation functions.
+
+To lower the computational effort of computables, we implemented
+caching of computed documents. Whenever a query is identical to a
+query that caused computation in the caching time before, the no
+computables are executed for it. Computed documents remain in the
+robot memory during this caching time. This is implemented by adding
+the expiration time of computed documents to their meta information
+and periodically removing documents with passed wxpiration time.
+
+Computables can depend on the current content of the robot memory, by
+using the robot memory themself in their function. This can be used
+for hybrid reasoning by transform documents already contained in the
+robot memory into other representations. To allow computables to
+depend on the result of other computables, there is a
+prioritization. The computable manager uses this prioritization to
+determine the order in which computable checked.
+
+The \texttt{robot-memory} plugin in Fawkes provides two basic
+computables. One provides access to the blackboard by computing
+documents containing the fields of blackboard interfaces with matching
+types and ids. The other transforms documents describing 3D positions
+into other frames by using the transform aspect of Fawkes. All other
+computables have to be provided by other plugins.
+
+\color{gray}
 \subsection{Triggers}
 \label{sec:impl-triggers}
 To implement event-triggers, a registration function needs to be
