@@ -111,7 +111,11 @@ large part of this thesis, we split the implementation into the query
 language in \refsec{sec:impl-query-language}, the operation manager in
 \refsec{sec:impl-opmanager}, computables in
 \refsec{sec:impl-computables}, triggers in \refsec{sec:impl-triggers},
-and unit-tests in \refsec{sec:impl-unittests}.
+and unit-tests in \refsec{sec:impl-unittests}. The robot memory layer
+can be accessed in Fawkes through the \texttt{RobotMemoryAspect} and
+through sending messages to the blackboard interface of the robot
+memory. Both the aspect and the interface are provided by the
+\texttt{robot-memory} plugin.
 
 \subsection{Query Language}
 \label{sec:impl-query-language}
@@ -410,7 +414,7 @@ are appended behind the position the cursor points to. During the main
 loop of Fawkes, the trigger manager checks for all tailable cursors if
 there are new oplog with \texttt{o} object that match the according
 query. The cursor is forwarded simultaneously. Thus if
-\reffig{fig:oplog} shows the document labeled with 4 or 5 it would be
+\reffig{lst:oplog} shows the document labeled with 4 or 5 it would be
 returned by the query.
 \begin{wrapfigure}{r}{0.3\textwidth}
   \centering
@@ -419,16 +423,37 @@ returned by the query.
   \vspace{-3mm}
   \label{fig:oplog-cursor}
 \end{wrapfigure}
+\todo[inline]{fix oplog cursor figre}
 The trigger manager then calls the callback function and passes the
-document from \reffig{fig:oplog}. This way, the application is
+document from \reffig{lst:oplog}. This way, the application is
 notified and can react to the cange with the information contained in
 the returned document from the oplog.
 
-\color{gray}
 \subsection{Unittests}
 \label{sec:impl-unittests}
-\todo[inline]{keep section?}
-cite extreme programming/unit tests
+To ensure the quality and correctness of the robot memory, we
+implemented unit tests for the important features of this layer. Unit
+testing is part of the software development processes test driven
+development and extreme programming~\cite{beck-test,beck-xp}. Unit
+tests are automated software tests for small units of a program. They
+use the functions or components that should be tested and check if the
+computed result matches the expected one. Thus they help to locate
+bugs, ensure the quality of the unit, and fasten the development
+because they can verify if the tests still pass after changes in the
+unit. We use unit tests for the robot memory by using the C++
+interface of the robot memory and checking if the results are correct
+for examples of common use cases. For example there is one test that
+checks insert, update, and query operations by inserting a document
+into an empty collection, updating it, and querying it by an updated
+value. Another test checks if computables work by registering the
+computable showed in \reflst{lst:comp-func} and \reflst{lst:comp},
+executing the query in \reflst{lst:comp}b and checking if the result
+matches \reflst{lst:comp}c. Unittesting in Fawkes is based on Google's
+C++ testing framework \emph{gtest}. To test the functionality of the
+robot memory in a fully running Fawkes process with dependencies of
+the robot memory, such as the \texttt{mongodb} plugin, we integrated
+our unit tests into a separate plugin that is started with the robot
+memory when the tests are executed.
 
 \section{Planner/Reasoner}
 \label{sec:impl-planner}
