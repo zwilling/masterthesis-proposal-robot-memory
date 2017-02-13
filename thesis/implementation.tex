@@ -157,22 +157,55 @@ the configurable list of shared databases, the collection string also
 specifies whether the operation should be performed on the local or
 shared \texttt{mongod} instance. Because the connections to MongoDB
 are not thread safe, the implementation of all operations guarantees
-mutual exclusion of the usage of the used connection.
+mutual exclusion of connection usage. Furthermore, the operation
+manager handles exceptions caused by operations, e.g. when a query can
+not be parsed or an object contains invalid fields.
 
-all exception handling
+An \textbf{insertion} operation also specifies the document that
+should be inserted. Before performing the insertion on the database,
+the operation manager can add meta information of the robot memory,
+for example the insertion time if the collection is configured to be a
+short time memory. The meta information is contained in a sub-document
+under the \texttt{\_robmem\_info} key.
 
-insert: collection+document => add metainfo+handle exceptions
-When adding new
-documents, the \texttt{robot\_memory\_info} sub-document can be added
-to store additional meta information. When querying documents, this
-information can be removed by using a filter.
+For \textbf{queries}, the operation also specifies the query
+itself. The operation manager analyzes the query and modifies similar
+to how it modifies documents. It adds a filter and a read
+preference. The filter hides meta information of the robot memory from
+the application. The read preference specifies that the query should
+be executed closest available of a replica set. This should always be
+the local one because it has the lowest ping time and thus leads to a
+faster query times than performing queries on remote replica set
+members. Furthermore the query is passed to the computation manager to
+check if a computable has to be executed.
 
-query: collection+query => computable, read preference, return cursor
-update: collection+query+document => no computables
-remove: collection+query
+\textbf{Update} operations contain a query specifying which documents
+should be updated and a document containing the changes that should be
+applied. By default the first matching documents in the specified
+collection is replaced by the update document. It is possible to
+modify this behavior with additional options. There are options for
+perform the update on all matching documents and for inserting the
+document even if no document in the collection matches the query
+(called \emph{upsert}). To keep key-value pairs in the original
+document, the update document needs to contain updated values a
+\texttt{\$set} sub-document.\todo{listing for \$set?} In contrast to
+query operations, updates do not lead to the execution of computables,
+because it is pointless to update them because of the short lifetime.
 
+\textbf{Deletion} operations have an attached query specifying which
+documents should be removed. The operation manager does not need to
+perform special modifications of this query.
 
-\todo[inline]{initialization with dump}
+Additionally to these basic operations, the operation manager can also
+export the contents of a collection to a file (called \emph{dump}). It
+can also import a collection from a file in an operation called
+\emph{restore}. These operations can be used to sava and load a world
+model that is contained in a collection. For example in the RCLL, this
+allows setting the world model in a prepared state to test the
+behavior of the agent in that state. The dump and restore operations
+are implemented by calling the \texttt{mongodump} and
+\texttt{mongorestore} command line tools of MongoDB with appropriate
+parameters.
 
 \color{gray}
 \subsection{Computables}
