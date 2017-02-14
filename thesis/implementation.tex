@@ -678,15 +678,104 @@ arm has its origin in the base of the arm.
 
 \section{Application Scenarios}
 \label{sec:applicationscenarios}
+Based on the implementation of the robot memory and the interface
+providers, we can now present the implementation of the two
+application scenarios. The scenarios are chosen in a way that they
+cover all major features of the robot memory and that they are
+prototypes for applications the robot memory is made for.
+In \resec{sec:app-rcll}, we present how the robot memory is used in
+the RCLL to synchronize the worldmodel between multiple robots, and in
+\refsec{sec:app-blocks-world}, we present the use of the robot memory
+in a block stacking scenario with a robot arm.
 
-\subsection{Blocks World with a Robotic Arm}
+\subsection{RoboCup Logistics League}
 \label{sec:app-rcll}
+In the RoboCup Logistics League (RCLL), a team of autonomous mobile
+robots manages the production and material flow in a factory to
+assemble randomly ordered products.
+\begin{figure}
+  \centering
+  \begin{subfigure}[b]{0.49\textwidth}
+    \includegraphics[width=\textwidth]{img/rcll-field}
+    \caption{At the RoboCup 2016 in Leipzig}
+    \label{fig:rcll-real}
+  \end{subfigure}
+\hfill
+  \begin{subfigure}[b]{0.49\textwidth}
+    \includegraphics[width=\textwidth,height=0.55\textwidth]{img/rcll-sim}
+    \caption{In the Gazebo simulation}
+    \label{fig:rcll-sim}
+  \end{subfigure}
+  \caption[Field of the RoboCup Logistics League]{Field of the RoboCup Logistics League}
+  \label{fig:rcll}
+\end{figure}
+\reffig{fig:rcll-real} shows the factory area and the logistics robots
+of the Carologistics and Solidus teams at the RoboCup finals in
+2016. During the development and evaluation of the scenario, we mainly
+depend on the simulation of the RCLL shown in
+\reffig{fig:rcll-sim}. This simplifies and fastens the development
+because we had no full RCLL field available and properly setting up
+all robots takes a lot effort. However, this does not make a
+significant difference for the robot memory because the simulation can
+be distributed over multiple machines and because the interface and
+usage is identical in simulaiton and real world. A central component
+of the Carologistics robot software in the RCLL is the CLIPS agent. It
+maintains a world model, decides what the robot should do with
+incremental reasoning~\cite{CLIPS-Agent}, and monitors the execution
+of robot actions. The decision approach and world model maintainance
+is distributed. Robots have to coordinate with each other and notify
+each other about changes in the environment. Furthermore, they can
+drop out and might be restarted. Thus, the CLIPS agent needs to
+synchronize its world model with the other robots. The existing
+implementation used by Carologistics in 2016 uses Protobuf messages
+which are being sent between the agents. In this application scenario,
+we exchange the synchronization via Protobuf by using the robot
+memory. Thus the world model of CLIPS has to be represented in the
+robot memory and distributed over all robots. On the one hand, this
+lays the foundation for using the robot memory in the RCLL in future
+work. On the other hand, this simplyfies the CLIPS agent by separating
+the synchronization. The synchronization by
+MongoDB is advantageous because it only sends neccessary changes over the
+network instead of the whole world model, as it is done by the CLIPS
+agent. Another advantage is the persistency, because robots keep their
+state if one or all of them are restarted.
+
+The distribution of the robot memory in the RCLL is achieved by
+configuring the robot memory to use the replica set with all robots
+and loading the \texttt{robot-memory} plugin on all robots of the
+team. The world model existing in CLIPS is already properly
+initialized at the start of the game and has to be transfered to the
+robot memory. During the setup phase, one of the agents removes the
+old world model in the robot memory, which persisted from a previous
+game. Then all facts defining the world model are inserted into the
+robot memory by using the fact-to-document function of the CLIPS
+robot-memory feature. All facts that are represented in the robot
+memory have the unique field \texttt{sync-id}. This field is used to
+clearly identify which fact is represented by which document and vice
+versa. During the game, facts inside CLIPS are modified, for example
+because a robot commits to a task, observes a change, or applies the
+effect of actions it performed. For this modification, the agent uses
+the special modify function \texttt{(synced-modify)}, which uses a
+syntax similar to the original \texttt{(modify)} function of
+CLIPS. \texttt{(synced-modify)} applies the modification to the fact
+that should be modified by calling \texttt{(modify)} and furthermore
+updated the corresponding document in the robot memory by using the
+\texttt{sync-id} in the query. Similarly there are the functions
+\texttt{(synced-assert)} and \texttt{(synced-retract)}. Other robots
+are notified about such a change in the robot memory by using
+triggers. Each agent registeres a trigger at its own
+\texttt{robot-memory} plugin. Whenever there is a change, a trigger
+fact is asserted according to \refsec{sec:impl-clips} and an update
+rules consumes this fact and updates the fact with the corresponding
+\texttt{sync-id}.
+
+\color{gray}
+\subsection{Blocks World with a Robotic Arm}
+\label{sec:app-blocks-world}
 \todo[inline]{some images}
 image openrave
 
-\color{gray}
-\subsection{RoboCup Logistics League}
-\label{sec:app-blocks-world}
-\todo[inline]{simulation image + real world image}
+@home related
+
 
 \color{black}
