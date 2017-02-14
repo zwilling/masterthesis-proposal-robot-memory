@@ -455,17 +455,137 @@ the robot memory, such as the \texttt{mongodb} plugin, we integrated
 our unit tests into a separate plugin that is started with the robot
 memory when the tests are executed.
 
-\section{Planner/Reasoner}
+\section{Application Interface}
 \label{sec:impl-planner}
-are represented by the planner and reasoner part, because all
-other application components (e.g. for perception) can simply use the
-C++ interface of the robot memory.
+The application interface layer provides the features of the robot
+memory for applications such as planners and reasoners. Components
+using C++ can directly interface the robot memory layer over its C++
+interface. This interface is identical to the interface between the
+robot memory and and the interface providers. For example perception
+plugins in Fawkes are usually written in C++ and thus can provide
+computables or store documents directly in the robot memory. Planner
+and reasoner components often utilize specialized languages. For these
+components and languages, there are multiple interface providers we
+implemented. In the following, we present the interface providers for
+PDDL in \refsec{sec:impl-pddl}, for CLIPS in \refsec{sec:impl-clips},
+and for OpenRAVE in \refsec{sec:impl-openrave}.
+
+\subsection{PDDL Interface Provider}
+\label{sec:impl-pddl}
+To find a plan with a PDDL planner, a domain definition and a problem
+description need to be provided for the planner. The domain definition
+is usually fixed because the predicates defining the world state and
+the actions defining the capabilities of the robot often are fixed for
+a domain. The problem description, depends on the world model of the
+robot and varies in the concrete predicates and the amount of
+objects. Thus the problem description depends on the content of the
+robot memory and has to be constructed before planning. This process
+called \emph{domain creation} is implemented in the
+\texttt{pddl-robot-memory} plugin. In \refsec{sec:formalism}, we
+theoretically defined the mapping from documents in the robot memory
+to PDDL. Nevertheless we need to specify which documents in the robot
+memory should be mapped to PDDL and which strings are mapped to which
+predicates, functions, and their attributes. These are the $name$
+functions. To specify both, we make use of the template engine
+\emph{ctemplate}. The template engine takes a \emph{template file} as
+input and uses a \emph{dictionary} defined during run-time to exchange
+\emph{template markers} in the file by desired string values.
+\begin{figure}
+  \begin{minipage}{0.58\linewidth}
+\begin{lstlisting}[style=SmallPDDL,
+  caption={PDDL problem description template},
+  label=lst:template,
+  framexleftmargin=1pt, xleftmargin=1pt,
+ morekeywords={}, numbers=none]
+(define (problem blocks_world_generated)
+  (:domain blocksworld)
+  (:objects A B C D)
+  (:goal <<GOAL>>)
+  (:init
+    <<#ONTABLE|{relation:'on-table'}>>
+      (on-table <<object>>) <</ONTABLE>>
+    <<#ON|{relation:'on'}>>
+      (on <<object_top>> <<object_bottom>>)
+    <</ON>>
+    <<#HOLDING|{relation:'holding'}>>
+      (holding <<object>>) <</HOLDING>>
+  ))
+\end{lstlisting}
+  \end{minipage}
+\hfill
+  \begin{minipage}{0.42\linewidth}
+\begin{lstlisting}[style=SmallPDDL,
+  caption={Generated PDDL problem description},
+  label=lst:pddl-gen,
+  framexleftmargin=1pt, xleftmargin=1pt,
+ morekeywords={}, numbers=none]
+(define (problem blocks_world_generated)
+  (:domain blocksworld)
+  (:objects A B C D)
+  (:goal (on A B))
+  (:init
+    (on-table A)
+    (on-table C)
+    (on D A)
+    (holding B)
+  ))
+\end{lstlisting}
+  \end{minipage}
+  \vspace{-0.8cm}
+\end{figure}
+An example template file for the blocks world domain is shown in
+\reflst{lst:template}. The result after generating the problem
+description based on information in the robot memory is shown in
+\reflst{sec:pddl-gen}. A simple template marker is
+\texttt{<<GOAL>>}. During the domain creation, the dictionary is
+filled with the information that \texttt{<<GOAL>>} should be replaced
+by \texttt{(on A B)}. There also are special markers such as
+\texttt{<<#ON>> <</ON>>}. They enclose an environment and are called
+\emph{list markers} because they insert the enclosed environment for
+each list entry of the dictionary on the \texttt{ON} marker. We use
+list marker to insert a predicate for each document that is returned
+by a query. The query is located in the front marker behind the
+\texttt{|} symbol. The enclosed environment can contain markers that
+are substituted by key-value paris of documents. In the example given
+in \reflst{lst:template}, the query \texttt{\{relation:'on-table'\}}
+yields the documents \texttt{\{relation:'on-table', object:'A'\}},
+what is mapped to \texttt{(on-table A)}, and
+\texttt{\{relation:'on-table', object:'B'\}}, what is mapped to
+\texttt{(on-table B)}. To distinguish markers inside these
+environments, they are written in lower case.
+
+The process of the domain generation starts with an interface message
+containing the goal to the \texttt{pddl-robot-memory} plugin. Then the
+plugin parses the problem description template to extract the queries
+of the list markers. This is a separate step, because passing
+parameters to a list marker is not supported by ctemplate. The plugin
+fills the dictionary with the goal and entries for each document
+returned by the robot memory for a list marker query. For each such
+list entry, all key-value pairs of the documents are inserted into the
+dictionary, where the key name in the document equals the marker name
+in the template. For sub-documents, the key names are concatinated so
+that the marker name is the path to each value. Markers that are not
+in the dictionary are later substituted by the empty string. Finally,
+the dictionary is passed with the template file to ctemplate, which
+generates the resulting problem description.
+
+%mention problem that this template method can not recursively map
+%function terms?
+
+The direction back from PDDL to the robot memory is implemented in the
+\texttt{pddl-planner} plugin. When the plugin receives an interface
+message, it starts the FF planner with the domain and generated
+problem description files and waits until the planner finished. Then
+the resulting plan is passed, transformed to a document as specified
+in the theoretical foundation in \refsec{sec:formalism}, and inserted
+into the robot memory. Afterwards an executive can fetch the plan, for
+example after being notified by a trigger that there is a new plan.
 
 
-The implementation on the application layer includes the development
-of the Interface Provider and the usage of the robot memory in the
-planning language. As an example for the various planners and
-reasoners, we focus here on CLIPS. The Interface Provider for CLIPS
+\color{gray}
+\subsection{CLIPS Interface Provider}
+\label{sec:impl-clips}
+The Interface Provider for CLIPS
 can be realized as CLIPS-feature in Fawkes as it was already done for
 providing CLIPS access to the blackboard, Protobuf-messaging and the
 navgraph. The CLIPS \emph{robot-memory feature} will be implemented in C++
@@ -504,8 +624,10 @@ plan in the robot memory that should be executed or when the world
 model has changed in the robot memory and thus facts in CLIPS have to
 be updated.
 
-\todo[inline]{template engine stuff}
-\todo[inline]{examples template engine for implementation of theoretical mapping function (e.g. subdocument into function term)}
+
+\subsection{OpenRAVE Interface Provider}
+\label{sec:impl-openrave}
+
 
 \section{Application Scenarios}
 \label{sec:applicationscenarios}
