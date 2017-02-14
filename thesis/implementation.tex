@@ -376,7 +376,7 @@ about new or modified orders in the RCLL is \texttt{\{relation:
   "order"\}}. This query is used to search the oplog for changes. The
 oplog is a capped collection in MongoDB, which logs all changes to
 propagate them in a Replica Set.
-\begin{wrapfigure}{r}{0.42\textwidth}
+\begin{wrapfigure}{r}{0.42\textwidth}{6cm}
   \vspace{-0.8cm}
 \begin{lstlisting}[style=SmallJSON,
   caption={Document in the oplog},
@@ -401,6 +401,13 @@ propagate them in a Replica Set.
 \end{lstlisting}
 \vspace{-8mm}
 \end{wrapfigure}
+\begin{wrapfigure}{r}{0.3\textwidth}
+  \centering
+  \includegraphics[width=0.3\textwidth]{draw/oplog-cursor}%
+  \caption[Tailable cursor on the oplog]{Tailable cursor on the oplog}
+  \vspace{-4cm}
+  \label{fig:oplog-cursor}
+\end{wrapfigure}
 \reflst{lst:oplog} shows an example document contained in the
 oplog. Besides the collaction name and timestamp of the change, it
 shows the type the causing operation (\texttt{op:"i"} stands for
@@ -416,14 +423,6 @@ there are new oplog with \texttt{o} object that match the according
 query. The cursor is forwarded simultaneously. Thus if
 \reffig{lst:oplog} shows the document labeled with 4 or 5 it would be
 returned by the query.
-\begin{wrapfigure}{r}{0.3\textwidth}
-  \centering
-  \includegraphics[width=0.3\textwidth]{draw/oplog-cursor}%
-  \caption[Tailable cursor on the oplog]{Tailable cursor on the oplog}
-  \vspace{-3mm}
-  \label{fig:oplog-cursor}
-\end{wrapfigure}
-\todo[inline]{fix oplog cursor figre}
 The trigger manager then calls the callback function and passes the
 document from \reffig{lst:oplog}. This way, the application is
 notified and can react to the cange with the information contained in
@@ -581,16 +580,14 @@ in the theoretical foundation in \refsec{sec:formalism}, and inserted
 into the robot memory. Afterwards an executive can fetch the plan, for
 example after being notified by a trigger that there is a new plan.
 
-
-\color{gray}
 \subsection{CLIPS Interface Provider}
 \label{sec:impl-clips}
-The Interface Provider for CLIPS
-can be realized as CLIPS-feature in Fawkes as it was already done for
-providing CLIPS access to the blackboard, Protobuf-messaging and the
-navgraph. The CLIPS \emph{robot-memory feature} will be implemented in C++
-and provides the CLIPS environment with functions that call C++
-functions of the robot-memory feature. For example \reflst{lst:clips-rm}
+The Interface Provider for CLIPS is implemented as CLIPS-feature by
+the \texttt{clips-robot-memory} plugin. \todo[inline]{explain
+  CLIPS-feature?} In contrast to PDDL, CLIPS can use procedures. Thus
+the CLIPS \emph{robot-memory feature} can wrap the interface functions
+of the robot memory and provide them as functions inside the CLIPS
+environment.
 \begin{figure}
   \begin{lstlisting}[showlines,style=ReallySmallCLIPS, caption={CLIPS function to execute a query},
   label=lst:clips-rm,
@@ -601,30 +598,42 @@ functions of the robot-memory feature. For example \reflst{lst:clips-rm}
   emphstyle={[2]\bfseries\color{blue!80!black}},
   morekeywords={retract, assert, modify, skill-call, skill-to-execute,
     wait-for-lock}]
-(rm-query "database.collection"
-          (str-cat "{type:'order', end-time:{$gt:" ?gametime "}}"))
+(rm-query "syncedrobmem.clipswm"
+          (str-cat "{relation:'order', end:{$gt:" ?gametime "}}"))
 \end{lstlisting} %$ This is just to fix Emacs highlighting due to dollar sign in code above
 \end{figure}
-would be the CLIPS function, which queries all orders that have not
-ended yet, by creating the query using string concatenation to fill in
-the current game-time. The result would be a list of pointers to document
-objects represented as instances of CLIPS templates. Similarly there
-can be functions for registering events and providing computables.
+\reflst{lst:clips-rm} shows an example function in CLIPS for querying
+the robot memory. The function takes the collection name and the query
+as a string concatinated by clips and yields a cursor to documents
+about not ended orders. The cursor can then be used by further
+functions to check if there are more documents, fetching the document,
+and reading values from it. Furthermore, the robot-memory feature
+provides higher abstracted functions, which can convert a fact
+reference to a document and asserts facts constructed from
+documents. These functions use a similar mapping as presented in the
+theoretical foundation. The \texttt{relation} key-value pair is
+matched to the fact template name and the other key-value pairs are
+matched to slot names of this template. There is a transformation
+between lists in CLIPS and sub-documents with numbered key-value
+pairs. Other sub-documents are passed as reference to the
+sub-document. 
 
-The Domain Creator for CLIPS can be implemented by creating the initial
-fact-base with a static list of facts and additional facts resulting
-from a set of queries. For example, a domain creator implemented in
-the CLIPS language could execute the query function in
-\reflst{lst:clips-rm} and assert all orders as facts into the fact
-base.
-%% possibility to also generate rules form robot memory
+Similar to the domain creation in PDDL, it is also possible to create
+an initial fact base in CLIPS. This is done by querying the initial
+state from the robot memory and asserting the corresponding facts to
+the fact base. The robot-memory feature also provides access to
+triggers, which are a good way to keep the fact base in CLIPS updated
+accoring to changes in the robot memory. However, executing callback
+functions to notify about triggers does not fit to the programming
+methodology of the production system CLIPS. Rather CLIPS reacts to
+events by having rules with facts representing the event in the
+antecedent. Thus, when the CLIPS interface provider is notified about
+a trigger activation, it asserts a fact representing this to the fact
+base. This fact contains an identifyer defined during the registration
+of the trigger by a CLIPS agent, and a pointer to the oplog document
+causing the trigger event.
 
-CLIPS could use event-triggers to be notified when there is a new PDDL
-plan in the robot memory that should be executed or when the world
-model has changed in the robot memory and thus facts in CLIPS have to
-be updated.
-
-
+\color{gray}
 \subsection{OpenRAVE Interface Provider}
 \label{sec:impl-openrave}
 
