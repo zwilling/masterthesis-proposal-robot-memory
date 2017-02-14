@@ -633,10 +633,48 @@ base. This fact contains an identifyer defined during the registration
 of the trigger by a CLIPS agent, and a pointer to the oplog document
 causing the trigger event.
 
-\color{gray}
 \subsection{OpenRAVE Interface Provider}
 \label{sec:impl-openrave}
-
+OpenRAVE is a motion planner that finds collision free paths and
+movements of a robot (e.g. for an arm). It searches for the path in an
+internal representation of the robot's evironment, the
+\emph{scene}. During setup or run-time, this scene is filled with
+objects the robot knows about in its environment. Because the motion
+planner scene should be consistent with the world model stored in the
+robot memory, we provide the OpenRAVE interface provider. This
+interface provider is implemented in the
+\texttt{openrave-robot-memory} plugin. The plugin constructs and
+updates the motion planner scene from documents in the robot
+memory. Based on config values, it queries the robot memory for
+objects in the environment and inserts, updates, or removes them from
+the OpenRAVE scene.
+\begin{wrapfigure}{r}{0.35\textwidth}{6cm}
+  \vspace{-0.8cm}
+\begin{lstlisting}[style=SmallJSON,
+  caption={Document used to construct the OpenRAVE scene},
+  label=lst:openrave,
+  framexleftmargin=5pt, xleftmargin=0pt,
+ morekeywords={}, numbers=none]
+{
+  block: "B",
+  frame: "map",
+  translation:
+   [0.43, -0.04, 0.01],
+  rotation:
+   [0, 0, 0.99, 0.08]
+}
+\end{lstlisting}
+\vspace{-8mm}
+\end{wrapfigure}
+\reflst{lst:openrave} shows an example document, which can be used to
+construct the OpenRAVE scene. The key-value pair \texttt{block:"B"}
+specifies the type of the object and the name used to move or remove
+it later. The type also defines the model used in the scene according
+to the configuration. Furthermore the translation and rotation in a
+given frame are used to place the object at the right position. Here,
+the transform computable can be used to transform the position into
+the frame used by OpenRAVE. For example the frame used for the Jaco
+arm has its origin in the base of the arm.
 
 \section{Application Scenarios}
 \label{sec:applicationscenarios}
@@ -644,7 +682,9 @@ causing the trigger event.
 \subsection{Blocks World with a Robotic Arm}
 \label{sec:app-rcll}
 \todo[inline]{some images}
+image openrave
 
+\color{gray}
 \subsection{RoboCup Logistics League}
 \label{sec:app-blocks-world}
 \todo[inline]{simulation image + real world image}
