@@ -8,12 +8,11 @@ different expressiveness levels and database sizes to find a
 compromise between expressiveness and performance. Furthermore, we
 analyze the overhead of database operations introduced by robot memory
 features. In \refsec{sec:performance} we present the performance of
-the system in the already introduced application scenarios. This
-includes CPU and memory usage, network throughput, and statistics
-about robot memory operations. Qualitatively, we evaluate how well the
-features of the robot memory work, how it can support the development
-of application scenarios, and where limitations are.
-\todo[inline]{Update preview of qualitative evaluation}
+the system in both introduced application scenarios. This includes CPU
+and memory usage, network throughput, and statistics about robot
+memory operations. Qualitatively, \refsec{sec:qualitative} evaluates
+how well the robot memory fullfils the goals defined in the approach.
+\todo[inline]{check qualitative preview}
 
 \section{Evaluation context}
 \label{sec:eval-context}
@@ -366,26 +365,160 @@ to the results of the RCLL benchmark.
 
 
 \section{Qualitative Evaluation}
-\todo[inline]{qualtitative eval: refer to goals from approach as structure}
-\todo[inline]{for eval of Special Views for Different Components}
-%% example queries/ key-translations and computable for hybrid transformations
-\todo[inline]{for eval of computation on demand:}
-%% For example it would be possible to add
-%% a commonsense reasoner similar to KnowRob or ORO providing computables
-%% to the robot memory. Queries for this commonsense knowledge would then
-%% be forwarded to the commonsense reasoner and be solved by relating
-%% knowledge in the memory to an ontology.
+\label{sec:qualitative}
+In this section, we quantitatively evaluate the robot memory based on
+the goals defined in \refsec{sec:goals}. We discuss how well the
+features of the robot memory work based on the quantitaive evaluation
+and our experience of using the robot memory to implement the RCLL and
+blocks world application scenarios. Both scenarios were chosen in a
+way that all important robot memory features are covered.
 
+\subsection{Flexible Storage and Retrieval:}
+As demonstrated in the RCLL and blocks world, the robot memory
+properly works as memory for various types of robot data, information,
+and knowledge. Insert, query, modify, and remove functions work as
+supposed end ensured by unit-tests. The robot memory is flexible
+enough to maintain various kinds of data, such as symbolic knowledge
+about a world model in the RCLL, spatial information about block
+positions in the blocks world, and temporal information about how long
+cached informations have to be kept. As shown in
+\refsec{sec:op-durations}, robot memory operations are very fast for
+simple operations and complex queries only require reasonably more
+time. From our experience in the application scenarios, complex
+queries are rarely required and can often be made fast by
+reformulation.  Because of JavaScript usage, aggregation, and
+Map-Reduce, queries are very expressive, since JavaScript is Turing
+complete. However due to the nature of document orientation, it is
+inconvinient to join documents from different collections as it would
+be done in relational databases. This problem rarely occurs because
+the document structure (e.g. by utilizing sub-documents) allows
+storing additional information.
+\todo[inline]{move document vs. relational?}
+The storage and retrieval functions of the robot memory are available
+to a variaty of components via the C++ interface or the interface
+providers for PDDL, CLIPS, and OpenRAVE.
+
+\subsection{Memory Sharing Between Knowledge Based Systems:}
+The robot memory allows memory sharing between mutliple knowledge
+based systems. In the RCLL, we shared the world model between multiple
+robots using the same CLIPS reasoning engine. In the blocks world
+scenario, the memory was shared between different kinds of components,
+namely a symbolic PDDL planner, the motion planner OpenRAVE, a CLIPS
+executive, and a perception plugin. Because the robot memory is a
+central storage and KSB can keep their internal world model updated
+with triggers, it ensures consistency. Multiple state estimations by
+different systems are avoided.  As shown in both application
+scenarios, the robot memory is well suited as basis for the
+collaboration and combination of multiple KBS. Accessing a common
+storage is more convinient than accessing each others working memory
+(e.g. as it was done to monitor the CLIPS world model in the
+webinterface of Fawkes).  Another advantage of memory sharing with the
+robot memory is that different planners can easily be exchanged and
+thus compared. In the RCLL, we provide the world model in the robot
+memory and showed how a planner and CLIPS as executive can work
+together. This is also the foundation for future work with different
+planning systems in the RCLL.
+
+\subsection{Special Views for Different Components:} 
+Special views on the robot memory depending on the components are
+primarily realized by the queries used by a component. A query can
+filter which part of the robot memory is shown to the component by
+selecting a collection and filtering documents with the query language
+of MongoDB. Queries can also be used to rename keys of key-value pairs
+in returned documents. The robot memory does not directly rename keys
+or values. Thus, if some planner uses another identifyer for an object
+than a reasoner, one of them has to implment the mapping, for example
+by providing a computable. An example for such a mapping computable is
+the transform computable, which provides positions in other coordinate
+systems. Computables also simplify hybrid reasoning because they allow
+symbolic KBS to view spatio-temporal information is a symbolig
+way. For example, a computable in the blocks world provides
+\texttt{on-table} predicates, which are derived from block positions.
+In a distributed system, the robot memory focuses the view on the shared
+and local memory of a robot by not distributing the local memory to
+other robots. 
+
+\subsection{Computation on Demand:}
+The robot memory provides computation on demand with computables. In
+the application scenarios, computables are a usefull tool to provide
+functions of perception components to KBS, which only need to execute
+a usual robot memory query. They are also useful for hybrid reasoning
+because they can transform information in the robot memory to be
+usable by different components, as described in the previous
+subsection. As \reffig{fig:computable-durations} shows that
+computables are fast in the sense that the overhead is small and the
+complete query time mainly depends on the computation time. Compared
+to not computing on demand, computables are more efficient because
+they are only evaluated when needed and for the parameters needed.
+A disadvantage we notied when heavily using computables in the blocks
+world scenario is that the data flow over computables is difficult to
+trac and thus to debug during the development. This is caused by the
+volatility of computed documents in the robot memory and the
+flexibility of the document orientation. Similar to programming
+languages with dynamic typing, comparisons can fail because of
+unintended mistakes, such as spelling mistakes in a key name or
+comparing the string \texttt{"1"} with the number one. Because queries
+only return an empty result instead of throwing an error in such
+cases, the problem the developer has to search for the problem. We
+simplify this search by providing a configurable logging mechanism of
+executed queries, computables, and results.
+A major advantage of computables is the extensibility it adds by
+allowing any computation function to be interfacable by the robot
+memory. For example it is possible to compensate for not choosing a
+common sense reasoner as basis for the robot memory by integrating it
+with computables. KnowRob, for example, could be connected to the
+robot memory by querying information from the robot memory, adding it
+to its ontologies, and providing KnowRob queries via computables.
+\todo[inline]{Remove KnowRob stuff?}
+
+\subsection{Shared Memory for Multi-Robot Systems:} 
 \todo[inline]{eval shared memory multi-robot system}
 %% If the distribution of the
 %% knowledge would not be implemented in the robot memory it would have
 %% to be implemented separately. 
+consistency
+\todo[inline]{wifi real vs. sim}
+\todo[inline]{synchronization mongodb changes, instead of changes and
+  full wm in protobuf}
+more convinient than implementing and strongly typing a message
+  communication system
+\todo[inline]{mention quantitative evaluation}
+
+\subsection{Spatio-Temporal Grounding:}
+The robot memory allows spatio-temporal grounding of the information
+stored in it. The flexible structure and representation in documents
+with various types, such as floats and dates, allows adding
+spatio-temporal information. For example, we use the spatial positions
+of objects in blocks world and times in the caching of computables.
+The robot memory can also consiger spatio-temporal information in
+queries. Simple operations, such as comparison, can be expressed in
+the query language and complex operation can be performed by
+computables as, for example, shown by the transform computable.
+
+\subsection{Triggers:}
+By using triggers, components can properly be notified about changes in
+the robot memory. This is especially useful for keeping a world model
+in a KBS updated according to the robot memory. In the RCLL
+application scenario this works well and frees the agent from
+implementing a synchronization or pulling mechanism to search for
+changes. Another beneficial use case for triggers is message passing
+(e.g. for passing a plan to an executive). This way of message passing
+is simple, because it can use the existing interface to the robot
+memory, and the messages can be changed in the development with small
+effort because documents have no fixed structure as, for example,
+messages over the blackboard or Protobuf.
+
+
+
+only oplog changes, not sentences, but doable by application
+too costly?
+\todo[inline]{flaw: trigger on computables not possible without
+  invoking computable by some query}
+
+fast...
+
+\subsection{Persistent Storage:}
+\subsection{Human Interface and Visualization:}
 \todo[inline]{eval human interface + vis}
 %% robomongo, robot memory operations over webview messages, visualization as in evaluation plots 
-\todo[inline]{flaw: trigger on computables not possible without invoking computable by some query}
-\todo[inline]{flaw: debugging communication (with computables) difficult becasue of flexibility (no error, but just no documents returned on query)}
-\todo[inline]{Difference simulation-real world (almost same for robot memory, no possibility to test because of missing field, but distribution and full game already tested)}
-\todo[inline]{wifi real vs. sim}
-\todo[inline]{synchronization mongodb changes, instead of changes and full wm in protobuf}
-\todo[inline]{covered features rcll, blocksworld}
-\todo[inline]{CLIPS as executive for RCLL as in blocks world}
+

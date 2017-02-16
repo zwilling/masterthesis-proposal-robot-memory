@@ -720,27 +720,30 @@ because we had no full RCLL field available and properly setting up
 all robots takes a lot effort. However, this does not make a
 significant difference for the robot memory because the simulation can
 be distributed over multiple machines and because the interface and
-usage is identical in simulation and real world. A central component
-of the Carologistics robot software in the RCLL is the CLIPS agent. It
+usage is identical in simulation and real world.
+\todo[inline]{Difference simulation-real world (almost same for robot
+  memory, no possibility to test because of missing field, but
+  distribution and full game already tested)} A central component of
+the Carologistics robot software in the RCLL is the CLIPS agent. It
 maintains a world model, decides what the robot should do with
 incremental reasoning~\cite{CLIPS-Agent}, and monitors the execution
-of robot actions. The decision approach and world model maintenance
-is distributed. Robots have to coordinate with each other and notify
-each other about changes in the environment. Furthermore, they can
-drop out and might be restarted. Thus, the CLIPS agent needs to
-synchronize its world model with the other robots. The existing
-implementation used by Carologistics in 2016 uses Protobuf messages
-which are being sent between the agents. In this application scenario,
-we exchange the synchronization via Protobuf by using the robot
-memory. Thus the world model of CLIPS has to be represented in the
-robot memory and distributed over all robots. On the one hand, this
-lays the foundation for using the robot memory in the RCLL in future
-work. On the other hand, this simplifies the CLIPS agent by separating
-the synchronization. The synchronization by
-MongoDB is advantageous because it only sends necessary changes over the
-network instead of the whole world model, as it is done by the CLIPS
-agent. Another advantage is the persistency, because robots keep their
-state if one or all of them are restarted.
+of robot actions. The decision approach and world model maintenance is
+distributed. Robots have to coordinate with each other and notify each
+other about changes in the environment. Furthermore, they can drop out
+and might be restarted. Thus, the CLIPS agent needs to synchronize its
+world model with the other robots. The existing implementation used by
+Carologistics in 2016 uses Protobuf messages which are being sent
+between the agents. In this application scenario, we exchange the
+synchronization via Protobuf by using the robot memory. Thus the world
+model of CLIPS has to be represented in the robot memory and
+distributed over all robots. On the one hand, this lays the foundation
+for using the robot memory in the RCLL in future work. On the other
+hand, this simplifies the CLIPS agent by separating the
+synchronization. The synchronization by MongoDB is advantageous
+because it only sends necessary changes over the network instead of
+the whole world model, as it is done by the CLIPS agent. Another
+advantage is the persistency, because robots keep their state if one
+or all of them are restarted.
 
 The distribution of the robot memory in the RCLL is achieved by
 configuring the robot memory to use the replica set with all robots
