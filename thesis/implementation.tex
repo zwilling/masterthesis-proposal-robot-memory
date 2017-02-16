@@ -1,5 +1,6 @@
 \chapter{Implementation}
 \label{sec:impl}
+\todo[inline]{Here are probably more small mistakes, because I have not checked this yet}
 In the previous chapter, we presented the approach of the thesis and
 the architecture of the robot memory. On this basis, we present
 implementation considerations in this chapter. The implementation of
@@ -63,9 +64,9 @@ contains a local and a shared part. Each part is operated by a
 separate \texttt{mongod} instance, which is the daemon process of the
 MongoDB system. It manages data access, handles data requests, and
 performs background management operations. Each \texttt{mongod}
-instance is accessable over its unique port and can contain multiple
+instance is accessible over its unique port and can contain multiple
 databases. The databases of the robot memory that are only locally
-relevant are managed by the logal \texttt{mongod} instance. The shared
+relevant are managed by the local \texttt{mongod} instance. The shared
 \texttt{mongod} instance manages the distribution of shared databases
 in a multi-robot system. Thus we configured it to be part of replica
 set as already described in \refsec{sec:mongodb}. This ensures the
@@ -78,10 +79,10 @@ are not thread safe\todo{explain thread safe?}. Thus we use the connection manag
 \texttt{mongodb} Fawkes plugin to create two connections for usual
 operations, computables, and triggers.
 %
-The MongoDB back-end also contains the operations log (oplog), a
+The MongoDB back-end also contains the operations log (Oplog), a
 separate capped collection containing the list of changes to the
-database with a timestamp. The oplog is accessed by the robot memory
-to analyze database changes for triggers. However, the oplog is only
+database with a timestamp. The Oplog is accessed by the robot memory
+to analyze database changes for triggers. However, the Oplog is only
 created for replicated database, because its original purpose is
 logging changes to propagate them to other instances in the Replica
 Set. Thus we also have to configure the local \texttt{mongod} instance
@@ -89,19 +90,20 @@ as Replica Set, but this set only contains itself because its
 databases are only locally relevant.
 
 Because the robot memory requires a special configuration of the
-MongoDB deamons, we also implemented an automated setup of the
+MongoDB daemons, we also implemented an automated setup of the
 back-end. This setup starts the \texttt{mongod} processes as
-subprocesses of Fawkes if they are not already running. Each process
+sub-processes of Fawkes if they are not already running. Each process
 needs to be configured, most importantly, with the Replica Set name,
 the database path, where the databases are persistently stored on the
-hard-drive, and the oplog size. After the startup, the \texttt{mongod}
+hard-drive, and the Oplog size. After the start-up, the \texttt{mongod}
 instances need to be initialized, when they are started for the first
 time. Thus the automated setup sends commands for initialization of
-the Relica Set with information about the members of the
+the Replica Set with information about the members of the
 set. Furthermore, commands for the query evaluation are send, to allow
 query evaluation on Secondaries.  \todo[inline]{Mention ignoring error
   code when already initialized?}  When Fawkes is exited, also the
-MongoDB subprocesses are finalized again.
+MongoDB sub-processes are finalized again.
+\todo[inline]{visualization/human interface by Robomongo}
 
 \section{Robot Memory}
 \label{sec:impl-memory}
@@ -144,7 +146,7 @@ if computables are queried.
 \label{sec:impl-opmanager}
 The MongoDB query language provides the basis for the operation
 manager, which receives insert, query, update, and deletion
-requests. Received requests are analysed using the MongoDB C++ driver
+requests. Received requests are analyzed using the MongoDB C++ driver
 and modified before being applied to the back-end. This way, the
 operation manager can add meta information of the robot memory to
 documents and queries, and the computable manager can ground its
@@ -203,7 +205,7 @@ perform special modifications of this query.
 Additionally to these basic operations, the operation manager can also
 export the contents of a collection to a file (called \emph{dump}). It
 can also import a collection from a file in an operation called
-\emph{restore}. These operations can be used to sava and load a world
+\emph{restore}. These operations can be used to save and load a world
 model that is contained in a collection. For example in the RCLL, this
 allows setting the world model in a prepared state to test the
 behavior of the agent in that state. The dump and restore operations
@@ -249,7 +251,7 @@ computables should be executed for a query.\\
   y: 4
 }
 \end{lstlisting}
-\captionof{sublisting}{Query requireing the computable}
+\captionof{sublisting}{Query requiring the computable}
 \end{minipage}%
 \hfill
 \begin{minipage}[b]{.25\textwidth}
@@ -325,9 +327,9 @@ documents (list containing \reflst{lst:comp}c) and returns it to the
 computable manager. By defining the computable query appropriately
 (e.g. with \texttt{\$exists}), is is ensured that all values required
 by the function are provided by the query. It is also possible to
-ommit required values intentionally. For example the computable for
-blackboard interfaces in Fawkes, checks if an interface id is givien,
-and then eigther returns a document for the single interface with the
+omit required values intentionally. For example the computable for
+blackboard interfaces in Fawkes, checks if an interface id is given,
+and then either returns a document for the single interface with the
 id or all interfaces matching the interface type.
 
 After a computable returned the list of computed documents, the
@@ -347,10 +349,10 @@ query that caused computation in the caching time before, the no
 computables are executed for it. Computed documents remain in the
 robot memory during this caching time. This is implemented by adding
 the expiration time of computed documents to their meta information
-and periodically removing documents with passed wxpiration time.
+and periodically removing documents with passed expiration time.
 
 Computables can depend on the current content of the robot memory, by
-using the robot memory themself in their function. This can be used
+using the robot memory themselves in their function. This can be used
 for hybrid reasoning by transform documents already contained in the
 robot memory into other representations. To allow computables to
 depend on the result of other computables, there is a
@@ -367,20 +369,20 @@ computables have to be provided by other plugins.
 \subsection{Triggers}
 \label{sec:impl-triggers}
 Triggers notify components about changes in the database, for example
-to keep a reasoner intern world model up to date. To register a triger
+to keep a reasoner intern world model up to date. To register a trigger
 at the trigger manager, the component has to provide the name of the
 collection that should be observed, a reference to a callback
 function, and a query defining the event in which the callback
 function should be called. An example query used for being notified
 about new or modified orders in the RCLL is \texttt{\{relation:
-  "order"\}}. This query is used to search the oplog for changes. The
-oplog is a capped collection in MongoDB, which logs all changes to
+  "order"\}}. This query is used to search the Oplog for changes. The
+Oplog is a capped collection in MongoDB, which logs all changes to
 propagate them in a Replica Set.
 \begin{wrapfigure}{r}{0.42\textwidth}{6cm}
   \vspace{-0.8cm}
 \begin{lstlisting}[style=SmallJSON,
-  caption={Document in the oplog},
-  label=lst:oplog,
+  caption={Document in the Oplog},
+  label=lst:Oplog,
   framexleftmargin=2pt, xleftmargin=0pt,
  morekeywords={}, numbers=none]
 {
@@ -404,31 +406,31 @@ propagate them in a Replica Set.
 \begin{wrapfigure}{r}{0.3\textwidth}
   \centering
   \includegraphics[width=0.3\textwidth]{draw/oplog-cursor}%
-  \caption[Tailable cursor on the oplog]{Tailable cursor on the oplog}
+  \caption[Tailable cursor on the Oplog]{Tailable cursor on the Oplog}
   \vspace{-4cm}
   \label{fig:oplog-cursor}
 \end{wrapfigure}
-\reflst{lst:oplog} shows an example document contained in the
-oplog. Besides the collaction name and timestamp of the change, it
+\reflst{lst:Oplog} shows an example document contained in the
+Oplog. Besides the collection name and timestamp of the change, it
 shows the type the causing operation (\texttt{op:"i"} stands for
 insertion) and the inserted, updated, or removed document as
 sub-document under the \texttt{o} key. For each new trigger, the
-trigger manager creates a cursor on oplog in MongoDB with the trigger
-query. Initially this cursor points to the end of the oplog (position
-3 in \reffig{fig:oplog-cursor}). Because the oplog is a capped
+trigger manager creates a cursor on Oplog in MongoDB with the trigger
+query. Initially this cursor points to the end of the Oplog (position
+3 in \reffig{fig:oplog-cursor}). Because the Oplog is a capped
 collection, new changes (e.g. 4 and 5 in \reffig{fig:oplog-cursor})
 are appended behind the position the cursor points to. During the main
 loop of Fawkes, the trigger manager checks for all tailable cursors if
-there are new oplog with \texttt{o} object that match the according
+there are new Oplog with \texttt{o} object that match the according
 query. The cursor is forwarded simultaneously. Thus if
-\reffig{lst:oplog} shows the document labeled with 4 or 5 it would be
+\reffig{lst:Oplog} shows the document labeled with 4 or 5 it would be
 returned by the query.
 The trigger manager then calls the callback function and passes the
-document from \reffig{lst:oplog}. This way, the application is
-notified and can react to the cange with the information contained in
-the returned document from the oplog.
+document from \reffig{lst:Oplog}. This way, the application is
+notified and can react to the change with the information contained in
+the returned document from the Oplog.
 
-\subsection{Unittests}
+\subsection{Unit-tests}
 \label{sec:impl-unittests}
 To ensure the quality and correctness of the robot memory, we
 implemented unit tests for the important features of this layer. Unit
@@ -447,7 +449,7 @@ into an empty collection, updating it, and querying it by an updated
 value. Another test checks if computables work by registering the
 computable showed in \reflst{lst:comp-func} and \reflst{lst:comp},
 executing the query in \reflst{lst:comp}b and checking if the result
-matches \reflst{lst:comp}c. Unittesting in Fawkes is based on Google's
+matches \reflst{lst:comp}c. Unit-testing in Fawkes is based on Google's
 C++ testing framework \emph{gtest}. To test the functionality of the
 robot memory in a fully running Fawkes process with dependencies of
 the robot memory, such as the \texttt{mongodb} plugin, we integrated
@@ -545,7 +547,7 @@ each list entry of the dictionary on the \texttt{ON} marker. We use
 list marker to insert a predicate for each document that is returned
 by a query. The query is located in the front marker behind the
 \texttt{|} symbol. The enclosed environment can contain markers that
-are substituted by key-value paris of documents. In the example given
+are substituted by key-value pairs of documents. In the example given
 in \reflst{lst:template}, the query \texttt{\{relation:'on-table'\}}
 yields the documents \texttt{\{relation:'on-table', object:'A'\}},
 what is mapped to \texttt{(on-table A)}, and
@@ -562,7 +564,7 @@ fills the dictionary with the goal and entries for each document
 returned by the robot memory for a list marker query. For each such
 list entry, all key-value pairs of the documents are inserted into the
 dictionary, where the key name in the document equals the marker name
-in the template. For sub-documents, the key names are concatinated so
+in the template. For sub-documents, the key names are concatenated so
 that the marker name is the path to each value. Markers that are not
 in the dictionary are later substituted by the empty string. Finally,
 the dictionary is passed with the template file to ctemplate, which
@@ -604,7 +606,7 @@ environment.
 \end{figure}
 \reflst{lst:clips-rm} shows an example function in CLIPS for querying
 the robot memory. The function takes the collection name and the query
-as a string concatinated by clips and yields a cursor to documents
+as a string concatenated by clips and yields a cursor to documents
 about not ended orders. The cursor can then be used by further
 functions to check if there are more documents, fetching the document,
 and reading values from it. Furthermore, the robot-memory feature
@@ -623,21 +625,21 @@ an initial fact base in CLIPS. This is done by querying the initial
 state from the robot memory and asserting the corresponding facts to
 the fact base. The robot-memory feature also provides access to
 triggers, which are a good way to keep the fact base in CLIPS updated
-accoring to changes in the robot memory. However, executing callback
+according to changes in the robot memory. However, executing callback
 functions to notify about triggers does not fit to the programming
 methodology of the production system CLIPS. Rather CLIPS reacts to
 events by having rules with facts representing the event in the
 antecedent. Thus, when the CLIPS interface provider is notified about
 a trigger activation, it asserts a fact representing this to the fact
-base. This fact contains an identifyer defined during the registration
-of the trigger by a CLIPS agent, and a pointer to the oplog document
+base. This fact contains an identifier defined during the registration
+of the trigger by a CLIPS agent, and a pointer to the Oplog document
 causing the trigger event.
 
 \subsection{OpenRAVE Interface Provider}
 \label{sec:impl-openrave}
 OpenRAVE is a motion planner that finds collision free paths and
 movements of a robot (e.g. for an arm). It searches for the path in an
-internal representation of the robot's evironment, the
+internal representation of the robot's environment, the
 \emph{scene}. During setup or run-time, this scene is filled with
 objects the robot knows about in its environment. Because the motion
 planner scene should be consistent with the world model stored in the
@@ -645,7 +647,7 @@ robot memory, we provide the OpenRAVE interface provider. This
 interface provider is implemented in the
 \texttt{openrave-robot-memory} plugin. The plugin constructs and
 updates the motion planner scene from documents in the robot
-memory. Based on config values, it queries the robot memory for
+memory. Based on configuration values, it queries the robot memory for
 objects in the environment and inserts, updates, or removes them from
 the OpenRAVE scene.
 \begin{wrapfigure}{r}{0.35\textwidth}{6cm}
@@ -718,11 +720,11 @@ because we had no full RCLL field available and properly setting up
 all robots takes a lot effort. However, this does not make a
 significant difference for the robot memory because the simulation can
 be distributed over multiple machines and because the interface and
-usage is identical in simulaiton and real world. A central component
+usage is identical in simulation and real world. A central component
 of the Carologistics robot software in the RCLL is the CLIPS agent. It
 maintains a world model, decides what the robot should do with
 incremental reasoning~\cite{CLIPS-Agent}, and monitors the execution
-of robot actions. The decision approach and world model maintainance
+of robot actions. The decision approach and world model maintenance
 is distributed. Robots have to coordinate with each other and notify
 each other about changes in the environment. Furthermore, they can
 drop out and might be restarted. Thus, the CLIPS agent needs to
@@ -733,9 +735,9 @@ we exchange the synchronization via Protobuf by using the robot
 memory. Thus the world model of CLIPS has to be represented in the
 robot memory and distributed over all robots. On the one hand, this
 lays the foundation for using the robot memory in the RCLL in future
-work. On the other hand, this simplyfies the CLIPS agent by separating
+work. On the other hand, this simplifies the CLIPS agent by separating
 the synchronization. The synchronization by
-MongoDB is advantageous because it only sends neccessary changes over the
+MongoDB is advantageous because it only sends necessary changes over the
 network instead of the whole world model, as it is done by the CLIPS
 agent. Another advantage is the persistency, because robots keep their
 state if one or all of them are restarted.
@@ -744,7 +746,7 @@ The distribution of the robot memory in the RCLL is achieved by
 configuring the robot memory to use the replica set with all robots
 and loading the \texttt{robot-memory} plugin on all robots of the
 team. The world model existing in CLIPS is already properly
-initialized at the start of the game and has to be transfered to the
+initialized at the start of the game and has to be transferred to the
 robot memory. During the setup phase, one of the agents removes the
 old world model in the robot memory, which persisted from a previous
 game. Then all facts defining the world model are inserted into the
@@ -763,19 +765,30 @@ updated the corresponding document in the robot memory by using the
 \texttt{sync-id} in the query. Similarly there are the functions
 \texttt{(synced-assert)} and \texttt{(synced-retract)}. Other robots
 are notified about such a change in the robot memory by using
-triggers. Each agent registeres a trigger at its own
+triggers. Each agent registers a trigger at its own
 \texttt{robot-memory} plugin. Whenever there is a change, a trigger
 fact is asserted according to \refsec{sec:impl-clips} and an update
 rules consumes this fact and updates the fact with the corresponding
 \texttt{sync-id}.
 
-\color{gray}
 \subsection{Blocks World with a Robotic Arm}
 \label{sec:app-blocks-world}
-\todo[inline]{some images}
+The second 
+
+description task
+classical planning problem + difficulties with practical
+  implementation (occlusion)
+image real world
+explain @home relation
+components collaborating over robot memory
+perception plugin , bbinterface xteon, block positions
+PDDL domain description actions, problem description generated from
+  robot memory
+Computables for on-table, clear, unknown blocks
+Transformation geometric to symbolic 
+CLIPS executive, starts planner, trigger for new plan
+executes plan, task-step
+motion planner for arm motion
 image openrave
-
-@home related
-
-
-\color{black}
+scene construction, transform computable
+updates world model -> remembers on and position of covered blocks
