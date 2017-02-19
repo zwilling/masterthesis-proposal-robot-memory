@@ -95,23 +95,23 @@ knowledge based systems.
 Because the robot memory provides the back-end information storage of
 a robot system, it is meant to be the foundation for other components
 using it and thus for future work. Especially planners and reasoners
-benefit from collaboration possibilities and the hybrid
-reasoning capabilities of the robot memory. There are two ongoing
-master theses, which already use the robot memory and implement new
-global planning approaches in the RCLL. Both utilize the robot memory
-as common storage of the world model, which is updated by the CLIPS
-executive and read by a central planner. Furthermore, they use the
-robot memory to provide plans to the executive with triggers. Both
-also base their implementation on prototypes developed in the
-application scenarios of this thesis. On the one hand, the RCLL
-application scenario provides the distributed memory, which can be
-accessed by their planners and is kept updated by the CLIPS
-executive. On the other hand, the blocks world scenario provides a
-prototype showing how a CLIPS executive can fetch plans from the robot memory
-with triggers, represent it as task, and execute it step by step. The
-first thesis uses reactive answer set programming with real-time
-constraints and the second one uses a PDDL planner and converts the
-resulting plan into a simple temporal network. The second one also
+benefit from collaboration possibilities and the hybrid reasoning
+capabilities of the robot memory. There are two ongoing master theses,
+which already use the robot memory and implement new global planning
+approaches in the RCLL. Both utilize the robot memory as common
+storage of the world model, which is updated by the CLIPS executive
+and read by a central planner. Furthermore, they use the robot memory
+to provide plans to the executive with triggers. Both also base their
+implementation on prototypes developed in the application scenarios of
+this thesis. On the one hand, the RCLL application scenario provides
+the distributed memory, which can be accessed by their planners and is
+kept updated by the CLIPS executive. On the other hand, the blocks
+world scenario provides a prototype showing how a CLIPS executive can
+fetch plans from the robot memory with triggers, represent it as task,
+and execute it step by step. The first thesis uses reactive answer set
+programming with real-time constraints~\cite{bjoern-thesis} and the
+second one uses a PDDL planner and converts the resulting plan into a
+simple temporal network~\cite{matthias-thesis}. The second one also
 makes use of our PDDL domain generation and considers using
 computables for travel distance calculations.
 
