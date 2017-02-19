@@ -1,67 +1,100 @@
 \chapter{Conclusion}
 \label{chap:conclusion}
-\todo[inline]{write summary, this is only the proposal into}
-\color{gray}
+In this chapter we conclude the thesis with a summary in
+\refsec{sec:summary} and an outlook to possible future work in
+\refsec{sec:future-work}.
 
 \section{Summary}
 \label{sec:summary}
-\todo[inline]{remove proposal stuff + write}
-In the proposed master thesis, we develop the conceptual and
-architectural design of a generic robot memory and implement it in
-Fawkes with MongoDB. The envisioned robot memory is a generic,
-capable, and efficient long-time storage for knowledge, which is the
-basis for memorizing a complex environment and thus for reasoning in
-it. The robot memory is a knowledge sharing system, on the one hand,
-for multiple knowledge based systems and, on the other hand, for
-multiple robots working collaboratively. Therefore it allows a
-consistent and tight integration of planners and reasoners while
-avoiding multiple state estimations. The robot memory is a hybrid
-reasoning tool that allows storing spatio-temporal knowledge and
-transforming it on demand into symbolic knowledge.
+In this thesis, we have designed and implemented a document-oriented
+robot memory for knowledge sharing and hybrid reasoning on mobile
+robots. The robot memory allows robots to advance into more complex
+and unstructured domains by providing a generic and capable
+information storage, which is the basis for memorizing a complex
+environment and thus for reason in it. It can represent complex
+information and expressive queries. As collaboration platform for KBS,
+it provides a common and consistent information basis. Furthermore, it
+simplifies hybrid reasoning by storing spatio-temporal information and
+allowing transformation into symbolic information on demand.
 
-In contrast to existing knowledge processing systems, such as KnowRob
-and ORO, the concept of the robot memory decouples the storage of
-knowledge and reasoning on it and is based on a document-oriented
-representation. As we want to show in the evaluation of the thesis,
-this allows more efficient and scalable querying and tighter
-integration of multiple KBS and robots teams.
+In the theoretical foundation, we specified how information can be
+represented in documents and how these can be mapped into KBS. The
+theoretical foundation also describes the concept of computables,
+which allows components to provide computation on demand. By using
+query matching, the robot memory checks if information covered by the
+computable is queried and then invokes the function of the component
+providing the computable. As discussed in the evaluation, computables
+are convenient for transforming hybrid information and for interfacing
+perception.
+%
+Another important concept is notification about changes in the robot
+memory with triggers. The robot memory searches the Oplog of MongoDB
+with the query defining the trigger event and invokes the callback
+function if there is a matching change. Triggers are useful for
+keeping internal world models of KBS updated. They also have turned
+out to be convenient for message passing.
 
-The architecture of the robot memory builds on top of a database
-system. It contains components for dispatching and enhancing queries
-and storage requests, for knowledge computed on demand, and for
-event-triggers notifying about changes. There are interface
-components, which provide the functionality of the robot memory for
-KBS by giving access in the used languages and transforming query
-results into the appropriate form. Applications using the robot memory
-can store and query knowledge, provide computables for other
-components, and use event triggers.
+In contrast to other approaches from related work, our robot memory
+supports sharing information in a multi-robot system. We built a
+robust, consistent, and efficiently distributed memory by utilizing
+Replication Sets of MongoDB and distinguishing between a local and a
+shared database. In this context, triggers are useful for notifying
+about updates by other robots.
+%
+Based on the layered architecture, we implemented the back-end
+database with MongoDB and the core robot memory containing the
+operation-, trigger-, and computable-manager. To provide the robot
+memory to reasoners and planners, we implemented interface providers
+for PDDL, CLIPS, and OpenRAVE. The PDDL interface can generate problem
+descriptions from a template and the information contained in the
+robot memory. The CLIPS interface provides CLIPS functions for robot
+memory operations and can map between documents and facts by comparing
+key-value pairs to fact template definitions. The OpenRAVE interface
+builds the motion planner scene from object positions and types
+represented in the robot memory.
 
-Challenges of the thesis include the conceptual tuning of the
-document-oriented knowledge representation and querying to achieve a
-balance between expressiveness and computation time. Further
-challenges are the design of computables in a document-oriented system
-to allow on demand computation of knowledge in an efficient and still
-powerful way, and the robust knowledge sharing in a distributed
-multi-robot system.
+We used the robot memory in two application scenarios for knowledge
+sharing and hybrid reasoning. Both scenarios showed that the concepts
+of the robot memory are beneficial. In the RCLL, the robot memory
+distributes the world model between multiple robots, which use
+triggers. Important benefits are the robust, simple, and efficient
+world model synchronization and the persistent storage. In the blocks
+world scenario, the robot memory is the basis for the collaboration of
+perception, a PDDL planner, a CLIPS executive, and the motion planner
+OpenRAVE. Here, the main benefits are the world model sharing between
+planners and reasoners of different types and the hybrid reasoning
+support with computables.  As presented in the quantitative
+evaluation, the robot memory works efficient and only adds a small
+overhead compared to raw MongoDB operations. The increase in
+computation time for complex queries and computables is reasonable and
+caused by the computational complexity of the queries themselfs.
 
-The main part of the thesis focuses on the robot memory as back-end of
-a robot system and foundation for future applications, such as a
-thesis in preparation about global PDDL planning in the RCLL with
-CLIPS as executive. Nevertheless we will use the RCLL and RoboCup@Home
-application domains to implement prototypes utilizing the robot memory
-and working as proof of concept for qualitative evaluation and basis
-for quantitative evaluation. For these two application domains, we
-will connect the robot memory to CLIPS, PDDL, and various perception
-components.
+An important challenges we faced in the thesis is the conceptual
+tuning of robot memory concepts to achieve a balance between
+expressiveness and computation time. For example, we decided that
+triggers can only be evaluated on single changes of the robot memory
+instead of the whole set of documents. For queries and computables, we
+decided to allow all features of the MongoDB query language for high
+flexibility and expressiveness and make the application responsible
+for efficient query formulation.  Further challenges are the design
+and implementation of on demand computation in a document-oriented
+system and making the representations between CLIPS and MongoDB
+compatible. This is due to CLIPS using strings and symbols, which are
+both mapped to string values in documents, but still have to be
+distinguishable.
 
-
-\todo[inline]{summary content:}
-debug problems + additional implementation time for interface vs. time savings
+Concluding, this thesis has designed and implemented a very useful,
+scalable, and persistent robot memory for hybrid reasoning and
+knowledge sharing. Major benefits are representation of
+complex information and expressive queries with document-orientation,
+hybrid reasoning with computables, and world model sharing between
+knowledge based systems.
 
 \section{Future Work}
 \label{sec:future-work}
 
 meta data for belief/certainty
 Running master thesises Matthias, Björn + cite them
-
-\color{black}
+Connecting (common sense) reasoners
+Future Work Tim
+computables adding kv pairs and remove them later
