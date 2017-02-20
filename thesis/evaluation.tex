@@ -309,12 +309,30 @@ distributed part and $1060MB$ for each local one. The size does not
 change noticeably over time. $1GB$ of each database is occupied by the
 Oplog, which has a constant size because it is a capped collection.
 
-
-\todo[inline]{measure and plot network throughput distributed robot memory}
+\begin{figure}
+  \centering
+  \includegraphics[width=\textwidth]{plots/rsnetwork}
+  \caption[Network usage of distributed robot memory during an RCLL game]{Network usage of distributed robot memory during an RCLL game}
+  \label{fig:rcll-network}
+\end{figure}
+\reffig{fig:rcll-network} shows the network usage of a Replica Set to
+distribute the robot memory over the multi-robot system in the
+RCLL. The measurements are provided by MongoDB's server statistics and
+only consider the packages sent from the Primary to a Secondary. The
+network usage mostly stays below $1\frac{KB}{s}$ and rarely
+reaches about $2\frac{KB}{s}$. The usage is roughly proportional to
+the number of operations. What is interesting to notice here is that
+the amount of registered operations is smaller than the amount of
+insert, update, and delete operations in \reffig{fig:rcll-benchmark}. This
+is due to updates by the CLIPS agent, that do not apply to any
+document or change a value in document to its current value. This is
+detected by MongoDB and not distributed over the Oplog, because the
+operation did not change anything.
+% second->primary updates not shown (difficult to measure, c++ dirver
+% directly sends them to the primary)
 \todo[inline]{Comparison of network throughput with without robot memory?
   (re-syncing feature of MongoDB, not always sending whole world
   model...)}
-
 
 The second scenario is the Blocks World with the Kinova Jaco arm. The
 robot memory is included in the following processes: The overhead

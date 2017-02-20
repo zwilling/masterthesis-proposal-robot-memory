@@ -1,6 +1,6 @@
 #!/bin/bash
 
-EXPERIMENT="test"
+EXPERIMENT="rcll-rs-net"
 DURATION="14m"
 
 OUTPUT_PATH="/home/fzwilling/masterthesis-proposal-robot-memory/eval/res"
@@ -96,5 +96,38 @@ rrdtool graph "$OUTPUT_PATH/$EXPERIMENT/network.pdf" --imgformat="PDF" \
 	"LINE1:transmit#00ff00:Transmit" \
 	"COMMENT:\\n" \
 
+rrdtool graph "$OUTPUT_PATH/$EXPERIMENT/rsnetwork.pdf" --imgformat="PDF" \
+	--start="-$DURATION" --end="now" --step=5 \
+	--disable-rrdtool-tag --width=560 \
+	--font "LEGEND:10:" --font "UNIT:10:" \
+	--font "TITLE:12:" --font "AXIS:8:" \
+	--title="Replica Set Network Usage" \
+	--vertical-label "Bytes/sec" \
+	--alt-autoscale \
+	--pango-markup \
+	--grid-dash 1:2 --color "GRID#BBBBBBC4" \
+	"DEF:bytes=$INPUT/rsnetwork.rrd:bytes:AVERAGE" \
+	"LINE1:bytes#FF7200:Bytes" \
+	"COMMENT:\\n" \
+	
 
+
+rrdtool graph "$OUTPUT_PATH/$EXPERIMENT/rsnetwork-ops.pdf" --imgformat="PDF" \
+	--start="-$DURATION" --end="now" --step=5 \
+	--disable-rrdtool-tag --width=560 \
+	--font "LEGEND:10:" --font "UNIT:10:" \
+	--font "TITLE:12:" --font "AXIS:8:" \
+	--title="Replica Set Network Usage" \
+	--vertical-label "Bytes/sec" \
+	--right-axis "0.001:0" \
+	--right-axis-label "Ops/sec" \
+	--alt-autoscale \
+	--pango-markup \
+	--grid-dash 1:2 --color "GRID#BBBBBBC4" \
+	"DEF:bytes=$INPUT/rsnetwork.rrd:bytes:AVERAGE" \
+	"DEF:ops=$INPUT/rsnetwork.rrd:ops:AVERAGE" \
+	"CDEF:memavgS_ops=ops,1000,*" \
+	"LINE1:bytes#FF7200:Bytes" \
+	"LINE1:memavgS_ops#b72921:Ops" \
+	"COMMENT:\\n" \
 	
