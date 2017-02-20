@@ -33,8 +33,8 @@ relation to common sense knowledge to understand vaguely described
 tasks, such as "set the table". For representation and inference of
 knowledge, KnowRob uses Description Logic and approaches of the
 semantic web.  Each small piece of information is represented as a
-\emph{Resource Description Framework (RDF) triple} (e.g. \texttt{rdf(robot,
-holding, cup)}) that are composed of a subject, predicate, and
+\emph{Resource Description Framework (RDF) triple}, e.g., \texttt{rdf(robot,
+holding, cup)}, that are composed of a subject, predicate, and
 object. A set of these RDF triples in a network can compose
 commonsense knowledge based on the \emph{Web Ontology Language
   (OWL)}~\cite{owl}. It uses \emph{ontologies}, which can roughly be described as
@@ -73,7 +73,7 @@ action recipes from how-to websites giving step by step instructions.
 However, it has been found that this acquired knowledge needs a lot of
 manual extension and verification before it can be used by the
 robot~\cite{KnowRob-Web}. Encyclopedic knowledge often lacks action
-information needed by the robot (e.g. how to grab tools) and
+information needed by the robot, e.g., how to grab tools, and
 action recipes require human text understanding.
 \todo[inline]{add executive integration?}
 Furthermore large ontologies limit the performance of KnowRob because
@@ -84,8 +84,8 @@ back-end. It does not support sharing knowledge between multiple
 robots and has a too strong focus on data only usable for reasoning
 components. Although it can also represent spatio-temporal knowledge,
 we have performance and scalability concerns with Prolog handling
-larger data-sets (e.g. for storing locations of found object over long
-time to learn the distribution where they can be found). Although
+larger data-sets, e.g., for storing locations of found object over long
+time to learn the distribution where they can be found. Although
 KnowRob can load ontologies from a hard drive, the memory acquired
 during run-time is not persistently stored.
 
@@ -100,16 +100,16 @@ toolkit for RDF, and the inference with Pellet, a Java OWL
 reasoner. Besides knowledge storing, querying and reasoning, ORO
 features a modular architecture between the back-end storage and front
 end socket server for querying. These modules add features such as
-events that notify external components about changes (e.g. if
-instances of certain classes are added or modified).
+events that notify external components about changes, e.g., if
+instances of certain classes are added or modified.
 Another module adds representations of alternative perspectives that
 should allow understanding the point of view of other agents.
 For example when a human asks a robot to bring a
 cup, there are two cups on a table and the robot should infer which
 cup is meant by knowing that the other cup is occluded from the human's
 point of view. Furthermore ORO features categorization to find
-differences between objects (e.g. to ask if the blue cup or the red
-cup was meant in a vague task description) and memory profiles for
+differences between objects, e.g., to ask if the blue cup or the red
+cup was meant in a vague task description, and memory profiles for
 distinguishing long-term knowledge and short-term knowledge that is
 removed when the lifetime of a fact expires. Although these are useful
 features and we realized the concepts of events and memory
@@ -163,8 +163,8 @@ human demonstration and analyze faults. The focus of Open-EASE also is
 on providing the recorded data and access to KnowRob to humans using
 the web interface. This allows using Open-EASE as eLearning tool for
 students, who can explore and experiment with the data and the robotic
-system. Furthermore it fosters reproducing experiment results
-(e.g. for reviews) and visualizing them. Although the system is
+system. Furthermore it fosters reproducing experiment results, e.g.,
+for reviews, and visualizing them. Although the system is
 accessible from multiple users and robots, which can query the same
 Open-EASE instance, it is focused on single robot data and non
 collaborative processes because each user operates in his private
@@ -247,8 +247,8 @@ tables with attributes as columns and data entries as rows.
 \end{table}
 \reftab{tab:relational-example} shows an example of a relational
 database model of a library. Most relation contain a \emph{primary
-  key}, a unique value to identify a row in the relation (e.g. the
-\texttt{Id} columns in \reftab{tab:relational-example}). These keys
+  key}, a unique value to identify a row in the relation, e.g., the
+\texttt{Id} columns in \reftab{tab:relational-example}. These keys
 can be used as so called \emph{foreign keys} in other relations to
 link multiple relations, such as in
 \reftab{tab:relational-example}(c). In which relations a database is
@@ -282,7 +282,7 @@ would be necessary in relational databases, can be
 avoided~\cite{graphcomparison}. A graph-based data model that is
 widely used in robotics is the \emph{Resource Description Framework
   (RDF)}~\cite{KnowRob-Representation,Oro,OpenEASE}. It represents
-information as triples (e.g. \texttt{rdf(robot, holding, cup)}) that are
+information as triples, e.g., \texttt{rdf(robot, holding, cup)}, that are
 composed of a subject, predicate, and object~\cite{rdf}. Subjects and
 objects are represented by nodes and predicates by edges. The query
 language for RDF databases that is proposed as standard by the World
@@ -299,7 +299,7 @@ no predefined schema that enforces the structure of
 documents. Documents with similar structure are usually
 grouped into \emph{collections}. Values can be accessed
 by their key and can have different types, such as strings, numbers,
-complex objects (e.g. dates) and nested sub-documents. Therefore the documents
+complex objects, such as dates and nested sub-documents. Therefore the documents
 inserted in a collection implicitly define the structure during
 run-time. This allows a flexible use of the database because
 applications are not limited to a fixed schema and can, for example,
@@ -334,8 +334,8 @@ software~\cite{CouchDB,document-comparison}. As incorporated in its
 name, it should be relaxing to boost the productivity by being easy to
 use. It is written in the concurrency-oriented language Erlang and
 uses the JSON format to store data. Queries in CouchDB are realized with
-so called \emph{views}, which are based on JavaScript functions
-(e.g. to specify constraints, aggregation, updates). The API of
+so called \emph{views}, which are based on JavaScript functions,
+e.g., to specify constraints, aggregation, updates. The API of
 CouchDB is based on HTTP and thus focused on web applications, but
 interfaces for other languages, such as C++, also exist. What
 separates CouchDB from comparable database systems is its
@@ -359,8 +359,8 @@ format, but stores the data in a binary format called
 VelocityPack. The API is based on HTTP. ArangoDB uses the unique
 \emph{Arango Query Language (AQL)}, which is inspired by SQL and
 extended by document and graph features that account for the dynamic
-schema. Queries can be enhanced with JavaScript functions (e.g. for
-access graph features). Also the interface focuses on JavaScript, but
+schema. Queries can be enhanced with JavaScript functions, e.g., for
+access graph features. Also the interface focuses on JavaScript, but
 a C++ driver exists as well.
 
 \todo[inline]{mention multiversion concurrency control?}
@@ -560,15 +560,15 @@ are schema free and thus allow a higher flexibility during development
 and run-time. This flexibility is important because the representations of
 information on the robot tend to change during development and it is
 possible to group documents with similar purpose and different
-attributes together (e.g. facts of a world model). It also avoids
+attributes together, e.g., facts of a world model. It also avoids
 joining over many relations by storing information that
-belongs together as single document (e.g. with nesting).  Furthermore,
+belongs together as single document, e.g., with nesting.  Furthermore,
 document-oriented databases provide a simpler possibility to
 distribute the system over multiple robots. These arguments lead to
 the choice of a document-oriented database. Why we prefer MongoDB
 among other document-oriented database systems was discussed in
 \refsec{sec:mongodb}. The main reasons are the performance,
-scalability and popularity of MongoDB as well as it's query language.
+scalability and popularity of MongoDB as well as its query language.
 
 \section{MongoDB Extensions}
 \label{sec:mongodb-extensions}

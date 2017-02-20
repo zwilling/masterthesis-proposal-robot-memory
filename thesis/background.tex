@@ -1,16 +1,16 @@
 \chapter{Background}
 \label{chap:background}
-This chapter presents the background information of the
-thesis. Section~\ref{sec:mobile-robotics} gives an introduction into the
-thesis' context of mobile robotics and reasoning. In
-Section~\ref{sec:robocup} we introduce the primary application and
-evaluation domains, the RoboCup Logistics League (RCLL) and the
-RoboCup@Home league. Afterwards, we present the software context with
-robot software frameworks in
+This thesis will create a robot memory for knowledge sharing and
+hybrid reasoning. In order to do so, we first need to introduce
+background information. Section~\ref{sec:mobile-robotics} gives an
+introduction into the thesis' context of mobile robotics and
+reasoning. In Section~\ref{sec:robocup} we introduce the primary
+application and evaluation domains, the RoboCup Logistics League
+(RCLL) and the RoboCup@Home league. Afterwards, we present the
+software context with robot software frameworks in
 Section~\ref{sec:robot-software-frameworks}, planners and reasoners in
 Section~\ref{sec:planners}, and databases in
-Section~\ref{sec:databases}.
-\todo[inline]{mention moved db section}
+Section~\ref{sec:databases}.  \todo[inline]{mention moved db section}
 
 \section{Mobile Robotics and Reasoning}
 \label{sec:mobile-robotics}
@@ -34,12 +34,12 @@ act giving its sensing depends on its \emph{agent
 \emph{model-based, goal-based, and learning
   agents}~\cite{aimodern}. Reflex agents can only use the current
 sensing to compute how to react and are thus limited in their
-capabilities because they can not remember anything from previous
+capabilities because they can't remember anything from previous
 cycles. All other agent architectures have an internal state, which
 allows to take the perception history into account and implement more
 complex behavior.
 
-\subsection{Robot Memories}
+\subsection{Robot Memory}
 \label{sec:robot-memories}
 We define a \emph{robot memory} as a system that memorizes the
 internal state of a robot between two or more sense-think-act
@@ -51,7 +51,7 @@ previous observations~\cite{aimodern}.
 
 Physically, a robot memory can be stored on \emph{volatile} or
 \emph{non-volatile} devices that can be read and written. A volatile
-device, such as \emph{Random-access memory (RAM)}, can only store
+device, such as \emph{random-access memory (RAM)}, can only store
 information as long as it is powered. Usually, RAM acts as storage
 when the internal state of the robot is represented by variables in
 the programming languages used to implement the behavior of the
@@ -66,69 +66,67 @@ robot memory that is stored on a non-volatile device is called
 A robot memory is not necessarily limited to a single robot. In a
 \emph{multi-agent system}, a system that is composed of multiple
 interacting agents~\cite{multiagentsystems}, the agents can share
-their internal state. In this case, the robot memory is called
+their internal state. In this case, a robot memory used for sharing
+the state is called
 \emph{distributed}. Furthermore, we will also call a system composed
-of multiple interacting autonomous mobile robots a \emph{multi-robot
+of multiple, interacting, autonomous mobile robots a \emph{multi-robot
   system}. Similarly, a robot memory can also be shared on a single
 robot between multiple agent programs, each implementing a part of
 the robot's behavior. The architecture of a multi-agent system can be
-\emph{centralized} or \emph{distributed}. In the centralized one,
+\emph{centralized} or \emph{distributed}~\cite{RCLL-Planning}. In the centralized one,
 a central unit stores all relevant information and/or decides which
 actions each agent should execute. In the distributed one, the
 relevant information is stored and synchronized on all agents and/or
-each agents makes it's own decisions. This also introduces the need of
+each agents makes its own decisions. This also introduces the need of
 \emph{consistency}, which requires that information stored in a
-distributed system does not represent contradicting assumptions.
-\todo[inline]{Mention Master-Slave vs. Peer-to-peer?}
+distributed system has no contradictions.
+\todo[inline]{Mention Master-Slave?}
 
 \subsection{Reasoning}
 \label{sec:reasoning}
 According to Brachman and Levesque, \emph{reasoning} is the formal
-manipulation of symbols representing believed propositions to
-produce representations of new ones~\cite{kr-book}. Thus, new
-knowledge can be \emph{logically inferred} from other knowledge, by
-representing the propositions, which describe what is known or
-believed, and then performing reasoning manipulations on it.
-A simple example for logical inference is the following:
-\begin{enumerate}
-\item Caesar is a robot
-\item All robots should have a memory
-\item Therefore, Caesar should have a memory
-\end{enumerate}
-The field of \emph{knowledge representation} deals with the question
-how propositions like these can be represented in logic formalisms,
-such as First-Order Logic (FOL). \todo[inline]{introduce FOL?}
-Depending on the used formalism, different classes of propositions can
-be expressed and reasoning in these formalisms has a different
-computational complexity. Knowledge representation and reasoning are
-important parts of artificial intelligence in mobile
-robotics. Knowledge representation is used to model and memorize what
-a robot knows or beliefs about its environment and reasoning is used
-to infer what effects certain actions can have on the environment and
-which information can be inferred by made observations. The central
-tasks of reasoning systems used in this thesis are world model
-reasoning and \emph{incremental reasoning}, which determines the next best
-action to do with a robot whenever the robot is idle. An important
-area related to reasoning is \emph{planning}. After specifying a
-domain and possible actions that can be executed in the domain,
-planning can yield a sequence of actions that have to be executed to
-reach a given goal state from an initial state. Actions are formulated
-with preconditions that have to be satisfied before action can be
-performed and effects that describe how the state changes after
-executing the action. Depending on the formalism used by the planning
-systems, it is possible to minimize costs associated with actions,
-plan in temporarily constrained environments, or plan for a multi-agent
-system.
+manipulation of symbols representing believed propositions to produce
+representations of new ones~\cite{kr-book}. Thus, new knowledge can be
+\emph{logically inferred} from other knowledge, by representing the
+propositions, which describe what is known or believed, and then
+performing reasoning manipulations on it.  A simple example for
+logical inference is the following: Based on \emph{Caesar is a robot}
+and \emph{All robots should have a memory} it can be infered that
+\emph{Caesar should have a memory}.  The field of \emph{knowledge
+  representation} deals with the question how propositions like these
+can be represented in logic formalisms.  Depending on the used
+formalism, different classes of propositions can be expressed and
+reasoning in these formalisms has a different computational
+complexity. Knowledge representation and reasoning are important parts
+of artificial intelligence in mobile robotics. Knowledge
+representation is used to model and memorize what a robot knows or
+beliefs about its environment and reasoning is used to infer what
+effects certain actions can have on the environment and which
+information can be inferred by made observations. The central tasks of
+reasoning systems used in this thesis are updating a world model based
+on observations and \emph{incremental reasoning}, which determines the
+next best action to do with a robot whenever the robot is idle. An
+important area related to reasoning is \emph{task planning}. After
+specifying a domain and possible actions that can be executed in the
+domain, planning can yield a sequence of actions that have to be
+executed to reach a given goal state from an initial state. Actions
+are formulated with preconditions that have to be satisfied before
+action can be performed and effects that describe how the state
+changes after executing the action. Depending on the formalism used by
+the planning systems, it is possible to minimize costs associated with
+actions, plan in temporarily constrained environments, or plan for a
+multi-agent system. Reasoning and task planning systems belong to the
+group of knowledge-based systems (KBS), which can be described as
+systems constructed with the intentional stance to ground its design
+on symbolic representations, the knowledge base~\cite{kr-book}.
 
 The robot memory developed in this thesis expands the capabilities of
 planning and reasoning systems by providing a back-end database for
 memorizing a large amount of information and by building a bridge
 between multiple reasoning and planning systems by transforming
 information between their representations. \refsec{sec:planners}
-presents these systems and how they can profit from the robot memory
+presents these systems and how they can benefit from the robot memory
 in more detail.
-
-\todo[inline]{ definition knowledge based system here or in introduction?}
   
 \section{RoboCup}
 \label{sec:robocup}
@@ -158,11 +156,11 @@ team moves, humanoid soccer robots focusing on body control and
 limited perception, and rescue robots focusing on autonomy or partial
 tele-operation. The majority of the RoboCup leagues host soccer robots
 in different sizes and complexities. The leagues range from the
-\emph{Small Size League} with small cylindrical robots and ground
-truth perception from an overhead camera~\cite{rc-ssl} to humanoid
+\emph{Small Size League} with small cylindrical robots and external
+perception by an overhead camera~\cite{rc-ssl} to humanoid
 robots in teen size which need to have all sensors and computation
 devices on the robot~\cite{rc-book}. The RoboCup also features more
-application oriented domains, e.g. the \emph{Rescue League} with
+application oriented domains, for example the \emph{Rescue League} with
 robots solving different challenges in disaster
 scenarios~\cite{rc-rescue} and \emph{RoboCup@Work} with robots
 operating in an industrial scenario to perform identification,
@@ -266,8 +264,8 @@ multiple robots in a 3D environment with physics and
 visuals~\cite{Gazebo-Design,Gazsim-Thesis,LLSF-Sim}. The simulation
 was developed for multi-robot coordination evaluation and has
 been proven as useful tool for rapid testing and integration during
-the development of robot software (e.g. for agent reasoning, robot
-behavior, navigation graph creation, and collision avoidance). It is
+the development of robot software, e.g., for agent reasoning, robot
+behavior, navigation graph creation, and collision avoidance. It is
 the primary testing and development environment for implementing the
 robot memory in the RCLL because a full RCLL field is very costly and
 maintaining a team of robots with hardware and software takes much
@@ -403,7 +401,7 @@ exchanged by simulation plugins~\cite{Gazsim-Thesis,LLSF-Sim}.
 Furthermore, the blackboard architecture simplifies
 debugging because the current communication between two plugins,
 determined by the state of the interface, can be viewed at
-run-time. To send commands to an interface writer, e.g. a motor
+run-time. To send commands to an interface writer, e.g., a motor
 command to the motor controller, readers can send messages to the
 interface.
 As a communication infrastructure between different components, the
@@ -447,8 +445,8 @@ information, a \emph{knowledge base} with rules and procedures, and an
 \emph{inference engine} working with the knowledge base on the
 fact-base~\cite{CLIPS-RM}. The pieces of information in the fact-base
 are called \emph{facts} and consist of a name and a key-value
-structure defined in a template for \emph{unordered facts}
-(e.g. \texttt{(position~(name~robot1)~(translation~2.5~1.0~0.0)}) or an
+structure defined in a template for \emph{unordered facts},
+e.g., \texttt{(position~(name~robot1)~(translation~2.5~1.0~0.0)}, or an
 ordered list of values for \emph{ordered facts}.
 \begin{figure}
 \begin{lstlisting}[showlines,style=ReallySmallCLIPS, caption={CLIPS
@@ -499,8 +497,8 @@ fact-base. It chooses actions to take by using a technique called
 idle, it searches for the next best task and executes it.  For each
 task there is a rule with its preconditions in the antecedent and the
 actions to take in the consequent. There are also rules for modifying
-the world model (e.g. after finishing actions or getting new sensor
-data), task execution, and coordination with other robots.  The
+the world model, e.g., after finishing actions or getting new sensor
+data, task execution, and coordination with other robots.  The
 coordination of the robot team includes synchronizing their world
 model and resource allocation. Because of the synchronization, each
 robot knows what other robots noticed and changed in the
@@ -548,7 +546,7 @@ and effects. The precondition is a function free FOL sentence. In the
 example of the picking action, it represents that the object that
 should be picked is on the table and that the arm is empty. The effect
 is a universally quantified and conditional FOL sentence, but not all FOL
-sentences are allowed, e.g. sentences containing disjunctions~\cite{PDDL}. In the
+sentences are allowed, e.g., sentences containing disjunctions~\cite{PDDL}. In the
 example, the effect of the action is that the arm is not empty and the
 object is now hold and not on the table any more.
 
@@ -590,7 +588,7 @@ should be grabbed or the robot wants to go to. Thus they use geometric
 knowledge in contrast to logical reasoners and planners focusing on
 symbolic knowledge.  A motion planner needs to find a trajectory from
 the initial position to the goal position, taking the degrees of
-freedom, e.g. the joints of the robot or the maneuverability of the
+freedom, e.g., the joints of the robot or the maneuverability of the
 robot base, into account and avoiding collisions with objects in the
 environment. An example motion planner framework is \emph{MoveIt!},
 which is available for ROS~\cite{MoveIt}. Another motion planner

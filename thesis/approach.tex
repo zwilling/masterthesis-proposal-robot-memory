@@ -42,9 +42,9 @@ or each other's information. This should especially allow Knowledge
 Based Systems (KBS) to share a common world model, even if the KBS are
 of a different type. For example a planner, a world model reasoner,
 and an executive should work together using the robot memory as a
-common basis. This allows combining their specialized strengths
-(e.g. generating efficient plans, intuitive world model reasoning, and
-robust execution). Furthermore, the robot memory should help avoiding
+common basis. This allows combining their specialized strengths,
+e.g., generating efficient plans, intuitive world model reasoning, and
+robust execution. Furthermore, the robot memory should help avoiding
 inconsistencies between KBS by providing a common knowledge base so that
 only one state estimation is necessary.
 
@@ -54,7 +54,7 @@ views on the stored data are necessary. For example a planning
 components needs another part of the stored data, than a component
 learning distributions from object sights. Thus component-specific
 filters are necessary. Furthermore, different components need the
-stored data in different formats (e.g. symbolic or spatio-temporal)
+stored data in different formats, e.g., symbolic or spatio-temporal,
 depending on the used programming language and purpose. The robot
 memory has to allow defining these views and then accordingly filter
 and transform the stored information. Also keys and identifiers, which
@@ -85,16 +85,16 @@ distributed robot memory is necessary in many multi-robot domains,
 especially in the RoboCup Logistics League (RCLL), where the whole
 robot team needs to know the world model and what other robots intend
 to achieve at the moment.  Distributing the robot memory adds
-additional requirements and challenges, especially robustness (e.g. in
-the case of robots dropping out), consistency of the memory, and
+additional requirements and challenges, especially robustness, e.g., in
+the case of robots dropping out, consistency of the memory, and
 accessibility so each robot can use the robot memory without large
 latices.
 
 \textbf{Spatio-Temporal Grounding:} It is often desirable to ground
 stored knowledge based on location and time because this is the
 prerequisite for many applications, such as spatio-temporal clustering
-and learning distributions (e.g. at which day-times objects can be
-found at which positions~\cite{deebul}). Thus the robot
+and learning distributions, e.g., at which day-times objects can be
+found at which positions~\cite{deebul}. Thus the robot
 memory has to be able to store knowledge tagged with spatio-temporal
 information and consider this information while querying.
 
@@ -127,7 +127,7 @@ would also be desirable to analyze spatio-temporal data efficiently.
 \label{sec:formalism}
 \todo[inline]{emph mit textit oder textbf?}
 In this section, we lay the theoretical foundation of the robot memory
-and it's integration into knowledge based systems. First, we focus on
+and its integration into knowledge based systems. First, we focus on
 the representation of symbolic information as it is used in KBS. Here
 we take the PDDL formalism as example. The formal definition of the
 robot memory describes how knowledge is represented and how
@@ -178,8 +178,8 @@ A \textbf{database} is a finite set of documents $\mathcal{DB} \subset \mathcal{
 %% \end{align*}
 \textbf{Queries} are represented by documents $q\in\mathcal{D}$ and
 yield a set of documents $r\subseteq\mathcal{DB}$ as result when
-executed in a database according a specification (e.g. of
-MongoDB~\cite{mongodb}). For example, the query
+executed in a database according a specification, e.g., of
+MongoDB~\cite{mongodb}. For example, the query
 $\{("object","cup"),("room","kitchen")\}$ yields all documents
 containing these key-value pairs, which represent all cups in the
 kitchen.
@@ -188,8 +188,8 @@ A \textbf{computable} $f$ is a function mapping a query document and
 the current state of the database to a set of computed documents:
 $$f: \mathcal{D}\times\mathbb{P}(\mathcal{D}) \rightarrow \mathbb{P}(\mathcal{D})$$
 The power-set of documents is in the domain of a computable because the
-result can also depend on the state of the database (e.g. a computable
-calculating the number of objects in the database). For simplicity, we
+result can also depend on the state of the database, e.g., a computable
+calculating the number of objects in the database. For simplicity, we
 assume that all sensor data a computable can depend on is also
 represented in the database. The component providing the computable
 has to ensure that the function is computable and terminates.
@@ -289,8 +289,8 @@ Although it is not included in the theoretical foundation focused on
 PDDL, the robot memory can also map spatio-temporal information into
 other systems such as CLIPS and C++. Here, the documents in
 $mem(\mathcal{RM})$ are not directly mapped into the used
-representation of CLIPS (e.g. as facts) or C++ (e.g. as
-variables). Instead, there are functions for querying, which yield a
+representation of CLIPS, e.g., as facts or C++, e.g., as
+variables. Instead, there are functions for querying, which yield a
 set of documents, and functions to receive the value of a key-value
 pair in different types. Furthermore, there are functions to build
 documents and queries iteratively pair-by-pair and inserting,
@@ -362,8 +362,8 @@ According to the formal definition of computables in
 \refsec{sec:formalism}, computables are functions taking a query as
 input and returning a set of computed documents. Furthermore,
 computables can also use the documents currently provided by the robot
-memory as basis for the computation (e.g. to transform the
-coordinates written in the robot memory to another frame). The robot
+memory as basis for the computation, e.g., to transform the
+coordinates written in the robot memory to another frame. The robot
 memory has to decide when the function of a computable needs to be
 executed given an asked query. To decide this, each computable also
 contains a definition which queries can be answered by
@@ -479,7 +479,7 @@ out robot when it is started again.
 
 Triggers and computables work in a distributed robot memory. However,
 the robot that wants to be notified by the trigger or that wants to
-use the computable has to register it on it's own robot memory instance.
+use the computable has to register it on its own robot memory instance.
 
 \section{Architecture}
 \label{sec:architecture}
@@ -492,12 +492,12 @@ architecture, functional abstraction, and data
 abstraction~\cite{software-architecture} to allow
 re-usability and adaptability to changing requirements and use cases.
 %% functional abstraction,
-%% %% (e.g. of the different processes happening during storing and
-%% %% querying)
+%% %%, e.g., of the different processes happening during storing and
+%% %% querying
 %% and data abstraction.
-%% %%  (e.g. of stored knowledge which is
+%% %% , e.g., of stored knowledge which is
 %% %% more specialized internally than visible from a using
-%% %% application)
+%% %% application
 \reffig{fig:arch} shows the architecture of the robot
 memory and is explained in the following.
 \begin{figure}
@@ -531,7 +531,7 @@ receives and manages registrations of applications that want to be
 notified in the case of an event. It listens to logged changes in the
 databases to check if events happen and notifies applications
 accordingly. Additionally the operation manager can initialize the
-robot memory (e.g. to setup the world model for a new RCLL game).
+robot memory, e.g., to setup the world model for a new RCLL game.
 Between the robot memory and a planner or reasoner components, there
 is the Application Interface layer. For each KBS, it includes an
 Interface Provider component, which makes the function of the robot
@@ -544,7 +544,7 @@ key-names if they have be mapped to match the names used in the KBS
 model. Because languages and concepts of knowledge based systems can
 be very different, each KBS needs a separate Interface Provider. The
 Interface Provider can also contain a domain creator, which creates an
-initial state (e.g. a problem definition or initial fact base) from a
+initial state, e.g., a problem definition or initial fact base from a
 template and additional knowledge resulting from queries. Finally the
 Application layer contains all components using the robot memory
 either through the Interface provider or directly through the robot

@@ -43,7 +43,7 @@ operations, such as insert, query, and update. We also analyze how
 these change with computables and triggers. The goal is to find out
 how fast the robot memory works. Besides the influence of the
 implementation, the durations heavily depend on the underlying
-complexity (e.g. of a query) and \emph{domain size}, which is the
+complexity, e.g., of a query, and \emph{domain size}, which is the
 amount of information stored in the robot memory. Here, we want to
 find out how the durations scale with increasing domain size and
 increasing complexity.
@@ -140,8 +140,8 @@ documents that match the query. While the user iteratively fetches
 documents from the cursor, MongoDB continues the query evaluation if
 the batch was emptied. For the \texttt{'find object name'} query, the whole
 database was searched because the unique object could not fill the
-batch. However it is possible to request a smaller batch (e.g. only
-one) document for faster computation.  \todo[inline]{comparison with
+batch. However it is possible to request a smaller batch, e.g., only
+one, document for faster computation.  \todo[inline]{comparison with
   indexing} The overhead of the robot memory query operation does not
 depend on the domain size and has an average duration of $0.6ms$. The
 largest part of that overhead is caused by the computable manager,
@@ -238,8 +238,8 @@ before. The remaining overhead of the computable manager is the same.
 \label{sec:eval-trigger}
 Triggers notify an application when something in the database changes
 as specified in the trigger query. For this benchmark, we registered a
-trigger on new objects in a certain location (e.g. in the laundry
-box). Whether a trigger event happened, is checked each loop iteration of
+trigger on new objects in a certain location, e.g., in the laundry
+box. Whether a trigger event happened, is checked each loop iteration of
 the robot memory by the trigger manager. Because trigger queries,
 which check for these events, are only executed on the Oplog and not
 on the whole database, the time needed to check trigger depends on the
@@ -248,8 +248,8 @@ amount of registered trigger and the amount of database changes
 influence. During the insertion of the $100000$ objects, the trigger
 manager checked for trigger events $2249$ times with an average
 duration of $0.27ms$. That makes $0.006ms$ per insertion. This
-duration also depends heavily on the formulation of the trigger query
-(e.g. in the case of JavaScript usage). These measurements do not
+duration also depends heavily on the formulation of the trigger query,
+e.g., in the case of JavaScript usage. These measurements do not
 include the computation time needed by the callback function of the
 trigger. Because the callback function is executed directly, its
 computation time influences the loop time of the robot memory and can
@@ -415,7 +415,7 @@ complete. However due to the nature of document orientation, it is
 inconvenient to join documents from different collections as it would
 be done in relational databases. This problem rarely occurs because
 the document structure allows
-storing additional information (e.g. by utilizing sub-documents).
+storing additional information, e.g., by utilizing sub-documents.
 \todo[inline]{move document vs. relational?}
 The storage and retrieval functions of the robot memory are available
 to a variety of components via the C++ interface or the interface
@@ -434,9 +434,9 @@ with triggers. Multiple state estimations by
 different systems are avoided.  As shown in both application
 scenarios, the robot memory is well suited as basis for the
 collaboration and combination of multiple KBS. Accessing a common
-storage is more convenient than accessing each others working memory
-(e.g. as it was done to monitor the CLIPS world model in the
-web-interface of Fawkes).  Another advantage of memory sharing with the
+storage is more convenient than accessing each others working memory,
+e.g.,as it was done to monitor the CLIPS world model in the
+web-interface of Fawkes.  Another advantage of memory sharing with the
 robot memory is that different planners can easily be exchanged and
 thus compared. In the RCLL, we provide the world model in the robot
 memory and show how a planner and CLIPS as executive can work
@@ -527,8 +527,8 @@ in the robot memory. This is especially useful for keeping a world
 model in a KBS updated according to the robot memory. In the RCLL
 application scenario, this works well and frees the agent from
 implementing synchronization or pulling mechanisms to search for
-changes. Another beneficial use case for triggers is message passing
-(e.g. for passing a plan to an executive). This way of message passing
+changes. Another beneficial use case for triggers is message passing,
+e.g., for passing a plan to an executive. This way of message passing
 is simple. KBS can use the existing interface to the robot
 memory and messages can be changed in the development with small
 effort because documents have no fixed structure in contrast to

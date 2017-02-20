@@ -49,9 +49,9 @@ An example document stored in the back-end is shown in
 \reflst{lst:backend}. It contains knowledge about a bottle of milk as
 it could be needed by a planner with additional information where it
 should be stored later. Additionally the document contains meta
-information needed by the robot memory (e.g. if the document should be
+information needed by the robot memory, e.g., if the document should be
 stored persistently or removed at restart and when it should be
-dropped because its use-time has expired). How these documents are
+dropped because its use-time has expired. How these documents are
 parsed, serialized, stored, and queried again is handled by
 MongoDB. To connect to MongoDB from the robot memory, we use the
 \texttt{mongodb} plugin in Fawkes. It was developed for the
@@ -137,8 +137,8 @@ requires no translation before applying queries to the
 database. Furthermore it allows extending and modifying queries
 because queries are structured as documents with key-value fields and
 can be nested or executed in sequence. Another advantage of the
-MongoDB query language is that it can easily be parsed (e.g. from a
-string) by using the MongoDB C++ driver. The resulting object can be
+MongoDB query language is that it can easily be parsed, e.g., from a
+string by using the MongoDB C++ driver. The resulting object can be
 analyzed and modified for example to add key-value pairs or to check
 if computables are queried.
 
@@ -156,9 +156,9 @@ query.
 The basic operations on the robot memory are insertions, queries,
 updates, and deletions. For all four, the operation specifies on which
 collection in which database the operation should be performed. The
-collection string contains both separated by a dot
-(e.g. \texttt{'robmem.worldmodel'} for the worldmodel collection in
-the robmem database). \todo{mention default value collection?}  Using
+collection string contains both separated by a dot,
+e.g., \texttt{'robmem.worldmodel'} for the worldmodel collection in
+the robmem database. \todo{mention default value collection?}  Using
 the configurable list of shared databases, the collection string also
 specifies whether the operation should be performed on the local or
 shared \texttt{mongod} instance. Because the connections to MongoDB
@@ -307,7 +307,7 @@ on a collection, it needs to give a reference to the function
 performing the actual computation and a definition which documents can
 be provided by the computable. This definition is specified as
 \emph{computable query}, as shown in \reflst{lst:comp}a. Whenever the
-robot memory has to answer a query (e.g. \reflst{lst:comp}b) that is
+robot memory has to answer a query, for example \reflst{lst:comp}b, that is
 matched by the computable query, the computable is executed. The
 referenced function for the addition computable is shown in
 \reflst{lst:comp-func} and yields a list of computed documents that,
@@ -324,8 +324,8 @@ collection, the function of the computable is called. This function
 values in the query (\texttt{x} and \texttt{y}) to determine what
 should be computed. The function then computes a list of resulting
 documents (list containing \reflst{lst:comp}c) and returns it to the
-computable manager. By defining the computable query appropriately
-(e.g. with \texttt{\$exists}), is is ensured that all values required
+computable manager. By defining the computable query appropriately,
+e.g., with \texttt{\$exists}, is is ensured that all values required
 by the function are provided by the query. It is also possible to
 omit required values intentionally. For example the computable for
 blackboard interfaces in Fawkes, checks if an interface id is given,
@@ -418,7 +418,7 @@ sub-document under the \texttt{o} key. For each new trigger, the
 trigger manager creates a cursor on Oplog in MongoDB with the trigger
 query. Initially this cursor points to the end of the Oplog (position
 3 in \reffig{fig:oplog-cursor}). Because the Oplog is a capped
-collection, new changes (e.g. 4 and 5 in \reffig{fig:oplog-cursor})
+collection, new changes, e.g., 4 and 5 in \reffig{fig:oplog-cursor},
 are appended behind the position the cursor points to. During the main
 loop of Fawkes, the trigger manager checks for all tailable cursors if
 there are new Oplog with \texttt{o} object that match the according
@@ -638,7 +638,7 @@ causing the trigger event.
 \subsection{OpenRAVE Interface Provider}
 \label{sec:impl-openrave}
 OpenRAVE is a motion planner that finds collision free paths and
-movements of a robot (e.g. for an arm). It searches for the path in an
+movements of a robot, e.g., for an arm. It searches for the path in an
 internal representation of the robot's environment, the
 \emph{scene}. During setup or run-time, this scene is filled with
 objects the robot knows about in its environment. Because the motion
