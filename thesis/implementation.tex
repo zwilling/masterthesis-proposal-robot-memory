@@ -1,8 +1,7 @@
 \chapter{Implementation}
 \label{chap:impl}
-\todo[inline]{Here are probably more small mistakes, because I have not checked this yet}
 In the previous chapter, we presented the approach of the thesis and
-the architecture of the robot memory. On this basis, we present
+the architecture of the robot memory. On this basis, we now present
 implementation considerations in this chapter. The implementation of
 the robot memory is separated according to the layered
 architecture. \refsec{sec:back-end} presents the implementation of the
@@ -13,14 +12,15 @@ in \refsec{sec:impl-planner}. We conclude with the description of the
 evaluation scenarios and how they were implemented in
 \refsec{sec:applicationscenarios}.
 
+\todo[inline]{continue checking}
 \section{MongoDB Back-End}
 \label{sec:back-end}
 The back-end of the robot memory is based on MongoDB databases. It
 acts as storage of the robot memory and executes insert, query,
 update, and delete operations. The representation of stored information
 utilizes the document structure of MongoDB with key-value pairs and
-nested sub-documents. This allows a very flexible storage of
-information-pieces in the structure that is induced by the application
+nested sub-documents. This allows a flexible storage of
+information pieces in the structure that is induced by the application
 and can be expanded by meta information from the robot memory.
 
 \begin{wrapfigure}{r}{0.47\textwidth}
@@ -780,7 +780,7 @@ The second application scenario is the blocks world with a robotic
 arm. Blocks world is a classical planning problem about planning the
 actions of a robotic arm to stack block until a given goal state is
 reached. An example goal is stacking the blocks \texttt{A} on
-\texttt{B} on \texttt{C}. If all block lie on the table in the initial
+\texttt{B} and \texttt{B} on \texttt{C}. If all block lie on the table in the initial
 state, the planner has to figure out that a solving sequence of
 actions is to stack \texttt{B} on \texttt{C} first and \texttt{A} on
 \texttt{B} second because the arm can only hold one block.
@@ -798,11 +798,12 @@ occlusion and geometric representation and manipulation.
 \end{wrapfigure}
 \reffig{fig:blocksworld} shows this scenario and the Kinova Jaco arm
 we are using. The scenario is inspired by the RoboCup@Home league,
-which also deals with hybrid reasoning, manipulation, planning, and
-memorizing in the real world. Furthermore we choose this scenario
-because it requires many features provided by the robot memory. In the
-following, we present the different components operating in this
-scenario and how they collaborate by using the robot memory:
+which also deals with hybrid reasoning, perception, manipulation,
+planning, and memorizing observations in the real world. Furthermore
+we choose this scenario because it requires many features provided by
+the robot memory. In the following, we present the different
+components operating in this scenario and how they collaborate by
+using the robot memory:
 \\
 \textbf{Perception:} Blocks are located and identified by an AR-tag
 attached to the top surface. We use the results of the detection by
@@ -833,7 +834,7 @@ describing the available predicates \texttt{on, holding, on-table,
   putdown, stack, unstack}. We use the PDDL robot memory interface to
 generate the problem description based on the current state
 represented in the robot memory. The template is an extended version
-on \reflst{lst:template} and fills in the information, which is
+of \reflst{lst:template} and fills in the information, which is
 memorized in the robot memory or provided by computables of the
 \texttt{blocks-world-perception} plugin. All this information is
 symbolic and spatial coordinates are filtered out so that the PDDL

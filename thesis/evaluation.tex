@@ -322,7 +322,14 @@ only consider the packages sent from the Primary to a
 Secondary. MongoDB uses TCP for Replica Sets. The
 network usage mostly stays below $1\frac{KB}{s}$ and rarely
 reaches about $2\frac{KB}{s}$. The usage is roughly proportional to
-the number of operations. What is interesting to notice here is that
+the number of operations. For comparison, the previous CLIPS agent,
+which implements the world model synchronization with Protobuf
+messages, sends between $7\frac{KB}{s}$ and $9\frac{KB}{s}$ in about
+12 UDP packages over broadcast. The previous CLIPS agent acting as
+Master sends the whole world model to other robots once a second
+because it does not know if previous UDP packages reached other robots
+or if a robot was restarted and requires the whole world model again.
+ What is interesting to notice in \reffig{fig:rcll-network} is that
 the amount of registered operations is smaller than the amount of
 insert, update, and delete operations in \reffig{fig:rcll-benchmark}. This
 is due to updates by the CLIPS agent, that do not apply to any
@@ -331,9 +338,6 @@ detected by MongoDB and not distributed over the Oplog, because the
 operation did not change anything.
 % second->primary updates not shown (difficult to measure, c++ dirver
 % directly sends them to the primary)
-\todo[inline]{Comparison of network throughput with without robot memory?
-  (re-syncing feature of MongoDB, not always sending whole world
-  model...)}
 
 The second scenario is the Blocks World with the Kinova Jaco arm. The
 robot memory is included in the following processes: The overhead
@@ -475,7 +479,7 @@ track and thus to debug during the development. This is caused by the
 volatility of computed documents in the robot memory and the
 flexibility of document-orientation. Similar to programming
 languages with dynamic typing, comparisons can unintendedly fail, for
-example because of spelling mistakes in a key name or comparson
+example because of spelling mistakes in a key name or comparison
 of the string \texttt{"1"} with the number one. Because queries
 only return an empty result instead of throwing an error in such
 cases, the developer has to search for the problem. We
