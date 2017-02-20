@@ -396,7 +396,7 @@ and the experience using the robot memory in the RCLL and
 blocks world application scenarios. Both scenarios were chosen in a
 way that all important robot memory features are covered.
 
-\subsection{Flexible Storage and Retrieval:}
+\textbf{Flexible Storage and Retrieval:}
 As demonstrated in the RCLL and blocks world, the robot memory
 properly works as storage for robot data, information,
 and knowledge. Insert, query, modify, and remove functions work as
@@ -421,7 +421,7 @@ The storage and retrieval functions of the robot memory are available
 to a variety of components via the C++ interface or the interface
 providers for PDDL, CLIPS, and OpenRAVE.
 
-\subsection{Memory Sharing Between Knowledge Based Systems:}
+\textbf{Memory Sharing Between Knowledge Based Systems:}
 The robot memory allows memory sharing between multiple knowledge
 based systems. In the RCLL, we share the world model between multiple
 robots using the same CLIPS reasoning engine. In the blocks world
@@ -443,7 +443,7 @@ memory and show how a planner and CLIPS as executive can work
 together. This is also the foundation for future work with different
 planning systems in the RCLL.
 
-\subsection{Special Views for Different Components:} 
+\textbf{Special Views for Different Components:} 
 Special views on the robot memory are
 primarily realized by the used queries. A query can
 filter which part of the robot memory is shown to a component by
@@ -461,14 +461,14 @@ way. For example, a computable in the blocks world provides
 In a distributed system, the robot memory focuses the view on the shared
 and local memory of a robot and hides the local memory of other robots. 
 
-\subsection{Computation on Demand:}
+\textbf{Computation on Demand:}
 The robot memory provides computation on demand with computables. In
 the application scenarios, computables are a useful tool to provide
 functions of perception components to KBS, which only need to execute
 a usual robot memory query. They are also useful for hybrid reasoning
 because they can transform information in the robot memory to be
 usable by different components, as described in the previous
-subsection. \reffig{fig:computable-durations} shows that
+paragraph. \reffig{fig:computable-durations} shows that
 computables are fast in the sense that the overhead is small and the
 complete query time mainly depends on the computation time. Compared
 to not computing on demand, computables are more efficient because
@@ -493,7 +493,7 @@ with computables. KnowRob, for example, could be connected to the
 robot memory by querying information from the robot memory, adding it
 to its ontologies, and providing KnowRob queries via computables.
 
-\subsection{Shared Memory for Multi-Robot Systems:} 
+\textbf{Shared Memory for Multi-Robot Systems:} 
 In a multi-robot system, the robot memory can be distributed and thus
 allows information sharing. The content of the robot memory is
 consistent over the whole system and robust against failures of single
@@ -510,7 +510,7 @@ know which changes other agents already received. The distributed
 robot memory works well together with triggers to keep the world model
 updated for all CLIPS agents.
 
-\subsection{Spatio-Temporal Grounding:}
+\textbf{Spatio-Temporal Grounding:}
 The robot memory allows spatio-temporal grounding of the information
 stored in it. Due to the flexible structure and representation in documents
 with various types, such as floats and dates, adding spatio-temporal
@@ -521,7 +521,7 @@ queries. Simple operations, such as comparison, can be expressed in
 the query language and complex operation can be performed by
 computables as, for example, shown by the transform computable.
 
-\subsection{Triggers:}
+\textbf{Triggers:}
 By using triggers, components can be notified about changes
 in the robot memory. This is especially useful for keeping a world
 model in a KBS updated according to the robot memory. In the RCLL
@@ -555,7 +555,7 @@ computationally fast as shown in \refsec{sec:eval-trigger}. They
 work well in both application scenarios and are convenient for
 components using the robot memory.
 
-\subsection{Persistent Storage:}
+\textbf{Persistent Storage:}
 The robot memory provides a persistent storage. The content of the
 robot memory is stored on the hard-drive and remains after restarting
 Fawkes or the whole system. Thus the robot memory enables a robot to
@@ -563,7 +563,7 @@ have a long time memory. It is possible to mark documents that should
 not be stored persistently, by adding a expiration time or a key-value
 pair describing that this document should be removed during a restart.
 
-\subsection{Human Interface and Visualization:}
+\textbf{Human Interface and Visualization:}
 There are multiple possibilities to manually interface the robot
 memory during the development. On the one hand, it is possible to
 monitor and modify the content of the robot memory by using MongoDB

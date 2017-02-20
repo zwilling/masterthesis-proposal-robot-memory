@@ -19,7 +19,7 @@ define what the robot memory should be capable of. The evaluation in
 \refchap{chap:evaluation} refers to these goals to analyze how well
 the implementation fulfills them.
 
-\subsection{Flexible Storage and Retrieval:} The main task of
+\textbf{Flexible Storage and Retrieval:} The main task of
 the robot memory is memorizing information of the robot. Memorizing
 includes storing newly obtained information, updating it according to
 changes, removing information that is no longer valid or needed, and
@@ -33,7 +33,7 @@ of the DIKW hierarchy in any structure. For example the robot memory
 should be able to store world models, perception results and even
 large data-sets, such as remembered sights of objects.
 
-\subsection{Memory Sharing Between Knowledge Based Systems:}
+\textbf{Memory Sharing Between Knowledge Based Systems:}
 % original title of the goal: Consistent...
 The robot memory has to provide a common memory to allow consistent
 memory sharing between multiple components. Thus multiple components have to
@@ -48,7 +48,7 @@ robust execution). Furthermore, the robot memory should help avoiding
 inconsistencies between KBS by providing a common knowledge base so that
 only one state estimation is necessary.
 
-\subsection{Special Views for Different Components:} Depending on the
+\textbf{Special Views for Different Components:} Depending on the
 application of different components using the robot memory, different
 views on the stored data are necessary. For example a planning
 components needs another part of the stored data, than a component
@@ -60,7 +60,7 @@ memory has to allow defining these views and then accordingly filter
 and transform the stored information. Also keys and identifiers, which
 might be named differently, have to be translatable.
 
-\subsection{Computation on Demand:}
+\textbf{Computation on Demand:}
 \todo[inline]{call it 'knowledge' computation?}  To efficiently derive
 information only when it is necessary, the robot memory has to provide
 computation on demand. This means that some information is not stored
@@ -74,7 +74,7 @@ updated. Components using the robot memory should be able to provide
 knowledge computation functions (\emph{computables}) to the robot
 memory. This should add a lot of versatility and expandability.
 
-\subsection{Shared Memory for Multi-Robot Systems:} The robot memory
+\textbf{Shared Memory for Multi-Robot Systems:} The robot memory
 should be able to distribute parts of the memory in a multi-robot
 system. Multiple robots can then share a common world model for
 collaboration. This goal is similar to the memory sharing between
@@ -90,7 +90,7 @@ the case of robots dropping out), consistency of the memory, and
 accessibility so each robot can use the robot memory without large
 latices.
 
-\subsection{Spatio-Temporal Grounding:} It is often desirable to ground
+\textbf{Spatio-Temporal Grounding:} It is often desirable to ground
 stored knowledge based on location and time because this is the
 prerequisite for many applications, such as spatio-temporal clustering
 and learning distributions (e.g. at which day-times objects can be
@@ -98,7 +98,7 @@ found at which positions~\cite{deebul}). Thus the robot
 memory has to be able to store knowledge tagged with spatio-temporal
 information and consider this information while querying.
 
-\subsection{Triggers:} The robot memory should be able to notify
+\textbf{Triggers:} The robot memory should be able to notify
 components about relevant changes in the memory. These notifications
 about specified events are called \emph{triggers} and should
 automatically be sent after a component registers an event it wants to
@@ -108,7 +108,7 @@ sentences becoming true or queries returning new information.
 An example use case that should be supported by the robot memory is
 updating reasoner predicates according to changes in the memory.
 
-\subsection{Persistent Storage:} The robot memory should be persistent
+\textbf{Persistent Storage:} The robot memory should be persistent
 to be able to store long-time knowledge and operate over long times,
 in which a robot might be restarted. This is necessary in many
 domains, such as for domestic service robots and RCLL robots that
@@ -116,7 +116,7 @@ might be restarted. Furthermore, it should be possible to distinguish
 information that is persistent and information that becomes invalid
 after a restart and should be removed.
 
-\subsection{Human Interface and Visualization:} An important factor in the
+\textbf{Human Interface and Visualization:} An important factor in the
 development of a robotic systems is the accessibility of underlying
 components for easier debugging and modeling. Therefore the robot
 memory needs to provide an interface for developers to introspect and
