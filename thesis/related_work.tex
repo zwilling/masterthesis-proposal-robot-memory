@@ -1,16 +1,17 @@
 \chapter{Related Work}
 \label{chap:related}
 This chapter gives an overview of the related work. First,
-\refsec{sec:rw-robmems} presents other robot memories with similar
-approaches and goals. In \refsec{sec:basis-representation}, we compare
-different systems that can be used as a basis for a robot memory and
-explain our choice for the document-oriented database
-MongoDB. \refsec{sec:mongodb-extensions} presents related work about
-extensions of MongoDB that are similar to the extensions we add for
-the use of MongoDB in our robot memory.
-\todo[inline]{mention moved db section}
+\refsec{sec:rw-robmems} presents other information storage systems for
+robots with similar
+\todo[inline]{superset term for robot memories} approaches and
+goals. In refsec{sec:databases}, we present database systems that
+could be used for a robot memory and explain our choice for the
+document-oriented database MongoDB in
+\refsec{sec:basis-representation}. \refsec{sec:mongodb-extensions} then
+presents related work about extensions of MongoDB that are similar to
+the extensions we add for the use of MongoDB in our robot memory.
 
-\section{Robot Memories}
+\section{Information Storage Systems for Robots}
 \label{sec:rw-robmems}
 Because a memory is an important part of a robot, there already are
 various implementations and designs for it. However, there are only
@@ -177,19 +178,18 @@ current publications or on the project
 website\footnote{\url{http://www.open-ease.org/}}.
 
 \todo[inline]{Section for ROSPlan/MongoStore?}
-\todo[inline]{Section for RoboEarth?}
 
 \section{Databases}
 \label{sec:databases}
 Since storing, keeping, and retrieving information with the robot
 memory are central tasks of this thesis, the choice of a database
 system is important. In the following, we present the three popular
-database technologies, namely relational, graph-based and document
-oriented databases. Because we choose the document-oriented
-technology, we present implementations of it in
-\refsec{sec:documentdbs}. MongoDB, the database implementation used as
-a basis in this thesis, is presented separately in
-\refsec{sec:mongodb}.
+database technologies, namely relational, graph-based, and
+document-oriented databases. Because we later decide to use
+document-orientation in robot memory, we present document-oriented
+databases in \refsec{sec:documentdbs}. MongoDB, the database
+implementation used as a basis in this thesis, is presented separately
+in \refsec{sec:mongodb}.
 
 \subsection{Database Technologies}
 \label{sec:db-designs}
@@ -249,7 +249,7 @@ tables with attributes as columns and data entries as rows.
 database model of a library. Most relation contain a \emph{primary
   key}, a unique value to identify a row in the relation, e.g., the
 \texttt{Id} columns in \reftab{tab:relational-example}. These keys
-can be used as so called \emph{foreign keys} in other relations to
+can be used as so-called \emph{foreign keys} to
 link multiple relations, such as in
 \reftab{tab:relational-example}(c). In which relations a database is
 structured and which attributes relations contain is defined by the
@@ -263,6 +263,8 @@ feature of relational databases and SQL is joining multiple relations
 by using foreign keys. For example, this allows listing the titles of
 borrowed books together with the name of the borrower from
 \reftab{tab:relational-example}.
+\todo[inline]{with the SQL query ...}
+\todo[inline]{example relational database: PostgreSQL}
 
 \subsubsection{Graph-Based}
 \label{sec:graph-design}
@@ -309,34 +311,62 @@ document structure tends to change often. Even if there are documents
 with different structure, the application can choose to retrieve only
 certain documents by giving a specialized query. Each document also
 contains a unique key, similar to a primary key in relational
-databases. The query languages of document-oriented databases are not
+databases.
+In contrast to relational databases, which \emph{normalize}
+information into multiple relations to minimize redundancy, document-oriented ones focus on
+bundling related information in documents (\emph{denormalization}).
+This simplifies horizontal scaling in distributed systems because required
+information is available at one place.
+The query languages of document-oriented databases are not
 so standardized as of relational databases shown in
 \refsec{sec:documentdbs}. However, most document-oriented databases
-have the usage of the \emph{JavaScript Object Notation (JSON)} format
-in common. JSON is a lightweight data-interchange format similar to
+have the usage of the \emph{JavaScript Object Notation (JSON)} as input format
+in common.
+\begin{wrapfigure}{r}{0.33\textwidth}
+  \vspace{-0.4cm}
+\begin{lstlisting}[style=SmallJSON,
+  caption={JSON document},
+  label=lst:json,
+  framexleftmargin=1pt, xleftmargin=0pt,
+ morekeywords={}, numbers=none]
+ {
+   "key": "value",
+   "subdocument":
+     {"x":3, "y":1},
+   "array":
+     [{"n":0.1},{"n":2}]
+}
+\end{lstlisting}
+\vspace{-8mm}
+\end{wrapfigure}
+An example of a JSON document is shown in \reffig{lst:json}.
+JSON is a lightweight data-interchange format similar to
 the \emph{Extensible Markup Language (XML)}~\cite{json}. It is human
 readable and assembles objects with key-value pairs. Because these
 objects can also be nested, they can represent documents. Compared to
-XML, JSON is faster and more compact~\cite{json-comparison}.
+XML, JSON is faster and more compact~\cite{json-comparison}. In the
+following, we omitt quotation marks around JSON keys for more compact
+presentation.
+
 
 \subsection{Document-oriented Databases}
 \label{sec:documentdbs}
-There are multiple database managing systems based on the document
-oriented model. Here, we present three popular open source
-implementations that were considered for this thesis. CouchDB and
-ArangoDB are introduced in this Subsection an MongoDB is covered in
-the next Subsection in more detail.
+There are multiple database managing systems, which are based on the
+document oriented model and could be used in this thesis. Here, we
+present three popular open source implementations that we
+considered. CouchDB and ArangoDB are introduced in this Subsection an
+MongoDB is covered in the next Subsection in more detail.
 
 \subsubsection{CouchDB}
 \label{sec:couchdb}
 Apache CouchDB\footnote{\url{http://couchdb.apache.org/}} is an open source document-oriented database
-software~\cite{CouchDB,document-comparison}. As incorporated in its
-name, it should be relaxing to boost the productivity by being easy to
-use. It is written in the concurrency-oriented language Erlang and
+software~\cite{CouchDB,document-comparison}.
+It is written in the concurrency-oriented language Erlang and
 uses the JSON format to store data. Queries in CouchDB are realized with
 so called \emph{views}, which are based on JavaScript functions,
-e.g., to specify constraints, aggregation, updates. The API of
-CouchDB is based on HTTP and thus focused on web applications, but
+e.g., to specify constraints, aggregation, updates. The
+\emph{Application programming interface (API)} of
+CouchDB is based on the Hypertext Transfer Protocol (HTTP) and thus focused on web applications, but
 interfaces for other languages, such as C++, also exist. What
 separates CouchDB from comparable database systems is its
 \emph{multiversion concurrency control}. In a distributed system,
@@ -344,10 +374,11 @@ CouchDB does not guarantee consistency. It provides a system called
 Multi-Master Replication, which allows writing to all replication
 instances.  Conflicts can be solved similar to a version control
 system, thus multiple conflicting versions can be kept in parallel for
-later revision.
-
-\todo[inline]{mention scalability through asynchronous replication, no
-  sharding?}
+later revision. Because of the multiversion concurrency control,
+CouchDB also support asynchronous replication. Thus it is possible to
+write on two replication instances concurrently. On a multi-robot
+system that would avoid idling times waiting for write access, but
+introduces the problem of solving conflicts later.
 
 \subsubsection{ArangoDB}
 \label{sec:arangodb}
@@ -356,19 +387,20 @@ apart from other database managing systems is that it combines document
 oriented and graph-based models in a so called
 \emph{multi-model}~\cite{arango-manual,arango}. It supports the JSON
 format, but stores the data in a binary format called
-VelocityPack. The API is based on HTTP. ArangoDB uses the unique
+VelocityPack. The API is based on HTTP. ArangoDB uses the
 \emph{Arango Query Language (AQL)}, which is inspired by SQL and
 extended by document and graph features that account for the dynamic
 schema. Queries can be enhanced with JavaScript functions, e.g., for
 access graph features. Also the interface focuses on JavaScript, but
-a C++ driver exists as well.
-
-\todo[inline]{mention multiversion concurrency control?}
+a C++ driver exists as well. Similar to CouchDB, ArangoDB also
+features multiversion concurrency control. For a robot memory,
+ArangoDB would have the advantage that ontological knowledge could be
+properly represented and queried since it has a graph structure.
 
 \subsection{MongoDB}
 \label{sec:mongodb}
-MongoDB\footnote{\url{https://www.mongodb.com/}} is a document-oriented database that fits particularly
-well for the application in this thesis. It provides many useful
+MongoDB\footnote{\url{https://www.mongodb.com/}} is a
+document-oriented database. It provides many useful
 features, such as flexible data structures, aggregation, and
 distribution over multiple machines, which would take a large effort
 to implement manually. It has proven as powerful and scalable data
@@ -420,17 +452,21 @@ timestamp greater than the given one. Multiple key-value pairs in a
 query are conjunctive.  Values can be checked and compared as in the
 example with a variety of operators such as \texttt{not}, \texttt{or},
 \texttt{equals}, \texttt{greater than}, etc. These queries can be
-evaluated very quickly, especially when \emph{indexing} is used, a
-database feature that manages indexes for a combination of document
-keys. For more complex queries, it is possible to add arbitrary
-JavaScript functions with the \texttt{where} operator to check if
-documents match the query. Furthermore, it is possible to aggregate
+evaluated very quickly, especially when \emph{indexing} is
+used. Indexing is a
+database feature that, similary to binary search, allows to lookup
+documents faster than in linear time by sorting them for combination of document
+keys, the \emph{index}. For more complex queries, it is possible to add arbitrary
+JavaScript functions, which check if documents are matched.
+Furthermore, it is possible to aggregate
 results using the \emph{Map-Reduce} paradigm~\cite{mapreduce}, which
 maps resulting documents to intermediate documents which are then
 reduced until the end-result is found. For example this allows
 querying for the nearest visible object by getting all visible
 objects, mapping their position to a distance and reducing them to the
-nearest one by dropping more distant ones when comparing them.  The
+nearest one by dropping more distant ones when comparing them.
+\todo[inline]{explain map and reduce steps more?}
+ The
 higher expressiveness of these queries comes with the price of slower
 computation. However, the computational effort can be reduced by
 formulating queries smartly. Many usual queries,
@@ -481,16 +517,16 @@ collection is full.
 MongoDB is especially well suited for this thesis because of its
 performance and scalability compared to the document-oriented
 databases CouchDB and
-ArangoDB~\cite{db-comparison,arango-vs-mongo}. Especially compared to
-CouchDB, MongoDB provides faster interaction times. This could be
-caused by the fact that queries in CouchDB purely rely on JavaScript
+ArangoDB~\cite{arango-vs-mongo}. Especially compared to
+CouchDB, MongoDB provides faster interaction times~\cite{db-comparison}. This could be
+caused by the HTTP interface or by the fact that queries in CouchDB purely rely on JavaScript
 functions that have to be evaluated and computed during querying. The
 query language of MongoDB also provides an additional syntax for
 simple queries for faster evaluation in C++. Compared to ArangoDB,
 MongoDB has a larger community and more features, such as Map-Reduce
 and saving larger files. Furthermore it was already used successfully
-and efficiently in Fawkes and the RCLL as logging database~\cite{RoboDB}.
-\todo[inline]{JS example?}
+and efficiently in Fawkes and the RCLL as logging
+database~\cite{RoboDB,RCLL2015Eval}.
 
 \section{Choice for Underlying Basis System}
 \label{sec:basis-representation}
@@ -569,6 +605,7 @@ the choice of a document-oriented database. Why we prefer MongoDB
 among other document-oriented database systems was discussed in
 \refsec{sec:mongodb}. The main reasons are the performance,
 scalability and popularity of MongoDB as well as its query language.
+\todo[inline]{denormalization, horizontal scaling}
 
 \section{MongoDB Extensions}
 \label{sec:mongodb-extensions}
