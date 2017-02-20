@@ -318,7 +318,8 @@ Oplog, which has a constant size because it is a capped collection.
 \reffig{fig:rcll-network} shows the network usage of a Replica Set to
 distribute the robot memory over the multi-robot system in the
 RCLL. The measurements are provided by MongoDB's server statistics and
-only consider the packages sent from the Primary to a Secondary. The
+only consider the packages sent from the Primary to a
+Secondary. MongoDB uses TCP for Replica Sets. The
 network usage mostly stays below $1\frac{KB}{s}$ and rarely
 reaches about $2\frac{KB}{s}$. The usage is roughly proportional to
 the number of operations. What is interesting to notice here is that
@@ -489,17 +490,21 @@ robot memory by querying information from the robot memory, adding it
 to its ontologies, and providing KnowRob queries via computables.
 
 \subsection{Shared Memory for Multi-Robot Systems:} 
-\todo[inline]{eval shared memory multi-robot system}
-%% If the distribution of the
-%% knowledge would not be implemented in the robot memory it would have
-%% to be implemented separately. 
-consistency
-\todo[inline]{wifi real vs. sim}
-\todo[inline]{synchronization mongodb changes, instead of changes and
-  full wm in protobuf}
-more convenient than implementing and strongly typing a message
-  communication system
-\todo[inline]{mention quantitative evaluation}
+In a multi-robot system, the robot memory can be distributed and thus
+allows information sharing. The content of the robot memory is
+consistent over the whole system and robust against failures of single
+robots. Because of the persistency, it is even robust against a restart
+of all robots. As showed in \reffig{fig:rcll-network}, the network
+usage is small and only depends on changes in the robot memory. In the
+RCLL application scenario, the synchronization of the world model with
+the robot memory is convenient. It frees the CLIPS agent from
+implementing its own synchronization and provides more
+features. Especially useful is the focus on sending only changes and
+detecting when a full re-synchronization is necessary. Previously the
+CLIPS agent sent the full world model once a second because it did not
+know which changes other agents already received. The distributed
+robot memory works well together with triggers to keep the world model
+updated for all CLIPS agents.
 
 \subsection{Spatio-Temporal Grounding:}
 The robot memory allows spatio-temporal grounding of the information
