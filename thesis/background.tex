@@ -91,7 +91,7 @@ representations of new ones~\cite{kr-book}. Thus, new knowledge can be
 propositions, which describe what is known or believed, and then
 performing reasoning manipulations on it.  A simple example for
 logical inference is the following: Based on \emph{Caesar is a robot}
-and \emph{All robots should have a memory} it can be infered that
+and \emph{All robots should have a memory} it can be inferred that
 \emph{Caesar should have a memory}.  The field of \emph{knowledge
   representation} deals with the question how propositions like these
 can be represented in logic formalisms.  Depending on the used
@@ -117,8 +117,8 @@ the planning systems, it is possible to minimize costs associated with
 actions, plan in temporarily constrained environments, or plan for a
 multi-agent system. Reasoning and task planning systems belong to the
 group of knowledge-based systems (KBS), which can be described as
-systems constructed with the intentional stance to ground its design
-on symbolic representations, the knowledge base~\cite{kr-book}.
+systems that intentionally ground their processes on symbolic
+representations, the knowledge base~\cite{kr-book}.
 
 The robot memory developed in this thesis expands the capabilities of
 planning and reasoning systems by providing a back-end database for
@@ -182,7 +182,7 @@ robots have to plan, execute, and optimize the material and product
 flow between machines to produce and deliver products according to
 dynamic orders. Each competing team deploys a group of three robots
 that has to build ordered products autonomously by interacting with
-\emph{Modular Production Machines (MPS)} and transporting work pieces
+\emph{Modular Production Machines (MPS)} and transporting workpieces
 between these machines.
 \begin{wrapfigure}{r}{0.3\textwidth}
   \centering
@@ -193,21 +193,22 @@ between these machines.
   \label{fig:rcll}
 \end{wrapfigure}
 \reffig{fig:rcll} shows an RCLL robot filling a machine that mounts
-colored rings on work pieces. The robots are based on the Festo
+colored rings on workpieces. The robots are based on the Festo
 Robotino 3 platform, which uses a holonomic drive, and can be extended
 and programmed by the teams. The robot shown in \reffig{fig:rcll} was
 built by the Carologistics team and uses a laser range finder for
-localization, a custom made gripper for handling work pieces, and
+localization, a custom made gripper for handling workpieces, and
 several cameras for detection of markers and light-signals mounted on
 the machines~\cite{Carologistics2015,chapter-cps}. The game is
 controlled by a software component called \emph{referee box (refbox)}
-which randomizes the machine placement in the factory and the
+which acts as agent to control the environment~\cite{RCLL-Planning}.
+It randomizes machine placements in the factory and
 production orders, communicates with participating robots, controls
 machines, and awards points.
 
 The game consists of two phases. In the first phase, the
 \emph{exploration phase}, the robots have to roam the factory to find
-randomly placed machines, which are used later. By detecting the
+randomly placed machines, which are to be used later. By detecting the
 light signal shown by the machines, the robots can determine the
 machine-type. For correct reports of discovered machines to the refbox
 the team is awarded with points, for incorrect ones points are subtracted.
@@ -223,7 +224,7 @@ the team is awarded with points, for incorrect ones points are subtracted.
   \end{minipage}
   \caption[Production chain of a high complexity
     product in the RCLL]{Production chain of a high complexity
-    product in the RCLL}
+    product in the RCLL~\cite{chapter-cps}}
   \vspace{-2mm}
   \label{fig:prod-chain}
 \end{figure}
@@ -235,7 +236,7 @@ colored cap.  \reffig{fig:prod-chain} shows the production chain for
 building a high complexity product.  There are four different machine
 types. The \emph{base-station (BS)} provides new bases, the colored
 cups, as raw resource. The \emph{ring stations (RS)} mounts colored
-rings on a work piece after preparing it with a varying amount of
+rings on a workpiece after preparing it with a varying amount of
 bases.  The \emph{cap-station (CS)} mounts black or gray caps to
 finish a product after loading it with a cap form a shelf first.
 Finally, the \emph{delivery-station (DS)} is used to deliver products.
@@ -244,17 +245,19 @@ A major challenge of the RCLL lies in the fully autonomous task
 planning and coordination of the multi-robot system in the dynamic
 environment with spatial information and time constraints. The
 dynamism of the environment is caused by the randomization of the factory
-layout, machine out-of-order times, ordered product composition and
+layout, machine out-of-order times, product orders and
 unknown obstacles, such as the robots of other teams. Furthermore,
 baseline robotic challenges such as collision avoidance, perception
 and behavior execution need to be solved. To outperform opponent
 teams, the robots have to build as many ordered products as possible
-and deliver them in time given time window.  To cope with these
-challenges, a multi-robot decision making is necessary and therefore a
-mechanism to share knowledge about the world model between the
-robots. This can be done by the robot memory, which also allows
-combining a global planner for finding plans and a reasoner for plan
-execution.
+and deliver them in the given time window. To cope with these
+challenges, a decision making process needs the knowledge about the
+environment, which is collected by the whole robot team. Therefore the
+world model containing this knowledge has to be shared between the robots.
+This can be done by the robot memory, which also allows
+combining a global task planner looking in the future and a reasoner
+for executing plans step by step and updating the world model with
+current observations.
 
 In the course of this thesis, we use a simulation of the
 RCLL\footnote{\url{https://www.fawkesrobotics.org/projects/rcll-sim/}}
@@ -267,7 +270,7 @@ been proven as useful tool for rapid testing and integration during
 the development of robot software, e.g., for agent reasoning, robot
 behavior, navigation graph creation, and collision avoidance. It is
 the primary testing and development environment for implementing the
-robot memory in the RCLL because a full RCLL field is very costly and
+robot memory in the RCLL because a full RCLL field is not available for us and
 maintaining a team of robots with hardware and software takes much
 effort and time. For the majority of robot software components, the
 simulation is close enough to reality to yield similar results and
@@ -277,7 +280,7 @@ visual perception by shape, and physical gripper actuation. Here, the
 simulation uses an approach called \emph{multi-level abstraction},
 which allows to simulate vision not only on the sensor data level
 (providing a simulated image), but also on the perception level
-(providing simulated perception results).
+(providing simulated perception results)~\cite{Multi-Level-Abstraction}.
 
 \subsection{RoboCup@Home League}
 The RoboCup@Home league is a competition about domestic service
@@ -287,7 +290,7 @@ serving
 \begin{wrapfigure}{r}{0.2\textwidth}
   \centering
   \includegraphics[width=0.2\textwidth]{img/ceasar}%
-  \caption[RoboCup@Home robot tidying up]{RoboCup@Home robot tidying up~\cite{wisspeintner2009robocup}}
+  \caption[RoboCup@Home robot Caesar tidying up]{RoboCup@Home robot Caesar tidying up~\cite{wisspeintner2009robocup}}
   \vspace{-3mm}
   \label{fig:athome}
 \end{wrapfigure}
@@ -321,21 +324,22 @@ it can help with hybrid reasoning by transforming spatio-temporal
 knowledge into symbolic knowledge with computables.  Another challenge
 is that detecting and manipulating objects in a personal environment
 can be difficult because the space the robot acts in, for example the
-fridge, can be very clouded. The robot memory can help here, becasue
+fridge, can be very clouded. The robot memory can help here, because
 it is useful to keep an internal model of the environment instead of
-only relying on the current perception
-results. \todo[inline]{introduce Caesar? Mention @Home simulation?} 
+only relying on the current perception results.
 
 \section{Robot Software Frameworks}
 \label{sec:robot-software-frameworks}
 A \emph{robot software framework} can be defined as design and
-implementation of a middleware for the implementation of a robot
-control software~\cite{tnthesis,orocos}. It provides basic functionality,
-infrastructure, and tools to develop robot software. Furthermore, it
-can define a standard for component interfaces that allows building on
-a variety of open source solutions for robotic problems. In the
-following, we introduce the widely used Robot Operating System and
-Fawkes~\cite{Gazsim-Thesis}, which is used in this thesis.
+implementation providing a possible solution for controlling a robot
+with basic software libraries, a communication middleware, and a
+run-time environment~\cite{tnthesis,orocos}.
+%
+Furthermore, it defines a standard for component interfaces that
+allows building on a variety of open source solutions for robotic
+problems. In the following, we introduce the widely used Robot
+Operating System and Fawkes~\cite{Gazsim-Thesis}, which is used in
+this thesis.
 \subsection{Robot Operating System (ROS)}
 \label{sec:ros}
 The open source robot software framework
@@ -347,18 +351,16 @@ integration framework~\cite{Ros,ros-book}. The components integrated
 in ROS consists of processes called \emph{nodes}. These nodes can
 exchange information over a peer-to-peer communication network. There
 are communication channels called \emph{topics}. Nodes can register a
-publisher to send messages on a topic or subscriber to a specified
-\emph{topic} to receive all messages sent on it. Messages are encoded
-using the Google Protocol Buffers (Protobuf) message protocol, which
-enforces a fixed message structure. A central process called
-\texttt{Roscore} manages the registration of publishers and
-subscribers. It is also responsible for loading configurations and
-managing nodes.
+publisher to send messages on a topic or a subscriber to receive
+messages sent over a specified topic. There message types defining 
+the fixed structure of a message with nesting. A central process
+called \texttt{Roscore} manages the registration of publishers and
+subscribers. It is also a broker nodes and configurations.
 
 In the RCLL, ROS is used by multiple teams~\cite{rc-2014}. The
 Carologistics team uses ROS primarily for and localization and
 visualization of sensor and perception data with the \texttt{Rviz}
-package. In previous years, it also used the ROS package
+package. In the years 2012 and 2013, it also used the ROS package
 \texttt{move\_base}, which provides local motion planning with
 collision avoidance.
 
@@ -377,12 +379,12 @@ perception, reasoning, and behavior execution. Compiled components can
 be loaded as \emph{plugins} at run-time.
 %
 Plugin activity is organized in threads to make use of multiple CPU
-cores. The threads can be run continuously or hooked into the
+cores. The threads can be run concurrently or hooked into the
 main-loop of Fawkes to order the execution into a
 \emph{sense-think-act} cycle.  This ensures that higher-level
 components can use the latest perception data.  Fawkes softly
 guarantees loop times by monitoring which threads are running for too
-long and pausing them. These are advantages in comparison to ROS,
+long and suspending to waking them up until they recovered. These are advantages in comparison to ROS,
 because the components can be closer integrated. Features in Fawkes
 are provided as \emph{aspects}. These are based on aspect-oriented
 programming~\cite{aspect_oriented} and give access to particular
@@ -390,10 +392,10 @@ features. Threads that need to use a feature can inherit from the
 corresponding aspect. For example, there are aspects for logging,
 transforms, and specific external libraries~\cite{tnthesis}.
 
-The communication between plugins uses a \emph{hybrid blackboard}
+The communication between plugins uses a \emph{hybrid blackboard messaging}
 paradigm. The blackboard lists structured entries called
 \emph{interfaces}, which contain qualitative and quantitative
-information.  Interfaces can be provided by one plugin at a time, the
+information.  Interfaces can be provided by at most one plugin at a time, the
 writer, and read by other plugins, the readers. This allows a flexible
 communication because the interface is independent from the concrete
 writer and readers.  For example, sensor and actor plugins can be
@@ -415,9 +417,8 @@ or event-triggers.
 
 \section{Planners and Reasoners}
 \label{sec:planners}
-This section gives an overview of planners and reasoners benefiting
-from the robot memory. We introduce three systems that belong to
-different fields of planning and reasoning: These are \emph{CLIPS}, a
+In this thesis, there three planning and reasoning systems benefiting
+from the robot memory. These are \emph{CLIPS}, a
 rule-based production system, the \emph{Planning Domain Definition
   Language (PDDL)}, which incorporates a family of planning formalisms
 into a standard programming language, and OpenRAVE, a \emph{motion
@@ -434,7 +435,7 @@ The CLIPS Rules Engine\footnote{\url{http://www.clipsrules.net/}} belongs to the
   production systems}, which can be defined as knowledge based system
 using forward chaining based on the \emph{Rete
   algorithm}~\cite{aimodern}. The Rete algorithm efficiently determines
-which preconditions of forward chaining rules can be matched by the
+which conditions of forward chaining rules can be matched by the
 knowledge base, even with a large number of rules and facts by
 constructing a data-flow graph and keeping partial
 matches~\cite{Rete}. CLIPS is the basis of the currently used reasoner
@@ -471,15 +472,14 @@ ordered list of values for \emph{ordered facts}.
 \end{lstlisting} %$ This is just to fix Emacs highlighting due to dollar sign in code above
 \end{figure}
 An example rule is shown in \reflst{lst:clips-rule}. Rules are
-composed of an \emph{antecedent} and a \emph{consequent}. The
-antecedent is the first part of the rule and describes the condition
-that has to be satisfied before the rule is considered for activation.
+composed of an \emph{antecedent} (lines 2-4) and a \emph{consequent} (lines 6-8). The
+antecedent is the first part of the rule and describes the conditions
+that have to be satisfied before the rule is considered for activation.
 It consists of a list of patterns that have to be matched by facts in
 the fact-base. For the antecedent in \reflst{lst:clips-rule}, there
 have to be fitting \texttt{state}, \texttt{visible}, and
 \texttt{position} facts with matching constants and variables, which
-start with question marks. The consequent is written behind the
-antecedent and defines the procedure to execute when the rule is
+start with question marks. The consequent defines the procedure to execute when the rule is
 activated. It usually modifies the fact-base by retracting and
 asserting facts, for example to exchange the \texttt{state} fact. The
 inference engine checks which rule antecedents are satisfied and puts
@@ -487,7 +487,7 @@ only them on the \emph{agenda}. Which rule of the agenda is executed,
 is determined by a conflict resolution strategy such as highest
 priority or earliest on the agenda. The consequent of the chosen rule
 is executed and the inference engine checks again. \emph{Functions}
-encode procedural knowledge, can have side effects, and also be
+encode procedural knowledge, can have side effects, and can also be
 implemented in C++.
 
 The Carologistics RCLL agent implemented in CLIPS represents its
@@ -503,7 +503,7 @@ coordination of the robot team includes synchronizing their world
 model and resource allocation. Because of the synchronization, each
 robot knows what other robots noticed and changed in the
 environment. The resource allocation ensures that no two robots try to
-use the same machine at a time or try to achieve the same goal by
+use the same machine at the same time or try to achieve the same goal by
 choosing a redundant task. This coordination was already implemented
 in CLIPS rules using Google Protocol Buffers (Protobuf)
 messages. During this thesis, we developed an alternative
@@ -520,7 +520,7 @@ PDDL is a standardized language for planning
 problems~\cite{PDDL}. It allows modeling the nature and behavior of a
 domain as well as the \emph{actions} possible to perform in a
 \emph{domain description}. An additional \emph{problem description}
-defines the problem to solve. Both together can be given to a PDDL
+defines the problem to solve. Both together can be given to a PDDL-based
 planner that typically searches for a totally or partially ordered
 sequence of actions, the \emph{plan}, to solve the problem.
 \begin{figure}
@@ -554,40 +554,40 @@ There are various versions and extensions of PDDL which introduce new
 concepts and features. For example, PDDL~2.1~\cite{PDDL2.1} adds
 numeric values and continuous actions. This allows finding plans in
 continuous environments where, for example, distances and travel times
-matter. PDDL has the advantage of being able to find complete and
+matter. Planners based on PDDL can have the advantage of being able to find complete and
 optimal or efficient plans depending on the model. However, this comes
 with the drawbacks of high computational effort for larger domains and
-the problem of adopting to events during plan execution. For example
+the problem of adapting to events during plan execution. For example
 when the domain is not fully observable, the robot could sense changes
 in the environment or fail executing an action. This would require
 notifying the planner, incorporating the changes in PDDL and
 re-planning. To solve this problem, the robot memory allows
-combining PDDL with an execution in CLIPS. Then PDDL generates an
-efficient and complete plan with coarse actions and CLIPS executes the
-plan action for action, while monitoring the execution and updating
+combining a PDDL-based planner with an execution in CLIPS. Then the
+planner can generates an
+efficient and complete plan with coarse actions and the executive can
+carry out the plan step by step, while monitoring the execution and updating
 the world model according to perceived changes. This world model is
-written into the robot memory so that PDDL can access the world model
-with all changes applied.  % This way the strengths of both PDDL and
-% CLIPS can be combined.
+written into the robot memory so that the world model with all changes
+applied can be represented in PDDL.
 
 Because PDDL is only a standardized language for formulating planning
-problems, a concrete planner program is necessary to find plans. There
+problems, a concrete PDDL-based planner program is necessary to find plans. There
 is a variety of planners. Many compete in the International
 Planning Competition (IPC), which provides a benchmark and ranking for
 multiple problem domains with different
-complexities~\cite{planning-competition}. An example of a widely used
-and successful planner in the IPC is (FF)~\cite{hoffmannFF}. FF uses
+complexities~\cite{planning-competition}. In this thesis, we use FF, a successful
+planner of the IPC. FF uses
 forward state space search and a heuristic that ignores the negative
-literals in action effects.
+literals in action effects~\cite{hoffmannFF}.
 
 \subsection{Motion Planners}
 Another kind of widely used planning in robotics is geometric motion
-planning. They usually plan the motion of a robotic arm or the path of
-a driving robot to reach a certain goal position where an object
-should be grabbed or the robot wants to go to. Thus they use geometric
+planning. They find collision free trajectories in an n-dimensional
+space to reach a goal position from the initial position. Common use cases
+are planning the motion of a robotic arm to grasp or place something
+and finding paths for driving robots. Thus motion planners use geometric
 knowledge in contrast to logical reasoners and planners focusing on
-symbolic knowledge.  A motion planner needs to find a trajectory from
-the initial position to the goal position, taking the degrees of
+symbolic knowledge.  When searching for an trajectory, it needs to take the degrees of
 freedom, e.g., the joints of the robot or the maneuverability of the
 robot base, into account and avoiding collisions with objects in the
 environment. An example motion planner framework is \emph{MoveIt!},
@@ -604,8 +604,7 @@ sharing information about objects and obstacles in the environment.
 They can better work together with other planners and task execution
 components because they can access the same knowledge base. This
 avoids double state estimations, which can cause inconsistencies. To
-be usable by motions planners, the robot memory has to be able to
+be usable by motion planners, the robot memory has to be able to
 represent hybrid information in the form of continuous positions and
 time related events.
 
-\todo[inline]{extend? (JS example, gridfs)}
