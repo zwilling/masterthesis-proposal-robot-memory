@@ -19,16 +19,16 @@ systems. For example, domestic robots serving breakfast need a memory
 to know which items belong on the table and where they are
 stored. Intelligent factory robots need to remember where products are
 in the factory and what other robots are doing.
-%
+
 This thesis focuses on developing such a \emph{robot memory}. Basic
 requirements are representing, storing, and querying information. The
 information can contain sensor data, recognized object positions,
 symbolic knowledge, and beliefs. Thus the representation has to be
 flexible enough to store symbolic and spatio-temporal information. The
 representation we chose is \emph{document-oriented}. Pieces of
-information are bundled as \emph{documents}, which are a set of
+information are bundled as \emph{documents}, which are sets of
 \emph{key-value pairs} with nesting and data typing. As
-back-end storage system, we use the document-oriented database system
+back-end storage system, we use the document-oriented database
 \emph{MongoDB}. This has multiple advantages we need for the robot
 memory, for example long time storage and the possibility of
 distribution.
@@ -56,10 +56,10 @@ purposes and internal concepts, they require different views on the
 robot memory. On the one hand, they need a filter to only get relevant
 information. On the other hand, they require the information to be in
 the appropriate format. For the example of the robot position, a
-motion planner needs it as 3D coordinates and a symbolic planner needs
+motion planner needs it as geometric coordinates and a symbolic planner needs
 it as string describing the location (e.g. \texttt{"kitchen"}). The robot memory
 provides these views and supports hybrid reasoning by transforming
-between spatio-temporal and symbolic information. We provide views via
+between spatio-temporal and symbolic information. Views are provided via
 interfaces to multiple KBS. For example, the PDDL interface can
 generate files describing the state of the environment, which is
 represented in the robot memory.  To transform between spatio-temporal
@@ -69,7 +69,7 @@ robot memory analyzes queries to figure out if information covered by
 a computable is necessary for answering. In this case, it calls the
 component providing the information by a computation
 function. Computables also allow interfacing perception and save
-computational effort. For example, imagine a query for the distance of
+computational effort. Imagine a query for the distance of
 two objects. This can be computed quickly, but storing all distances
 between each two objects and keeping them updated would be
 inefficient.

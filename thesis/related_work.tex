@@ -175,8 +175,6 @@ planners exchanging knowledge over the web service is not mentioned in
 current publications or on the project
 website\footnote{\url{http://www.open-ease.org/}}.
 
-\todo[inline]{Section for ROSPlan/MongoStore?}
-
 \section{Databases}
 \label{sec:databases}
 Since storing, keeping, and retrieving information with the robot
@@ -481,9 +479,7 @@ maps resulting documents to intermediate documents which are then
 reduced until the end-result is found. For example this allows
 querying for the nearest visible object by getting all visible
 objects, mapping their position to a distance and reducing them to the
-nearest one by dropping more distant ones when comparing them.
-\todo[inline]{explain map and reduce steps more?}
- The
+nearest one by dropping more distant ones when comparing them. The
 higher expressiveness of these queries comes with the price of slower
 computation. However, the computational effort can be reduced by
 formulating queries smartly. Many usual queries,
@@ -672,5 +668,3 @@ applies changes in a Slave replication to the local Master.  To detect
 changes in a replica, MMM utilizes MongoDB's Oplog similar to this
 thesis. It queries the Oplog, which is capped collection, as described
 in the \refsec{sec:mongodb-trigger}.
-
-% \todo[inline]{related work zu on demand computation in MongoDB: Ontology mediated queries}
