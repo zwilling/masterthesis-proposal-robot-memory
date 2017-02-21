@@ -195,10 +195,19 @@ restart of the whole system because of the persistency.
 There are multiple possibilities to manually interface the robot
 memory during the development. On the one hand, it is possible to
 monitor and modify the content of the robot memory by using MongoDB
-tools. There are the \texttt{mongo} command line program provided by
+tools.
+\begin{figure}
+  \centering
+  \vspace{-4mm}
+  \includegraphics[width=0.7\textwidth]{img/robomongo-small}%
+  \caption[Robomongo screenshot]{Robomongo screenshot}
+  \vspace{-5mm}
+  \label{fig:robomongo}
+\end{figure}
+There are the \texttt{mongo} command line program provided by
 MongoDB and GUI based programs, such as
 \emph{Robomongo}\footnote{\url{https://robomongo.org/}}, which
-provides a table like view on collections and allows to perform
+provides a table like view on collections as shown in \reffig{fig:robomongo} and allows to perform
 modifications without being familiar to the MongoDB syntax. This
 leads to simple and efficient monitoring during the development.
 On the other hand, the robot memory can be
@@ -211,7 +220,6 @@ visualize spatio-temporal data in the robot memory. For example, the
 computation times in \reffig{fig:eval-durations-2} were inserted as
 documents in the robot memory and plotted using the
 \texttt{matplotlib} and \texttt{pymongo} libraries for Python.
-\todo[inline]{screenshot Robomongo}
 
 \section{Evaluation context}
 \label{sec:eval-context}
