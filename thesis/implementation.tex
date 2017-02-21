@@ -317,11 +317,13 @@ in this example, only contains the result shown in
 later by the original query in \reflst{lst:comp}b.
 
 The computable manager checks whether queries passed to it can be
-answered by registered computables. To check if the robot memory query
-is matched by a computable spec, the robot memory query is inserted
-as document in a separate and empty collection. When this inserted
-document is returned by performing the computable spec as query on the
-collection, the function of the computable is called. This function
+answered by registered computables. Because the MongoDB C++ driver
+supports no unification or matching method outside the database, we
+perform the matching inside the database. Firstly the robot memory query is inserted
+as document in a separate and empty collection. Secondly the
+computable spec is executed as querry on that collection to check if the robot memory query
+is matched by the computable spec. Thus when the computable spec
+returns the robot memory query as result, the function of the computable is called. This function
 (\reflst{lst:comp-func}) takes the query causing the computation
 (\reflst{lst:comp}b) and the collection as parameters. Thus it can use
 values in the query (\texttt{x} and \texttt{y}) to determine what
@@ -693,7 +695,7 @@ The two scenarios are chosen in a way that they
 cover all major features of the robot memory and that they are
 prototypes for applications the robot memory is made for.
 In \refsec{sec:app-rcll}, we present how the robot memory is used in
-the RCLL to synchronize the worldmodel between multiple robots, and in
+the RCLL to synchronize the world model between multiple robots, and in
 \refsec{sec:app-blocks-world}, we present the use of the robot memory
 in a block stacking scenario with a robot arm.
 
@@ -881,13 +883,14 @@ robot memory.
 is planned with OpenRAVE.
 \begin{wrapfigure}{r}{0.3\textwidth}
   \centering
+  \vspace{-4mm}
   \includegraphics[width=0.3\textwidth]{img/openrave-blocks}%
   \caption[Blocks world OpenRAVE scene]{Blocks world OpenRAVE scene}
   \vspace{-4mm}
   \label{fig:openrave}
 \end{wrapfigure}
-\reffig{fig:openrave} shows the motion planner scene OpenRAVE
-visualizes and plans in. The scene is constructed with by the OpenRAVE
+\reffig{fig:openrave} shows the motion planner scene of OpenRAVE
+and the path it planned in blue. The scene is constructed with by the OpenRAVE
 robot memory interface, which queries the position, name, and type of
 all objects in the environment from the robot memory. An example
 document, which can be inserted from the robot memory into the

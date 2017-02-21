@@ -1,7 +1,8 @@
 \chapter{Evaluation}
 \label{chap:evaluation}
-This chapter presents the evaluation results of the thesis. After some
-remarks about the evaluation context in \refsec{sec:eval-context}, we
+Qualitatively, \refsec{sec:qualitative} evaluates
+how well the robot memory fulfills the goals defined in the approach.
+After some remarks about the context of the quantitative evaluation in \refsec{sec:eval-context}, we
 analyze the durations of different robot memory operations in
 \refsec{sec:op-durations}. This includes comparing the durations for
 different expressiveness levels and database sizes to find a
@@ -10,393 +11,17 @@ analyze the overhead of database operations introduced by robot memory
 features. In \refsec{sec:performance} we present the performance of
 the system in both introduced application scenarios. This includes CPU
 and memory usage, network throughput, and statistics about robot
-memory operations. Qualitatively, \refsec{sec:qualitative} evaluates
-how well the robot memory fulfills the goals defined in the approach.
-\todo[inline]{check qualitative preview}
-
-\section{Evaluation context}
-\label{sec:eval-context}
-The benchmarks presented in this chapter were performed on Fedora 23
-systems with 16 GB RAM and an Intel Core i7-3770 with four hyper-threading enabled cores at
-$3.4$~GHz. For local benchmarks, everything, including Fawkes, MongoDB,
-the Gazebo simulation and ROS, ran on a single system. For distributed
-benchmarks, three identical systems were used. Each system hosted its
-own Fawkes, ROS, and MongoDB processes and one system additionally,
-hosts the Gazebo simulation.
-
-Since the robot memory runs inside the Fawkes framework and thus
-inside the Fawkes process, the performance of the robot memory is
-influenced by Fawkes and can not directly be measured separately. The
-influences are caused by other components, such as localization,
-reasoning, and collision avoidance, and by the thread management of
-Fawkes. To softly guarantee loop times for other threads, Fawkes
-suspends threads with a too long loop iteration. When measuring
-durations of robot memory operations, this can increase large
-measurement values because if an operation takes longer than the
-allowed loop iteration time, the time being suspended is added to the
-measurement.
-
-\section{Robot Memory Operations}
-\label{sec:op-durations}
-In this section, we analyze the run-time durations of robot memory
-operations, such as insert, query, and update. We also analyze how
-these change with computables and triggers. The goal is to find out
-how fast the robot memory works. Besides the influence of the
-implementation, the durations heavily depend on the underlying
-complexity, e.g., of a query, and \emph{domain size}, which is the
-amount of information stored in the robot memory. Here, we want to
-find out how the durations scale with increasing domain size and
-increasing complexity.
-
-The structure of the data used for this evaluation is chosen in a way
-to be similar to information that is usually stored in a robot
-memory. Furthermore, it should simplify the analysis. The used data mimics
-a robot's knowledge about object and their positions to solve a tidy
-up scenario. For each object, the robot memory contains a document
-with the object's name, current position, and the storage position it
-belongs to. Names are unique and storage positions are randomly chosen
-out of $1000$ possibilities. Objects are at a random misplaced position with
-probability $0.01$ and at their proper storage position otherwise. The
-object's name is a string to enforce string comparisons, which are
-expected to be often needed in a real scenario. For evaluation
-reasons, we do not index the collection by the object names right now
-because this heavily impacts the duration. An evaluation plugin in
-Fawkes generates the data and calls random operations. To analyze how
-the durations scale with the domain size, the plugin calls the
-operations repeatedly after increasing the domain size from $0$ to
-$100000$ documents by steps of $1000$ documents.
-
-The analysis is separated into the main classes of operations, namely
-insertions in \refsec{sec:insertions}, queries in
-\refsec{sec:queries}, and updates in \refsec{sec:updates}. Because
-deletions behave very similar to updates, both search for documents
-and work with them, they are also covered in the section about
-updates. \refsec{sec:eval-computables} covers and explains the impact
-of computables on query durations and \refsec{sec:eval-trigger} deals
-with the impact of event triggers. Operations that are performed
-rarely are not analyzed. For example dropping or restoring a collection and
-registration of triggers and computables are only performed once
-during initialization.  In the course of implementing and evaluating
-the application scenarios, their durations were not noticeable compared
-to the initialization time of the whole robot software.
-
-\subsection{Insertions}
-\label{sec:insertions}
-\begin{figure}
-  \centering
-  \begin{subfigure}[b]{0.49\textwidth}
-    \includegraphics[width=\textwidth]{plots/insert-durations}
-    \caption{Insertions}
-    \label{fig:insert-durations}
-  \end{subfigure}
-  \begin{subfigure}[b]{0.49\textwidth}
-    \includegraphics[width=\textwidth]{plots/query-durations}
-    \caption{Queries}
-    \label{fig:query-durations}
-  \end{subfigure}
-  \caption[Duration of robot memory operations with increasing domain size]{Duration of robot memory operations with increasing domain size}
-  \label{fig:eval-durations-1}
-\end{figure}
-\todo[inline]{larger axis labels?}
-The insertion of a new document into the robot memory is overall the
-fastest operation.
-\reffig{fig:insert-durations} shows the distribution of
-insert durations with increasing domain size. It is noticeable that the
-duration does not depend on the domain size and thus has run-time
-complexity of $O(1)$. The insertion time is small with an average of
-$0.125ms$. However, there are single outliers not present in
-\reffig{fig:insert-durations}. These outliers occur periodically, when
-MongoDB flushes database changes from the RAM to the hard drive. We
-could reduce the occurrence frequency of these outliers to one in $60s$, which is the
-default flushing frequency of MongoDB. To reach this, we had to
-disable the forward logging of MongoDB, called Journaling. In this
-evaluation scenario, the outliers took about $0.3s$ because of the
-large amount of written documents and the threading in Fawkes.  The
-overhead of the robot memory compared to the duration of the raw
-MongoDB operation has an average of $0.006ms$, which is about $5.5\%$.
-The overhead is caused by verifying the collection name, deciding if
-the local or distributed database is used, adding meta-data, and
-mutual exclusion of database usage. The robot memory overhead measured
-here does not include checking if triggers were activated by inserting
-the document. This is caused by the asynchronous and separate checking by
-the trigger manager. The size and the complexity of inserted
-documents did not make a noticeable difference.\todo{need to add
-  numbers?}
-
-\subsection{Queries}
-\label{sec:queries}
-Queries are more complex operations than insertions and also take more
-time. \reffig{fig:query-durations} shows that query durations heavily
-depend on many factors, such as domain-size and query complexity. The
-query durations, when searching for an object by its unique name,
-linearly depend on the domain size. The other plot shows the query
-durations for finding objects that are not at their storage location
-and thus would have to be tidied up. The query is more complex
-because it contains a comparison between two values that is formulated
-in JavaScript. From $0$ to about $10000$ documents, also a linear
-increase can be seen. With more documents the average duration does
-not increase, because of a query evaluation trick of MongoDB. MongoDB
-lazily evaluates queries and returns a cursor to the first batch of
-documents that match the query. While the user iteratively fetches
-documents from the cursor, MongoDB continues the query evaluation if
-the batch was emptied. For the \texttt{'find object name'} query, the whole
-database was searched because the unique object could not fill the
-batch. However it is possible to request a smaller batch, e.g., only
-one, document for faster computation.  \todo[inline]{comparison with
-  indexing} The overhead of the robot memory query operation does not
-depend on the domain size and has an average duration of $0.6ms$. The
-largest part of that overhead is caused by the computable manager,
-even if in this scenario no computables are registered. The computable
-manager performs a single insert and remove on a separate collection
-to prepare checking if the query matches a computable and to clean up
-afterwards. Because of this insertion, the duration spikes observed
-for insertions can also occur for queries. As \reffig{fig:query-durations}
-shows, the query duration heavily depends on the complexity of the
-query. Especially the expressive JavaScript functions are expensive
-compared to the MongoDB internal query language without JavaScript. By
-formulating queries smartly, complex questions can often be
-efficient in practice. For example, checking whether the dishwasher
-is full sounds like a question that is computationally costly because
-it requires a JavaScript function. But it can be formulated efficiently
-by first filtering only the objects in the dishwasher with a fast
-JavaScript-free query and then summing up the objects volume to check
-if it exceeds a given threshold. This way the costly sum computation,
-which can be done by aggregation or JavaScript, only needs to be
-computed for the few objects in the dishwasher.
-  \todo[inline]{concrete example for query formulation?}
-  \todo[inline]{aggregation/map-reduce graph?}
-
-\subsection{Updates and Deletions}
-\label{sec:updates}
-\begin{figure}
-  \centering
-  \begin{subfigure}[b]{0.49\textwidth}
-    \includegraphics[width=\textwidth]{plots/update-durations}
-    \caption{Updates}
-    \label{fig:update-durations}
-  \end{subfigure}
-  \begin{subfigure}[b]{0.49\textwidth}
-    \includegraphics[width=\textwidth]{plots/computable-durations}
-    \caption{Computables}
-    \label{fig:computable-durations}
-  \end{subfigure}
-  \caption[Duration of robot memory operations with increasing domain size]{Duration of robot memory operations with increasing domain size}
-  \label{fig:eval-durations-2}
-\end{figure}
-Updates consist of a query defining what should be updated and some
-key-value pairs, which should be changed. Thus the duration of an
-update should be similar to a query plus an
-insertion. \reffig{fig:update-durations} shows the duration of
-position updates of objects with a random name. Because the used
-update operation only updates a single document, the durations are
-roughly uniformly distributed with an upper bound matching the
-duration of \texttt{'find object'} queries in
-\reffig{fig:query-durations}. Thus the duration of update operations
-also scale linearly with the domain size. Duration of queries
-searching for only one document also behave as in
-\reffig{fig:update-durations}.  Because delete operations also consist
-of a query and a fast change operation, they behave similar to
-updates. The difference is that by default deletions are executed on
-all documents and updates only on a single one. For both deletions and
-updates, the overhead does not depend on the database size. Both
-updates and deletions have an average overhead duration below
-$0.02ms$. In contrast to to query operations, the computable manager
-is not involved, because computed documents should not be updated and
-they do not need to be removed manually.
-
-\subsection{Computables}
-\label{sec:eval-computables}
-Computables generate new information when it is demanded by a
-query. Thus each new query is checked by the computable manager as
-explained in \refsec{sec:queries}. \reffig{fig:computable-durations}
-shows the time needed for checking if a query demands a computable and
-for computing the results. The computable used in
-\reffig{fig:computable-durations} calculates the distance of the robot
-to the closest object in the database and yields the object's name,
-position, and distance. The measurement does not include the query
-duration of finding the computed document. The computation time of
-the computable itself scales linear with the domain size because each
-object's distance needs to be checked. The time of the overhead does
-not depend on the domain size. The overhead includes inserting the
-original query in MongoDB, evaluating the demand query for each
-registered computable to check if the original query demands the
-computable, and a clean up operation. Furthermore, the results of the
-computable need to be inserted into the robot memory. Asynchronously
-in the main loop of the robot memory, computed documents are removed
-again. Thus the time needed for computables depends on the amount of
-registered computables, the amount of computed documents, and mainly
-the computation time needed for each matching computable itself. This
-computation time can get large if the computable solves problems with
-higher complexity. For example a computable that finds the pair of
-objects with the smallest distance to each other would scale
-quadratically with the domain size. To avoid repeated computation of
-the same data, we implemented caching for computables. As long as
-specified by the caching time, the computation step is skipped if the
-new query is identical to the query that demanded the computation
-before. The remaining overhead of the computable manager is the same.
-
-\subsection{Trigger}
-\label{sec:eval-trigger}
-Triggers notify an application when something in the database changes
-as specified in the trigger query. For this benchmark, we registered a
-trigger on new objects in a certain location, e.g., in the laundry
-box. Whether a trigger event happened, is checked each loop iteration of
-the robot memory by the trigger manager. Because trigger queries,
-which check for these events, are only executed on the Oplog and not
-on the whole database, the time needed to check trigger depends on the
-amount of registered trigger and the amount of database changes
-(insertions, updates, and deletions). The current domain size has no
-influence. During the insertion of the $100000$ objects, the trigger
-manager checked for trigger events $2249$ times with an average
-duration of $0.27ms$. That makes $0.006ms$ per insertion. This
-duration also depends heavily on the formulation of the trigger query,
-e.g., in the case of JavaScript usage. These measurements do not
-include the computation time needed by the callback function of the
-trigger. Because the callback function is executed directly, its
-computation time influences the loop time of the robot memory and can
-in the worst case block it.
-
-\section{Performance in evaluation scenarios}
-\label{sec:performance}
-To evaluate the performance of the robot memory, we performed
-benchmarks in multiple application scenarios. The measurements during
-the experiments were stored and plotted
-with the Round Robin Database Tool (RRD) as in~\cite{RoboDB}. The
-first scenario is a simulated RoboCup Logistics League game, in which
-the synchronization of the worldmodel between the robots was
-implemented with the robot memory.
-\begin{figure}
-  \centering
-  \begin{subfigure}[b]{1\textwidth}
-    \includegraphics[width=\textwidth]{plots/rcll-local/cpu-mem}
-    \label{fig:rcll-cpu-mem}
-  \end{subfigure}
-  \begin{subfigure}[b]{1\textwidth}
-    \includegraphics[width=\textwidth]{plots/rcll-local/operations}
-    \label{fig:rcll-ops}
-  \end{subfigure}
-  \caption[Benchmark during a locally simulated RCLL game]{Benchmark during a locally simulated RCLL game}
-  \label{fig:rcll-benchmark}
-\end{figure}
-\reffig{fig:rcll-benchmark} shows the CPU and memory usage, as well as
-the operations performed by MongoDB. For clarity only the CPU and
-memory usage of one Fawkes instance of the three robots is
-plotted. Both MongoDB processes, one for the robot local robot memory
-and one for the distributed worldmodel, have a CPU usage below $1\%$
-and a memory usage below $40MB$. This is not surprising because the
-robot's world model that needs to be synchronized in the RCLL only has
-a size of $60$ to $100$ documents with an average object size of $390$
-bytes. It only grows slowly because most of the documents are updated
-and there are few new documents for incoming orders and and work-pieces
-in production. This is also shown by the MongoDB operation count shown
-in \reffig{fig:rcll-benchmark}, which matches the operation count of
-the robot memory. The values include the database operations of
-all three robots. \reffig{fig:rcll-benchmark} shows that the mostly
-used operation is the \emph{Getmore} operation, which checks for an
-existing query cursor if there are more matching documents than in the
-previous batch. This is caused by the computable manager because it
-periodically checks the Oplog for new changes that have to be reported
-to the CLIPS agent. Since the robot memory runs inside the Fawkes
-process, its CPU and memory usage is included in the values of Fawkes
-in \reffig{fig:rcll-benchmark}. The growing memory usage of Fawkes is
-also present in benchmarks of the RCLL simulation without the robot
-memory and the CPU curve looks similar. Thus the robot memory plugin
-has no large impact on the performance in this scenario. \todo{mention
-amcl,colli, reasoning because they cause most CPU usage of Fawkes?}
-\todo[inline]{Also show RCLL graph without robot memory? (looks
-  boringly similar, but might be satisfying for the reader to verify)}
-The size of the database on the hard-drive is about $1097MB$ for the
-distributed part and $1060MB$ for each local one. The size does not
-change noticeably over time. $1GB$ of each database is occupied by the
-Oplog, which has a constant size because it is a capped collection.
-
-\begin{figure}
-  \centering
-  \includegraphics[width=\textwidth]{plots/rsnetwork}
-  \caption[Network usage of distributed robot memory during an RCLL game]{Network usage of distributed robot memory during an RCLL game}
-  \label{fig:rcll-network}
-\end{figure}
-\reffig{fig:rcll-network} shows the network usage of a Replica Set to
-distribute the robot memory over the multi-robot system in the
-RCLL. The measurements are provided by MongoDB's server statistics and
-only consider the packages sent from the Primary to a
-Secondary. MongoDB uses TCP for Replica Sets. The
-network usage mostly stays below $1\frac{KB}{s}$ and rarely
-reaches about $2\frac{KB}{s}$. The usage is roughly proportional to
-the number of operations. For comparison, the previous CLIPS agent,
-which implements the world model synchronization with Protobuf
-messages, sends between $7\frac{KB}{s}$ and $9\frac{KB}{s}$ in about
-12 UDP packages over broadcast. The previous CLIPS agent acting as
-Master sends the whole world model to other robots once a second
-because it does not know if previous UDP packages reached other robots
-or if a robot was restarted and requires the whole world model again.
- What is interesting to notice in \reffig{fig:rcll-network} is that
-the amount of registered operations is smaller than the amount of
-insert, update, and delete operations in \reffig{fig:rcll-benchmark}. This
-is due to updates by the CLIPS agent, that do not apply to any
-document or change a value in document to its current value. This is
-detected by MongoDB and not distributed over the Oplog, because the
-operation did not change anything.
-% second->primary updates not shown (difficult to measure, c++ dirver
-% directly sends them to the primary)
-\todo[inline]{mention wifi issues no tested}
-
-The second scenario is the Blocks World with the Kinova Jaco arm. The
-robot memory is included in the following processes: The overhead
-vision detects markers on blocks and publishes their position on the
-blackboard. The PDDL model generation constructs a problem description
-from symbolic information in the robot memory. A part of this
-information is provided by computables for \texttt{on-table} and
-\texttt{clear} predicates. There are also computables for the
-transformation of block positions and accessing the blackboard. The
-computables for predicates are provided by a perception plugin. This
-plugin continuously writes the block positions into the robot memory
-for demonstration purposes. This is not very efficient because
-continuously updating block positions requires executing the
-blackboard computable and transform computable very often. A
-computable that only inserts block positions when necessary would be
-more efficient.
-
-\begin{figure}
-  \centering
-  \begin{subfigure}[b]{1\textwidth}
-    \includegraphics[width=\textwidth]{plots/blocksworld/cpu-mem}
-    \label{fig:blocks-cpu-mem}
-  \end{subfigure}
-  \begin{subfigure}[b]{1\textwidth}
-    \includegraphics[width=\textwidth]{plots/blocksworld/operations}
-    \label{fig:blocks-ops}
-  \end{subfigure}
-  \caption[Benchmark during Blocks World demo]{Benchmark during Blocks World demo}
-  \label{fig:blocks-benchmark}
-\end{figure}
-\reffig{fig:blocks-benchmark} shows the CPU and memory usage as well as the
-operation count in MongoDB during the execution of two plans with 8
-and 12 actions.  \todo[inline]{explain two hills-two plan executions (amount of visible blocks?)}
-
-The amount of update operations is constant because the block
-positions and their visibility state are constantly updated. The large
-amount of queries, insertions, and deletions is mainly caused by the
-blackboard and transform computables, which are executed to update the
-block positions. The blackboard computable inserts the interface
-values into the robot memory and the transform computable queries
-these values and inserts the transformed values. For each query that
-needs to be checked by the computable manager, one insert and deletion
-is performed as well as a query for each registered computable.  The
-CPU usage of Fawkes and the CPU and memory usage of MongoDB are similar
-to the results of the RCLL benchmark.
-\todo[inline]{memory usage
-  Fawkes caused by OpenRAVE?}
-
+memory operations.
 
 \section{Qualitative Evaluation}
 \label{sec:qualitative}
-In this section, we quantitatively evaluate the robot memory based on
-the goals defined in \refsec{sec:goals}. We discuss how well the
+As a guideline for the quantitative evaluation, we use the goals defined
+in \refsec{sec:goals}. We discuss how well the
 features of the robot memory work based on the quantitative evaluation
 and the experience using the robot memory in the RCLL and
 blocks world application scenarios. Both scenarios were chosen in a
 way that all important robot memory features are covered.
+\todo[inline]{check consistency after reordering}
 
 \textbf{Flexible Storage and Retrieval:}
 As demonstrated in the RCLL and blocks world, the robot memory
@@ -406,19 +31,16 @@ supposed and are quality controlled by unit-tests. The robot memory is flexible
 enough to maintain various kinds of information, such as symbolic knowledge
 about a world model in the RCLL, spatial information about block
 positions in the blocks world, and temporal information about how long
-cached information has to be kept. As shown in
-\refsec{sec:op-durations}, robot memory operations are very fast for
-simple operations and reasonably fast for complex queries.
+cached information has to be kept.
 From our experience in the application scenarios, complex
 queries are rarely required and can often be made faster by
 reformulation.  Because of JavaScript usage, aggregation, and
-Map-Reduce, queries are very expressive, since JavaScript is Turing
-complete. However due to the nature of document orientation, it is
+Map-Reduce, queries are very expressive.
+However due to the document-oriented nature, it is
 inconvenient to join documents from different collections as it would
 be done in relational databases. This problem rarely occurs because
 the document structure allows
 storing additional information, e.g., by utilizing sub-documents.
-\todo[inline]{move document vs. relational?}
 The storage and retrieval functions of the robot memory are available
 to a variety of components via the C++ interface or the interface
 providers for PDDL, CLIPS, and OpenRAVE.
@@ -436,9 +58,9 @@ with triggers. Multiple state estimations by
 different systems are avoided.  As shown in both application
 scenarios, the robot memory is well suited as basis for the
 collaboration and combination of multiple KBS. Accessing a common
-storage is more convenient than accessing each others working memory,
-e.g.,as it was done to monitor the CLIPS world model in the
-web-interface of Fawkes.  Another advantage of memory sharing with the
+storage is more convenient than accessing each others working memory
+because of a well defined interface and higher exchangability.
+Another advantage of memory sharing with the
 robot memory is that different planners can easily be exchanged and
 thus compared. In the RCLL, we provide the world model in the robot
 memory and show how a planner and CLIPS as executive can work
@@ -454,14 +76,16 @@ of MongoDB. Queries can also be used to rename keys of key-value pairs
 in returned documents. The robot memory does not directly rename keys
 or values. Thus, if some planner uses another identifier for an object
 than a reasoner, one of them has to implement the mapping, for example
-by providing a computable. An example for such a mapping is
-the transform computable, which provides positions in other coordinate
-systems. Computables also simplify hybrid reasoning because they allow
-symbolic KBS to view spatio-temporal information in a symbolic
-way. For example, a computable in the blocks world provides
+by providing a computable. The robot memory also simplifies hybrid
+reasoning by providing a symbolic or spatio-temporal view if
+appropriate computables are registered. For example, a computable in the blocks world provides
 \texttt{on-table} predicates, which are derived from block positions.
+Special view on the robot memory are also provided by model
+generators such as the PDDL model generator, which creates a PDDL
+problem description from information represented in the robot memory.
 In a distributed system, the robot memory focuses the view on the shared
-and local memory of a robot and hides the local memory of other robots. 
+and local memory of a robot and hides the local memory of other
+robots.
 
 \textbf{Computation on Demand:}
 The robot memory provides computation on demand with computables. In
@@ -473,7 +97,7 @@ usable by different components, as described in the previous
 paragraph. \reffig{fig:computable-durations} shows that
 computables are fast in the sense that the overhead is small and the
 complete query time mainly depends on the computation time. Compared
-to not computing on demand, computables are more efficient because
+to computing everything in advance, computables are more efficient because
 they are only evaluated when required and for required parameters.
 A disadvantage we noticed when heavily using computables in the blocks
 world scenario is that the data flow over computables is difficult to
@@ -482,7 +106,7 @@ volatility of computed documents in the robot memory and the
 flexibility of document-orientation. Similar to programming
 languages with dynamic typing, comparisons can unintendedly fail, for
 example because of spelling mistakes in a key name or comparison
-of the string \texttt{"1"} with the number one. Because queries
+of the string \texttt{"1"} with the number 1. Because queries
 only return an empty result instead of throwing an error in such
 cases, the developer has to search for the problem. We
 simplify this search by providing a configurable logging mechanism of
@@ -498,8 +122,7 @@ to its ontologies, and providing KnowRob queries via computables.
 \textbf{Distributed Memory for Multi-Robot Systems:} 
 In a multi-robot system, the robot memory can be distributed and thus
 allows information sharing. It is robust against failures of single
-robots. Because of the persistency, it is even robust against a restart
-of all robots. The content of the robot memory is
+robots. The content of the robot memory is
 eventually consistent over the whole system because changes are
 distributed with a slight delay.  As showed in \reffig{fig:rcll-network}, the network
 usage is small and only depends on changes in the robot memory. In the
@@ -565,6 +188,8 @@ Fawkes or the whole system. Thus the robot memory enables a robot to
 have a long time memory. It is possible to mark documents that should
 not be stored persistently, by adding a expiration time or a key-value
 pair describing that this document should be removed during a restart.
+In a multi-robot system, the distributed robot memory is even robust against a
+restart of the whole system because of the persistency.
 
 \textbf{Human Interface and Visualization:}
 There are multiple possibilities to manually interface the robot
@@ -586,5 +211,384 @@ visualize spatio-temporal data in the robot memory. For example, the
 computation times in \reffig{fig:eval-durations-2} were inserted as
 documents in the robot memory and plotted using the
 \texttt{matplotlib} and \texttt{pymongo} libraries for Python.
-
 \todo[inline]{screenshot Robomongo}
+
+\section{Evaluation context}
+\label{sec:eval-context}
+The benchmarks presented in this chapter were performed on Fedora 23
+systems with 16 GB RAM, a spinning hard-drive, and an Intel Core i7-3770
+with four hyper-threading enabled cores at
+$3.4$~GHz. For local benchmarks, everything, including Fawkes, MongoDB,
+the Gazebo simulation and ROS, ran on a single system. For distributed
+benchmarks, three identical systems were used. Each system hosted its
+own Fawkes, ROS, and MongoDB processes, and one system additionally,
+hosts the Gazebo simulation.
+
+Since the robot memory runs inside the Fawkes framework and thus
+inside the Fawkes process, the performance of the robot memory is
+influenced by Fawkes and can not directly be measured separately. The
+influences are caused by other components, such as localization,
+reasoning, and collision avoidance, and by the thread management of
+Fawkes. To softly guarantee loop times for other threads, Fawkes
+suspends threads with a too long loop iteration. When measuring
+durations of robot memory operations, this can increase large
+measurement values because if an operation takes longer than the
+allowed loop iteration time, the time being suspended is added to the
+measurement.
+
+\section{Robot Memory Operations}
+\label{sec:op-durations}
+In this section, we analyze the run-time durations of robot memory
+operations, such as insert, query, and update. We also analyze how
+these change with computables and triggers. The goal is to find out
+how fast the robot memory works. Besides the influence of the
+implementation, the durations heavily depend on the underlying
+complexity, e.g., of a query, and \emph{domain size}, which is the
+amount of information stored in the robot memory. Here, we want to
+find out how the durations scale with increasing domain size and
+increasing complexity.
+
+The structure of the data used for this evaluation is chosen in a way
+to be similar to information that is usually stored in a robot
+memory. Furthermore, the structure should simplify the analysis. The used data mimics
+a robot's knowledge about object and their positions to solve a tidy
+up scenario. For each object, the robot memory contains a document
+with the object's name, current position, and the tidied place it
+belongs to. Names are unique and tidied places are randomly chosen
+out of $1000$ possibilities. Objects are at a random misplaced position with
+probability $0.01$ and at their proper tidied place otherwise. The
+object's name is a string to enforce string comparisons, which are
+expected to be often needed in a real scenario. For the analysis of
+operation durations, we do not use indexing of collection by object names right now
+because we evaluate the impact of indexing separately afterwards.
+\todo[inline]{really did that (indexing)?}
+An evaluation plugin in
+Fawkes generates the data and calls random operations. To analyze how
+the durations scale with the domain size, the plugin calls the
+operations repeatedly after increasing the domain size from $0$ to
+$100000$ documents by steps of $1000$ documents.
+
+The analysis is separated into the main classes of operations, namely
+insertions in \refsec{sec:insertions}, queries in
+\refsec{sec:queries}, and updates in \refsec{sec:updates}. Because
+deletions behave very similar to updates, both search for documents
+and work with them, they are also covered in the section about
+updates. \refsec{sec:eval-computables} covers and explains the impact
+of computables on query durations and \refsec{sec:eval-trigger} deals
+with the impact of event triggers. Operations that are performed
+rarely are not analyzed. For example dropping or restoring a collection and
+registration of triggers and computables are only performed once
+during initialization.  In the course of implementing and evaluating
+the application scenarios, their durations were not noticeable compared
+to the initialization time of the whole robot software.
+\todo[inline]{example documents}
+
+\subsection{Insertions}
+\todo[inline]{larger axis labels?}
+The insertion of a new document into the robot memory is overall the
+fastest operation.
+\reffig{fig:insert-durations} shows the distribution of
+insert durations with increasing domain size. It is noticeable that the
+duration does not depend on the domain size. The insertion time is small with an average of
+$0.125ms$. However, there are single outliers not present in
+\reffig{fig:insert-durations}. These outliers occur periodically, when
+MongoDB flushes database changes from the RAM to the hard drive. We
+could reduce the occurrence frequency of these outliers to one in $60s$, which is the
+default flushing frequency of MongoDB. To reach this, we had to
+disable the forward logging of MongoDB, called Journaling. The
+outliers are not shown in \reffig{fig:insert-durations}
+because it is unlikely to hit one outlier in $60s$ by measurring the
+duration of each $1000$th insertion and the insertion of all $100000$
+documents lasts less than $15s$. When measureing all insertion durations,
+outliers took about $0.3s$ because of the
+large amount of written documents and the threading in Fawkes.The
+overhead of the robot memory compared to the duration of the raw
+MongoDB operation has an average of $0.006ms$, which is about $5.5\%$.
+The overhead is caused by verifying the collection name, deciding if
+the local or distributed database is used, adding meta-data, and
+mutual exclusion of database usage. The robot memory overhead measured
+here does not include checking if triggers were activated by inserting
+the document. This is caused by the asynchronous and separate checking by
+the trigger manager. The size and the complexity of inserted
+documents did not make a noticeable difference.
+\todo{need to add numbers?}
+
+\label{sec:insertions}
+\begin{figure}[ht!]
+  \centering
+  \begin{subfigure}[b]{0.49\textwidth}
+    \hspace{-8mm}
+    \includegraphics[width=1.15\textwidth]{plots/insert-durations}
+    \caption{Insertions}
+    \label{fig:insert-durations}
+  \end{subfigure}
+  \begin{subfigure}[b]{0.49\textwidth}
+    \hspace{-3mm}
+    \includegraphics[width=1.15\textwidth]{plots/query-durations}
+    \caption{Queries}
+    \label{fig:query-durations}
+  \end{subfigure}
+  \begin{subfigure}[b]{0.49\textwidth}
+    \hspace{-8mm}
+    \includegraphics[width=1.15\textwidth]{plots/update-durations}
+    \caption{Updates}
+    \label{fig:update-durations}
+  \end{subfigure}
+  \begin{subfigure}[b]{0.49\textwidth}
+    \hspace{-3mm}
+    \includegraphics[width=1.15\textwidth]{plots/computable-durations}
+    \caption{Computables}
+    \label{fig:computable-durations}
+  \end{subfigure}
+  \caption[Duration of robot memory operations with increasing domain size]{Duration of robot memory operations with increasing domain size}
+  \label{fig:eval-durations-1}
+\end{figure}
+
+\subsection{Queries}
+\label{sec:queries}
+Queries are more complex operations than insertions and also take more
+time. \reffig{fig:query-durations} shows that query durations heavily
+depend on many factors, such as domain-size and query complexity. The
+query durations, when searching for an object by its unique name,
+linearly depend on the domain size. The other plot shows the query
+durations for finding objects that are not at their tidied place
+and thus would have to be tidied up. The query is more complex
+because it contains a comparison between two values that is formulated
+in JavaScript. From $0$ to about $10000$ documents, also a linear
+increase can be seen. With more documents the average duration does
+not increase, because of a query evaluation trick of MongoDB. MongoDB
+lazily evaluates queries and returns a cursor to the first batch of
+$n$ documents that match the query. While the user iteratively fetches
+documents from the cursor, MongoDB continues the query evaluation if
+the batch was emptied. For the \texttt{'find object name'} query, the whole
+database was searched because the unique object could not fill the
+batch. However it is possible to request a smaller batch, e.g., only
+one, document for faster computation.  \todo[inline]{comparison with
+  indexing} The overhead of the robot memory query operation does not
+depend on the domain size and has an average duration of $0.6ms$. The
+largest part of that overhead is caused by the computable manager,
+even if in this scenario no computables are registered. The computable
+manager performs a single insert and remove on a separate collection
+to prepare checking if the query matches a computable and to clean up
+afterwards. Because of this insertion, the duration spikes observed
+for insertions can also occur for queries. As \reffig{fig:query-durations}
+shows, the query duration heavily depends on the complexity of the
+query. Especially the expressive JavaScript functions are expensive
+compared to the MongoDB internal query language without JavaScript. By
+formulating queries smartly, complex questions can often be
+efficient in practice. For example, checking whether the dishwasher
+is full is a complex question because it considers a set of document
+that have to fullfill the condition of being in the dishwasher, and
+their aggregated volume has to exceed a threshold. Thus it could be a
+computationally costly JavaScript function. But the query can also be formulated efficiently
+by first filtering only the objects in the dishwasher with a fast
+JavaScript-free query and then summing up the objects volume to check
+if it exceeds a given threshold. This way the costly sum computation,
+which can be done by aggregation or JavaScript, only needs to be
+computed for the few objects in the dishwasher.
+\todo[inline]{concrete example for query formulation (dishwasher)?}
+
+\subsection{Updates and Deletions}
+Updates consist of a query defining what should be updated and some
+key-value pairs, which should be changed. Thus the duration of an
+update should be similar to a query plus an
+insertion. \reffig{fig:update-durations} shows the duration of
+position updates of objects with a random name. Because the used
+update operation only updates a single document, the durations are
+roughly uniformly distributed with an upper bound matching the
+duration of \texttt{'find object'} queries in
+\reffig{fig:query-durations}. Thus the duration of update operations
+also scale linearly with the domain size. Duration of queries
+searching for only one document also behave as in
+\reffig{fig:update-durations}.  Because delete operations also consist
+of a query and a fast change operation, they behave similar to
+updates. The difference is that by default deletions are executed on
+all documents and updates only on a single one. For both deletions and
+updates, the overhead does not depend on the database size. Both
+updates and deletions have an average overhead duration below
+$0.02ms$. In contrast to to query operations, the computable manager
+is not involved, because computed documents should not be updated and
+they do not need to be removed manually.
+
+\subsection{Computables}
+\label{sec:eval-computables}
+Computables generate new information when it is demanded by a
+query. Thus each new query is checked by the computable manager as
+explained in \refsec{sec:queries}. \reffig{fig:computable-durations}
+shows the time needed for checking if a query demands a computable and
+for computing the results. The computable used in
+\reffig{fig:computable-durations} calculates the distance of the robot
+to the closest object in the database and yields the object's name,
+position, and distance. The measurement does not include the query
+duration of finding the computed document. The computation time of
+the computable itself scales linear with the domain size because each
+object's distance needs to be checked. The time of the overhead does
+not depend on the domain size and has an average duration of $1.8ms$. The overhead includes inserting the
+original query in MongoDB, evaluating the demand query for each
+registered computable to check if the original query demands the
+computable, and a clean up operation. Furthermore, the results of the
+computable need to be inserted into the robot memory. Asynchronously
+in the main loop of the robot memory, computed documents are removed
+again. Thus the time needed for computables depends on the amount of
+registered computables, the amount of computed documents, and mainly
+the computation time needed for each matching computable itself. This
+computation time can get large if the computable solves problems with
+higher complexity. For example a computable that finds the pair of
+objects with the smallest distance to each other would scale
+quadratically with the domain size. To avoid repeated computation of
+the same data, we implemented caching for computables. As long as
+specified by the caching time, the computation step is skipped if the
+new query is identical to the query that demanded the computation
+before. The remaining overhead of the computable manager is the same.
+
+\subsection{Trigger}
+\label{sec:eval-trigger}
+Triggers notify an application when something in the database changes
+as specified in the trigger query. For this benchmark, we registered a
+trigger on new objects in a certain location, e.g., in the laundry
+box. Whether a trigger event happened, is checked each loop iteration of
+the robot memory by the trigger manager. Because trigger queries,
+which check for these events, are only executed on the Oplog and not
+on the whole database, the time needed to check trigger depends on the
+amount of registered trigger and the amount of database changes
+(insertions, updates, and deletions). The current domain size has no
+influence. During the insertion of the $100000$ objects, the trigger
+manager checked for trigger events $2249$ times with an average
+duration of $0.27ms$. That makes $0.006ms$ per insertion. This
+duration also depends heavily on the formulation of the trigger query,
+e.g., in the case of JavaScript usage. These measurements do not
+include the computation time needed by the callback function of the
+trigger. Because the callback function is executed directly, its
+computation time influences the loop time of the robot memory and can
+in the worst case block it.
+
+\section{Performance in Evaluation Scenarios}
+\label{sec:performance}
+To evaluate the performance of the robot memory, we performed
+benchmarks in multiple application scenarios. The measurements during
+the experiments were stored and plotted
+with the Round Robin Database Tool
+(RRD)\footnote{\url{http://www.rrdtool.org}} as in~\cite{RoboDB}.
+
+The
+first scenario is a \textbf{simulated RoboCup Logistics League} game, in which
+the synchronization of the world model between the robots was
+implemented with the robot memory.
+\begin{figure}
+  \centering
+  \begin{subfigure}[b]{1\textwidth}
+    \includegraphics[width=\textwidth]{plots/rcll-local/cpu-mem}
+    \label{fig:rcll-cpu-mem}
+  \end{subfigure}
+  \begin{subfigure}[b]{1\textwidth}
+    \includegraphics[width=\textwidth]{plots/rcll-local/operations}
+    \label{fig:rcll-ops}
+  \end{subfigure}
+  \caption[Benchmark during a locally simulated RCLL game]{Benchmark during a locally simulated RCLL game}
+  \label{fig:rcll-benchmark}
+\end{figure}
+\reffig{fig:rcll-benchmark} shows the CPU and memory usage, as well as
+the operations performed by MongoDB. For clarity only the CPU and
+memory usage of one Fawkes instance of the three robots is
+plotted. Both MongoDB processes, one for the robot local robot memory
+and one for the distributed worldmodel, have a CPU usage below $1\%$
+and a memory usage below $40$~MB. This is not surprising because the
+robot's world model that needs to be synchronized in the RCLL only has
+a size of $60$ to $100$ documents with an average object size of $390$
+bytes. It only grows slowly because most of the documents are updated
+and there are few new documents for incoming orders and and work-pieces
+in production. This is also shown by the MongoDB operation count shown
+in \reffig{fig:rcll-benchmark}, which matches the operation count of
+the robot memory. The values include the database operations of
+all three robots. \reffig{fig:rcll-benchmark} shows that the mostly
+used operation is the \emph{Getmore} operation, which checks for an
+existing query cursor if there are more matching documents than in the
+previous batch. This is caused by the trigger manager because it
+periodically checks the Oplog for new changes that have to be reported
+to the CLIPS agent. Since the robot memory runs inside the Fawkes
+process, its CPU and memory usage is included in the values of Fawkes
+in \reffig{fig:rcll-benchmark}. The growing memory usage of Fawkes is
+also present in benchmarks of the RCLL simulation without the robot
+memory and the CPU curve looks similar. Thus the robot memory plugin
+has no large impact on the performance in this scenario.
+The size of the database on the hard-drive is about $1097$~MB for the
+distributed part and $1060$~MB for each local one. The size does not
+change noticeably over time. $1$~GB of each database is occupied by the
+Oplog, which has a constant size because it is a capped collection.
+
+\begin{figure}
+  \centering
+  \includegraphics[width=\textwidth]{plots/rsnetwork}
+  \caption[Network usage of distributed robot memory during an RCLL game]{Network usage of distributed robot memory during an RCLL game}
+  \label{fig:rcll-network}
+\end{figure}
+\reffig{fig:rcll-network} shows the network usage of a Replica Set to
+distribute the robot memory over the multi-robot system in the
+RCLL. The measurements are provided by MongoDB's server statistics and
+only consider the packages sent from the Primary to a
+Secondary. MongoDB uses TCP for Replica Sets. The
+network usage mostly stays below $1$~KB/s and rarely
+reaches about $2$~KB/s. The usage is roughly proportional to
+the number of operations. For comparison, the previous CLIPS agent,
+which implements the world model synchronization with Protobuf
+messages, sends between $7$~KB/s and $9$~KB/s in about
+12 UDP packages over broadcast. The previous CLIPS agent acting as
+Master sends the whole world model to other robots once a second
+because it does not know if previous UDP packages reached other robots
+or if a robot was restarted and requires the whole world model again.
+ What is interesting to notice in \reffig{fig:rcll-network} is that
+the amount of registered operations is smaller than the amount of
+insert, update, and delete operations in \reffig{fig:rcll-benchmark}. This
+is due to updates by the CLIPS agent, that do not apply to any
+document or change a value in document to its current value. This is
+detected by MongoDB and not distributed over the Oplog, because the
+operation did not change anything.
+% second->primary updates not shown (difficult to measure, c++ dirver
+% directly sends them to the primary)
+\todo[inline]{mention wifi issues no tested}
+
+\bigskip
+The second scenario is the \textbf{Blocks World} with the Kinova Jaco arm. The
+robot memory is included in the following processes: the overhead
+vision detects markers on blocks and publishes their position on the
+blackboard. The PDDL model generation constructs a problem description
+from symbolic information in the robot memory. A part of this
+information is provided by computables for \texttt{on-table} and
+\texttt{clear} predicates. There are also computables for the
+transformation of block positions and accessing the blackboard. The
+computables for predicates are provided by a perception plugin. This
+plugin continuously writes the block positions into the robot memory
+for demonstration purposes. This is not very efficient because
+continuously updating block positions requires executing the
+blackboard computable and transform computable very often. A
+computable that only inserts block positions when necessary would be
+more efficient.
+
+\begin{figure}
+  \centering
+  \begin{subfigure}[b]{1\textwidth}
+    \includegraphics[width=\textwidth]{plots/blocksworld/cpu-mem}
+    \label{fig:blocks-cpu-mem}
+  \end{subfigure}
+  \begin{subfigure}[b]{1\textwidth}
+    \includegraphics[width=\textwidth]{plots/blocksworld/operations}
+    \label{fig:blocks-ops}
+  \end{subfigure}
+  \caption[Benchmark during Blocks World demo]{Benchmark during Blocks World demo}
+  \label{fig:blocks-benchmark}
+\end{figure}
+\reffig{fig:blocks-benchmark} shows the CPU and memory usage as well as the
+operation count in MongoDB during the execution of two plans with 8
+and 12 actions.
+
+The amount of update operations is constant because the block
+positions and their visibility state are constantly updated. The large
+amount of queries, insertions, and deletions is mainly caused by the
+blackboard and transform computables, which are executed to update the
+block positions. The blackboard computable inserts the interface
+values into the robot memory and the transform computable queries
+these values and inserts the transformed values. For each query that
+needs to be checked by the computable manager, one insert and deletion
+is performed as well as a query for each registered computable.  The
+CPU usage of Fawkes and the CPU and memory usage of MongoDB are similar
+to the results of the RCLL benchmark.
