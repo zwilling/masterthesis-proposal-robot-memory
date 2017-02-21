@@ -1,17 +1,16 @@
 \chapter{Conclusion}
 \label{chap:conclusion}
-In this chapter we conclude the thesis with a summary in
-\refsec{sec:summary} and an outlook to possible future work in
-\refsec{sec:future-work}.
+In this chapter, we summarize the thesis in \refsec{sec:summary} and
+give an outlook to possible future work in \refsec{sec:future-work}.
 
 \section{Summary}
 \label{sec:summary}
 In this thesis, we have designed and implemented a document-oriented
 robot memory for knowledge sharing and hybrid reasoning on mobile
 robots. The robot memory allows robots to advance into more complex
-and unstructured domains by providing a generic and capable
+everyday domains by providing a generic and capable
 information storage, which is the basis for memorizing a complex
-environment and thus for reason in it. It can represent complex
+environment and thus for reasoning about it. It can represent complex
 information and expressive queries. As collaboration platform for KBS,
 it provides a common and consistent information basis. Furthermore, it
 simplifies hybrid reasoning by storing spatio-temporal information and
@@ -69,7 +68,7 @@ overhead compared to raw MongoDB operations. The increase in
 computation time for complex queries and computables is reasonable and
 caused by the computational complexity of the queries themselves.
 
-An important challenges we faced in the thesis is the conceptual
+An important challenge we faced in the thesis is the conceptual
 tuning of robot memory concepts to achieve a balance between
 expressiveness and computation time. For example, we decided that
 triggers can only be evaluated on single changes of the robot memory
@@ -83,7 +82,7 @@ compatible. This is due to CLIPS using strings and symbols, which are
 both mapped to string values in documents, but still have to be
 distinguishable.
 
-Concluding, this thesis has designed and implemented a very useful,
+Concluding, this thesis has designed and implemented a useful,
 scalable, and persistent robot memory for hybrid reasoning and
 knowledge sharing. Major benefits are representation of
 complex information and expressive queries with document-orientation,
@@ -98,7 +97,7 @@ using it and thus for future work. Especially planners and reasoners
 benefit from collaboration possibilities and the hybrid reasoning
 capabilities of the robot memory. There are two ongoing master theses,
 which already use the robot memory and implement new global planning
-approaches in the RCLL. Both utilize the robot memory as common
+approaches in the RCLL~\cite{bjoern-thesis,matthias-thesis}. Both utilize the robot memory as common
 storage of the world model, which is updated by the CLIPS executive
 and read by a central planner. Furthermore, they use the robot memory
 to provide plans to the executive with triggers. Both also base their
@@ -108,9 +107,9 @@ the distributed memory, which can be accessed by their planners and is
 kept updated by the CLIPS executive. On the other hand, the blocks
 world scenario provides a prototype showing how a CLIPS executive can
 fetch plans from the robot memory with triggers, represent it as task,
-and execute it step by step. The first thesis uses reactive answer set
+and execute it step by step. The first thesis by Schäpers uses reactive answer set
 programming with real-time constraints~\cite{bjoern-thesis} and the
-second one uses a PDDL planner and converts the resulting plan into a
+second one by Löbach uses a PDDL planner and converts the resulting plan into a
 simple temporal network~\cite{matthias-thesis}. The second one also
 makes use of our PDDL model generation and considers using
 computables for travel distance calculations.
@@ -126,7 +125,7 @@ to query documents with location information by proximity or
 intersection. A possible improvement of computables is the addition
 of computed key-value pairs in already existing documents.
 
+\todo[inline]{mention integration of Deebul}
 
 As part of Fawkes, the robot memory is open source and thus available
 for many future projects.
-\todo[inline]{Future Work Tim?}
