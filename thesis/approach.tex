@@ -29,11 +29,11 @@ querying information.  It has to be usable by multiple components
 as information source and collaboration platform.  When the robot memory is queried, it should
 only return the information that it is asked for. It should be flexible
 enough to store any kind of data, information, knowledge, and wisdom
-of the DIKW hierarchy in any structure. For example the robot memory
+of the Data-Information-Knowledge hierarchy in any structure. For example the robot memory
 should be able to store world models, perception results and even
 large data-sets, such as remembered sights of objects.
 
-\textbf{Memory Sharing Between Knowledge Based Systems:}
+\textbf{Memory Sharing Between Knowledge-Based Systems:}
 % original title of the goal: Consistent...
 The robot memory has to provide a common memory to allow consistent
 memory sharing between multiple components. Thus multiple components have to
@@ -78,7 +78,7 @@ memory. This should add a lot of versatility and expandability.
 should be able to distribute parts of the memory in a multi-robot
 system. Multiple robots can then share a common world model for
 collaboration. This goal is similar to the memory sharing between
-knowledge based systems on the same machine with the difference that
+knowledge-based systems on the same machine with the difference that
 the components on a multi-robot system work simultaneously and the
 additional difficulty of message loss and keeping consistency. Such a
 distributed robot memory is necessary in many multi-robot domains,
@@ -127,7 +127,7 @@ would also be desirable to analyze spatio-temporal data efficiently.
 \label{sec:formalism}
 \todo[inline]{emph mit textit oder textbf?}
 In this section, we lay the theoretical foundation of the robot memory
-and its integration into knowledge based systems. First, we focus on
+and its integration into knowledge-based systems. First, we focus on
 the representation of symbolic information as it is used in KBS. Here
 we take the PDDL formalism as example. The formal definition of the
 robot memory describes how knowledge is represented and how
@@ -301,7 +301,7 @@ updating, and removing removing.
 This section presents the concepts behind important aspects of the
 robot memory in more detail. These concepts are computables for
 computation on demand, trigger for notifications about events in the
-database, interfaces of the robot memory to knowledge based systems,
+database, interfaces of the robot memory to knowledge-based systems,
 and the distribution of the robot memory in a multi-robot system.
 
 \subsection{Computables}
@@ -316,7 +316,7 @@ example, a vision component can register a computable that computes
 which objects are currently visible at which position. We use
 computables in our robot memory for three main reasons:
 \begin{itemize}
-\item Computables ease dealing with complex data in knowledge based
+\item Computables ease dealing with complex data in knowledge-based
   systems. By using the robot memory interface, KBS can access
   functions that are provided by other components and compute
   information that is difficult or impossible to compute inside the
@@ -416,9 +416,9 @@ possible to bypass this limitation by replacing the computable by a
 system that periodically inserts the required computation results into
 the robot memory as usual.
 
-\subsection{Knowledge Based System Interface}
+\subsection{Knowledge-Based System Interface}
 \label{sec:kbs-interface}
-The interface between knowledge based systems and the robot memory
+The interface between knowledge-based systems and the robot memory
 defines how features of the robot memory can be accessed and how the
 robot memory can be embedded in the language concepts of the KBS. The
 features of the robot memory include the basic operations, query,
@@ -541,7 +541,7 @@ interface of the robot memory (available in C++). The responsibilities
 of the interface provider also include transforming query results into
 the appropriate format used by the KBS and eventually renaming
 key-names if they have be mapped to match the names used in the KBS
-model. Because languages and concepts of knowledge based systems can
+model. Because languages and concepts of knowledge-based systems can
 be very different, each KBS needs a separate Interface Provider. The
 Interface Provider can also contain a domain creator, which creates an
 initial state, e.g., a problem definition or initial fact base from a

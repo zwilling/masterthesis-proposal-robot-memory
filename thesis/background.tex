@@ -425,13 +425,13 @@ into a standard programming language, and OpenRAVE, a \emph{motion
 representatives for often used types of planners and
 reasoners. However, the robot memory is not limited to these because
 it provides a general C++ interface, which can be used to integrate it
-into more knowledge based systems. The three presented here use the robot memory
+into more knowledge-based systems. The three presented here use the robot memory
 to achieve new or improved functionality and are used to evaluate this
 thesis.
 
 \subsection{CLIPS Rules Engine}
 The CLIPS Rules Engine\footnote{\url{http://www.clipsrules.net/}} belongs to the class of \emph{rule-based
-  production systems}, which can be defined as knowledge based system
+  production systems}, which can be defined as knowledge-based system
 using forward chaining based on the \emph{Rete
   algorithm}~\cite{aimodern}. The Rete algorithm efficiently determines
 which conditions of forward chaining rules can be matched by the
@@ -547,7 +547,9 @@ should be picked is on the table and that the arm is empty. The effect
 is a universally quantified and conditional FOL sentence, but not all FOL
 sentences are allowed, e.g., sentences containing disjunctions~\cite{PDDL}. In the
 example, the effect of the action is that the arm is not empty and the
-object is now hold and not on the table any more.
+object is now hold and not on the table any more. PDDL predicates,
+such as \texttt{(arm-empty)} and \texttt{(on-table ?ob)} in the example,
+describe properties and can be true or false.
 
 There are various versions and extensions of PDDL which introduce new
 concepts and features. For example, PDDL~2.1~\cite{PDDL2.1} adds
