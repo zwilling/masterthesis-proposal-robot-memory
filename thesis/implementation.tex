@@ -1,8 +1,6 @@
 \chapter{Implementation}
 \label{chap:impl}
-In the previous chapter, we presented the approach of the thesis and
-the architecture of the robot memory. On this basis, we now present
-implementation considerations in this chapter. The implementation of
+The implementation of
 the robot memory is separated according to the layered
 architecture. \refsec{sec:back-end} presents the implementation of the
 back-end containing the MongoDB databases and \refsec{sec:impl-memory}
@@ -11,8 +9,8 @@ trigger-, and computable manager. Both application layers are covered
 in \refsec{sec:impl-planner}. We conclude with the description of the
 evaluation scenarios and how they were implemented in
 \refsec{sec:applicationscenarios}.
+\todo[inline]{read through}
 
-\todo[inline]{continue checking}
 \section{MongoDB Back-End}
 \label{sec:back-end}
 The back-end of the robot memory is based on MongoDB databases. It
@@ -26,12 +24,12 @@ and can be expanded by meta information from the robot memory.
 \begin{wrapfigure}{r}{0.47\textwidth}
   \vspace{-0.8cm}
 \begin{lstlisting}[style=SmallJSON,
-  caption={Representation of a knowledge piece in the back-end},
+  caption={Representation of a knowledge item in the back-end},
   label=lst:backend,
   framexleftmargin=1pt, xleftmargin=0pt,
  morekeywords={}, numbers=none]
  {
-   _robot_memory_info:
+   _robmem_info:
    {
      persistent: true,
      decay_time: ISODate(
@@ -46,8 +44,8 @@ and can be expanded by meta information from the robot memory.
 \vspace{-8mm}
 \end{wrapfigure}
 An example document stored in the back-end is shown in
-\reflst{lst:backend}. It contains knowledge about a bottle of milk as
-it could be needed by a planner with additional information where it
+\reflst{lst:backend}. It contains knowledge about a bottle of milk, as needed
+by a planner told to bring it, with additional information where it
 should be stored later. Additionally the document contains meta
 information needed by the robot memory, e.g., if the document should be
 stored persistently or removed at restart and when it should be
@@ -64,7 +62,7 @@ contains a local and a shared part. Each part is operated by a
 separate \texttt{mongod} instance, which is the daemon process of the
 MongoDB system. It manages data access, handles data requests, and
 performs background management operations. Each \texttt{mongod}
-instance is accessible over its unique port and can contain multiple
+instance is accessible over its unique TCP port and can contain multiple
 databases. The databases of the robot memory that are only locally
 relevant are managed by the local \texttt{mongod} instance. The shared
 \texttt{mongod} instance manages the distribution of shared databases
@@ -75,8 +73,8 @@ distribution issues, such as Primary election, consistency, and
 synchronization.  \todo[inline]{explain why no sharding is used?}  The
 robot memory needs multiple connections to both \texttt{mongod}
 instances because single connections, as provided by the C++ driver,
-are not thread safe\todo{explain thread safe?}. Thus we use the connection manager of the
-\texttt{mongodb} Fawkes plugin to create two connections for usual
+are not thread safe. Thus we use the connection manager of the
+\texttt{mongodb} Fawkes plugin to create two connections each for
 operations, computables, and triggers.
 %
 The MongoDB back-end also contains the operations log (Oplog), a
@@ -99,11 +97,9 @@ hard-drive, and the Oplog size. After the start-up, the \texttt{mongod}
 instances need to be initialized, when they are started for the first
 time. Thus the automated setup sends commands for initialization of
 the Replica Set with information about the members of the
-set. Furthermore, commands for the query evaluation are send, to allow
-query evaluation on Secondaries.  \todo[inline]{Mention ignoring error
-  code when already initialized?}  When Fawkes is exited, also the
+set. Furthermore, commands for the query evaluation are sent, to allow
+query evaluation on Secondaries. When Fawkes is terminated, also the
 MongoDB sub-processes are finalized again.
-\todo[inline]{visualization/human interface by Robomongo}
 
 \section{Robot Memory}
 \label{sec:impl-memory}
@@ -125,14 +121,15 @@ A central question is which query language should be used between
 applications and the robot memory because this determines the
 expressiveness and has a large impact on the performance. We choose to
 use the query language of MongoDB as it is already used between the
-robot memory and the back-end. This has many advantages compared to
+robot memory and the back-end. This has the following advantages compared to
 using other query languages, such as SQL, SPARQL,
-XQuery~\cite{query-languages}, and JSONiq~\cite{jsoniq}.  For the
+XQuery~\cite{query-languages}, and JSONiq~\cite{jsoniq}:  For the
 applications using the robot memory, the query language of MongoDB is
 a good choice because it is an intuitive query language and has been
-proven as efficient for usual and well designed queries. It is also
+proven as efficient for usual and well designed queries~\cite{RoboDB}. It is also
 highly expressive when using additional JavaScript functions or the
-MapReduce paradigm~\cite{mongodb,RoboDB}. For the robot memory, it
+MapReduce paradigm~\cite{mongodb}.
+\todo[inline]{example expressive query?} For the robot memory, it
 requires no translation before applying queries to the
 database. Furthermore it allows extending and modifying queries
 because queries are structured as documents with key-value fields and
@@ -149,7 +146,7 @@ manager, which receives insert, query, update, and deletion
 requests. Received requests are analyzed using the MongoDB C++ driver
 and modified before being applied to the back-end. This way, the
 operation manager can add meta information of the robot memory to
-documents and queries, and the computable manager can ground its
+documents and queries, and the computable manager can base its
 decision if computables need to be executed on the contents of a
 query.
 
@@ -158,11 +155,11 @@ updates, and deletions. For all four, the operation specifies on which
 collection in which database the operation should be performed. The
 collection string contains both separated by a dot,
 e.g., \texttt{'robmem.worldmodel'} for the worldmodel collection in
-the robmem database. \todo{mention default value collection?}  Using
+the robmem database. Using
 the configurable list of shared databases, the collection string also
 specifies whether the operation should be performed on the local or
-shared \texttt{mongod} instance. Because the connections to MongoDB
-are not thread safe, the implementation of all operations guarantees
+shared \texttt{mongod} instance. Because connections to MongoDB
+are not thread safe, the operation manager has to guarantee the
 mutual exclusion of connection usage. Furthermore, the operation
 manager handles exceptions caused by operations, e.g. when a query can
 not be parsed or an object contains invalid fields.
@@ -172,7 +169,9 @@ should be inserted. Before performing the insertion on the database,
 the operation manager can add meta information of the robot memory,
 for example the insertion time if the collection is configured to be a
 short time memory. The meta information is contained in a sub-document
-under the \texttt{\_robmem\_info} key.
+under the \texttt{\_robmem\_info} key, as shown in
+\reflst{lst:backend}.
+\todo[inline]{example insert c++}
 
 For \textbf{queries}, the operation also specifies the query
 itself. The operation manager analyzes the query and modifies similar
@@ -180,30 +179,35 @@ to how it modifies documents. It adds a filter and a read
 preference. The filter hides meta information of the robot memory from
 the application. The read preference specifies that the query should
 be executed closest available of a replica set. This should always be
-the local one because it has the lowest ping time and thus leads to a
+the local one because it has the lowest latency and thus leads to a
 faster query times than performing queries on remote replica set
 members. Furthermore the query is passed to the computation manager to
 check if a computable has to be executed.
+\todo[inline]{example query}
 
 \textbf{Update} operations contain a query specifying which documents
 should be updated and a document containing the changes that should be
-applied. By default the first matching documents in the specified
+applied. By default the first matching document in the specified
 collection is replaced by the update document. It is possible to
 modify this behavior with additional options. There are options for
 perform the update on all matching documents and for inserting the
 document even if no document in the collection matches the query
 (called \emph{upsert}). To keep key-value pairs in the original
 document, the update document needs to contain updated values a
-\texttt{\$set} sub-document.\todo{listing for \$set?} In contrast to
-query operations, updates do not lead to the execution of computables,
-because it is pointless to update them because of the short lifetime.
+\texttt{\$set} sub-document.\todo[inline]{example update with \$set?} In contrast to
+query operations, updates do not lead to the execution of computables
+because the updated information would be lost shortly after when the computable
+exceets its caching time. However, it is still possible to update
+already computed documents because they are handled as regular
+documents during the caching time.
 
 \textbf{Deletion} operations have an attached query specifying which
 documents should be removed. The operation manager does not need to
 perform special modifications of this query.
+\todo[inline]{example deletion}
 
 Additionally to these basic operations, the operation manager can also
-export the contents of a collection to a file (called \emph{dump}). It
+export the content of a collection to a file (called \emph{dump}). It
 can also import a collection from a file in an operation called
 \emph{restore}. These operations can be used to save and load a world
 model that is contained in a collection. For example in the RCLL, this
@@ -236,7 +240,7 @@ computables should be executed for a query.\\
   y: {$exists:true}
 }
 \end{lstlisting}
-\captionof{sublisting}{Computable query defining what is computed}
+\captionof{sublisting}{Query defining the computable specification}
 \end{minipage}%
 \hfill
 \begin{minipage}[b]{.25\textwidth}
@@ -274,7 +278,6 @@ computables should be executed for a query.\\
 \caption{Queries and documents involved in a computable for addition}
 \label{lst:comp}
 \end{listing}
-
 \begin{wrapfigure}{r}{0.49\textwidth}
   \vspace{-0.8cm}
 \begin{lstlisting}[style=SmallCpp,
@@ -286,51 +289,51 @@ std::list<mongo::BSONObj>
 compute_sum(mongo::BSONObj query,
             std::string collection)
 {
-  std::list<mongo::BSONObj> result;
   int x = query.getField("x").Int();
   int y = query.getField("y").Int();
   mongo::BSONObjBuilder b;
   b << "compute" << "sum"
     << "x" << x << "y" << y
     << "sum" << x + y;
-  result.push_back(b.obj());
-  return result;
+  return {b.obj()};
 }
 \end{lstlisting}
 \vspace{-8mm}
 \end{wrapfigure}
-
 \reflst{lst:comp} and \reflst{lst:comp-func} show how queries,
-documents, and functions are involved in a computable on the example
-of an addition computable. When some component registers a computable
+documents, and functions are involved in a computable by an addition example.
+When some component registers a computable
 on a collection, it needs to give a reference to the function
 performing the actual computation and a definition which documents can
-be provided by the computable. This definition is specified as
-\emph{computable query}, as shown in \reflst{lst:comp}a. Whenever the
+be provided by the computable. This definition is specified by the
+\emph{computable spec}, as shown in \reflst{lst:comp}a. Whenever the
 robot memory has to answer a query, for example \reflst{lst:comp}b, that is
-matched by the computable query, the computable is executed. The
+matched by the computable spec, the computable is executed. The
 referenced function for the addition computable is shown in
 \reflst{lst:comp-func} and yields a list of computed documents that,
-in this example, only contains the result shown in \reflst{lst:comp}c.
+in this example, only contains the result shown in
+\reflst{lst:comp}c. The result contains the \texttt{compute},
+\texttt{x}, and \texttt{y}, fields because it needs to be matched
+later by the original query in \reflst{lst:comp}b.
 
 The computable manager checks whether queries passed to it can be
 answered by registered computables. To check if the robot memory query
-is matched by a computable query, the robot memory query is inserted
+is matched by a computable spec, the robot memory query is inserted
 as document in a separate and empty collection. When this inserted
-document is returned by performing the computable query on the
+document is returned by performing the computable spec as query on the
 collection, the function of the computable is called. This function
 (\reflst{lst:comp-func}) takes the query causing the computation
 (\reflst{lst:comp}b) and the collection as parameters. Thus it can use
 values in the query (\texttt{x} and \texttt{y}) to determine what
 should be computed. The function then computes a list of resulting
 documents (list containing \reflst{lst:comp}c) and returns it to the
-computable manager. By defining the computable query appropriately,
-e.g., with \texttt{\$exists}, is is ensured that all values required
-by the function are provided by the query. It is also possible to
-omit required values intentionally. For example the computable for
-blackboard interfaces in Fawkes, checks if an interface id is given,
-and then either returns a document for the single interface with the
-id or all interfaces matching the interface type.
+computable manager. By defining the computable spec appropriately,
+i.e., with \texttt{\$exists}, it is ensured that all values required
+by the function are provided by the query. It is also possible have
+optional arguments. When optional arguments are not given, a
+computable could create documents for all possible values. For example a computable for
+blackboard interfaces in Fawkes, could returns documents for all interface
+ids of a type, when no interface id is given in the query.
 
 After a computable returned the list of computed documents, the
 computable manager inserts these documents in the specified collection
@@ -350,6 +353,7 @@ computables are executed for it. Computed documents remain in the
 robot memory during this caching time. This is implemented by adding
 the expiration time of computed documents to their meta information
 and periodically removing documents with passed expiration time.
+A typical caching time could be the loop time of Fawkes.
 
 Computables can depend on the current content of the robot memory, by
 using the robot memory themselves in their function. This can be used
@@ -357,7 +361,7 @@ for hybrid reasoning by transform documents already contained in the
 robot memory into other representations. To allow computables to
 depend on the result of other computables, there is a
 prioritization. The computable manager uses this prioritization to
-determine the order in which computable checked.
+determine the order in which computables are checked.
 
 The \texttt{robot-memory} plugin in Fawkes provides two basic
 computables. One provides access to the blackboard by computing
@@ -365,12 +369,13 @@ documents containing the fields of blackboard interfaces with matching
 types and ids. The other transforms documents describing 3D positions
 into other frames by using the transform aspect of Fawkes. All other
 computables have to be provided by other plugins.
+\todo[inline]{example bb computable or tf computable}
 
 \subsection{Triggers}
 \label{sec:impl-triggers}
 Triggers notify components about changes in the database, for example
-to keep a reasoner intern world model up to date. To register a trigger
-at the trigger manager, the component has to provide the name of the
+to keep a reasoner internal world model up to date. To register a trigger,
+the component has to provide the name of the
 collection that should be observed, a reference to a callback
 function, and a query defining the event in which the callback
 function should be called. An example query used for being notified
@@ -378,8 +383,8 @@ about new or modified orders in the RCLL is \texttt{\{relation:
   "order"\}}. This query is used to search the Oplog for changes. The
 Oplog is a capped collection in MongoDB, which logs all changes to
 propagate them in a Replica Set.
-\begin{wrapfigure}{r}{0.42\textwidth}{6cm}
-  \vspace{-0.8cm}
+\begin{wrapfigure}{r}{0.42\textwidth}
+  \vspace{-0.0cm}
 \begin{lstlisting}[style=SmallJSON,
   caption={Document in the Oplog},
   label=lst:Oplog,
@@ -421,8 +426,8 @@ query. Initially this cursor points to the end of the Oplog (position
 collection, new changes, e.g., 4 and 5 in \reffig{fig:oplog-cursor},
 are appended behind the position the cursor points to. During the main
 loop of Fawkes, the trigger manager checks for all tailable cursors if
-there are new Oplog with \texttt{o} object that match the according
-query. The cursor is forwarded simultaneously. Thus if
+there are new documents in the Oplog containing \texttt{o} object that match the according
+query. As Oplog changes are checked, the tailable cursor is forwarded. Thus if
 \reffig{lst:Oplog} shows the document labeled with 4 or 5 it would be
 returned by the query.
 The trigger manager then calls the callback function and passes the
@@ -450,45 +455,46 @@ value. Another test checks if computables work by registering the
 computable showed in \reflst{lst:comp-func} and \reflst{lst:comp},
 executing the query in \reflst{lst:comp}b and checking if the result
 matches \reflst{lst:comp}c. Unit-testing in Fawkes is based on Google's
-C++ testing framework \emph{gtest}. To test the functionality of the
+C++ testing framework \emph{gtest}\footnote{\url{https://github.com/google/googletest}}. To test the functionality of the
 robot memory in a fully running Fawkes process with dependencies of
 the robot memory, such as the \texttt{mongodb} plugin, we integrated
 our unit tests into a separate plugin that is started with the robot
 memory when the tests are executed.
+\todo[inline]{example unittest}
 
 \section{Application Interface}
 \label{sec:impl-planner}
 The application interface layer provides the features of the robot
 memory for applications such as planners and reasoners. Components
-using C++ can directly interface the robot memory layer over its C++
-interface. This interface is identical to the interface between the
+written in C++ can directly interface the robot memory layer.
+This interface is identical to the interface between the
 robot memory and and the interface providers. For example perception
 plugins in Fawkes are usually written in C++ and thus can provide
 computables or store documents directly in the robot memory. Planner
 and reasoner components often utilize specialized languages. For these
 components and languages, there are multiple interface providers we
 implemented. In the following, we present the interface providers for
-PDDL in \refsec{sec:impl-pddl}, for CLIPS in \refsec{sec:impl-clips},
-and for OpenRAVE in \refsec{sec:impl-openrave}.
+PDDL, CLIPS, and OpenRAVE.
 
 \subsection{PDDL Interface Provider}
 \label{sec:impl-pddl}
-To find a plan with a PDDL planner, a domain definition and a problem
-description need to be provided for the planner. The domain definition
+To find a plan with a PDDL-based planner, a domain description and a problem
+description need to be provided for the planner. The domain description
 is usually fixed because the predicates defining the world state and
 the actions defining the capabilities of the robot often are fixed for
 a domain. The problem description, depends on the world model of the
 robot and varies in the concrete predicates and the amount of
 objects. Thus the problem description depends on the content of the
 robot memory and has to be constructed before planning. This process
-called \emph{domain creation} is implemented in the
+belongs to the model generation of the interface provider and is implemented in the
 \texttt{pddl-robot-memory} plugin. In \refsec{sec:formalism}, we
-theoretically defined the mapping from documents in the robot memory
-to PDDL. Nevertheless we need to specify which documents in the robot
+defined the mapping from documents in the robot memory
+to PDDL theoretically. Nevertheless, we need to specify which documents in the robot
 memory should be mapped to PDDL and which strings are mapped to which
 predicates, functions, and their attributes. These are the $name$
 functions. To specify both, we make use of the template engine
-\emph{ctemplate}. The template engine takes a \emph{template file} as
+\emph{ctemplate}\footnote{\url{https://code.google.com/p/google-ctemplate}}.
+The template engine takes a \emph{template file} as
 input and uses a \emph{dictionary} defined during run-time to exchange
 \emph{template markers} in the file by desired string values.
 \begin{figure}
@@ -531,20 +537,21 @@ input and uses a \emph{dictionary} defined during run-time to exchange
     (holding B)
   ))
 \end{lstlisting}
+\vspace{0.3cm}
   \end{minipage}
   \vspace{-0.8cm}
 \end{figure}
 An example template file for the blocks world domain is shown in
 \reflst{lst:template}. The result after generating the problem
 description based on information in the robot memory is shown in
-\reflst{sec:pddl-gen}. A simple template marker is
-\texttt{<<GOAL>>}. During the domain creation, the dictionary is
+\reflst{lst:pddl-gen}. A simple template marker is
+\texttt{<<GOAL>>}. During the model generation, the dictionary is
 filled with the information that \texttt{<<GOAL>>} should be replaced
 by \texttt{(on A B)}. There also are special markers such as
 \texttt{<<#ON>> <</ON>>}. They enclose an environment and are called
 \emph{list markers} because they insert the enclosed environment for
 each list entry of the dictionary on the \texttt{ON} marker. We use
-list marker to insert a predicate for each document that is returned
+list markers to insert a predicate for each document that is returned
 by a query. The query is located in the front marker behind the
 \texttt{|} symbol. The enclosed environment can contain markers that
 are substituted by key-value pairs of documents. In the example given
@@ -555,7 +562,7 @@ what is mapped to \texttt{(on-table A)}, and
 \texttt{(on-table B)}. To distinguish markers inside these
 environments, they are written in lower case.
 
-The process of the domain generation starts with an interface message
+The process of the model generation starts with an interface message
 containing the goal to the \texttt{pddl-robot-memory} plugin. Then the
 plugin parses the problem description template to extract the queries
 of the list markers. This is a separate step, because passing
@@ -573,7 +580,7 @@ generates the resulting problem description.
 %mention problem that this template method can not recursively map
 %function terms?
 
-The direction back from PDDL to the robot memory is implemented in the
+The direction from PDDL to the robot memory is implemented in the
 \texttt{pddl-planner} plugin. When the plugin receives an interface
 message, it starts the FF planner with the domain and generated
 problem description files and waits until the planner finished. Then
@@ -584,9 +591,10 @@ example after being notified by a trigger that there is a new plan.
 
 \subsection{CLIPS Interface Provider}
 \label{sec:impl-clips}
-The Interface Provider for CLIPS is implemented as CLIPS-feature by
-the \texttt{clips-robot-memory} plugin. \todo[inline]{explain
-  CLIPS-feature?} In contrast to PDDL, CLIPS can use procedures. Thus
+The Interface Provider for CLIPS is implemented in the
+\texttt{clips-robot-memory} plugin as a CLIPS-feature. \emph{CLIPS-features} are extensions
+of an environment, can be loaded during run-time, and can provide
+access to C++ functions. In contrast to PDDL, CLIPS can use procedures. Thus
 the CLIPS \emph{robot-memory feature} can wrap the interface functions
 of the robot memory and provide them as functions inside the CLIPS
 environment.
@@ -607,7 +615,7 @@ environment.
 \reflst{lst:clips-rm} shows an example function in CLIPS for querying
 the robot memory. The function takes the collection name and the query
 as a string concatenated by clips and yields a cursor to documents
-about not ended orders. The cursor can then be used by further
+about not ended orders. This cursor can then be used by further
 functions to check if there are more documents, fetching the document,
 and reading values from it. Furthermore, the robot-memory feature
 provides higher abstracted functions, which can convert a fact
@@ -619,8 +627,9 @@ matched to slot names of this template. There is a transformation
 between lists in CLIPS and sub-documents with numbered key-value
 pairs. Other sub-documents are passed as reference to the
 sub-document. 
+\todo[inline]{example mapping doc-fact}
 
-Similar to the domain creation in PDDL, it is also possible to create
+Similar to the model generation in PDDL, it is also possible to create
 an initial fact base in CLIPS. This is done by querying the initial
 state from the robot memory and asserting the corresponding facts to
 the fact base. The robot-memory feature also provides access to
@@ -641,10 +650,10 @@ OpenRAVE is a motion planner that finds collision free paths and
 movements of a robot, e.g., for an arm. It searches for the path in an
 internal representation of the robot's environment, the
 \emph{scene}. During setup or run-time, this scene is filled with
-objects the robot knows about in its environment. Because the motion
-planner scene should be consistent with the world model stored in the
-robot memory, we provide the OpenRAVE interface provider. This
-interface provider is implemented in the
+objects the robot knows about in its environment, either for
+interaction or collision avoidance. To make sure the motion
+planner scene is be consistent with the world model stored in the
+robot memory, we implement the OpenRAVE interface provider in the
 \texttt{openrave-robot-memory} plugin. The plugin constructs and
 updates the motion planner scene from documents in the robot
 memory. Based on configuration values, it queries the robot memory for
@@ -680,50 +689,17 @@ arm has its origin in the base of the arm.
 
 \section{Application Scenarios}
 \label{sec:applicationscenarios}
-Based on the implementation of the robot memory and the interface
-providers, we can now present the implementation of the two
-application scenarios. The scenarios are chosen in a way that they
+The two scenarios are chosen in a way that they
 cover all major features of the robot memory and that they are
 prototypes for applications the robot memory is made for.
-In \resec{sec:app-rcll}, we present how the robot memory is used in
+In \refsec{sec:app-rcll}, we present how the robot memory is used in
 the RCLL to synchronize the worldmodel between multiple robots, and in
 \refsec{sec:app-blocks-world}, we present the use of the robot memory
 in a block stacking scenario with a robot arm.
 
 \subsection{RoboCup Logistics League}
 \label{sec:app-rcll}
-In the RoboCup Logistics League (RCLL), a team of autonomous mobile
-robots manages the production and material flow in a factory to
-assemble randomly ordered products.
-\begin{figure}
-  \centering
-  \begin{subfigure}[b]{0.49\textwidth}
-    \includegraphics[width=\textwidth]{img/rcll-field}
-    \caption{At the RoboCup 2016 in Leipzig}
-    \label{fig:rcll-real}
-  \end{subfigure}
-\hfill
-  \begin{subfigure}[b]{0.49\textwidth}
-    \includegraphics[width=\textwidth,height=0.55\textwidth]{img/rcll-sim}
-    \caption{In the Gazebo simulation}
-    \label{fig:rcll-sim}
-  \end{subfigure}
-  \caption[Field of the RoboCup Logistics League]{Field of the RoboCup Logistics League}
-  \label{fig:rcll}
-\end{figure}
-\reffig{fig:rcll-real} shows the factory area and the logistics robots
-of the Carologistics and Solidus teams at the RoboCup finals in
-2016. During the development and evaluation of the scenario, we mainly
-depend on the simulation of the RCLL shown in
-\reffig{fig:rcll-sim}. This simplifies and fastens the development
-because we had no full RCLL field available and properly setting up
-all robots takes a lot effort. However, this does not make a
-significant difference for the robot memory because the simulation can
-be distributed over multiple machines and because the interface and
-usage is identical in simulation and real world.
-\todo[inline]{Difference simulation-real world (almost same for robot
-  memory, no possibility to test because of missing field, but
-  distribution and full game already tested)} A central component of
+A central component of
 the Carologistics robot software in the RCLL is the CLIPS agent. It
 maintains a world model, decides what the robot should do with
 incremental reasoning~\cite{CLIPS-Agent}, and monitors the execution
@@ -743,7 +719,37 @@ synchronization. The synchronization by MongoDB is advantageous
 because it only sends necessary changes over the network instead of
 the whole world model, as it is done by the CLIPS agent. Another
 advantage is the persistency, because robots keep their state if one
-or all of them are restarted.
+or even all of them are restarted.
+
+\begin{figure}
+  \centering
+  \begin{subfigure}[b]{0.49\textwidth}
+    \includegraphics[width=\textwidth]{img/rcll-field}
+    \caption{At the RoboCup 2016 in Leipzig}
+    \label{fig:rcll-real}
+  \end{subfigure}
+\hfill
+  \begin{subfigure}[b]{0.49\textwidth}
+    \includegraphics[width=\textwidth,height=0.55\textwidth]{img/rcll-sim}
+    \caption{In the Gazebo simulation}
+    \label{fig:rcll-sim}
+  \end{subfigure}
+  \caption[Field of the RoboCup Logistics League]{Field of the RoboCup Logistics League}
+  \label{fig:rcll}
+\end{figure}
+During the development and evaluation of the RCLL scenario, we mainly
+depend on the simulation of the RCLL shown in
+\reffig{fig:rcll-sim}. This simplifies and fastens the development
+because we had no full RCLL field available and properly setting up
+all robots takes a lot effort. However, this does not make a
+significant difference for the robot memory because the simulation can
+be distributed over multiple machines and because the interface and
+usage is identical in simulation and real world. Also the robot
+behavior, perception results, and factory layout (\reffig{fig:rcll})
+are similar. The environment agency by the Refbox is
+identical. Different are WiFi issues occuring at RoboCup
+competitions because the simulation only introduces a message loss for
+UDP packages.
 
 The distribution of the robot memory in the RCLL is achieved by
 configuring the robot memory to use the replica set with all robots
@@ -778,12 +784,13 @@ rules consumes this fact and updates the fact with the corresponding
 \label{sec:app-blocks-world}
 The second application scenario is the blocks world with a robotic
 arm. Blocks world is a classical planning problem about planning the
-actions of a robotic arm to stack block until a given goal state is
-reached. An example goal is stacking the blocks \texttt{A} on
-\texttt{B} and \texttt{B} on \texttt{C}. If all block lie on the table in the initial
-state, the planner has to figure out that a solving sequence of
-actions is to stack \texttt{B} on \texttt{C} first and \texttt{A} on
-\texttt{B} second because the arm can only hold one block.
+actions of a robotic arm to stack blocks until a given goal state is
+reached~\cite{blocks-world}. An example goal is stacking the blocks \texttt{A} on
+\texttt{B} and \texttt{B} on \texttt{C}. If the initial state is shown
+in \reffig{fig:blocksworld}, the planner has to figure out that a solving sequence of
+actions is to put \texttt{A} on the table first, stack \texttt{B} on
+\texttt{C} second, and stack \texttt{A} on
+\texttt{B} third because the arm can only hold one block at a time.
 Implementing this scenario with a real robot arm, is a good evaluation
 scenario for the robot memory, because in contrast to the theoretical
 problem, multiple components (perception, planners, executive)
@@ -791,8 +798,9 @@ have to work together and there are additional problems such as
 occlusion and geometric representation and manipulation.
 \begin{wrapfigure}{r}{0.37\textwidth}
   \centering
-  \includegraphics[width=0.37\textwidth]{img/blocks-world}%
-  \caption[Blocks world scenario with Jaco arm]{Blocks world scenario with Jaco arm}
+  \vspace{-6mm}
+  \includegraphics[width=0.37\textwidth]{img/blocks-world-annotated}%
+  \caption[Blocks world scenario with Jaco arm (annotated)]{Blocks world scenario with Jaco arm (annotated)}
   \vspace{-4mm}
   \label{fig:blocksworld}
 \end{wrapfigure}
@@ -800,16 +808,16 @@ occlusion and geometric representation and manipulation.
 we are using. The scenario is inspired by the RoboCup@Home league,
 which also deals with hybrid reasoning, perception, manipulation,
 planning, and memorizing observations in the real world. Furthermore
-we choose this scenario because it requires many features provided by
+we choose this scenario because it requires many features of
 the robot memory. In the following, we present the different
 components operating in this scenario and how they collaborate by
 using the robot memory:
 \\
-\textbf{Perception:} Blocks are located and identified by an AR-tag
+\textbf{Perception:} Blocks are located and identified by a marker
 attached to the top surface. We use the results of the detection by
 the \texttt{tag-vision} plugin with a Kinect version 1 camera mounted
 on the ceiling. We implemented the \texttt{blocks-world-perception}
-plugin, which fetches the position of detected tags and updates the
+plugin, which fetches the position of detected markers and updates the
 last observed position in the robot memory. Because the
 \texttt{tag-vision} plugin publishes its results on the blackboard, we
 use the blackboard computable to obtain the interface data as
@@ -819,16 +827,16 @@ provides computables for transforming the 3D positions into symbolic
 information needed later by a PDDL component. It provides the symbolic
 information if a block is on the table by comparing the height of the
 block to the height of the table and if a block is clear to be grabbed
-by checking if the tag is currently visible. There is also a
+by checking if the marker is currently visible. There is also a
 computable describing unknown blocks. If \reffig{fig:blocksworld}
-shows the initial situation, the plugin can detect that block
+shows the current situation, the plugin can detect that block
 \texttt{C} is not on the table. By using the information in the robot
 memory, the plugin also detects that there is an unknown block below
 \texttt{C} because the robot memory does not contain any information
 about \texttt{C} standing on another block yet.
 \\
-\textbf{PDDL planner:} The classical part of the blocks world scenario
-is solved by a PDDL planner. There is a fixed domain definition
+\textbf{PDDL-based planner:} The classical part of the blocks world scenario
+is solved by a PDDL planner. There is a fixed domain description
 describing the available predicates \texttt{on, holding, on-table,
   clear, arm-empty} and the possible arm actions \texttt{pickup,
   putdown, stack, unstack}. We use the PDDL robot memory interface to
@@ -844,7 +852,7 @@ planner is inserted into the robot memory.
 \textbf{CLIPS executive:} We use CLIPS executive as top level
 executive for user interaction, invocation of the planner, and
 monitoring plan execution. When a new goal state is specified by the
-user, the executive invokes the PDDL domain generation with the goal
+user, the executive invokes the PDDL model generation with the goal
 first and then starts the planner. It uses a trigger to be notified
 when the resulting plan is added to the robot memory. When planning
 failed, it starts again, otherwise the plan is converted into a CLIPS
@@ -864,26 +872,27 @@ removes the document describing that \texttt{B} is hold. These updates
 allow the system to remember the current state because the vision can
 no longer detect \texttt{C} due to occlusion by \texttt{B}. When a
 step fails, the execution of the plan is aborted and the executive
-starts again with domain generation and planning. In most cases, the
+starts again with model generation and planning. In most cases, the
 system can continue because the current state is remembered in the
 robot memory.
+\todo[inline]{listings clips (taks+steps?)}
 \\
 \textbf{OpenRAVE motion planner:} The collision free motion of the arm
 is planned with OpenRAVE.
 \begin{wrapfigure}{r}{0.3\textwidth}
   \centering
-  \includegraphics[width=0.3\textwidth]{img/openrave-scene}%
+  \includegraphics[width=0.3\textwidth]{img/openrave-blocks}%
   \caption[Blocks world OpenRAVE scene]{Blocks world OpenRAVE scene}
   \vspace{-4mm}
   \label{fig:openrave}
 \end{wrapfigure}
-\todo[inline]{OpenRAVE figure with drawn path?}
 \reffig{fig:openrave} shows the motion planner scene OpenRAVE
 visualizes and plans in. The scene is constructed with by the OpenRAVE
 robot memory interface, which queries the position, name, and type of
-all objects in the environment from the robot memory. Positions are
+all objects in the environment from the robot memory. An example
+document, which can be inserted from the robot memory into the
+OpenRAVE scene is \reflst{lst:openrave}. Positions are
 transformed by the transform computable into the frame of the robot
 arm, which is used by OpenRAVE. The scene construction is invoked by
 the executive between steps. The motion commands OpenRAVE plans and
 controls are send by the behaviors executing each step.
-\todo[inline]{mention attaching of blocks to hand in skill?}

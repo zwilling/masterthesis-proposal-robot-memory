@@ -251,7 +251,26 @@ can be used as so-called \emph{foreign keys} to
 link multiple relations, such as in
 \reftab{tab:relational-example}(c). In which relations a database is
 structured and which attributes relations contain is defined by the
-\emph{schema} of the database. To interact with a database management
+\emph{schema} of the database.
+\begin{wrapfigure}{r}{0.33\textwidth}
+  \vspace{-0.4cm}
+\begin{lstlisting}[style=SmallJSON,
+  caption={SQL query},
+  label=lst:sql,
+  framexleftmargin=1pt, xleftmargin=0pt,
+ morekeywords={}, numbers=none]
+SELECT *
+  FROM Borrowed
+  JOIN Persons
+    ON Borrowed.Person =
+         Persons.Id
+  JOIN Books
+    ON Borrowed.Book = 
+         Books.Id
+\end{lstlisting}
+\vspace{-8mm}
+\end{wrapfigure}
+To interact with a database management
 system following the relational model, the \emph{Structured Query
   Language (SQL)} can be used. SQL is a formal language to insert,
 update, and delete rows, change the database schema, and search the
@@ -260,8 +279,8 @@ attributes and group, sort, and aggregate results. An especially useful
 feature of relational databases and SQL is joining multiple relations
 by using foreign keys. For example, this allows listing the titles of
 borrowed books together with the name of the borrower from
-\reftab{tab:relational-example}.
-\todo[inline]{with the SQL query ...}
+\reftab{tab:relational-example} with the query shown in \reflst{lst:sql}
+\todo[inline]{check SQL query ...}
 \todo[inline]{example relational database: PostgreSQL}
 
 \subsubsection{Graph-Based}

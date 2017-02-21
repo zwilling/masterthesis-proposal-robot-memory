@@ -339,11 +339,12 @@ detected by MongoDB and not distributed over the Oplog, because the
 operation did not change anything.
 % second->primary updates not shown (difficult to measure, c++ dirver
 % directly sends them to the primary)
+\todo[inline]{mention wifi issues no tested}
 
 The second scenario is the Blocks World with the Kinova Jaco arm. The
 robot memory is included in the following processes: The overhead
-vision detects tags on blocks and publishes their position on the
-blackboard. A PDDL domain generation constructs a problem description
+vision detects markers on blocks and publishes their position on the
+blackboard. The PDDL model generation constructs a problem description
 from symbolic information in the robot memory. A part of this
 information is provided by computables for \texttt{on-table} and
 \texttt{clear} predicates. There are also computables for the
@@ -586,4 +587,4 @@ computation times in \reffig{fig:eval-durations-2} were inserted as
 documents in the robot memory and plotted using the
 \texttt{matplotlib} and \texttt{pymongo} libraries for Python.
 
-
+\todo[inline]{screenshot Robomongo}
