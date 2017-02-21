@@ -1,20 +1,19 @@
 \chapter{Approach}
 \label{chap:approach}
-This chapter presents the approach of the thesis. It describes and
-explains the concepts behind the robot memory. It starts with the
-goals the robot memory is designed to achieve in
-\refsec{sec:goals}. \refsec{sec:formalism} introduces the theoretical
+To describe the approach of this thesis, we first present the
+goals of the robot memory in \refsec{sec:goals}.
+\refsec{sec:formalism} then introduces the theoretical
 foundation how information can be represented in the robot memory and
 how knowledge is transferred into a knowledge based system (KBS). The
 concepts of the robot memory's main components are presented in
 \refsec{sec:concepts} and \refsec{sec:architecture} gives an overview
-of the architecture, which describes in which components the robot
-memory is organized and how they interact with each other.
+of the architecture describing which components the robot
+memory consists of and how they interact with each other.
 
 \section{Goals}
 \label{sec:goals}
-This section presents the design goals of the robot memory. They were
-formulated before detailing the concepts used in the robot memory and
+The design goals of the robot memory were
+formulated before detailing robot memory concepts and
 define what the robot memory should be capable of. The evaluation in
 \refchap{chap:evaluation} refers to these goals to analyze how well
 the implementation fulfills them.
@@ -24,14 +23,13 @@ the robot memory is memorizing information of the robot. Memorizing
 includes storing newly obtained information, updating it according to
 changes, removing information that is no longer valid or needed, and
 remembering the information by querying it again. Thus the robot
-memory has to provide services for storing, updating, removing, and
-querying information.  It has to be usable by multiple components
-as information source and collaboration platform.  When the robot memory is queried, it should
+memory has to provide services for these operations.  It has to be usable by multiple components
+as information source and collaboration platform.  When the robot memory is queried, it must
 only return the information that it is asked for. It should be flexible
 enough to store any kind of data, information, knowledge, and wisdom
 of the Data-Information-Knowledge hierarchy in any structure. For example the robot memory
 should be able to store world models, perception results and even
-large data-sets, such as remembered sights of objects.
+large data-sets, such as remembered observations of objects.
 
 \textbf{Memory Sharing Between Knowledge-Based Systems:}
 % original title of the goal: Consistent...
@@ -50,31 +48,31 @@ only one state estimation is necessary.
 
 \textbf{Special Views for Different Components:} Depending on the
 application of different components using the robot memory, different
-views on the stored data are necessary. For example a planning
-components needs another part of the stored data, than a component
+views on the stored data are necessary. For example, a planning
+components needs a different part of the stored data, than a component
 learning distributions from object sights. Thus component-specific
 filters are necessary. Furthermore, different components need the
-stored data in different formats, e.g., symbolic or spatio-temporal,
+stored data in different formats, e.g., symbolic or geometric,
 depending on the used programming language and purpose. The robot
 memory has to allow defining these views and then accordingly filter
 and transform the stored information. Also keys and identifiers, which
 might be named differently, have to be translatable.
 
 \textbf{Computation on Demand:}
-\todo[inline]{call it 'knowledge' computation?}  To efficiently derive
+To efficiently derive
 information only when it is necessary, the robot memory has to provide
 computation on demand. This means that some information is not stored
 in the robot memory directly, but computed when needed. It allows
 accessing information through the robot memory that is otherwise
 impracticable to compute and store continuously and for all possible
-queries. For example when a component queries the distance of two
+queries. For example when a component rarely queries the distance of two
 objects, it is better to compute the result on demand than to store
 all distances between each two objects in the memory and to keep them
 updated. Components using the robot memory should be able to provide
 knowledge computation functions (\emph{computables}) to the robot
-memory. This should add a lot of versatility and expandability.
+memory. This adds a lot of versatility and expandability.
 
-\textbf{Shared Memory for Multi-Robot Systems:} The robot memory
+\textbf{Distributed Memory for Multi-Robot Systems:} The robot memory
 should be able to distribute parts of the memory in a multi-robot
 system. Multiple robots can then share a common world model for
 collaboration. This goal is similar to the memory sharing between
@@ -88,7 +86,7 @@ to achieve at the moment.  Distributing the robot memory adds
 additional requirements and challenges, especially robustness, e.g., in
 the case of robots dropping out, consistency of the memory, and
 accessibility so each robot can use the robot memory without large
-latices.
+latencies.
 
 \textbf{Spatio-Temporal Grounding:} It is often desirable to ground
 stored knowledge based on location and time because this is the
@@ -99,17 +97,19 @@ memory has to be able to store knowledge tagged with spatio-temporal
 information and consider this information while querying.
 
 \textbf{Triggers:} The robot memory should be able to notify
-components about relevant changes in the memory. These notifications
+components about relevant changes in it. These notifications
 about specified events are called \emph{triggers} and should
 automatically be sent after a component registers an event it wants to
 be notified about. Events include the appearances of new information
-about a specific topic, modifications and deletions of it, as well as
-sentences becoming true or queries returning new information.
-An example use case that should be supported by the robot memory is
+about a specific topic, modifications and deletions of it. More
+complex events describe conditions over whole collections, such as the
+amount of objects exceeding a threshold.
+An important use case that should be supported by the robot memory is
 updating reasoner predicates according to changes in the memory.
 
-\textbf{Persistent Storage:} The robot memory should be persistent
-to be able to store long-time knowledge and operate over long times,
+\textbf{Persistent Storage:} The robot memory should be persistently
+stored on a non-volatile device
+to be able to hold long-time knowledge and operate over long times,
 in which a robot might be restarted. This is necessary in many
 domains, such as for domestic service robots and RCLL robots that
 might be restarted. Furthermore, it should be possible to distinguish
@@ -125,11 +125,10 @@ would also be desirable to analyze spatio-temporal data efficiently.
 
 \section{Theoretical Foundation}
 \label{sec:formalism}
-\todo[inline]{emph mit textit oder textbf?}
 In this section, we lay the theoretical foundation of the robot memory
-and its integration into knowledge-based systems. First, we focus on
+and its integration into KBS. First, we focus on
 the representation of symbolic information as it is used in KBS. Here
-we take the PDDL formalism as example. The formal definition of the
+we take the PDDL formalism as an example. The formal definition of the
 robot memory describes how knowledge is represented and how
 computables are defined. Because the robot memory is document
 oriented, we first define documents and their key-value pairs. This
@@ -161,14 +160,14 @@ defined as follows:
   \forall (k,v),(k',v')\in d , k\neq k' \vee (k,v)=(k',v')
   \}$
 \end{enumerate}
-This yields the set of all \textbf{finitely nested documents}
-$\mathcal{D}=\cup_{n\in\mathbb{N}}\mathcal{D}_n$.
-The set of all values is $\mathcal{V}=\cup_{n\in\mathbb{N}}\mathcal{V}_n$.
+This yields the set of all \emph{finitely nested documents}
+$\mathcal{D}=\bigcup_{n\in\mathbb{N}}\mathcal{D}_n$.
+The set of all values is $\mathcal{V}=\bigcup_{n\in\mathbb{N}}\mathcal{V}_n$.
   Infinite nesting and
 documents containing themselves are not considered because they can
-not properly be mapped into most KBS formalisms.
+not properly be mapped into most KBS formalisms and databases.
 \\
-A \textbf{database} is a finite set of documents $\mathcal{DB} \subset \mathcal{D}$.
+A \emph{database} is a finite set of documents $\mathcal{DB} \subset \mathcal{D}$.
 %% with unique object
 %% identifiers, which are a special key-value pair:
 %% \begin{align*}
@@ -176,7 +175,7 @@ A \textbf{database} is a finite set of documents $\mathcal{DB} \subset \mathcal{
 %% & \text{where } \forall d,d' \in \mathcal{DB} \text{ with } ("\_id",v)\in
 %% d \text{ and } ("\_id",v')\in d' , d=d' \vee v\neq v'
 %% \end{align*}
-\textbf{Queries} are represented by documents $q\in\mathcal{D}$ and
+\emph{Queries} are represented by documents $q\in\mathcal{D}$ and
 yield a set of documents $r\subseteq\mathcal{DB}$ as result when
 executed in a database according a specification, e.g., of
 MongoDB~\cite{mongodb}. For example, the query
@@ -184,35 +183,37 @@ $\{("object","cup"),("room","kitchen")\}$ yields all documents
 containing these key-value pairs, which represent all cups in the
 kitchen.
 \\
-A \textbf{computable} $f$ is a function mapping a query document and
+A \emph{computable} $f$ is a function mapping a query document and
 the current state of the database to a set of computed documents:
 $$f: \mathcal{D}\times\mathbb{P}(\mathcal{D}) \rightarrow \mathbb{P}(\mathcal{D})$$
 The power-set of documents is in the domain of a computable because the
 result can also depend on the state of the database, e.g., a computable
 calculating the number of objects in the database. For simplicity, we
-assume that all sensor data a computable can depend on is also
+assume that all sensor data, a computable can depend on, is also
 represented in the database. The component providing the computable
 has to ensure that the function is computable and terminates.
 %
-With these preliminaries, we can now define a \textbf{robot memory} as tuple
+With these preliminaries, we can now define a \emph{robot memory} as tuple
 of a database~$\mathcal{DB}$ and an ordered set of computables~$\mathcal{C}=\{f_1,...,f_n\}$:
 $$\mathcal{RM}=(\mathcal{DB},\mathcal{C})$$
 %
 The computables are ordered by a priority because a computable with
-higher priority can provide documents that are used by a computable
-with lower priority. The set of documents \textbf{memorized} by a
+higher priority can produce documents that are consumed by a computable
+with lower priority.
+
+The set of documents \emph{memorized} by a
 robot memory without computables equals the underlying database:
 $$mem(\mathcal{(DB,\emptyset)})=\mathcal{DB}$$
 For a robot memory with computables the documents memorized are:
 $$mem((\mathcal{DB},\{f_1,..,f_n\}))=mem((\mathcal{DB},\{f_1,..,f_{n-1}\})) \cup \bigcup_{d\in\mathcal{D}}f_n(d,mem((\mathcal{DB},\{f_1,..,f_{n-1}\})))$$
 
 To integrate the robot memory into PDDL, we need to define 
-\textbf{mapping functions} $map_d$ between documents and predicates, and
+\emph{mapping functions} $map_d$ between documents and predicates, and
 $map_v$ between values and terms. As prerequisite, the connection
 between key-names in documents and predicates, functions, actions, and their
-attributes needs to be defined. Let $\mathcal{R}$ be the \textbf{set
-  of predicate symbols}, $\mathcal{F}$ the \textbf{set of function
-  symbols}, and $\mathcal{A}$ the \textbf{set of actions
+attributes needs to be defined. Let $\mathcal{R}$ be the \emph{set
+  of predicate symbols}, $\mathcal{F}$ the \emph{set of function
+  symbols}, and $\mathcal{A}$ the \emph{set of actions
   symbols}, then
 %
 $$name_{pred}: \mathcal{R} \rightarrow \Sigma^*
@@ -221,7 +222,7 @@ $$name_{pred}: \mathcal{R} \rightarrow \Sigma^*
 %
 map to the strings used in document keys
 (e.g. $name_{pred}(\text{at})="\text{at}"$). To ensure unambiguity,
-the $name$ functions should
+the $name$ functions must
 be injective and their images disjunctive. The function
 %
 $$ name_{func-atr}: \mathcal{R} \times \mathbb{N} \rightarrow
@@ -260,7 +261,7 @@ map_p&(\{("predicate", "at"),("object", "cup"),("room",
 This theoretical foundation of the robot memory and the mapping of
 queried documents into predicates is the basis for the generation of
 PDDL problem descriptions. The direction from PDDL back to the robot
-memory is limited on storing the resulting plan found by a
+memory is limited to storing the resulting plan found by a
 planner. The plan $\mathcal{L}$ is an ordered sequence of
 parameterized actions
 $$\mathcal{L}=(a_1(v_{1,1},v_{1,2},...,v_{1,k_1}),a_2(v_{2,1},...,v_{2,k_2}),...,a_j(v_{j,1},...,v_{j,k_j})) \text{.}$$
@@ -285,16 +286,18 @@ integration into PDDL, the closed world assumption is kept. Thus if
 there is no document $d\in mem(\mathcal{RM})$ so that
 $map_p(d)=p(v_1,v_2)$, $p(v_1,v_2)$ is known to be false.
 
-Although it is not included in the theoretical foundation focused on
-PDDL, the robot memory can also map spatio-temporal information into
+\bigskip
+
+Not included in the theoretical foundation focused on
+PDDL is that the robot memory can also map spatio-temporal information into
 other systems such as CLIPS and C++. Here, the documents in
 $mem(\mathcal{RM})$ are not directly mapped into the used
-representation of CLIPS, e.g., as facts or C++, e.g., as
+representation of CLIPS, e.g., as facts, or C++, e.g., as
 variables. Instead, there are functions for querying, which yield a
 set of documents, and functions to receive the value of a key-value
 pair in different types. Furthermore, there are functions to build
-documents and queries iteratively pair-by-pair and inserting,
-updating, and removing removing.
+documents and queries iteratively pair-by-pair and for inserting,
+updating, and removing.
 
 \section{Robot Memory Concepts}
 \label{sec:concepts}
@@ -352,9 +355,9 @@ computables in our robot memory for three main reasons:
   effort mentioned in the previous two reasons, computables are well
   suited to simplify dealing with hybrid information in KBS. For
   example computables can provide a KBS with the information in which
-  room the robot is based on the current 3D position
+  room the robot is based on the current geometric position
   stored in the robot memory. An example for the transformation of
-  symbolical to geometric information is finding a free position on a
+  symbolic to geometric information is finding a free position on a
   table for a planner action specifying to place an object somewhere on the table.
 \end{itemize}
 
@@ -393,8 +396,8 @@ insertions, modifications, or deletions of documents with specific
 properties. For applications using the robot memory, triggers can be
 useful because they allow notifications in a convenient and efficient
 way. Applications do not have to implement polling and the queries
-defining events only need to be executed on changes in the database,
-instead of the whole robot memory. Examples for components utilizing
+defining events only need to be executed on changes in the robot
+memory. Examples for components utilizing
 triggers, are executives that want to be notified about changes to
 keep their internal world model up to date and planners that want to
 be notified about preconditions of their plan becoming false to
@@ -414,7 +417,7 @@ possible to combine triggers and computables by periodically querying
 the robot memory to activate the computable. Furthermore it is
 possible to bypass this limitation by replacing the computable by a
 system that periodically inserts the required computation results into
-the robot memory as usual.
+the robot memory.
 
 \subsection{Knowledge-Based System Interface}
 \label{sec:kbs-interface}
@@ -435,7 +438,7 @@ which requires the mapping from documents to predicates as shown in
 into the representation and programming language used by the KBS. This
 transformation can also require deriving symbolic information from
 spatio-temporal one. An example is the room a robot is in if the robot
-memory only contains the 3D position of the robot. Furthermore KBS
+memory only contains the geometric position of the robot. Furthermore KBS
 often are specialized on some area, such as planning or world model
 reasoning. Therefore only a part of the information contained in the
 robot memory might be relevant to the KBS. The interface has to filter
@@ -454,10 +457,9 @@ the KBS.
 
 \subsection{Multi-Robot Synchronization}
 \label{sec:synchronization}
-The robot memory is usable in a distributed multi-robot system. Thus
-we have to specify how this distribution works and which properties
-the distributed robot memory has. In a multi-robot system, each robot
-hosts one instance of the robot memory. These instances communicate to
+To distribute the robot memory in a multi-robot system,
+each robot has to
+host one instance of the robot memory. These instances communicate to
 share and synchronize their memorized information. There are a shared
 and a private part of the robot memory, which are both accessible by
 the robot. The private part is only visible and usable by the robot
@@ -465,14 +467,16 @@ hosting it and the shared part is accessible by all robots in the
 system. This enables sharing all necessary information while saving
 bandwidth by not sending information that is not relevant for other
 robots. The shared and private part of the robot memory are separated
-as different databases. The shared part is consistent over the whole
-multi-robot system. This is ensured by having a single primary
-instance that executes and mutually locks all write operations in the
-robot memory. Read operations can be evaluated on all instances for
-faster querying. Because the time difference between writing to the
-primary instance and propagating the change to other instances is
-expected to be small, inconsistencies caused by distributed reads are
-negligible. The distributed robot memory has to be robust against the
+as different databases. All write operations on the shared part are
+mutually locked and executed on a single primary instance. Read
+operations can be evaluated on all instances for faster
+querying. Thus the shared robot memory is eventually consistent
+because all updates on the primary reach the secondary with a slight delay. Each
+document is consistent in itself since additions, updates, and
+deletions of single documents are atomic. Inconsistencies of document
+sets should not be a problem for the robot memory because documents
+should be denormalized and thus bundle all relevant information.
+The distributed robot memory has to be robust against the
 drop out of robots. Thus, it has to stay operational, keep all shared
 information by having a copy on each robot, and reintegrate the dropped
 out robot when it is started again.
@@ -483,10 +487,7 @@ use the computable has to register it on its own robot memory instance.
 
 \section{Architecture}
 \label{sec:architecture}
-This section presents the architecture of the robot memory and
-explains its design considerations. It shows how the intended
-functionality is organized in smaller components and how these
-components interact with each other. The architecture contains
+The architecture contains
 standard concepts of software engineering, most importantly a layered
 architecture, functional abstraction, and data
 abstraction~\cite{software-architecture} to allow
@@ -500,13 +501,13 @@ re-usability and adaptability to changing requirements and use cases.
 %% %% application
 \reffig{fig:arch} shows the architecture of the robot
 memory and is explained in the following.
-\begin{figure}
+\begin{figure}[ht!]
   \centering
-  \includegraphics[width=1.1\textwidth]{architecture.pdf}
+  \includegraphics[width=1.0\textwidth]{architecture.pdf}
   \vspace{-5mm}
   \caption[Architecture of the Robot Memory]{Architecture of the Robot Memory}
   \label{fig:arch}
-  \vspace{-5mm}
+  \vspace{-0mm}
 \end{figure}
 The architecture organizes all components into four layers: Back-End,
 Robot Memory, Application Interface, and Application. The Back-End
@@ -530,8 +531,8 @@ demanded computation. The component responsible for triggers
 receives and manages registrations of applications that want to be
 notified in the case of an event. It listens to logged changes in the
 databases to check if events happen and notifies applications
-accordingly. Additionally the operation manager can initialize the
-robot memory, e.g., to setup the world model for a new RCLL game.
+accordingly. Additionally the operation manager can setup the
+robot memory by loading a set of inital documents from a file, e.g., for a new RCLL game.
 Between the robot memory and a planner or reasoner components, there
 is the Application Interface layer. For each KBS, it includes an
 Interface Provider component, which makes the function of the robot
@@ -544,8 +545,8 @@ key-names if they have be mapped to match the names used in the KBS
 model. Because languages and concepts of knowledge-based systems can
 be very different, each KBS needs a separate Interface Provider. The
 Interface Provider can also contain a domain creator, which creates an
-initial state, e.g., a problem definition or initial fact base from a
-template and additional knowledge resulting from queries. Finally the
+initial state for the KBS, e.g., a problem definition or initial fact base, from a
+template and additional information resulting from queries. Finally the
 Application layer contains all components using the robot memory
 either through the Interface provider or directly through the robot
 memory interface. KBS can also register triggers through their
@@ -556,7 +557,8 @@ data flow starts in the application requesting storage, modification,
 or querying of knowledge (over the language specific interface). The
 operation manager forwards the request enhanced with management
 information to the database. For queries, the result is transferred
-back on the reversed path of the query request. For computables, the
+back from the database over the operation manager (and the interface
+provider) to the KBS or perception component. For computables, the
 only difference in the data flow is the knowledge computation before
 executing the query in the database. The operation manager
 additionally initiates the knowledge computation via the Computables
@@ -564,4 +566,3 @@ Manager, which forwards the query to the application providing the
 specific computable. The documents resulting from the computable are
 then stored by the computables manager in the robot memory, where it
 is queried afterwards.
-\todo[inline]{add data-flow examples as UML sequence diagram?}

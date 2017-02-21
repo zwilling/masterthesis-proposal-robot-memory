@@ -493,12 +493,13 @@ with computables. KnowRob, for example, could be connected to the
 robot memory by querying information from the robot memory, adding it
 to its ontologies, and providing KnowRob queries via computables.
 
-\textbf{Shared Memory for Multi-Robot Systems:} 
+\textbf{Distributed Memory for Multi-Robot Systems:} 
 In a multi-robot system, the robot memory can be distributed and thus
-allows information sharing. The content of the robot memory is
-consistent over the whole system and robust against failures of single
+allows information sharing. It is robust against failures of single
 robots. Because of the persistency, it is even robust against a restart
-of all robots. As showed in \reffig{fig:rcll-network}, the network
+of all robots. The content of the robot memory is
+eventually consistent over the whole system because changes are
+distributed with a slight delay.  As showed in \reffig{fig:rcll-network}, the network
 usage is small and only depends on changes in the robot memory. In the
 RCLL application scenario, the synchronization of the world model with
 the robot memory is convenient. It frees the CLIPS agent from
