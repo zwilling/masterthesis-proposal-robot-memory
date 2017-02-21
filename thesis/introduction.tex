@@ -1,21 +1,20 @@
 \chapter{Introduction}
 \label{chap:introduction}
 Artificial intelligence and robotics are making a fascinating progress
-and allow autonomous robots to advance into more complex and
-unstructured domains.
+and allow autonomous robots to advance into more complex and everyday domains.
 % Deep neural networks allowed the program \emph{AlphaGo} to win
 % against highest ranked Go players~\cite{alphago}, natural language
 % processing and reasoning helped the question answering system
 % \emph{Watson} to win the quiz show \emph{Jeopardy!}~\cite{watson},
 % and motion control allows robots to walk offroad~\cite{bigdog}.
 Applications with high significance for our society include domestic
-service robots supporting elder care, autonomous cars avoiding
+service robots supporting elderly care, autonomous cars avoiding
 accidents, and intelligent factory robots allowing flexible and
 efficient production. To realize these intelligent and helpful robots,
-a couple of challenges have to be solved. One of these is enabling
+a couple of challenges have to be tackled. One of these is enabling
 robots to grasp their environment and make decisions based on their
-knowledge. To solve this, robots have to memorize gained information
-about their environment and provide it to reasoning and planning
+knowledge. There, robots could benefit from memorizing gained information
+about their environment and providing it to reasoning and planning
 systems. For example, domestic robots serving breakfast need a memory
 to know which items belong on the table and where they are
 stored. Intelligent factory robots need to remember where products are
@@ -28,7 +27,7 @@ symbolic knowledge, and beliefs. Thus the representation has to be
 flexible enough to store symbolic and spatio-temporal information. The
 representation we chose is \emph{document-oriented}. Pieces of
 information are bundled as \emph{documents}, which are a set of
-\emph{key-value pairs} with nesting and various value types. As
+\emph{key-value pairs} with nesting and data typing. As
 back-end storage system, we use the document-oriented database system
 \emph{MongoDB}. This has multiple advantages we need for the robot
 memory, for example long time storage and the possibility of
@@ -48,7 +47,7 @@ actions. These systems need to collaborate and exchange
 information. By storing and sharing the information with a general
 robot memory, we can ensure that they work on a common and consistent
 world model. The separation of storing information and working with it
-also allows easier exchange of components. Furthermore a component
+also allows easier exchange of components. Furthermore, a component
 focused on holding the memory can provide more benefits, such as
 scalability and sophisticated querying.
 
@@ -58,13 +57,13 @@ robot memory. On the one hand, they need a filter to only get relevant
 information. On the other hand, they require the information to be in
 the appropriate format. For the example of the robot position, a
 motion planner needs it as 3D coordinates and a symbolic planner needs
-it as string describing the location (e.g. the room). The robot memory
+it as string describing the location (e.g. \texttt{"kitchen"}). The robot memory
 provides these views and supports hybrid reasoning by transforming
 between spatio-temporal and symbolic information. We provide views via
 interfaces to multiple KBS. For example, the PDDL interface can
 generate files describing the state of the environment, which is
 represented in the robot memory.  To transform between spatio-temporal
-and symbolic information, we introduce the concept of
+and symbolic information and to enrich query results, we introduce the concept of
 \emph{computables}, which allow computing information on demand. The
 robot memory analyzes queries to figure out if information covered by
 a computable is necessary for answering. In this case, it calls the
@@ -75,19 +74,19 @@ two objects. This can be computed quickly, but storing all distances
 between each two objects and keeping them updated would be
 inefficient.
 %
-Another main features of the robot memory is called \emph{Trigger} and
+Another feature of the robot memory is called \emph{trigger} and
 notifies about changes. This can be used to keep a world model updated
-without polling or to wait until a certain information is
+without polling, or to wait until certain information is
 available. For example, a reasoner executing a production plan could
 register to be notified when there is a new order requiring
 re-planning. The robot memory is also usable in a multi robot
-system and thus has to be distributable.
+system and thus distributable.
 
 Our contributions are the conceptual and architectural design of this
 generic robot memory and the implementation in the Fawkes robot
 software framework. In one sentence, our robot memory can be described
 as document-oriented database for hybrid reasoning and knowledge
-sharing between multiple KBS on mobile robots. The thesis focuses on
+sharing between multiple, potentially distributed, KBS on mobile robots. The thesis focuses on
 two applications, which benefit from the robot memory and are used for
 evaluation. Firstly the robot memory is used by in the RoboCup
 Logistics League to share a world model between reasoners running on

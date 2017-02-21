@@ -282,7 +282,8 @@ If the planner can not find any plan, the result is mapped to the
 document $\{("plan", "fail")\}$.
 
 For the knowledge representation in the robot memory and the
-integration into PDDL, the closed world assumption is kept. Thus if
+integration into PDDL, the closed world assumption, stating that all
+true predicates are known to be true, is kept. Thus if 
 there is no document $d\in mem(\mathcal{RM})$ so that
 $map_p(d)=p(v_1,v_2)$, $p(v_1,v_2)$ is known to be false.
 
