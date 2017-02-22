@@ -182,7 +182,7 @@ memory are central tasks of this thesis, the choice of a database
 system is important. In the following, we present the three popular
 database technologies, namely relational, graph-based, and
 document-oriented databases. Because we later decide to use
-document-orientation in robot memory, we conmpare document-oriented
+document-orientation in robot memory, we compare document-oriented
 databases in \refsec{sec:documentdbs}. MongoDB, the database
 implementation used as a basis in this thesis, is presented separately
 in \refsec{sec:mongodb}.
@@ -358,7 +358,7 @@ the \emph{Extensible Markup Language (XML)}~\cite{json}. It is human
 readable and assembles objects with key-value pairs. Because these
 objects can also be nested, they can represent documents. Compared to
 XML, JSON is faster and more compact~\cite{json-comparison}. In the
-following, we omitt quotation marks around JSON keys for more compact
+following, we omit quotation marks around JSON keys for more compact
 presentation.
 
 
@@ -467,9 +467,8 @@ example with a variety of operators such as \texttt{not}, \texttt{or},
 \texttt{equals}, \texttt{greater than}, etc. These queries can be
 evaluated very quickly, especially when \emph{indexing} is
 used. Indexing is a
-database feature that, similary to binary search, allows to lookup
-documents faster than in linear time by sorting them for combination of document
-keys, the \emph{index}. For more complex queries, it is possible to add arbitrary
+database feature that allows to lookup
+documents faster than in linear time by storing a references to a portion of the data in an fastly to traverse form, for example as hash table or binary tree. For more complex queries, it is possible to add arbitrary
 JavaScript functions, which check if documents are matched.
 Furthermore, it is possible to aggregate
 results using the \emph{Map-Reduce} paradigm~\cite{mapreduce}, which
@@ -507,7 +506,7 @@ process that distributes a database onto multiple machines.  One
 MongoDB instance called \emph{Primary} initially copies the database
 to other instances called \emph{Secondaries}.  Afterwards, all
 modifications to the primary database, which are stored in a separate,
-capped collection called \emph{operations log (oplog)}, are forwarded to the
+capped collection called \emph{operations log (Oplog)}, are forwarded to the
 secondaries to keep them synchronized and consistent.  This is often
 used in web-services to distribute read-queries and their computation
 on multiple machines and to keep backups.  Read only queries can be

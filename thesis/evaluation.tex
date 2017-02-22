@@ -21,7 +21,7 @@ features of the robot memory work based on the quantitative evaluation
 and the experience using the robot memory in the RCLL and
 blocks world application scenarios. Both scenarios were chosen in a
 way that all important robot memory features are covered.
-\todo[inline]{check consistency after reordering}
+
 
 \textbf{Flexible Storage and Retrieval:}
 As demonstrated in the RCLL and blocks world, the robot memory
@@ -94,9 +94,7 @@ functions of perception components to KBS, which only need to execute
 a usual robot memory query. They are also useful for hybrid reasoning
 because they can transform information in the robot memory to be
 usable by different components, as described in the previous
-paragraph. \reffig{fig:computable-durations} shows that
-computables are fast in the sense that the overhead is small and the
-complete query time mainly depends on the computation time. Compared
+paragraph. Compared
 to computing everything in advance, computables are more efficient because
 they are only evaluated when required and for required parameters.
 A disadvantage we noticed when heavily using computables in the blocks
@@ -144,7 +142,7 @@ information is simple. For example, we use spatial positions
 of objects in the blocks world and times for caching of computables.
 The robot memory can also consider spatio-temporal information in
 queries. Simple operations, such as comparison, can be expressed in
-the query language and complex operation can be performed by
+the query language and complex operations can be performed by
 computables as, for example, shown by the transform computable.
 
 \textbf{Triggers:}
@@ -170,7 +168,7 @@ use cases, such as keeping a world model updated.
 More complex problems, such as monitoring the amount, can still be
 implemented efficiently by creating a trigger for the insertion and
 deletion of such objects and then checking the object count in the
-callback function. Further triggers can not notify about documents
+callback function. Furthermore, triggers can not notify about documents
 provided by computables without invoking the computable from the
 application. This is due to the theoretical complexity of verifying if
 an arbitrary function yields a specified result for any input
@@ -185,7 +183,7 @@ components using the robot memory.
 The robot memory provides a persistent storage. The content of the
 robot memory is stored on the hard-drive and remains after restarting
 Fawkes or the whole system. Thus the robot memory enables a robot to
-have a long time memory. It is possible to mark documents that should
+have a long-time memory. It is possible to mark documents that should
 not be stored persistently, by adding a expiration time or a key-value
 pair describing that this document should be removed during a restart.
 In a multi-robot system, the distributed robot memory is even robust against a
@@ -217,7 +215,7 @@ robot memory features, such as computables. To support debugging, the
 robot memory logs operations, computable calls, and trigger
 activations when specified in the configuration. It is possible to
 visualize spatio-temporal data in the robot memory. For example, the
-computation times in \reffig{fig:eval-durations-2} were inserted as
+computation times in \reffig{fig:eval-durations-1} were inserted as
 documents in the robot memory and plotted using the
 \texttt{matplotlib} and \texttt{pymongo} libraries for Python.
 
@@ -270,16 +268,16 @@ increasing complexity.
 The structure of the data used for this evaluation is chosen in a way
 to be similar to information that is usually stored in a robot
 memory. Furthermore, the structure should simplify the analysis. The used data mimics
-a robot's knowledge about object and their positions to solve a tidy
+a robot's knowledge about objects and their positions to solve a tidy
 up scenario. For each object, the robot memory contains a document
-with the object's name, current position, and the tidied place it
+with the object's name, the current position, and the tidied place it
 belongs to. Names are unique and tidied places are randomly chosen
 out of $1000$ possibilities. Objects are at a random misplaced position with
 probability $0.01$ and at their proper tidied place otherwise. The
 object's name is a string to enforce string comparisons, which are
 expected to be often needed in a real scenario. Two example documents
 are shown in \reflst{lst:eval-objs}. At first, we do not use indexing for the analysis of
-operation durations because is the worst case queries do not benefit
+operation durations because in the worst case queries do not benefit
 from indexing. In \refsec{sec:indexing} we evaluate the impact of indexing separately.
 An evaluation plugin in
 Fawkes generates the data and calls random operations. To analyze how
@@ -315,11 +313,11 @@ could reduce the occurrence frequency of these outliers to one in $60s$, which i
 default flushing frequency of MongoDB. To reach this, we had to
 disable the forward logging of MongoDB, called Journaling. The
 outliers are not shown in \reffig{fig:insert-durations}
-because it is unlikely to hit one outlier in $60s$ by measurring the
+because it is unlikely to hit one outlier in $60s$ by measuring the
 duration of each $1000$th insertion and the insertion of all $100000$
-documents lasts less than $15s$. When measureing all insertion durations,
+documents lasts less than $15s$. When measuring all insertion durations,
 outliers took about $0.3s$ because of the
-large amount of written documents and the threading in Fawkes.The
+large amount of written documents and the threading in Fawkes. The
 overhead of the robot memory compared to the duration of the raw
 MongoDB operation has an average of $0.006ms$, which is about $5.5\%$.
 The overhead is caused by verifying the collection name, deciding if
@@ -356,7 +354,9 @@ documents did not make a noticeable difference.
     \caption{Computables}
     \label{fig:computable-durations}
   \end{subfigure}
-  \caption[Duration of robot memory operations with increasing domain size]{Duration of robot memory operations with increasing domain size}
+  \caption[Duration of robot memory operations with increasing domain
+  size]{Duration of robot memory operations with increasing domain
+    size (Different duration scale for each operation used)}
   \label{fig:eval-durations-1}
 \end{figure}
 
@@ -371,15 +371,15 @@ durations for finding objects that are not at their tidied place
 and thus would have to be tidied up. The query is more complex
 because it contains a comparison between two values that is formulated
 in JavaScript. From $0$ to about $10000$ documents, also a linear
-increase can be seen. With more documents the average duration does
-not increase, because of a query evaluation trick of MongoDB. MongoDB
+increase can be seen. With more documents, the average duration does
+not increase because of a query evaluation trick of MongoDB. MongoDB
 lazily evaluates queries and returns a cursor to the first batch of
 $n$ documents that match the query. While the user iteratively fetches
 documents from the cursor, MongoDB continues the query evaluation if
 the batch was emptied. For the \texttt{'find object name'} query, the whole
 database was searched because the unique object could not fill the
 batch. However it is possible to request a smaller batch, e.g., only
-one, document for faster computation. The overhead of the robot memory query operation does not
+one document, for faster computation. The overhead of the robot memory query operation does not
 depend on the domain size and has an average duration of $0.6ms$. The
 largest part of that overhead is caused by the computable manager,
 even if in this scenario no computables are registered. The computable
@@ -393,7 +393,7 @@ compared to the MongoDB internal query language without JavaScript. By
 formulating queries smartly, complex questions can often be
 efficient in practice. For example, checking whether the dishwasher
 is full is a complex question because it considers a set of document
-that have to fullfill the condition of being in the dishwasher, and
+that have to fulfill the condition of being in the dishwasher, and
 their aggregated volume has to exceed a threshold. Thus it could be a
 computationally costly JavaScript function. But the query can also be formulated efficiently
 by first filtering only the objects in the dishwasher with a fast
@@ -401,9 +401,10 @@ JavaScript-free query and then summing up the objects volume to check
 if it exceeds a given threshold. This way the costly sum computation,
 which can be done by aggregation or JavaScript, only needs to be
 computed for the few objects in the dishwasher.
-\todo[inline]{concrete example for query formulation (dishwasher)?}
+%\todo[inline]{concrete example for query formulation (dishwasher)?}
 
 \subsection{Updates and Deletions}
+\label{sec:updates}
 Updates consist of a query defining what should be updated and some
 key-value pairs, which should be changed. Thus the duration of an
 update should be similar to a query plus an
@@ -413,7 +414,7 @@ update operation only updates a single document, the durations are
 roughly uniformly distributed with an upper bound matching the
 duration of \texttt{'find object'} queries in
 \reffig{fig:query-durations}. Thus the duration of update operations
-also scale linearly with the domain size. Duration of queries
+also scale linearly with the domain size. Durations of queries
 searching for only one document also behave as in
 \reffig{fig:update-durations}.  Because delete operations also consist
 of a query and a fast change operation, they behave similar to
@@ -421,7 +422,7 @@ updates. The difference is that by default deletions are executed on
 all documents and updates only on a single one. For both deletions and
 updates, the overhead does not depend on the database size. Both
 updates and deletions have an average overhead duration below
-$0.02ms$. In contrast to to query operations, the computable manager
+$0.02ms$. In contrast to query operations, the computable manager
 is not involved, because computed documents should not be updated and
 they do not need to be removed manually.
 
@@ -505,21 +506,26 @@ in the worst case block it.
     \caption{Computables}
     \label{fig:computable-index}
   \end{subfigure}
-  \caption[Duration of robot memory operations with indexing]{Duration of robot memory operations with indexing}
+  \caption[Duration of robot memory operations with indexing]{Duration
+    of robot memory operations with indexing. For each operation the
+    duration scale is identical to ~\reffig{fig:eval-durations-1}}
   \label{fig:eval-indexing}
 \end{figure}
 As \reffig{fig:eval-indexing} shows in comparison to
-\reffig{fig:eval-durations-1}, indexing by the object name has a large
-impact on operation durations. The scales used both figures
-are identical for the same operation. The largest benefit can be
-observed for queries and updates. Both are faster if the query is
-restricting the value of the key used as primary index. If the query
-only restricts other key-value fields, such as the query about places
-in \reffig{fig:query-index}, query durations are not noticeably
+\reffig{fig:eval-durations-1}, indexing by the object name has a
+significant impact on some query and update durations. The scales used both figures
+are identical for the same operation. Both can be faster if the query is
+restricting the value of the key used as primary index because then
+the built index can be used to search for documents with this
+key-value pair. 'Find object
+by name' queries in \reffig{fig:query-index} have an average duration
+of $1.96ms$ and updates in \reffig{fig:update-index} an average
+duration of $0.4ms$. If the query
+only restricts non indexed key-value fields or a comparison of values, such as the query about places
+in \reffig{fig:query-index}, the index can not be used. In this case, query durations are not noticeably
 affected because it is still necessary to search through all documents
 until the batch is full. The duration of insertion operations is
-larger with indexing because MongoDB has to sort in new documents at
-the proper position. The durations for computables do not change in
+larger with indexing because MongoDB has to update the index. The durations for computables do not change in
 this scenario because the function searching for the closest object still
 has to iterate over all documents.
 

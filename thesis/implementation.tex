@@ -65,7 +65,7 @@ instance is accessible over its unique TCP port and can contain multiple
 databases. The databases of the robot memory that are only locally
 relevant are managed by the local \texttt{mongod} instance. The shared
 \texttt{mongod} instance manages the distribution of shared databases
-in a multi-robot system. Thus we configured it to be part of replica
+in a multi-robot system. Thus we configured it to be part of a replica
 set as already described in \refsec{sec:mongodb}. This ensures the
 efficient distribution of the databases and handles important
 distribution issues, such as Primary election, consistency, and
@@ -230,7 +230,7 @@ The operation manager analyzes the query and modifies it similar
 to how it modifies documents. It adds a filter and a read
 preference. The filter hides meta information of the robot memory from
 the application. The read preference specifies that the query should
-be executed closest available of a replica set. This should always be
+be on the executed closest available member of a replica set. This should always be
 the local one because it has the lowest latency and thus leads to a
 faster query times than performing queries on remote replica set
 members. Furthermore the query is passed to the computation manager to
@@ -252,7 +252,7 @@ update << "$set" << fromjson(
 robot_memory->update("memory.dishes",
   query.obj(), update.obj());
 \end{lstlisting}%$
-\vspace{-8mm}
+\vspace{-10mm}
 \end{wrapfigure}
 \textbf{Update} operations contain a query specifying which documents
 should be updated and a document containing the changes that should be
@@ -262,10 +262,10 @@ with key-value pairs and the greater than operator \texttt{\$gt}.
 By default the first matching document in the specified
 collection is replaced by the update document. It is possible to
 modify this behavior with additional options. There are options for
-perform the update on all matching documents and for inserting the
+performing the update on all matching documents and for inserting the
 document even if no document in the collection matches the query
 (called \emph{upsert}). To keep key-value pairs in the original
-document, the update document needs to contain updated values a
+document, the update document needs to contain updated values in a
 \texttt{\$set} sub-document. In contrast to
 query operations, updates do not lead to the execution of computables
 because the updated information would be lost shortly after when the computable
@@ -314,6 +314,7 @@ and unregistering computables as well as for checking which
 computables should be executed for a query.\\
 \begin{listing}
 \refstepcounter{listing}
+\addtocounter{listing}{4}
 \addtocounter{lstlisting}{1}
 \noindent
 \begin{minipage}[b]{.30\textwidth}
@@ -366,8 +367,23 @@ computables should be executed for a query.\\
 \caption{Queries and documents involved in a computable for addition}
 \label{lst:comp}
 \end{listing}
+\reflst{lst:comp} and \reflst{lst:comp-func} show how queries,
+documents, and functions are involved in a computable by an addition example.
+When some component registers a computable
+on a collection, it needs to give a reference to the function
+performing the actual computation and a definition which documents can
+be provided by the computable. This definition is specified by the
+\emph{computable spec}, as shown in \reflst{lst:comp}a. Whenever the
+robot memory has to answer a query, for example \reflst{lst:comp}b, that is
+matched by the computable spec, the computable is executed. The
+referenced function for the addition computable is shown in
+\reflst{lst:comp-func} and yields a list of computed documents that,
+in this example, only contains the result shown in
+\reflst{lst:comp}c. The result contains the \texttt{compute},
+\texttt{x}, and \texttt{y}, fields because it needs to be matched
+later by the original query in \reflst{lst:comp}b.
 \begin{wrapfigure}{r}{0.49\textwidth}
-  \vspace{-0.8cm}
+  \vspace{-0.0cm}
 \begin{lstlisting}[style=SmallCpp,
   caption={Function of a computable},
   label=lst:comp-func,
@@ -388,21 +404,6 @@ compute_sum(mongo::BSONObj query,
 \end{lstlisting}
 \vspace{-8mm}
 \end{wrapfigure}
-\reflst{lst:comp} and \reflst{lst:comp-func} show how queries,
-documents, and functions are involved in a computable by an addition example.
-When some component registers a computable
-on a collection, it needs to give a reference to the function
-performing the actual computation and a definition which documents can
-be provided by the computable. This definition is specified by the
-\emph{computable spec}, as shown in \reflst{lst:comp}a. Whenever the
-robot memory has to answer a query, for example \reflst{lst:comp}b, that is
-matched by the computable spec, the computable is executed. The
-referenced function for the addition computable is shown in
-\reflst{lst:comp-func} and yields a list of computed documents that,
-in this example, only contains the result shown in
-\reflst{lst:comp}c. The result contains the \texttt{compute},
-\texttt{x}, and \texttt{y}, fields because it needs to be matched
-later by the original query in \reflst{lst:comp}b.
 
 The computable manager checks whether queries passed to it can be
 answered by registered computables. Because the MongoDB C++ driver
@@ -499,7 +500,7 @@ propagate them in a Replica Set.
     end: 282 }
 }
 \end{lstlisting}
-\vspace{-8mm}
+\vspace{-22mm}
 \end{wrapfigure}
 \begin{wrapfigure}{r}{0.3\textwidth}
   \centering
@@ -753,10 +754,10 @@ sub-document.
 \begin{lstlisting}[style=SmallJSON,
   %caption={Computed document},
   %label=lst:comp-res,
-  framexleftmargin=5pt, xleftmargin=0pt,
+  framexleftmargin=0pt, xleftmargin=0pt,
  morekeywords={}, numbers=none]
-{ relation: "cap-station", name: "M-CS1", cap-loaded: "NONE",
-  caps-on-shelf: NumberLong(3), "sync-id": NumberLong(13) }
+ { relation: "cap-station", name: "M-CS1", cap-loaded: "NONE",
+   caps-on-shelf: NumberLong(3), "sync-id": NumberLong(13) }
 \end{lstlisting}
   \begin{lstlisting}[showlines,style=ReallySmallCLIPS,
     caption={Mapping between robot memory document and an unordered CLIPS fact},
@@ -934,19 +935,45 @@ in \reffig{fig:blocksworld}, the planner has to figure out that a solving sequen
 actions is to put \texttt{A} on the table first, stack \texttt{B} on
 \texttt{C} second, and stack \texttt{A} on
 \texttt{B} third because the arm can only hold one block at a time.
-Implementing this scenario with a real robot arm, is a good evaluation
+Implementing this scenario with a robot arm, is a good evaluation
 scenario for the robot memory, because in contrast to the theoretical
 problem, multiple components (perception, planners, executive)
 have to work together and there are additional problems such as
 occlusion and geometric representation and manipulation.
-\begin{wrapfigure}{r}{0.37\textwidth}
+% \begin{wrapfigure}{r}{0.37\textwidth}
+%   \centering
+%   \vspace{-6mm}
+%   \includegraphics[width=0.37\textwidth]{img/blocks-world-annotated}%
+%   \caption[Blocks world scenario with Jaco arm (annotated)]{Blocks world scenario with Jaco arm (annotated)}
+%   \vspace{-4mm}
+% \end{wrapfigure}
+% \begin{wrapfigure}{r}{0.3\textwidth}
+%   \centering
+%   \vspace{-4mm}
+%   \includegraphics[width=0.3\textwidth]{img/openrave-blocks}%
+%   \caption[Blocks world OpenRAVE scene]{Blocks world OpenRAVE scene}
+%   \vspace{-4mm}
+% \end{wrapfigure}
+\begin{figure}
   \centering
-  \vspace{-6mm}
-  \includegraphics[width=0.37\textwidth]{img/blocks-world-annotated}%
-  \caption[Blocks world scenario with Jaco arm (annotated)]{Blocks world scenario with Jaco arm (annotated)}
-  \vspace{-4mm}
+  \begin{subfigure}[b]{0.49\textwidth}
+  \centering
+  \includegraphics[width=0.8\textwidth]{img/blocks-world-annotated}%
+  \caption[Arm picking up block \texttt{A} (annotated)]{Arm
+    picking up block \texttt{A} (annotated)}
   \label{fig:blocksworld}
-\end{wrapfigure}
+  \end{subfigure}
+\hfill
+  \begin{subfigure}[b]{0.49\textwidth}
+  \centering
+  \includegraphics[width=0.8\textwidth]{img/openrave-blocks}%
+  \caption[Same situation in OpenRAVE scene]{Same situation in OpenRAVE scene}
+  \label{fig:openrave}
+  \end{subfigure}
+  \caption[Blocks world scenario with Jaco arm]{Blocks world
+    scenario with Jaco arm}
+  \label{fig:blocks-world-figure}
+\end{figure}
 \reffig{fig:blocksworld} shows this scenario and the Kinova Jaco arm
 we are using. The scenario is inspired by the RoboCup@Home league,
 which also deals with hybrid reasoning, perception, manipulation,
@@ -1021,14 +1048,6 @@ robot memory.
 \\
 \textbf{OpenRAVE motion planner:} The collision free motion of the arm
 is planned with OpenRAVE.
-\begin{wrapfigure}{r}{0.3\textwidth}
-  \centering
-  \vspace{-4mm}
-  \includegraphics[width=0.3\textwidth]{img/openrave-blocks}%
-  \caption[Blocks world OpenRAVE scene]{Blocks world OpenRAVE scene}
-  \vspace{-4mm}
-  \label{fig:openrave}
-\end{wrapfigure}
 \reffig{fig:openrave} shows the motion planner scene of OpenRAVE
 and the path it planned in blue. The scene is constructed with by the OpenRAVE
 robot memory interface, which queries the position, name, and type of

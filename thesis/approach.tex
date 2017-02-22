@@ -59,7 +59,7 @@ and transform the stored information. Also keys and identifiers, which
 might be named differently, have to be translatable.
 
 \textbf{Computation on Demand:}
-To efficiently derive
+To efficiently compute
 information only when it is necessary, the robot memory has to provide
 computation on demand. This means that some information is not stored
 in the robot memory directly, but computed when needed. It allows
@@ -67,7 +67,7 @@ accessing information through the robot memory that is otherwise
 impracticable to compute and store continuously and for all possible
 queries. For example when a component rarely queries the distance of two
 objects, it is better to compute the result on demand than to store
-all distances between each two objects in the memory and to keep them
+all distances between each two objects in the memory and keep them
 updated. Components using the robot memory should be able to provide
 knowledge computation functions (\emph{computables}) to the robot
 memory. This adds a lot of versatility and expandability.
@@ -165,7 +165,7 @@ $\mathcal{D}=\bigcup_{n\in\mathbb{N}}\mathcal{D}_n$.
 The set of all values is $\mathcal{V}=\bigcup_{n\in\mathbb{N}}\mathcal{V}_n$.
   Infinite nesting and
 documents containing themselves are not considered because they can
-not properly be mapped into most KBS formalisms and databases.
+not properly be mapped into most KBS formalisms and database systems.
 \\
 A \emph{database} is a finite set of documents $\mathcal{DB} \subset \mathcal{D}$.
 %% with unique object
@@ -178,8 +178,8 @@ A \emph{database} is a finite set of documents $\mathcal{DB} \subset \mathcal{D}
 \emph{Queries} are represented by documents $q\in\mathcal{D}$ and
 yield a set of documents $r\subseteq\mathcal{DB}$ as result when
 executed in a database according a specification, e.g., of
-MongoDB~\cite{mongodb}. For example, the query
-$\{("object","cup"),("room","kitchen")\}$ yields all documents
+MongoDB~\cite{mongodb}. The query
+$\{("object","cup"),("room","kitchen")\}$, for example, yields all documents
 containing these key-value pairs, which represent all cups in the
 kitchen.
 \\
@@ -228,7 +228,7 @@ be injective and their images disjunctive. The function
 $$ name_{func-atr}: \mathcal{R} \times \mathbb{N} \rightarrow
 \mathcal{K}$$
 %
-maps the attributes in function to a key name. $name_{pred-atr}$ and
+maps the attributes of functions to a key names. $name_{pred-atr}$ and
 $name_{act-atr}$ are defined accordingly
 (e.g. $name_{pred-atr}(\text{at},1)="\text{object}"$ and
 $name_{pred-atr}(\text{at},2)="\text{room}"$).
@@ -261,7 +261,7 @@ map_p&(\{("predicate", "at"),("object", "cup"),("room",
 This theoretical foundation of the robot memory and the mapping of
 queried documents into predicates is the basis for the generation of
 PDDL problem descriptions. The direction from PDDL back to the robot
-memory is limited to storing the resulting plan found by a
+memory is limited to storing the resulting plan found by a PDDL-based
 planner. The plan $\mathcal{L}$ is an ordered sequence of
 parameterized actions
 $$\mathcal{L}=(a_1(v_{1,1},v_{1,2},...,v_{1,k_1}),a_2(v_{2,1},...,v_{2,k_2}),...,a_j(v_{j,1},...,v_{j,k_j})) \text{.}$$
@@ -371,8 +371,8 @@ coordinates written in the robot memory to another frame. The robot
 memory has to decide when the function of a computable needs to be
 executed given an asked query. To decide this, each computable also
 contains a definition which queries can be answered by
-it. This definition is represented by a query. Whenever a query on the
-robot memory matches this computable query definition, the computable
+it, called the \emph{computable spec}. This definition is represented by a query. Whenever a query on the
+robot memory matches this computable spec, the computable
 is called. Furthermore, each computable has a priority defining in which
 order computables are executed if a query can be answered by multiple
 computables. This allows computables to depend on the results of
@@ -398,11 +398,9 @@ properties. For applications using the robot memory, triggers can be
 useful because they allow notifications in a convenient and efficient
 way. Applications do not have to implement polling and the queries
 defining events only need to be executed on changes in the robot
-memory. Examples for components utilizing
-triggers, are executives that want to be notified about changes to
-keep their internal world model up to date and planners that want to
-be notified about preconditions of their plan becoming false to
-re-plan. Furthermore, triggers allow sending messages in the flexible
+memory. An examples for a component utilizing
+triggers is an executives that wants to be notified about changes to
+keep an internal world model up to date. Furthermore, triggers allow sending messages in the flexible
 document format.
 
 We note here that triggers are not intended to automatically work
@@ -533,7 +531,7 @@ receives and manages registrations of applications that want to be
 notified in the case of an event. It listens to logged changes in the
 databases to check if events happen and notifies applications
 accordingly. Additionally the operation manager can setup the
-robot memory by loading a set of inital documents from a file, e.g., for a new RCLL game.
+robot memory by loading a set of initial documents from a file, e.g., for a new RCLL game.
 Between the robot memory and a planner or reasoner components, there
 is the Application Interface layer. For each KBS, it includes an
 Interface Provider component, which makes the function of the robot
