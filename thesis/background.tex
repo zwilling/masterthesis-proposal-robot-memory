@@ -1,6 +1,6 @@
 \chapter{Background}
 \label{chap:background}
-This thesis will create a robot memory for knowledge sharing and
+In this thesis, we will create a robot memory for knowledge sharing and
 hybrid reasoning. In order to do so, we first need to introduce
 background information. Section~\ref{sec:mobile-robotics} gives an
 introduction into the thesis' context of mobile robotics and
@@ -67,16 +67,16 @@ A robot memory is not necessarily limited to a single robot. In a
 interacting agents~\cite{multiagentsystems}, the agents can share
 their internal state. In this case, a robot memory used for sharing
 the state is called
-\emph{distributed}. Furthermore, we will also call a system composed
+\emph{distributed}. Furthermore, we will call a system composed
 of multiple, interacting, autonomous mobile robots a \emph{multi-robot
-  system}. Similarly, a robot memory can also be shared on a single
+  system}. Similarly, a robot memory can be shared on a single
 robot between multiple agent programs, each implementing a part of
 the robot's behavior. The architecture of a multi-agent system can be
 \emph{centralized} or \emph{distributed}~\cite{RCLL-Planning}. In the centralized one,
 a central unit stores all relevant information and/or decides which
 actions each agent should execute. In the distributed one, the
 relevant information is stored and synchronized on all agents and/or
-each agents makes its own decisions. This also introduces the need of
+each agents makes its own decisions. This introduces the need of
 \emph{consistency}, which requires that information stored in a
 distributed system has no contradictions.
 
@@ -108,7 +108,7 @@ important area related to reasoning is \emph{task planning}. After
 specifying a domain and possible actions that can be executed in the
 domain, planning can yield a sequence of actions that have to be
 executed to reach a given goal state from an initial state. Actions
-are formulated with preconditions that have to be satisfied before
+are formulated with preconditions that have to be satisfied before the
 action can be performed and effects that describe how the state
 changes after executing the action. Depending on the formalism used by
 the planning systems, it is possible to minimize costs associated with
@@ -149,10 +149,8 @@ changing light conditions and unknown obstacles.
 RoboCup features a variety of leagues, each focusing on another aspect
 or application domain of robotics and artificial intelligence.  For
 example there are soccer simulation leagues focusing only on
-software~\cite{simspark_old}, small soccer robots focusing on tactical
-team moves, humanoid soccer robots focusing on body control and
-limited perception, and rescue robots focusing on autonomy or partial
-tele-operation. The majority of the RoboCup leagues host soccer robots
+software~\cite{simspark_old}, and rescue robot leagues focusing on autonomy or partial
+tele-operation in the real world. The majority of the RoboCup leagues host soccer robots
 in different sizes and complexities. The leagues range from the
 \emph{Small Size League} with small cylindrical robots and external
 perception by an overhead camera~\cite{rc-ssl} to humanoid
@@ -171,7 +169,21 @@ detail. These two leagues are used as application domains of the
 thesis.
 
 \subsection{RoboCup Logistics League}
-
+\begin{figure}[t]
+  \centering
+  \begin{minipage}{.8\linewidth}
+  \includegraphics[width=\linewidth]{img/chain_c3}%
+  \end{minipage}
+  \quad%
+  \begin{minipage}{.15\linewidth}
+  \includegraphics[width=\linewidth]{img/legend}%
+  \end{minipage}
+  \caption[Production chain of a high complexity
+    product in the RCLL]{Production chain of a high complexity
+    product in the RCLL~\cite{chapter-cps}}
+  \vspace{-2mm}
+  \label{fig:prod-chain}
+\end{figure}
 The \emph{RoboCup Logistics League (RCLL)}\footnote{RoboCup Logistics
   League website: \url{http://www.robocup-logistics.org}} is an
 industry-oriented competition~\cite{LLSF-Rules-2016}. It tackles the
@@ -188,12 +200,12 @@ between these machines.
   \includegraphics[width=0.3\textwidth]{img/rcll}
   \vspace{-4ex}
   \caption[Robot and MPS used in the RCLL]{Robot and MPS used in the RCLL~\cite{chapter-cps}}
-  \label{fig:rcll}
+  \label{fig:rcll-bot-mps}
 \end{wrapfigure}
-\reffig{fig:rcll} shows an RCLL robot filling a machine that mounts
+\reffig{fig:rcll-bot-mps} shows an RCLL robot filling a machine that mounts
 colored rings on workpieces. The robots are based on the Festo
 Robotino 3 platform, which uses a holonomic drive, and can be extended
-and programmed by the teams. The robot shown in \reffig{fig:rcll} was
+and programmed by the teams. The robot shown in \reffig{fig:rcll-bot-mps} was
 built by the Carologistics team and uses a laser range finder for
 localization, a custom made gripper for handling workpieces, and
 several cameras for detection of markers and light-signals mounted on
@@ -211,24 +223,8 @@ light signal shown by the machines, the robots can determine the
 machine-type. For correct reports of discovered machines to the refbox
 the team is awarded with points, for incorrect ones points are subtracted.
 
-\begin{figure}[t]
-  \centering
-  \begin{minipage}{.8\linewidth}
-  \includegraphics[width=\linewidth]{img/chain_c3}%
-  \end{minipage}
-  \quad%
-  \begin{minipage}{.15\linewidth}
-  \includegraphics[width=\linewidth]{img/legend}%
-  \end{minipage}
-  \caption[Production chain of a high complexity
-    product in the RCLL]{Production chain of a high complexity
-    product in the RCLL~\cite{chapter-cps}}
-  \vspace{-2mm}
-  \label{fig:prod-chain}
-\end{figure}
-
 In the second phase, the \emph{production phase}, the refbox announces
-orders, which products have to be produced by the robots. The products
+orders, which products have to be produced by the robots. Products
 are build from colored cups with optionally mounted rings and a
 colored cap.  \reffig{fig:prod-chain} shows the production chain for
 building a high complexity product.  There are four different machine
@@ -264,9 +260,9 @@ is based on the open source simulator Gazebo and models the RCLL with
 multiple robots in a 3D environment with physics and
 visuals~\cite{Gazebo-Design,Gazsim-Thesis,LLSF-Sim}. The simulation
 was developed for multi-robot coordination evaluation and has
-been proven as useful tool for rapid testing and integration during
+been proven as a useful tool for rapid testing and integration during
 the development of robot software, e.g., for agent reasoning, robot
-behavior, navigation graph creation, and collision avoidance. It is
+behavior, navigation graph creation, and collision avoidance. The simulation is
 the primary testing and development environment for implementing the
 robot memory in the RCLL because a full RCLL field is not available for us and
 maintaining a team of robots with hardware and software takes much
@@ -350,21 +346,21 @@ in ROS consists of processes called \emph{nodes}. These nodes can
 exchange information over a peer-to-peer communication network. There
 are communication channels called \emph{topics}. Nodes can register a
 publisher to send messages on a topic or a subscriber to receive
-messages sent over a specified topic. There message types defining 
+messages sent over a specified topic. There are message types defining 
 the fixed structure of a message with nesting. A central process
 called \texttt{Roscore} manages the registration of publishers and
-subscribers. It is also a broker nodes and configurations.
+subscribers. It is also a broker for nodes and configurations.
 
 In the RCLL, ROS is used by multiple teams~\cite{rc-2014}. The
 Carologistics team uses ROS primarily for and localization and
 visualization of sensor and perception data with the \texttt{Rviz}
-package. In the years 2012 and 2013, it also used the ROS package
+package. In the years 2012 and 2013, Carologistics used the ROS package
 \texttt{move\_base}, which provides local motion planning with
 collision avoidance.
 
 \subsection{Fawkes}
 \label{sec:fawkes}
-The basis for the proposed thesis is the robot software framework
+The basis for the thesis is the robot software framework
 \emph{Fawkes}\footnote{\url{http://www.fawkesrobotics.org}}, which is
 available as open source and developed at the Knowledge-based Systems
 Group\footnote{\url{http://www.kbsg.rwth-aachen.de}} (KBSG) at RWTH
@@ -379,7 +375,7 @@ be loaded as \emph{plugins} at run-time.
 Plugin activity is organized in threads to make use of multiple CPU
 cores. The threads can be run concurrently or hooked into the
 main-loop of Fawkes to order the execution into a
-\emph{sense-think-act} cycle.  This ensures that higher-level
+sense-think-act cycle.  This ensures that higher-level
 components can use the latest perception data.  Fawkes softly
 guarantees loop times by monitoring which threads are running for too
 long and suspending to waking them up until they recovered. These are advantages in comparison to ROS,
@@ -401,11 +397,11 @@ exchanged by simulation plugins~\cite{Gazsim-Thesis,LLSF-Sim}.
 Furthermore, the blackboard architecture simplifies
 debugging because the current communication between two plugins,
 determined by the state of the interface, can be viewed at
-run-time. To send commands to an interface writer, e.g., a motor
+run-time. To send commands to an interface writer, for example a motor
 command to the motor controller, readers can send messages to the
 interface.
 As a communication infrastructure between different components, the
-blackboard only has a limited possibility to realize a robot memory.
+blackboard only has limited possibilities to realize a robot memory.
 Indeed the blackboard works well for providing some information and sending
 commands. However the size
 and structure of blackboard interfaces is fixed, and thus does not
@@ -420,12 +416,12 @@ from the robot memory. These are \emph{CLIPS}, a
 rule-based production system, the \emph{Planning Domain Definition
   Language (PDDL)}, which incorporates a family of planning formalisms
 into a standard programming language, and OpenRAVE, a \emph{motion
-  planner} finding collision free actuation plans.  These examples are
+  planner} finding collision free actuation plans.  These systems are
 representatives for often used types of planners and
 reasoners. However, the robot memory is not limited to these because
 it provides a general C++ interface, which can be used to integrate it
-into more knowledge-based systems. The three presented here use the robot memory
-to achieve new or improved functionality and are used to evaluate this
+into more knowledge-based systems. The three systems presented here use the robot memory
+to achieve new or improved functionality and are used for evaluation in this
 thesis.
 
 \subsection{CLIPS Rules Engine}
@@ -495,7 +491,7 @@ fact-base. It chooses actions to take by using a technique called
 idle, it searches for the next best task and executes it.  For each
 task there is a rule with its preconditions in the antecedent and the
 actions to take in the consequent. There are also rules for modifying
-the world model, e.g., after finishing actions or getting new sensor
+the world model, for example after finishing actions or getting new sensor
 data, task execution, and coordination with other robots.  The
 coordination of the robot team includes synchronizing their world
 model and resource allocation. Because of the synchronization, each
@@ -541,10 +537,10 @@ sequence of actions, the \emph{plan}, to solve the problem.
 \reflst{lsf:pddl-action} shows an example action contained in a domain
 description.  Actions can have parameters and consist of preconditions
 and effects. The precondition is a function free FOL sentence. In the
-example of the picking action, it represents that the object that
+case of the picking action, it represents that the object that
 should be picked is on the table and that the arm is empty. The effect
 is a universally quantified and conditional FOL sentence, but not all FOL
-sentences are allowed, e.g., sentences containing disjunctions~\cite{PDDL}. In the
+sentences are allowed, for example sentences containing disjunctions~\cite{PDDL}. In the
 example, the effect of the action is that the arm is not empty and the
 object is now hold and not on the table any more. PDDL predicates,
 such as \texttt{(arm-empty)} and \texttt{(on-table ?ob)} in the example,
@@ -582,7 +578,7 @@ literals in action effects~\cite{hoffmannFF}.
 
 \subsection{Motion Planners}
 Another kind of widely used planning in robotics is geometric motion
-planning. They find collision free trajectories in an n-dimensional
+planning. It finds collision free trajectories in an n-dimensional
 space to reach a goal position from the initial position. Common use cases
 are planning the motion of a robotic arm to grasp or place something
 and finding paths for driving robots. Thus motion planners use geometric

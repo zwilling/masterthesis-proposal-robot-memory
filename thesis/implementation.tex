@@ -192,7 +192,7 @@ An \textbf{insertion} operation also specifies the document that
 should be inserted. An example insertion of a document in C++ is
 shown in \reflst{lst:impl-insert}. The object is built by adding
 key-value pairs. The \texttt{position} field holds a sub-document
-constructed from a json string. Before performing the insertion on the database,
+constructed from a JSON string. Before performing the insertion on the database,
 the operation manager can add meta information of the robot memory,
 for example the insertion time if the collection is configured to be a
 short time memory. The meta information is contained in a sub-document
@@ -224,7 +224,7 @@ while(res->more())
 For \textbf{queries}, the operation also specifies the query
 itself. \reflst{lst:impl-query}
 shows how a query can be executed, how to iterate over returned
-documents, and how to access their key-value paris.
+documents, and how to access their key-value pairs.
 The operation manager analyzes the query and modifies it similar
 to how it modifies documents. It adds a filter and a read
 preference. The filter hides meta information of the robot memory from
@@ -268,7 +268,7 @@ document, the update document needs to contain updated values a
 \texttt{\$set} sub-document. In contrast to
 query operations, updates do not lead to the execution of computables
 because the updated information would be lost shortly after when the computable
-exceets its caching time. However, it is still possible to update
+exceeds its caching time. However, it is still possible to update
 already computed documents because they are handled as regular
 documents during the caching time.
 
@@ -408,7 +408,7 @@ answered by registered computables. Because the MongoDB C++ driver
 supports no unification or matching method outside the database, we
 perform the matching inside the database. Firstly the robot memory query is inserted
 as document in a separate and empty collection. Secondly the
-computable spec is executed as querry on that collection to check if the robot memory query
+computable spec is executed as query on that collection to check if the robot memory query
 is matched by the computable spec. Thus when the computable spec
 returns the robot memory query as result, the function of the computable is called. This function
 (\reflst{lst:comp-func}) takes the query causing the computation
@@ -458,7 +458,7 @@ documents containing the fields of blackboard interfaces with matching
 types and ids. The other transforms documents describing 3D positions
 into other frames by using the transform aspect of Fawkes. All other
 computables have to be provided by other plugins.
-\todo[inline]{example bb computable or tf computable}
+\todo[inline]{example BB computable or TF computable}
 
 \subsection{Triggers}
 \label{sec:impl-triggers}
@@ -549,7 +549,7 @@ robot memory in a fully running Fawkes process with dependencies of
 the robot memory, such as the \texttt{mongodb} plugin, we integrated
 our unit tests into a separate plugin that is started with the robot
 memory when the tests are executed.
-\todo[inline]{example unittest}
+\todo[inline]{example unit-test}
 
 \section{Application Interface}
 \label{sec:impl-planner}
@@ -836,7 +836,7 @@ be distributed over multiple machines and because the interface and
 usage is identical in simulation and real world. Also the robot
 behavior, perception results, and factory layout (\reffig{fig:rcll})
 are similar. The environment agency by the Refbox is
-identical. Different are WiFi issues occuring at RoboCup
+identical. Different are WiFi issues occurring at RoboCup
 competitions because the simulation only introduces a message loss for
 UDP packages.
 
@@ -964,7 +964,7 @@ step fails, the execution of the plan is aborted and the executive
 starts again with model generation and planning. In most cases, the
 system can continue because the current state is remembered in the
 robot memory.
-\todo[inline]{listings clips (taks+steps?)}
+\todo[inline]{listings clips (task+steps?)}
 \\
 \textbf{OpenRAVE motion planner:} The collision free motion of the arm
 is planned with OpenRAVE.

@@ -63,7 +63,7 @@ perception, a PDDL planner, a CLIPS executive, and the motion planner
 OpenRAVE. Here, the main benefits are the world model sharing between
 planners and reasoners of different types and the hybrid reasoning
 support with computables.  As presented in the quantitative
-evaluation, the robot memory works efficient and only adds a small
+evaluation, the robot memory works efficiently and only adds a small
 overhead compared to raw MongoDB operations. The increase in
 computation time for complex queries and computables is reasonable and
 caused by the computational complexity of the queries themselves.
@@ -107,9 +107,9 @@ the distributed memory, which can be accessed by their planners and is
 kept updated by the CLIPS executive. On the other hand, the blocks
 world scenario provides a prototype showing how a CLIPS executive can
 fetch plans from the robot memory with triggers, represent it as task,
-and execute it step by step. The first thesis by Schäpers uses reactive answer set
+and execute it step by step. The first thesis by Björn Schäpers uses reactive answer set
 programming with real-time constraints~\cite{bjoern-thesis} and the
-second one by Löbach uses a PDDL planner and converts the resulting plan into a
+second one by Matthias Löbach uses a PDDL planner and converts the resulting plan into a
 simple temporal network~\cite{matthias-thesis}. The second one also
 makes use of our PDDL model generation and considers using
 computables for travel distance calculations.

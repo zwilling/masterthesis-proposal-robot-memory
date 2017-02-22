@@ -55,8 +55,8 @@ Because different components using the robot memory have special
 purposes and internal concepts, they require different views on the
 robot memory. On the one hand, they need a filter to only get relevant
 information. On the other hand, they require the information to be in
-the appropriate format. For the example of the robot position, a
-motion planner needs it as geometric coordinates and a symbolic planner needs
+the appropriate format. In the case of a robot position, a
+motion planner needs the position as geometric coordinates and a symbolic planner needs
 it as string describing the location (e.g. \texttt{"kitchen"}). The robot memory
 provides these views and supports hybrid reasoning by transforming
 between spatio-temporal and symbolic information. Views are provided via
@@ -68,27 +68,26 @@ and symbolic information and to enrich query results, we introduce the concept o
 robot memory analyzes queries to figure out if information covered by
 a computable is necessary for answering. In this case, it calls the
 component providing the information by a computation
-function. Computables also allow interfacing perception and save
+function. Computables allow interfacing perception and save
 computational effort. Imagine a query for the distance of
 two objects. This can be computed quickly, but storing all distances
 between each two objects and keeping them updated would be
 inefficient.
 %
 Another feature of the robot memory is called \emph{trigger} and
-notifies about changes. This can be used to keep a world model updated
-without polling, or to wait until certain information is
-available. For example, a reasoner executing a production plan could
+notifies about changes. This feature can be used to keep a world model updated
+without polling or waiting for certain information. For example, a reasoner executing a production plan could
 register to be notified when there is a new order requiring
-re-planning. The robot memory is also usable in a multi robot
+re-planning. The robot memory is usable in a multi robot
 system and thus distributable.
 
 Our contributions are the conceptual and architectural design of this
 generic robot memory and the implementation in the Fawkes robot
 software framework. In one sentence, our robot memory can be described
-as document-oriented database for hybrid reasoning and knowledge
+as a document-oriented database for hybrid reasoning and knowledge
 sharing between multiple, potentially distributed, KBS on mobile robots. The thesis focuses on
 two applications, which benefit from the robot memory and are used for
-evaluation. Firstly the robot memory is used by in the RoboCup
+evaluation. Firstly the robot memory is used in the RoboCup
 Logistics League to share a world model between reasoners running on
 multiple logistics robots. Secondly it is used in a block stacking
 scenario inspired by the RoboCup@Home league, where it is used for
