@@ -135,7 +135,8 @@ a good choice because it is an intuitive query language and has been
 proven as efficient for usual and well designed queries~\cite{RoboDB}. It is also
 highly expressive when using additional JavaScript functions or the
 MapReduce paradigm~\cite{mongodb}.
-\todo[inline]{example expressive query?} For the robot memory, it
+%\todo[inline]{example expressive query?}
+For the robot memory, it
 requires no translation before applying queries to the
 database. Furthermore it allows extending and modifying queries
 because queries are structured as documents with key-value fields and
@@ -461,7 +462,7 @@ documents containing the fields of blackboard interfaces with matching
 types and ids. The other transforms documents describing 3D positions
 into other frames by using the transform aspect of Fawkes. All other
 computables have to be provided by other plugins.
-\todo[inline]{example BB computable or TF computable}
+%\todo[inline]{example BB computable result}
 
 \subsection{Triggers}
 \label{sec:impl-triggers}
@@ -723,7 +724,8 @@ environment.
   WAIT-FOR-LOCK, SKILL-EXECUTION, running},
   emphstyle={[2]\bfseries\color{blue!80!black}},
   morekeywords={retract, assert, modify, skill-call, skill-to-execute,
-    wait-for-lock}]
+    wait-for-lock},
+  numbers=none]
 (rm-query "syncedrobmem.clipswm"
           (str-cat "{relation:'order', end:{$gt:" ?gametime "}}"))
 \end{lstlisting} %$ This is just to fix Emacs highlighting due to dollar sign in code above
@@ -737,14 +739,39 @@ and reading values from it. Furthermore, the robot-memory feature
 provides higher abstracted functions, which can convert a fact
 reference to a document and asserts facts constructed from
 documents. These functions use a similar mapping as presented in the
-theoretical foundation. The \texttt{relation} key-value pair is
+theoretical foundation. \reflst{lst:clips-map} shows how a document is
+mapped to an unordered fact by the function
+\texttt{(rm-assert-from-bson ?doc)}, where \texttt{?doc} is a pointer
+to a document. The \texttt{relation} key-value pair is
 matched to the fact template name and the other key-value pairs are
 matched to slot names of this template. There is a transformation
 between lists in CLIPS and sub-documents with numbered key-value
 pairs. Other sub-documents are passed as reference to the
-sub-document. 
-\todo[inline]{example mapping doc-fact}
+sub-document.
 
+\begin{figure}
+\begin{lstlisting}[style=SmallJSON,
+  %caption={Computed document},
+  %label=lst:comp-res,
+  framexleftmargin=5pt, xleftmargin=0pt,
+ morekeywords={}, numbers=none]
+{ relation: "cap-station", name: "M-CS1", cap-loaded: "NONE",
+  caps-on-shelf: NumberLong(3), "sync-id": NumberLong(13) }
+\end{lstlisting}
+  \begin{lstlisting}[showlines,style=ReallySmallCLIPS,
+    caption={Mapping between robot memory document and an unordered CLIPS fact},
+  label=lst:clips-map,
+  emph={skill, args, state, target, res},
+  emphstyle=\bfseries\color{green!80!black},
+  emph={[2]\?skill, \$\?args, cap-station, \?target, use,
+  WAIT-FOR-LOCK, SKILL-EXECUTION, running},
+  emphstyle={[2]\bfseries\color{blue!80!black}},
+  morekeywords={retract, assert, modify, skill-call, skill-to-execute,
+    wait-for-lock},
+  numbers=none]
+(cap-station (name M-CS1) (cap-loaded NONE) (caps-on-shelf 3) (sync-id 13))
+\end{lstlisting} %$ This is just to fix Emacs highlighting due to dollar sign in code above
+\end{figure}
 Similar to the model generation in PDDL, it is also possible to create
 an initial fact base in CLIPS. This is done by querying the initial
 state from the robot memory and asserting the corresponding facts to
@@ -991,7 +1018,6 @@ step fails, the execution of the plan is aborted and the executive
 starts again with model generation and planning. In most cases, the
 system can continue because the current state is remembered in the
 robot memory.
-\todo[inline]{listings clips (task+steps?)}
 \\
 \textbf{OpenRAVE motion planner:} The collision free motion of the arm
 is planned with OpenRAVE.

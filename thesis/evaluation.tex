@@ -256,6 +256,17 @@ amount of information stored in the robot memory. Here, we want to
 find out how the durations scale with increasing domain size and
 increasing complexity.
 
+\begin{figure}
+\centering
+\begin{lstlisting}[style=SmallJSON,
+  caption={Documents of the tidy up scenario. One is misplaced.},
+  label=lst:eval-objs,
+  framexleftmargin=5pt, xleftmargin=0pt,
+ morekeywords={}, numbers=none]
+           { name: "99898", position: "299", tidied: "299" }
+           { name: "42305", position: "942", tidied: "231" }
+\end{lstlisting}
+\end{figure}
 The structure of the data used for this evaluation is chosen in a way
 to be similar to information that is usually stored in a robot
 memory. Furthermore, the structure should simplify the analysis. The used data mimics
@@ -266,10 +277,10 @@ belongs to. Names are unique and tidied places are randomly chosen
 out of $1000$ possibilities. Objects are at a random misplaced position with
 probability $0.01$ and at their proper tidied place otherwise. The
 object's name is a string to enforce string comparisons, which are
-expected to be often needed in a real scenario. For the analysis of
-operation durations, we do not use indexing of collection by object names right now
-because we evaluate the impact of indexing separately afterwards.
-\todo[inline]{really did that (indexing)?}
+expected to be often needed in a real scenario. Two example documents
+are shown in \reflst{lst:eval-objs}. At first, we do not use indexing for the analysis of
+operation durations because is the worst case queries do not benefit
+from indexing. In \refsec{sec:indexing} we evaluate the impact of indexing separately.
 An evaluation plugin in
 Fawkes generates the data and calls random operations. To analyze how
 the durations scale with the domain size, the plugin calls the
@@ -289,9 +300,9 @@ registration of triggers and computables are only performed once
 during initialization.  In the course of implementing and evaluating
 the application scenarios, their durations were not noticeable compared
 to the initialization time of the whole robot software.
-\todo[inline]{example documents}
 
 \subsection{Insertions}
+\label{sec:insertions}
 The insertion of a new document into the robot memory is overall the
 fastest operation.
 \reffig{fig:insert-durations} shows the distribution of
@@ -319,7 +330,6 @@ the document. This is caused by the asynchronous and separate checking by
 the trigger manager. The size and the complexity of inserted
 documents did not make a noticeable difference.
 
-\label{sec:insertions}
 \begin{figure}[ht!]
   \centering
   \begin{subfigure}[b]{0.49\textwidth}
@@ -369,8 +379,7 @@ documents from the cursor, MongoDB continues the query evaluation if
 the batch was emptied. For the \texttt{'find object name'} query, the whole
 database was searched because the unique object could not fill the
 batch. However it is possible to request a smaller batch, e.g., only
-one, document for faster computation.  \todo[inline]{comparison with
-  indexing} The overhead of the robot memory query operation does not
+one, document for faster computation. The overhead of the robot memory query operation does not
 depend on the domain size and has an average duration of $0.6ms$. The
 largest part of that overhead is caused by the computable manager,
 even if in this scenario no computables are registered. The computable
@@ -468,6 +477,53 @@ trigger. Because the callback function is executed directly, its
 computation time influences the loop time of the robot memory and can
 in the worst case block it.
 
+\subsection{Indexing}
+\label{sec:indexing}
+\begin{figure}[ht!]
+  \centering
+  \begin{subfigure}[b]{0.49\textwidth}
+    \hspace{-8mm}
+    \includegraphics[width=1.15\textwidth]{plots/insert-durations-index}
+    \caption{Insertions}
+    \label{fig:insert-index}
+  \end{subfigure}
+  \begin{subfigure}[b]{0.49\textwidth}
+    \hspace{-3mm}
+    \includegraphics[width=1.15\textwidth]{plots/query-durations-index}
+    \caption{Queries}
+    \label{fig:query-index}
+  \end{subfigure}
+  \begin{subfigure}[b]{0.49\textwidth}
+    \hspace{-8mm}
+    \includegraphics[width=1.15\textwidth]{plots/update-durations-index}
+    \caption{Updates}
+    \label{fig:update-index}
+  \end{subfigure}
+  \begin{subfigure}[b]{0.49\textwidth}
+    \hspace{-3mm}
+    \includegraphics[width=1.15\textwidth]{plots/computable-durations-index}
+    \caption{Computables}
+    \label{fig:computable-index}
+  \end{subfigure}
+  \caption[Duration of robot memory operations with indexing]{Duration of robot memory operations with indexing}
+  \label{fig:eval-indexing}
+\end{figure}
+As \reffig{fig:eval-indexing} shows in comparison to
+\reffig{fig:eval-durations-1}, indexing by the object name has a large
+impact on operation durations. The scales used both figures
+are identical for the same operation. The largest benefit can be
+observed for queries and updates. Both are faster if the query is
+restricting the value of the key used as primary index. If the query
+only restricts other key-value fields, such as the query about places
+in \reffig{fig:query-index}, query durations are not noticeably
+affected because it is still necessary to search through all documents
+until the batch is full. The duration of insertion operations is
+larger with indexing because MongoDB has to sort in new documents at
+the proper position. The durations for computables do not change in
+this scenario because the function searching for the closest object still
+has to iterate over all documents.
+
+
 \section{Performance in Evaluation Scenarios}
 \label{sec:performance}
 To evaluate the performance of the robot memory, we performed
@@ -549,9 +605,7 @@ is due to updates by the CLIPS agent, that do not apply to any
 document or change a value in document to its current value. This is
 detected by MongoDB and not distributed over the Oplog, because the
 operation did not change anything.
-% second->primary updates not shown (difficult to measure, c++ dirver
-% directly sends them to the primary)
-\todo[inline]{mention wifi issues no tested}
+%\todo[inline]{mention wifi issues no tested}
 
 \bigskip
 The second scenario is the \textbf{Blocks World} with the Kinova Jaco arm. The

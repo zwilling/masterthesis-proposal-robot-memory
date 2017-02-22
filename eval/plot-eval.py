@@ -76,9 +76,9 @@ def plot_query():
         plt.legend(loc=5)
         
         # save plot
-        plt.show()
-        # pdf.savefig()
-        # plt.close()
+        # plt.show()
+        pdf.savefig()
+        plt.close()
         
 def plot_update():
     # get data
@@ -100,9 +100,9 @@ def plot_update():
         # plt.legend(loc=5)
         
         # save plot
-        plt.show()
-        # pdf.savefig()
-        # plt.close()
+        # plt.show()
+        pdf.savefig()
+        plt.close()
 
         
 def plot_computable():
@@ -144,8 +144,8 @@ def plot_computable():
         
 if __name__ == "__main__":
 
-    # plot_inserts()
-    # plot_query()
-    # plot_update()
+    plot_inserts()
+    plot_query()
+    plot_update()
     plot_computable()
     print "Plotted :-)"
