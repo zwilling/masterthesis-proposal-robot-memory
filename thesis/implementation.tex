@@ -416,7 +416,10 @@ returns the robot memory query as result, the function of the computable is call
 values in the query (\texttt{x} and \texttt{y}) to determine what
 should be computed. The function then computes a list of resulting
 documents (list containing \reflst{lst:comp}c) and returns it to the
-computable manager. By defining the computable spec appropriately,
+computable manager.
+The example in \reflst{lst:unit-test} shows how this computable can be
+registered, invoked, and removed.
+By defining the computable spec appropriately,
 i.e., with \texttt{\$exists}, it is ensured that all values required
 by the function are provided by the query. It is also possible have
 optional arguments. When optional arguments are not given, a
@@ -540,16 +543,40 @@ interface of the robot memory and checking if the results are correct
 for examples of common use cases. For example there is one test that
 checks insert, update, and query operations by inserting a document
 into an empty collection, updating it, and querying it by an updated
-value. Another test checks if computables work by registering the
+value. The test shown in \reflst{lst:unit-test} checks if computables work by registering the
 computable showed in \reflst{lst:comp-func} and \reflst{lst:comp},
 executing the query in \reflst{lst:comp}b and checking if the result
-matches \reflst{lst:comp}c. Unit-testing in Fawkes is based on Google's
+contains the correct sum from \reflst{lst:comp}c. Unit-testing in Fawkes is based on Google's
 C++ testing framework \emph{gtest}\footnote{\url{https://github.com/google/googletest}}. To test the functionality of the
 robot memory in a fully running Fawkes process with dependencies of
 the robot memory, such as the \texttt{mongodb} plugin, we integrated
 our unit tests into a separate plugin that is started with the robot
 memory when the tests are executed.
-\todo[inline]{example unit-test}
+\begin{figure}
+  \begin{lstlisting}[showlines,style=SmallCpp,
+  caption={Unit test for registering and invoking a computable},
+  label=lst:unit-test,
+  emph={skill, args, state, target, res},
+  emphstyle=\bfseries\color{green!80!black},
+  emph={[2]\?skill, \$\?args, wait-for-lock, \?target, use,
+  WAIT-FOR-LOCK, SKILL-EXECUTION, running},
+  emphstyle={[2]\bfseries\color{blue!80!black}},
+  morekeywords={retract, assert, modify, skill-call, skill-to-execute,
+    wait-for-lock}]
+TEST_F(RobotMemoryTest, ComputableCallAddition)
+{
+  TestComputable* tc = new TestComputable();
+  Computable* comp = robot_memory->register_computable(fromjson(
+      "{compute:'sum',x:{$exists:true},y:{$exists:true}}"),
+      "robmem.test", &TestComputable::compute_sum, tc);
+  QResCursor qres = robot_memory->query(
+      fromjson("{compute:'sum',x:15,y:4}"), "robmem.test");
+  ASSERT_TRUE(qres->more());
+  ASSERT_TRUE(19, qres->next().getField("sum").Int());
+  robot_memory->remove_computable(comp);
+}
+\end{lstlisting} %$ This is just to fix Emacs highlighting due to dollar sign in code above
+\end{figure}
 
 \section{Application Interface}
 \label{sec:impl-planner}
