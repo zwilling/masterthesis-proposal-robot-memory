@@ -1,0 +1,92 @@
+\lstdefinelanguage{OpenPRS}{
+  keywordsprefix=\$,
+  %keywordsprefix=\$,
+  alsoletter={?!=-<>*\$^~},
+  keywordstyle=\color{Mulberry!80!black}\bfseries,
+  keywords=[2]{:invocation, :context, :call, :body, :action,
+    :setting, :documentation, :effects, defop},
+  keywordstyle=[2]\color{BrickRed!70!blue}\bfseries,
+  keywords=[3]{?, !, ^, ~, =>, ~>, =, if, else, elseif, do, while, //},
+  keywordstyle=[3]\color{darkgray}\bfseries,
+  keywords=[4]{start-critical-section, end-critical-section, equal,
+    print, printf},%
+  keywordstyle=[4]\color{gray}\bfseries,
+  %identifierstyle=\color{black},
+  sensitive=false,
+  comment=[l]{;},
+  commentstyle=\color{purple}\ttfamily,
+  stringstyle=\color{red}\ttfamily,
+  morestring=[b]"
+}
+
+
+\lstdefinestyle{OpenPRS}
+{
+  language=OpenPRS,
+  basicstyle=\footnotesize\ttfamily\vspace{0.2cm},
+  breaklines=true,
+  showstringspaces=false,
+  %keywordstyle=\bfseries,
+  %keywordstyle=\color{Mulberry},
+  frame=lines,
+  belowcaptionskip=8pt,
+  emphstyle=\itshape,
+  numbers=left,
+  stepnumber=1,
+  backgroundcolor=\color{blue!10},
+  rulecolor=\color{blue!50},
+  fillcolor=\color{blue!20},
+  framexleftmargin=16pt,
+  xleftmargin=16pt,
+  %stringstyle=\color{BitterSweet},
+  stringstyle=\color{BrickRed},
+  commentstyle=\color{BrickRed},
+  escapechar=\%
+  % emph={getup, servo, depends_skills},
+  %emphstyle=\underbar,
+  %numbers=left,
+  %stepnumber=1,
+  %%stringstyle=\ttfamily, % typewriter type for strings
+}
+
+\lstdefinestyle{SmallOpenPRS}{
+  style=OpenPRS,
+  basicstyle=\ttfamily\footnotesize,
+  numbersep=6pt,
+}
+\lstdefinestyle{ReallySmallOpenPRS}{
+  style=OpenPRS,
+  basicstyle=\ttfamily\scriptsize,
+  numbersep=5pt,
+}
+
+\lstdefinestyle{ReallySmallOpenPRSNoFrame}{
+  style=OpenPRS,
+  basicstyle=\ttfamily\scriptsize,
+  numbersep=5pt,
+  frame=none,
+  backgroundcolor=\color{white},
+  framextopmargin=0pt,
+  framexbottommargin=0pt
+}
+
+\lstdefinestyle{SuperSmallOpenPRSNoFrame}{
+  style=OpenPRS,
+  basicstyle=\ttfamily\fontsize{10pt}{10pt}\selectfont,
+  numbers=none,
+  frame=none,
+  backgroundcolor=\color{white},
+  framextopmargin=0pt,
+  framexbottommargin=0pt,
+  framexleftmargin=-2pt, xleftmargin=-2pt,
+}
+
+\lstdefinestyle{SmallOpenPRSNoFrame}{
+  style=OpenPRS,
+  basicstyle=\ttfamily\footnotesize,
+  numbersep=5pt,
+  frame=none,
+  backgroundcolor=\color{white},
+  framextopmargin=0pt,
+  framexbottommargin=0pt
+}

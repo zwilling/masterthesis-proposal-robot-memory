@@ -1,0 +1,175 @@
+
+% Copyright (c)  2007-2012  Tim Niemueller, RWTH Aachen University
+%
+% Created: Mon Aug 13 16:55:22 2012
+
+%aspectratio=169
+\documentclass[compress,xcolor=table,nominiframes,notitlehead,noframetitlebg,addurl]{beamer}
+% add handout to optional args for handout version
+
+%\usepackage{hyperref}
+\usepackage{beamerthemesplit}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[german]{babel}
+\usepackage{german}
+\usepackage{graphicx}
+\usepackage{subfigure}
+\usepackage{epsfig}
+\usepackage{tabularx}
+\usepackage{latexsym}
+\usepackage{url}
+\usepackage{tikz}
+\usepackage{multimedia}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{verbatim}
+\usepackage{colortbl}
+\usepackage{psfrag}
+\usepackage{xifthen}
+\usepackage[absolute,overlay]{textpos}
+\usepackage{palatino}
+\usepackage{enumitem}
+
+\graphicspath{{../},{./images/},{./images/},{./figures/}}
+
+%% Mulberry Color for highlighting
+\definecolor{Mulberry}{cmyk}{0.34,0.90,0,0.02}
+\definecolor{Lavender}{cmyk}{0,0.48,0,0}
+\definecolor{Melon}{cmyk}{0,0.46,0.50,0}
+\definecolor{Peach}{cmyk}{0,0.50,0.70,0}
+\definecolor{RedOrange}{cmyk}{0,0.77,0.87,0}
+\definecolor{BrickRed}{cmyk}{0,0.89,0.94,0.28}
+\definecolor{Mahogany}{cmyk}{0,0.85,0.87,0.35}
+\definecolor{BurntOrange}{cmyk}{0,0.51,1,0}
+\definecolor{BitterSweet}{cmyk}{0,0.75,1,0.24}
+\definecolor{RosBlue}{rgb}{0.19,0.25,0.38}
+
+
+\mode<presentation>
+{
+  \usetheme{FawkesMinimal}
+
+  % to hide nav bar uncomment this line
+  \setbeamertemplate{navigation symbols}{}
+
+  %\setbeamercovered{transparent}
+  \setbeamercovered{%
+    invisible,
+    again covered={\opaqueness<1->{40}}
+  }
+
+  \setbeamerfont{author}{size=\footnotesize,family=\rmfamily,parent=structure}
+}
+
+% Usage notes for handout version:
+% Compile the beamer version immediately before you build the handout version,
+% otherwise page numbers etc. will be wrong! The .aux files are *not* updated
+% in handout mode, see PGF Manual for details why this is necessary.
+% Comment out below one of the two pgfuselayout lines for either 2 or 4 slides
+% per page. To have a very light grey background uncomment the background canvas
+% color line. The logical page options are used to draw borders around each
+% slide.
+\mode<handout>
+{
+  \usetheme{Fawkes}
+
+  % to hide nav bar uncomment this line
+  \setbeamertemplate{navigation symbols}{}
+
+  %\setbeamercovered{transparent}
+  \setbeamercovered{%
+    again covered={\opaqueness<1->{40}}
+  }
+
+  % Very slight grey background, can be used instead of borders
+  %\setbeamercolor{background canvas}{bg=black!5}
+
+  \usepackage{pgfpages}
+  \pgfpagesuselayout{4 on 1}[a4paper,border shrink=5mm,landscape]
+  %\pgfpagesuselayout{2 on 1}[a4paper,border shrink=5mm]
+
+  \pgfpageslogicalpageoptions{1}{border code=\pgfstroke}
+  \pgfpageslogicalpageoptions{2}{border code=\pgfstroke}
+  \pgfpageslogicalpageoptions{3}{border code=\pgfstroke}
+  \pgfpageslogicalpageoptions{4}{border code=\pgfstroke}
+  \nofiles
+}
+
+
+% Declare layers
+\pgfdeclarelayer{background}
+\pgfsetlayers{background,main} 
+
+% Load PGF libraries
+\usetikzlibrary{patterns}
+\usetikzlibrary{arrows}
+\usetikzlibrary{topaths}
+\usetikzlibrary{snakes}
+\usetikzlibrary{calc}
+\usetikzlibrary{positioning}
+\usetikzlibrary{shadows}
+\usetikzlibrary{shapes.multipart}
+%% \usetikzlibrary{arrows.meta}
+\usetikzlibrary{fit,arrows,decorations.pathreplacing,decorations.text}
+
+
+% set lengths for textpos package
+\setlength{\TPHorizModule}{10mm}
+\setlength{\TPVertModule}{\TPHorizModule}
+\textblockorigin{8mm}{16mm} % start everything near the top-left corner
+\setbeamercolor{textblock color}{fg=blue!50,bg=white}
+
+\institute{%
+  %\vspace{1cm}
+  \begin{minipage}{\textwidth}\centering
+  \includegraphics[height=0.6cm]{common/images/logos/rwth-logo}
+  \quad\quad
+  \includegraphics[height=0.6cm]{common/images/logos/kbsg}
+  \end{minipage}
+}
+
+\setlist[itemize]{leftmargin=12pt,label=\usebeamerfont*{itemize item}%
+  \usebeamercolor[fg]{itemize item}
+  \usebeamertemplate{itemize item}}
+\setlist[description]{leftmargin=4pt,itemindent=0pt,font=\color{FawkesOrange}}
+\setenumerate[1]{%
+  leftmargin=12pt,%
+  label=\protect\usebeamerfont{enumerate item}%
+        \protect\usebeamercolor[fg]{enumerate item}%
+        \insertenumlabel.}
+
+%numbers=left, numberstyle=\tiny, stepnumber=2, numbersep=5pt
+\lstset{language=[GNU]C++,
+        basicstyle=\small,
+        escapeinside={/*(*/}{/*)*/},
+        breaklines=true,
+        showstringspaces=false
+        }
+
+% Uncomment the listings styles you need
+\input{common/tex/lua.tex}
+\input{common/tex/yaml.tex}
+%\input{common/tex/prs.tex}
+\input{common/tex/clips.tex}
+%\input{common/tex/json.tex}
+\input{common/tex/sdf.tex}
+
+% Default style
+\lstset{style=Lua}
+
+% Hyphenation of words with hyphen
+\def\hyph{-\penalty0\hskip0pt\relax}
+
+% define an anchor in the frame
+\newcommand{\tikzref}[1]{%
+  \tikz[remember picture]{%
+    \coordinate (#1) at (0,0.5ex);%
+  }%
+}%
+
+
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-master: "aaai-spring2013-clips-agent"
+%%% End: 
