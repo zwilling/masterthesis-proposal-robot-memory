@@ -175,17 +175,87 @@
 
 \section{Related Work}
 \begin{frame}
-  \frametitle{Information Storage Systems}
+  \frametitle{Related Work: Information Storage Systems}
+  \begin{description}[]
+  \item[KnowRob/OpenRobots Ontology (ORO)]<uncover@1-> \hfill \\
+    \begin{itemize}
+    \item Common sense reasoning with ontologies
+          %explain with example (graph, rdf, milk)
+    \item Virtual knowledge base to interface perception/\\
+          Events notifying about changes
+    \item Based on Prolog / Java
+    \end{itemize}
+  \end{description}
+  \begin{block}{}%<uncover@2->
+  \begin{itemize}
+  \item Not applicable for multi-robot systems
+  \item Scalability, efficiency concerns % because storage is interwined with reasoning
+  \item Missing events / computation on demand
+  \end{itemize}
+  \end{block}
+  \begin{description}
+  \item[Generic Robot Database with MongoDB]%<uncover@3->
+                \hfill \\
+    \begin{itemize}
+    \item Data logging for evaluation and fault analysis
+    \item Generic and scalable storage with MongoDB
+    \item Integration in Fawkes and ROS
+    \end{itemize}
+  \end{description}
 \end{frame}
+
 \begin{frame}
   \frametitle{Document Orientation}
 \end{frame}
-\begin{frame}
-  \frametitle{MongoDB + why}
+
+\begin{frame}[fragile]
+  \frametitle{MongoDB Database System}
+  \includegraphics[width=0.3\textwidth]{../thesis/img/mongodb}
+  \begin{itemize}
+    \item Document-oriented database
+    \item Scalable, powerful and widely used
+    \item Generic, schema-less data structure with key-value pairs
+  \end{itemize}
+\begin{columns}
+\column[]{0.55\textwidth}
+\begin{lstlisting}[style=ReallySmallJSON,
+  framexleftmargin=2pt, xleftmargin=2pt,
+ morekeywords={}, numbers=none]
+ {
+   type: "position",
+   name: "robot1",
+   translation: {x:2.5, y:1.0, z:0.0},
+   rotation: {x:0.0, y:0.0, z:0.0, w:1.0},
+   timestamp : ISODate("2016-05-19T15:26:34")
+ }
+\end{lstlisting}
+\column[]{0.5\textwidth}
+\begin{lstlisting}[style=ReallySmallJSON,
+  framexleftmargin=2pt, xleftmargin=10pt,
+ morekeywords={}, numbers=none]
+db.positions.find(
+  {
+    type: "position",
+    name: "robot1",
+    timestamp : {"$gt":
+      ISODate("2016-05-19T15:26:34")}
+  })
+\end{lstlisting}%$
+\end{columns}
+%\pause
+  \begin{itemize}
+    \item Distributable with Replica Sets
+    \item Expressive querying with JavaScript, MapReduce
+    \item[$\Rightarrow$] Allows generic, scalable robot memory
+  \end{itemize}
 \end{frame}
+
 \begin{frame}
   \frametitle{MondoDB Extensions}
 \end{frame}
+
+%TOC?
+
 \section{Approach}
 \begin{frame}
   \frametitle{Theoretical Foundation (sketch)}
@@ -234,105 +304,6 @@
 \end{frame}
 
 
-\section{Related Work}
-\begin{frame}
-  \frametitle{Related Work: Knowledge Processing Systems}
-  \begin{description}[]
-  \item[KnowRob/OpenRobots Ontology (ORO)]<uncover@1-> \hfill \\
-    \begin{itemize}
-    \item Common sense reasoning with ontologies
-          %explain with example (graph, rdf, milk)
-    \item Virtual knowledge base to interface perception/\\
-          Events notifying about changes
-    \item Based on Prolog/Java
-    \end{itemize}
-  \end{description}
-  \begin{block}{}<uncover@2->
-  \begin{itemize}
-  \item Not applicable for multi-robot systems
-  \item Scalability, efficiency concerns
-  \item Missing events/knowledge computation on demand
-  \end{itemize}
-  \end{block}
-  \begin{description}
-  %% \item[OpenRobots Ontology (ORO)]<uncover@1-> \hfill \\
-  %%   \begin{itemize}
-  %%   \item Focus on human-robot interaction with ontologies
-  %%   \item Modular architecture (knowledge decay, categorization)
-  %%         %for short time memory, find missing information
-  %%   \item Events notifying about changes
-  %%   \end{itemize}
-  \item[Generic Robot Database with MongoDB]<uncover@3-> \hfill \\
-    \begin{itemize}
-    \item Data logging for evaluation and fault analysis
-    \item Generic and scalable storage with MongoDB
-    \item Integration in Fawkes and ROS
-    \end{itemize}
-  \end{description}
-\end{frame}
-
-%% \begin{frame}
-%%   \frametitle{Related Work}
-%%   \begin{description}[]
-%%   \item[Generic Robot Database with MongoDB]<uncover@1-> \hfill \\
-%%     \begin{itemize}
-%%     \item Data logging for evaluation and fault analysis
-%%     \item Generic and scalable storage with MongoDB
-%%     \item Integration in Fawkes and ROS
-%%     \end{itemize}
-%%   \smallskip
-%%   \item[Open-EASE]<uncover@2-> \hfill \\
-%%     \begin{itemize}
-%%     \item Combination of KnowRob and\\
-%%           the Generic Robot Database with MongoDB
-%%     \item Focus on eLearning platform\\
-%%           (e.g. replay sensor input from database log)
-%%     \end{itemize}
-%%   \end{description}
-%% \end{frame}
-
-\section{Background}
-\begin{frame}[fragile]
-  \frametitle{Background: MongoDB}
-  \includegraphics[width=0.3\textwidth]{../thesis/img/mongodb}
-  \begin{itemize}
-    \item Document-oriented database
-    \item Scalable, powerful and widely used
-    \item Generic, schema-less data structure with key-value pairs
-  \end{itemize}
-\begin{columns}
-\column[]{0.55\textwidth}
-\begin{lstlisting}[style=ReallySmallJSON,
-  framexleftmargin=2pt, xleftmargin=2pt,
- morekeywords={}, numbers=none]
- {
-   type: "position",
-   name: "robot1",
-   translation: {x:2.5, y:1.0, z:0.0},
-   rotation: {x:0.0, y:0.0, z:0.0, w:1.0},
-   timestamp : ISODate("2016-05-19T15:26:34")
- }
-\end{lstlisting}
-\column[]{0.5\textwidth}
-\begin{lstlisting}[style=ReallySmallJSON,
-  framexleftmargin=2pt, xleftmargin=10pt,
- morekeywords={}, numbers=none]
-db.positions.find(
-  {
-    type: "position",
-    name: "robot1",
-    timestamp : {"$gt":
-      ISODate("2016-05-19T15:26:34")}
-  })
-\end{lstlisting}%$
-\end{columns}
-\pause
-  \begin{itemize}
-    \item Distributable with Replica Sets
-    \item Expressive querying with JavaScript, MapReduce
-    \item[$\Rightarrow$] Allows generic, scalable robot memory
-  \end{itemize}
-\end{frame}
 
 
 \section{Approach}
