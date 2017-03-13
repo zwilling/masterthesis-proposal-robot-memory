@@ -45,6 +45,7 @@
 
 \begin{frame}
   \tableofcontents[]
+\todo[inline]{move to top of frames}
 \end{frame}
 \addtocounter{framenumber}{-1}
 
@@ -276,12 +277,12 @@ db.environment.find(
 
 \section{Approach}
 \begin{frame}
-  \frametitle{Theoretical Foundation (sketch)}
+  \frametitle{Approach: Theoretical Foundation (sketch)}
   \todo[inline]{Sketch/Full/Or Something else?}
 \end{frame}
 
 \begin{frame}[fragile]
-  \frametitle{Computables}
+  \frametitle{Approach: Computables}
   \begin{description}
   \item[Advantages of on demand computation]%<uncover@1->
                 \hfill \\
@@ -343,7 +344,7 @@ Resulting document
 \end{frame}
 
 \begin{frame}
-  \frametitle{Triggers}
+  \frametitle{Approach: Triggers}
   \begin{description}
   \item[Trigger: Notification about events in the robot memory]%<uncover@1->
                 \hfill \\
@@ -368,28 +369,187 @@ Resulting document
   \includegraphics[width=0.8\textwidth]{../thesis/architecture.pdf}
 \end{frame}
 
+
 \section{Implementation}
 \begin{frame}
-  \frametitle{MongoDB BackEnd + Distribution}
+  \frametitle{Implementation: Back-End}
+  \begin{description}
+  \item[MongoDB as basis]%<uncover@1->
+                \hfill \\
+    \begin{itemize}
+    \item Document-oriented storage
+    \item Basic operations (insert, query, update, remove)
+    \end{itemize}
+  \item[Distribution in multi-robot system]%<uncover@2->
+                \hfill \\
+    \begin{itemize}
+    \item Private and shared database
+    \item Write operations only on primary instance
+    \item Eventual consistency on secondaries %(forwarding changes, denormalization)
+    %\item No sharding because WiFi, one robot in breakdown
+    \end{itemize}
+  \end{description}
 \end{frame}
-\begin{frame}
-  \frametitle{RobotMemory (query language, operations, computables, triggers)?}
 
-caching of computables
-blackboard+transform computable?
-\end{frame}
 \begin{frame}
-  \frametitle{CLIPS}
+  \frametitle{Implementation: Robot Memory}
+  \begin{description}
+  \item[Operation Manager]%<uncover@1->
+                \hfill \\
+    \begin{itemize}
+    \item Also use MongoDB query language
+    \item Modify documents/queries, e.g., to add meta information % decay time, persistency
+    \item Automated startup and configuration of MongoDB % as sub process
+    \end{itemize}
+  \item[Computable Manager]%<uncover@2->
+                \hfill \\
+    \begin{itemize}
+    \item Registering computables
+    \item Evaluates whether queries require computables
+    \item Caches of computed documents
+    %\item Blackboard and transform computable
+    \end{itemize}
+  \item[Trigger Manager]%<uncover@3->
+                \hfill \\
+    \begin{itemize}
+    \item Registering triggers
+    \item Checks the Oplog for trigger events
+    \end{itemize}
+  \end{description}
 \end{frame}
+
+% how to interface robot memory from planners and reasoners
+% and how to map documents into specific concepts
+
+\begin{frame}[fragile]
+  \frametitle{Implementation: CLIPS Interface}
+  \begin{description}
+  \item[CLIPS Characteristics]%<uncover@1->
+                \hfill \\
+    \begin{itemize}
+    \item Fact base as working memory
+  \begin{lstlisting}[showlines,style=ReallySmallCLIPS,
+  framexleftmargin=4pt, xleftmargin=0pt,
+  emph={skill, args, state, target, res},
+  emphstyle=\bfseries\color{green!80!black},
+  emph={[2]\?skill, \$\?args, cap-station, \?target, use,
+  WAIT-FOR-LOCK, SKILL-EXECUTION, running},
+  emphstyle={[2]\bfseries\color{blue!80!black}},
+  morekeywords={retract, assert, modify, skill-call, skill-to-execute,
+    wait-for-lock},
+  numbers=none]
+(cap-station (name M-CS1) (loaded NONE) (caps-on-shelf 3))
+\end{lstlisting} %$ This is just to fix Emacs highlighting due to dollar sign in code above
+    \item Condition-action rules
+    \item Procedural functions
+    \end{itemize}
+  \item[Robot Memory Interface]%<uncover@2->
+                \hfill \\
+    \begin{itemize}
+    \item Provide operation and traversal functions in CLIPS % insert, query, update, get-key, construct document
+    \item Mapping between facts and documents
+\begin{lstlisting}[style=SmallJSON,
+  framexleftmargin=0pt, xleftmargin=0pt,
+ morekeywords={}, numbers=none]
+ { relation: "cap-station", name: "M-CS1",
+   loaded: "NONE", caps-on-shelf: NumberLong(3)}
+\end{lstlisting}
+    \item Assert trigger events as facts
+    \end{itemize}
+  \end{description}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Implementation: PDDL Interface}
+  \begin{description}
+  \item[PDDL Characteristics]%<uncover@1->
+                \hfill \\
+    \begin{itemize}
+    \item Domain definition and problem description as input %for PDDL-based planner
+    \item Predicates represent information
+\begin{lstlisting}[style=SmallSlidePDDL,
+  framexleftmargin=1pt, xleftmargin=1pt,linewidth=9.5cm,
+ morekeywords={}, numbers=none]
+  (:goal (on A B))
+  (:init (on-table A) (on-table B))
+\end{lstlisting}
+    \end{itemize}
+  \item[Robot Memory Interface]%<uncover@2->
+                \hfill \\
+    \begin{itemize}
+    \item Mapping of documents to predicates
+    \item Generation of problem description from template
+\begin{lstlisting}[style=SmallSlidePDDL,
+  framexleftmargin=1pt, xleftmargin=1pt,linewidth=9.5cm,
+ morekeywords={}, numbers=none]
+  (:goal <<GOAL>>)
+  (:init  <<#ONTABLE|{relation:'on-table'}>>
+            (on-table <<object>>) <</ONTABLE>>))
+\end{lstlisting}
+\begin{lstlisting}[style=SmallJSON,
+  framexleftmargin=0pt, xleftmargin=0pt,linewidth=9.5cm,
+ morekeywords={}, numbers=none]
+ { relation: "on-table", object: "A"},
+ { relation: "on-table", object: "B"}
+\end{lstlisting}
+    \item Parses resulting plans and inserts them as documents % used Fast Forward in thesis
+    \end{itemize}
+  \end{description}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Implementation: OpenRAVE Interface}
+  \begin{columns}
+    \begin{column}{0.6\textwidth}
+  \begin{description}
+  \item[OpenRAVE Characteristics]%<uncover@1->
+                \hfill \\
+    \begin{itemize}
+    \item Motion planner
+    \item Requires geometric positions
+    \end{itemize}
+  \item[Robot Memory Interface]%<uncover@2->
+                \hfill \\
+    \begin{itemize}
+    \item Insert/update/remove positions represented in documents
+\begin{lstlisting}[style=SmallJSON,
+  framexleftmargin=5pt, xleftmargin=0pt,linewidth=5cm,
+ morekeywords={}, numbers=none]
+{
+  block: "B",
+  frame: "map",
+  translation:
+    [0.43, -0.04, 0.01]
+}
+\end{lstlisting}
+
+    \item Configurable models and queries
+    \end{itemize}
+  \end{description}
+    \end{column}
+    \begin{column}{0.4\textwidth}
+    \includegraphics[width=\textwidth]{../thesis/img/openrave-blocks}
+    \end{column}
+  \end{columns}
+\end{frame}
+
 \begin{frame}
-  \frametitle{PDDL}
+  \frametitle{Application and evaluation scenarios}
+  \begin{columns}
+    \begin{column}{0.5\textwidth}
+    \textbf{World model synchronization between robots in the RCLL}\\
+    \vspace{0.6cm}
+    \includegraphics[width=0.9\textwidth]{../thesis/img/rcll-sim-slim}
+%% share knowledge to collaborate
+    \end{column}
+    \begin{column}{0.4\textwidth}
+    \textbf{Blocks world with a robot arm}\\
+    \vspace{0.6cm}
+    \includegraphics[width=\textwidth]{../thesis/img/blocks-world-annotated}
+    \end{column}
+  \end{columns}
 \end{frame}
-\begin{frame}
-  \frametitle{OpenRAVE}
-\end{frame}
-\begin{frame}
-  \frametitle{Demo Videos}
-\end{frame}
+
 \section{Evaluation}
 \begin{frame}
   \frametitle{qualitative (performance in scenarios)}
@@ -407,7 +567,7 @@ trigger only on single documents (denormalization, computational complexity vs e
 \begin{frame}
   \frametitle{Summary and Questions}
 \todo[inline]{review + challenges}
-  \begin{block}{} \centering\bfseries The generic robot memory is capable of
+  \begin{block}{Document-oriented Robot Memory} \centering\bfseries The generic robot memory is capable of
     efficiently storing and querying arbitrary symbolic or geometric information
     and allows consistent knowledge sharing.
   \end{block}
@@ -430,7 +590,8 @@ trigger only on single documents (denormalization, computational complexity vs e
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
+\newcounter{finalframe}
+\setcounter{finalframe}{\value{framenumber}}
 
 
 \begin{frame}[allowframebreaks]
@@ -539,7 +700,6 @@ trigger only on single documents (denormalization, computational complexity vs e
 \begin{frame}[fragile]
   \frametitle{Trigger/Oplog document}
 \begin{lstlisting}[style=SmallJSON,
-  caption={Document in the Oplog},
   label=lst:Oplog,
   framexleftmargin=2pt, xleftmargin=0pt,
  morekeywords={}, numbers=none]
@@ -560,4 +720,7 @@ trigger only on single documents (denormalization, computational complexity vs e
 }
 \end{lstlisting}
 \end{frame}
+
+\setcounter{framenumber}{\value{finalframe}}
+
 \end{document}
