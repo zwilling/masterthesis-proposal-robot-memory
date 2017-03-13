@@ -636,28 +636,53 @@ Resulting document
   \end{columns}
 \end{frame}
 
-
 \section{Conclusion}
 \begin{frame}
+  \frametitle{Future Work}
+  \begin{description}
+  \item[Two projects currently using the Robot Memory]\hfill\\
+    \begin{itemize}
+    \item Both for centralized global task planning in the RCLL
+    \item Reactive ASP and real-time constraints
+    \item PDDL with temporal aspects
+    \end{itemize}
+  \item[Beneficial features] \hfill \\
+    \begin{itemize}
+    \item Distributed memory shared by planner and executives
+    \item CLIPS agent integration
+    \item Triggers for notifications
+    \item PDDL problem definition generation
+    \end{itemize}
+  \end{description}
+\end{frame}
+
+\begin{frame}
   \frametitle{Conclusion and Questions}
-\todo[inline]{review + challenges}
-\todo[inline]{future work}
-  \begin{block}{Document-oriented Robot Memory} \centering\bfseries The generic robot memory is capable of
-    efficiently storing and querying arbitrary symbolic or geometric information
-    and allows consistent knowledge sharing.
+  \begin{block}{Generic robot memory } \centering\bfseries
+    with flexible storage and expressive querying for hybrid reasoning and world model sharing between different KBS
   \end{block}
-
   \bigskip
-
-  \begin{itemize}
-  \item Document-oriented representation and querying
-  \item Theoretical and architectural design
-  \item Interfaces for knowledge based systems
-  \item Computables for on demand knowledge computation
-  %% \item Implementation with MongoDB in Fawkes
-  \item RCLL and @Home as application and evaluation domains
-  \item Foundation for future projects
-  \end{itemize}
+  \begin{columns}
+    \begin{column}{0.5\textwidth}
+      \begin{itemize}
+      \item Document-oriented representation and querying
+      \item Distributable and persistent
+      \item Theoretical foundation
+      \item Architectural design
+      \item Interfaces for KBS
+      %\item Hybrid reasoning with computables
+      \end{itemize}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \begin{itemize}
+      \item Triggers for notification
+      \item Computables
+      \item Symbolic/spatio-temporal
+      \item Beneficial and efficient in application scenarios
+      \item Foundation for future projects
+      \end{itemize}
+    \end{column}
+  \end{columns}
 \end{frame}
 
 
