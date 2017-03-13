@@ -89,7 +89,6 @@
   \end{itemize}
 \end{frame}
 
-%TOC?
 
 \section{Background}
 \begin{frame}
@@ -274,12 +273,29 @@ db.environment.find(
   \end{description}
 \end{frame}
 
-%TOC?
 
 \section{Approach}
 \begin{frame}
-  \frametitle{Approach: Theoretical Foundation (sketch)}
-  \todo[inline]{Sketch/Full/Or Something else?}
+  \frametitle{Approach: Theoretical Foundation}
+  \begin{description}
+  \item[Documents] \hfill {\small $\{("object","cup"),("position",{\scriptstyle\{("x",8),("y",4)\}})\}$}\\
+    \begin{itemize}
+    \item Sets of key-value pairs (unique keys)
+    \item Finitely nested sub-documents
+    \end{itemize}
+  \item[Robot Memory] \hfill \\
+    \begin{itemize}
+    \item Composed of database and computables
+    \item Database: Set of documents
+    \item Computables: Functions yielding sets of documents
+    \end{itemize}
+  \item[Mapping between documents and PDDL predicates] \hfill \\
+  \includegraphics[width=0.8\textwidth]{../thesis/draw/mapping.pdf}
+    \begin{itemize}
+    \item Recursive for sub-documents / functions
+    \end{itemize}
+  % \item[Mapping of plans to documents] \hfill \\
+  \end{description}  
 \end{frame}
 
 \begin{frame}[fragile]
@@ -299,7 +315,6 @@ db.environment.find(
     \item Computable specification
     \item Priority % to order evaluation because of dependencies between computables
     \end{itemize}
-  \item[Example]%<uncover@3->
   \end{description}
 
 \begin{minipage}[b]{.27\textwidth}
@@ -550,6 +565,7 @@ Resulting document
   \end{columns}
 \end{frame}
 
+
 \section{Evaluation}
 \begin{frame}
   \frametitle{Evaluation: Qualitative}
@@ -617,24 +633,31 @@ Resulting document
   \begin{columns}
     \begin{column}{0.55\textwidth}
   \centering
-    \\\vspace{-0.08cm}
+    \small
+    \\\vspace{-0.15cm}
     \includegraphics[width=\textwidth]{../thesis/plots/insert-durations}\\
+    \\\vspace{-0.05cm}
     (a) Insertions
-    \\\vspace{-0.08cm}
+    \\\vspace{-0.1cm}
     \includegraphics[width=\textwidth]{../thesis/plots/update-durations}\\
+    \\\vspace{-0.05cm}
     (c) Updates
     \end{column}
     \begin{column}{0.55\textwidth}
   \centering
-    \\\vspace{-0.08cm}
+    \small
+    \\\vspace{-0.15cm}
     \includegraphics[width=\textwidth]{../thesis/plots/query-durations}\\
+    \\\vspace{-0.05cm}
     (b) Queries
-    \\\vspace{-0.08cm}
+    \\\vspace{-0.1cm}
     \includegraphics[width=\textwidth]{../thesis/plots/computable-durations}\\
+    \\\vspace{-0.05cm}
     (d) Computables
     \end{column}
   \end{columns}
 \end{frame}
+
 
 \section{Conclusion}
 \begin{frame}
@@ -690,6 +713,7 @@ Resulting document
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 \newcounter{finalframe}
 \setcounter{finalframe}{\value{framenumber}}
 
@@ -708,7 +732,6 @@ Resulting document
 \begin{description}[]
   \item[Definition of documents representing knowledge] \hfill \\
   \small e.g.~$\{("object","cup"),("room","kitchen"),("position",{\scriptstyle\{("x",8),("y",4)\}})\}$
-  \pause
   \begin{enumerate}
 \item \textbf{Keys:} $\mathcal{K} := \Sigma^*$
 \item  \textbf{Atomic values:} $\mathcal{V}_0$ are constants
@@ -735,7 +758,6 @@ Resulting document
 \end{align*}
 \end{enumerate}
   \end{description}
-  \pause
   \textbf{Finitely nested documents:} $\mathcal{D}=\cup_{n\in\mathbb{N}}\mathcal{D}_n$\\
   \textbf{Values:} $\mathcal{V}=\cup_{n\in\mathbb{N}}\mathcal{V}_n$
 \end{frame}
@@ -828,20 +850,26 @@ Resulting document
   \begin{columns}
     \begin{column}{0.55\textwidth}
   \centering
-    \\\vspace{-0.08cm}
+    \small
+    \\\vspace{-0.15cm}
     \includegraphics[width=\textwidth]{../thesis/plots/insert-durations}\\
+    \\\vspace{-0.05cm}
     (a) Insertions
-    \\\vspace{-0.08cm}
+    \\\vspace{-0.1cm}
     \includegraphics[width=\textwidth]{../thesis/plots/update-durations}\\
+    \\\vspace{-0.05cm}
     (c) Updates
     \end{column}
     \begin{column}{0.55\textwidth}
   \centering
-    \\\vspace{-0.08cm}
+    \small
+    \\\vspace{-0.15cm}
     \includegraphics[width=\textwidth]{../thesis/plots/query-durations}\\
+    \\\vspace{-0.05cm}
     (b) Queries
-    \\\vspace{-0.08cm}
+    \\\vspace{-0.1cm}
     \includegraphics[width=\textwidth]{../thesis/plots/computable-durations}\\
+    \\\vspace{-0.05cm}
     (d) Computables
     \end{column}
   \end{columns}
@@ -853,20 +881,26 @@ Resulting document
   \begin{columns}
     \begin{column}{0.55\textwidth}
   \centering
-    \\\vspace{-0.08cm}
+    \small
+    \\\vspace{-0.15cm}
     \includegraphics[width=\textwidth]{../thesis/plots/insert-durations-index}\\
+    \\\vspace{-0.05cm}
     (a) Insertions
-    \\\vspace{-0.08cm}
+    \\\vspace{-0.1cm}
     \includegraphics[width=\textwidth]{../thesis/plots/update-durations-index}\\
+    \\\vspace{-0.05cm}
     (c) Updates
     \end{column}
     \begin{column}{0.55\textwidth}
   \centering
-    \\\vspace{-0.08cm}
+    \small
+    \\\vspace{-0.15cm}
     \includegraphics[width=\textwidth]{../thesis/plots/query-durations-index}\\
+    \\\vspace{-0.05cm}
     (b) Queries
-    \\\vspace{-0.08cm}
+    \\\vspace{-0.1cm}
     \includegraphics[width=\textwidth]{../thesis/plots/computable-durations-index}\\
+    \\\vspace{-0.05cm}
     (d) Computables
     \end{column}
   \end{columns}
