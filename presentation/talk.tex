@@ -151,13 +151,15 @@
   \item Fact base and condition-action rules
   \item[$\Rightarrow$] Good for world model reasoning and\\ execution monitoring
   \end{itemize}
-  \item[Planning Domain Definition Language (PDDL)]<uncover@2-> \hfill \\
+  \item[Planning Domain Definition Language (PDDL)]%<uncover@2->
+    \hfill \\
   \begin{itemize}
   \item Standardized language for planning problems
   \item Find action sequence through heuristic search
   \item[$\Rightarrow$] Good for finding global plans
   \end{itemize}
-  \item[Motion Planners]<uncover@3-> \hfill \\
+  \item[Motion Planners]%<uncover@3->
+    \hfill \\
   \begin{itemize}
   \item Robot arm and locomotion collision avoidance
   \item Depend on geometric data
@@ -167,7 +169,7 @@
   \begin{column}{0.17\linewidth}
   \includegraphics[width=\textwidth]{../thesis/img/CLIPS}
   \vspace{3.4cm}
-  \pause\pause
+  %\pause\pause
   \includegraphics[width=\textwidth]{../thesis/img/openrave}
   \end{column}
   \end{columns}
@@ -175,83 +177,99 @@
 
 \section{Related Work}
 \begin{frame}
-  \frametitle{Related Work: Information Storage Systems}
+  \frametitle{Related Work: Robot Information Storage Systems}
   \begin{description}[]
-  \item[KnowRob/OpenRobots Ontology (ORO)]<uncover@1-> \hfill \\
+  \item[KnowRob~\cite{KnowRob}]%<uncover@1->
+    \hfill \\
     \begin{itemize}
     \item Common sense reasoning with ontologies
           %explain with example (graph, rdf, milk)
-    \item Virtual knowledge base to interface perception/\\
-          Events notifying about changes
-    \item Based on Prolog / Java
+    \item Virtual knowledge base to interface perception
+    \item Based on Prolog
     \end{itemize}
   \end{description}
-  \begin{block}{}%<uncover@2->
+  \begin{description}[]
+  \item[OpenRobots Ontology~\cite{Oro}]%<uncover@2-> 
+    \hfill \\
+    \begin{itemize}
+    \item Common sense reasoning with ontologies
+    \item Events notifying about changes
+    \item Based on  Java
+    \end{itemize}
+  \end{description}
+  \begin{block}{}%<uncover@3->
   \begin{itemize}
   \item Not applicable for multi-robot systems
   \item Scalability, efficiency concerns % because storage is interwined with reasoning
   \item Missing events / computation on demand
   \end{itemize}
   \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Document Orientation}
+
+  \begin{itemize}
+  \item Documents: Sets of key-value pairs
+    %keys unique, different value types
+  \item Java Script Object Notation (JSON)
+    \begin{lstlisting}[style=SmallJSON,linewidth=8.5cm,
+      label=lst:json,
+      framexleftmargin=1pt, xleftmargin=0pt,
+      morekeywords={}, numbers=none]
+      {
+        "key": "value",
+        "subdocument": {"x":3, "y":1},
+        "array": [{"n":0.1},{"n":2}]
+      }
+    \end{lstlisting}
+  \item Denormalized (information bundled in documents)
+  \item Schema free
+  \end{itemize}
+  \begin{itemize}
+  \item[$\Rightarrow$] Allows generic, flexable, and distributable robot memory
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{MongoDB Database System}
+  \hfill\includegraphics[width=0.3\textwidth]{../thesis/img/mongodb}
+  \begin{itemize}
+    \item Document-oriented
+    \item Scalable, powerful and widely used
+    \item Collections group documents
+    \item Query language with aggregation, MapReduce, JavaScript %expressive
+\begin{lstlisting}[style=SmallJSON,linewidth=8.5cm,
+  framexleftmargin=2pt, xleftmargin=10pt,
+ morekeywords={}, numbers=none]
+db.environment.find(
+  { object: "cup", color: {$ne: "red"}})
+\end{lstlisting}%$
+    \item Indexing for fast querying
+    \item Distributable with Replica Sets\\ %explain a bit (Primary, Secondary)
+      Operations Log (Oplog) to forward changes
+    \item Performance and scalability advantages compared to other database systems, e.g., ArangoDB, CouchDB\\\cite{arango-vs-mongo,db-comparison}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Related Work with MondoDB}
   \begin{description}
-  \item[Generic Robot Database with MongoDB]%<uncover@3->
+  \item[Generic Robot Database with MongoDB~\cite{RoboDB}]%<uncover@1->
                 \hfill \\
     \begin{itemize}
     \item Data logging for evaluation and fault analysis
     \item Generic and scalable storage with MongoDB
     \item Integration in Fawkes and ROS
     \end{itemize}
+\bigskip
+  \item[Extentions of  MongoDB]%<uncover@2->
+                \hfill \\
+    \begin{itemize}
+    \item Triggers with replication Oplog~\cite{mongodb-trigger}
+    \item Multi-Master Replication~\cite{mongodb-multi-master}
+    \end{itemize}
   \end{description}
-\end{frame}
-
-\begin{frame}
-  \frametitle{Document Orientation}
-\end{frame}
-
-\begin{frame}[fragile]
-  \frametitle{MongoDB Database System}
-  \includegraphics[width=0.3\textwidth]{../thesis/img/mongodb}
-  \begin{itemize}
-    \item Document-oriented database
-    \item Scalable, powerful and widely used
-    \item Generic, schema-less data structure with key-value pairs
-  \end{itemize}
-\begin{columns}
-\column[]{0.55\textwidth}
-\begin{lstlisting}[style=ReallySmallJSON,
-  framexleftmargin=2pt, xleftmargin=2pt,
- morekeywords={}, numbers=none]
- {
-   type: "position",
-   name: "robot1",
-   translation: {x:2.5, y:1.0, z:0.0},
-   rotation: {x:0.0, y:0.0, z:0.0, w:1.0},
-   timestamp : ISODate("2016-05-19T15:26:34")
- }
-\end{lstlisting}
-\column[]{0.5\textwidth}
-\begin{lstlisting}[style=ReallySmallJSON,
-  framexleftmargin=2pt, xleftmargin=10pt,
- morekeywords={}, numbers=none]
-db.positions.find(
-  {
-    type: "position",
-    name: "robot1",
-    timestamp : {"$gt":
-      ISODate("2016-05-19T15:26:34")}
-  })
-\end{lstlisting}%$
-\end{columns}
-%\pause
-  \begin{itemize}
-    \item Distributable with Replica Sets
-    \item Expressive querying with JavaScript, MapReduce
-    \item[$\Rightarrow$] Allows generic, scalable robot memory
-  \end{itemize}
-\end{frame}
-
-\begin{frame}
-  \frametitle{MondoDB Extensions}
 \end{frame}
 
 %TOC?
@@ -259,22 +277,106 @@ db.positions.find(
 \section{Approach}
 \begin{frame}
   \frametitle{Theoretical Foundation (sketch)}
+  \todo[inline]{Sketch/Full/Or Something else?}
 \end{frame}
-\begin{frame}
+
+\begin{frame}[fragile]
   \frametitle{Computables}
+  \begin{description}
+  \item[Advantages of on demand computation]%<uncover@1->
+                \hfill \\
+    \begin{itemize}
+    \item Interfacing of perception and complex computation in KBS % to bypass expressiveness/complexity
+    \item Decreased computational effort % compared to continously store %e.g. perception, transform, distance
+    \item Simplify hybrid reasoning by transforming between\\ spatio-temporal and symbolic information
+    \end{itemize}
+  \item[Computables]%<uncover@2->
+                \hfill \\
+    \begin{itemize}
+    \item Function: Query $x$ Robot-State $\rightarrow$ Set of documents
+    \item Computable specification
+    \item Priority % to order evaluation because of dependencies between computables
+    \end{itemize}
+  \item[Example]%<uncover@3->
+  \end{description}
+
+\begin{minipage}[b]{.27\textwidth}
+\begin{lstlisting}[style=ReallySmallJSON,
+  framexleftmargin=5pt, xleftmargin=0pt,
+ morekeywords={}, numbers=none]
+{
+  compute: "sum",
+  x: {$exists:true},
+  y: {$exists:true}
+}
+\end{lstlisting}
+Computable\\specification
+\end{minipage}%
+\hfill
+\begin{minipage}[b]{.25\textwidth}
+\begin{lstlisting}[style=ReallySmallJSON,
+  framexleftmargin=5pt, xleftmargin=0pt,
+ morekeywords={}, numbers=none]
+{
+  compute: "sum",
+  x: 15,
+  y: 4
+}
+\end{lstlisting}
+Query requiring the computable
+\end{minipage}%
+\hfill
+\begin{minipage}[b]{.25\textwidth}
+\begin{lstlisting}[style=ReallySmallJSON,
+  framexleftmargin=5pt, xleftmargin=0pt,
+ morekeywords={}, numbers=none]
+{
+  compute: "sum",
+  x: 15,
+  y: 4,
+  sum: 19
+}
+\end{lstlisting}
+  \vspace{-0.1cm}
+Resulting document
+\end{minipage}%
 \end{frame}
+
 \begin{frame}
-  \frametitle{Trigger}
+  \frametitle{Triggers}
+  \begin{description}
+  \item[Trigger: Notification about events in the robot memory]%<uncover@1->
+                \hfill \\
+    \begin{itemize}
+    \item Queries define changes of single documents, e.g., \texttt{\{relation: "order"\}}
+    \item Callback with matching document, timestamp, and operation type
+    \item Avoids polling
+    \item Use cases: World model updates, Messaging % e.g. multi-robot system, new plan
+    \end{itemize}
+  \item[Implementation]%<uncover@2->
+                \hfill \\
+    \begin{itemize}
+    \item Searching replication Oplog for changes
+    \item Tailable cursor in capped collection % give intuition ring buffer
+    \end{itemize}
+  \end{description}
 \end{frame}
+
 \begin{frame}
   \frametitle{Architecture}
+  \center
+  \includegraphics[width=0.8\textwidth]{../thesis/architecture.pdf}
 \end{frame}
+
 \section{Implementation}
 \begin{frame}
-  \frametitle{MongoDB BackEnd?}
+  \frametitle{MongoDB BackEnd + Distribution}
 \end{frame}
 \begin{frame}
   \frametitle{RobotMemory (query language, operations, computables, triggers)?}
+
+caching of computables
+blackboard+transform computable?
 \end{frame}
 \begin{frame}
   \frametitle{CLIPS}
@@ -291,6 +393,9 @@ db.positions.find(
 \section{Evaluation}
 \begin{frame}
   \frametitle{qualitative (performance in scenarios)}
+
+note trigger+computable?
+trigger only on single documents (denormalization, computational complexity vs expressiveness)
 \end{frame}
 \begin{frame}
   \frametitle{graphs}
@@ -300,14 +405,43 @@ db.positions.find(
   \frametitle{Future Work}
 \end{frame}
 \begin{frame}
-  \frametitle{Summary}
+  \frametitle{Summary and Questions}
+\todo[inline]{review + challenges}
+  \begin{block}{} \centering\bfseries The generic robot memory is capable of
+    efficiently storing and querying arbitrary symbolic or geometric information
+    and allows consistent knowledge sharing.
+  \end{block}
+
+  \bigskip
+
+  \begin{itemize}
+  \item Document-oriented representation and querying
+  \item Theoretical and architectural design
+  \item Interfaces for knowledge based systems
+  \item Computables for on demand knowledge computation
+  %% \item Implementation with MongoDB in Fawkes
+  \item RCLL and @Home as application and evaluation domains
+  \item Foundation for future projects
+  \end{itemize}
 \end{frame}
 
 
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\section{Approach}
-\subsection{Theoretical Foundation}
+
+
+\begin{frame}[allowframebreaks]
+  \frametitle{References}
+  \small
+  \bibliographystyle{apalike}
+  \bibliography{../references}
+\end{frame}
+
+% Backup Slides
+
 \begin{frame}
   \frametitle{Theoretical Foundation}
 \begin{description}[]
@@ -341,8 +475,8 @@ db.positions.find(
 \end{enumerate}
   \end{description}
   \pause
-  \textbf{Finitely nested documents:} $\mathcal{D}=\cup_{n\in\{0..b\}}\mathcal{D}_n$\\
-  \textbf{Values:} $\mathcal{V}=\cup_{n\in\{0..b\}}\mathcal{V}_n$, with nesting bound $b$
+  \textbf{Finitely nested documents:} $\mathcal{D}=\cup_{n\in\mathbb{N}}\mathcal{D}_n$\\
+  \textbf{Values:} $\mathcal{V}=\cup_{n\in\mathbb{N}}\mathcal{V}_n$
 \end{frame}
 
 \begin{frame}
@@ -402,89 +536,28 @@ db.positions.find(
     \end{enumerate}
   \end{description}
 \end{frame}
-
-\subsection{Architecture}
-\begin{frame}
-  \frametitle{Architecture}
-  \center
-  \includegraphics[width=0.8\textwidth]{../thesis/architecture.pdf}
+\begin{frame}[fragile]
+  \frametitle{Trigger/Oplog document}
+\begin{lstlisting}[style=SmallJSON,
+  caption={Document in the Oplog},
+  label=lst:Oplog,
+  framexleftmargin=2pt, xleftmargin=0pt,
+ morekeywords={}, numbers=none]
+{
+  ns: "syncedrobmem.clipswm",
+  ts: Timestamp(1485369072, 5),
+  op: "i",
+  o: {
+    _id : ObjectId("58c14a14"),
+    relation: "order",
+    id: 2,
+    complexity: "C0",
+    delivery-gate: 3,
+    quantity-requested: 1,
+    quantity-delivered: 0,
+    begin: 209,
+    end: 282 }
+}
+\end{lstlisting}
 \end{frame}
-
-\subsection{Implementation}
-\begin{frame}
-  \frametitle{Implementation}
-  \begin{description}[]
-  \item[Back-End] \hfill \\
-    \begin{itemize}
-    \item Realized with MongoDB
-    \item Replication for multi-robot distribution
-    \end{itemize}
-  \smallskip
-  \pause
-  \item[Robot Memory] \hfill \\
-    \begin{itemize}
-    \item Query enhancing, adding meta information (e.g. decay time)
-    \item Dispatching raw DB queries and queries for computables
-    \item Computables: forward query $\rightarrow$ compute results $\rightarrow$ \\
-          cache results in DB $\rightarrow$ execute query on results
-    \item Event-trigger with MongoDB Oplog
-    \end{itemize}
-  \smallskip
-  \pause
-  \item[Planner/Reasoner] \hfill \\
-    \begin{itemize}
-    \item Provide interface to robot memory\\
-          (store/query features in CLIPS, domain creator in PDDL)
-    \end{itemize}
-  \end{description}  
-\end{frame}
-
-\section{Evaluation}
-\begin{frame}
-  \frametitle{Evaluation}
-  %qualitative and quantitative
-  \begin{tabular}{l|l}
-  \textcolor{FawkesOrange}{\textbf{Prototype}} & \textcolor{FawkesOrange}{\textbf{Evaluation}}\\
-  \hline
-  \tabitem RCLL CLIPS agent & \tabitem Representing and querying\\
-  ~~~~with world model sync & \tabitem Reasoner integration\\
-                            & \tabitem Network throughput\\
-                                 %% & \tabitem Event-trigger\\
-  \hline
-  \tabitem RCLL PDDL            & \tabitem Planner integration\\
-  ~~~      domain creation      & \tabitem Knowledge Sharing\\
-                                & ~~~~Planner-Reasoner\\
-  \hline
-  \tabitem @Home Computables & \tabitem Knowledge Sharing\\
-  ~~~~                       & ~~~~Reasoner-Motion Planner\\
-                             & \tabitem Hybrid Reasoning\\
-  \hline
-  \tabitem @Home Tidy up scenario & \tabitem Scalability\\
-                                  & \tabitem Expressiveness vs.\\
-                                  & ~~~~Computation Speed\\
-\end{tabular}
-\end{frame}
-
-\section{Conclusion}
-\begin{frame}
-  \frametitle{Conclusion and Questions}
-
-  \begin{block}{} \centering\bfseries The generic robot memory is capable of
-    efficiently storing and querying arbitrary symbolic or geometric information
-    and allows consistent knowledge sharing.
-  \end{block}
-
-  \bigskip
-
-  \begin{itemize}
-  \item Document-oriented representation and querying
-  \item Theoretical and architectural design
-  \item Interfaces for knowledge based systems
-  \item Computables for on demand knowledge computation
-  %% \item Implementation with MongoDB in Fawkes
-  \item RCLL and @Home as application and evaluation domains
-  \item Foundation for future projects
-  \end{itemize}
-\end{frame}
-
 \end{document}
