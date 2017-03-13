@@ -9,8 +9,6 @@
 
 \mode<presentation>
 
-\useoutertheme[subsection=false]{miniframes}
-
 % this part is based on the shadow theme
 
 \pgfdeclarehorizontalshading[frametitle.bg,frametitle right.bg]{beamer@frametitleshade}{\paperheight}{%
@@ -73,12 +71,12 @@
   \begin{beamercolorbox}[colsep=0.05mm]{head bottom line}
   \end{beamercolorbox}
   \fi
-  % %\begin{beamercolorbox}{section in head/foot}
-  % %  \setlength{\navwidth}{\paperwidth - 1.68cm}
-  % %  \vskip1pt\hskip.84cm\insertnavigation{\navwidth}\vskip1pt
-  % %\end{beamercolorbox}%
-  % \begin{beamercolorbox}[colsep=0.05mm]{head bottom line}
-  % \end{beamercolorbox}
+  \begin{beamercolorbox}{section in head/foot}
+   \setlength{\navwidth}{\paperwidth - 1.68cm}
+   \vskip1pt\hskip.84cm\insertnavigation{\navwidth}\vskip1pt
+  \end{beamercolorbox}%
+  \begin{beamercolorbox}[colsep=0.05mm]{head bottom line}
+  \end{beamercolorbox}
 }
 
 %\addtoheadtemplate{\pgfuseshading{beamer@headfade}\vskip-1.25cm}{}

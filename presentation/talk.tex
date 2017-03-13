@@ -5,8 +5,8 @@
 
 \usepackage{todonotes}
 \usepackage{booktabs}
-\usepackage{subcaption}
 \newcommand{\tabitem}{~~\llap{\textcolor{FawkesOrange}{\textbullet}}~~}
+
 
 \hypersetup{
   pdftitle      = {Robot Memory-Master Thesis Presentation},
@@ -33,7 +33,7 @@
 \frame[plain]{\titlepage}
 \addtocounter{framenumber}{-1}
 
-\begin{frame}
+\begin{frame}[plain]
   \frametitle{Robot Memory at a Glance}
   \textbf{\large Database to store information of a robot about its environment}
   \bigskip
@@ -44,10 +44,10 @@
   \end{itemize}
 \end{frame}
 
-\begin{frame}
-  \tableofcontents[]
-\todo[inline]{move to top of frames}
-\end{frame}
+% \begin{frame}
+%   \tableofcontents[]
+% \end{frame}
+
 \addtocounter{framenumber}{-1}
 
 \section{Motivation}
