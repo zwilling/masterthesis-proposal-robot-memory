@@ -9,10 +9,10 @@
 \newcommand{\tabitem}{~~\llap{\textcolor{FawkesOrange}{\textbullet}}~~}
 
 \hypersetup{
-  pdftitle      = {RobotMemory-Proposal-Talk},
+  pdftitle      = {Robot Memory-Master Thesis Presentation},
   pdfauthor     = {Frederik Zwilling},
   pdfkeywords   = {robotics, artificial intelligence, robot memory, logistics, RCLL, @Home},
-  pdfsubject    = {Master Thesis Proposal Talk}
+  pdfsubject    = {Master Thesis Presentation}
   %hidelinks    = true
 }
 
@@ -229,7 +229,7 @@
   \item Schema free
   \end{itemize}
   \begin{itemize}
-  \item[$\Rightarrow$] Allows generic, flexable, and distributable robot memory
+  \item[$\Rightarrow$] Allows generic, flexible, and distributable robot memory
   \end{itemize}
 \end{frame}
 
@@ -255,7 +255,7 @@ db.environment.find(
 \end{frame}
 
 \begin{frame}
-  \frametitle{Related Work with MondoDB}
+  \frametitle{Related Work with MongoDB}
   \begin{description}
   \item[Generic Robot Database with MongoDB~\cite{RoboDB}]%<uncover@1->
                 \hfill \\
@@ -265,7 +265,7 @@ db.environment.find(
     \item Integration in Fawkes and ROS
     \end{itemize}
 \bigskip
-  \item[Extentions of  MongoDB]%<uncover@2->
+  \item[Extensions of  MongoDB]%<uncover@2->
                 \hfill \\
     \begin{itemize}
     \item Triggers with replication Oplog~\cite{mongodb-trigger}
@@ -400,7 +400,7 @@ Resulting document
     \begin{itemize}
     \item Also use MongoDB query language
     \item Modify documents/queries, e.g., to add meta information % decay time, persistency
-    \item Automated startup and configuration of MongoDB % as sub process
+    \item Automated start-up and configuration of MongoDB % as sub process
     \end{itemize}
   \item[Computable Manager]%<uncover@2->
                 \hfill \\
@@ -565,7 +565,7 @@ Resulting document
       % Transformation of geometric block position to on-table predicate
     \item Triggers useful for worldmodel updates and messages
     \end{itemize}
-  \item[Expresiveness vs. Computational Complexity]%<uncover@2->
+  \item[Expressiveness vs. Computational Complexity]%<uncover@2->
                 \hfill \\
     \begin{itemize}
     \item Trigger only for changes of single documents %(ok because of denormalization)
@@ -588,7 +588,7 @@ Resulting document
       \begin{description}
       \item[Tidy up scenario] \hfill \\
         \begin{itemize}
-        \item Robot Memory with informations about objects
+        \item Robot Memory with information about objects
           \begin{lstlisting}[style=SmallJSON,
             framexleftmargin=5pt, xleftmargin=0pt,
             morekeywords={}, numbers=none]
