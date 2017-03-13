@@ -5,6 +5,7 @@
 
 \usepackage{todonotes}
 \usepackage{booktabs}
+\usepackage{subcaption}
 \newcommand{\tabitem}{~~\llap{\textcolor{FawkesOrange}{\textbullet}}~~}
 
 \hypersetup{
@@ -522,7 +523,6 @@ Resulting document
     [0.43, -0.04, 0.01]
 }
 \end{lstlisting}
-
     \item Configurable models and queries
     \end{itemize}
   \end{description}
@@ -552,21 +552,96 @@ Resulting document
 
 \section{Evaluation}
 \begin{frame}
-  \frametitle{qualitative (performance in scenarios)}
+  \frametitle{Evaluation: Qualitative}
+  \begin{description}
+  \item[Experience from evaluation scenarios]%<uncover@1->
+                \hfill \\
+    \begin{itemize}
+    \item Flexible storage and expressive querying
+    \item Convenient memory sharing between KBS and in distributed system
+    \item Proper views on a common and thus consistent information basis
+      % (geometric for motion planner, symbolic for pddl)
+    \item Simplification of hybrid reasoning with computables
+      % Transformation of geometric block position to on-table predicate
+    \item Triggers useful for worldmodel updates and messages
+    \end{itemize}
+  \item[Expresiveness vs. Computational Complexity]%<uncover@2->
+                \hfill \\
+    \begin{itemize}
+    \item Trigger only for changes of single documents %(ok because of denormalization)
+    \item No direct trigger evaluation for computables % mention complexity, posisble with workaround
+    \end{itemize}
+  \end{description}
 
-note trigger+computable?
-trigger only on single documents (denormalization, computational complexity vs expressiveness)
+\begin{block}{}%<uncover@3->
+  \begin{itemize}
+  \item Beneficial for AI/robot software development
+  \item Especially for combining different planners/reasoners
+  \end{itemize}
+  \end{block}
 \end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Evaluation: Quantitative}
+  \begin{columns}
+    \begin{column}{0.55\textwidth}
+      \begin{description}
+      \item[Tidy up scenario] \hfill \\
+        \begin{itemize}
+        \item Robot Memory with informations about objects
+          \begin{lstlisting}[style=SmallJSON,
+            framexleftmargin=5pt, xleftmargin=0pt,
+            morekeywords={}, numbers=none]
+{ name: "coffee machine",
+  position: "counter",
+  tidied: "counter" },
+{ name: "milk",
+  position: "counter",
+  tidied: "fridge" }
+          \end{lstlisting}
+        \item Measure operation durations with increasing domain size
+        \item In worst case without indexing
+        \end{itemize}
+      \end{description}
+    \end{column}
+    \begin{column}{0.45\textwidth}
+      \centering
+    \includegraphics[width=0.9\textwidth]{../thesis/img/tidy-up}\\
+    \end{column}
+  \end{columns}
+\end{frame}
+
 \begin{frame}
-  \frametitle{graphs}
+  \frametitle{Evaluation: Duration of Robot Memory Operations}
+  \centering
+  \begin{columns}
+    \begin{column}{0.55\textwidth}
+  \centering
+    \\\vspace{-0.08cm}
+    \includegraphics[width=\textwidth]{../thesis/plots/insert-durations}\\
+    (a) Insertions
+    \\\vspace{-0.08cm}
+    \includegraphics[width=\textwidth]{../thesis/plots/update-durations}\\
+    (c) Updates
+    \end{column}
+    \begin{column}{0.55\textwidth}
+  \centering
+    \\\vspace{-0.08cm}
+    \includegraphics[width=\textwidth]{../thesis/plots/query-durations}\\
+    (b) Queries
+    \\\vspace{-0.08cm}
+    \includegraphics[width=\textwidth]{../thesis/plots/computable-durations}\\
+    (d) Computables
+    \end{column}
+  \end{columns}
 \end{frame}
+
+
 \section{Conclusion}
 \begin{frame}
-  \frametitle{Future Work}
-\end{frame}
-\begin{frame}
-  \frametitle{Summary and Questions}
+  \frametitle{Conclusion and Questions}
 \todo[inline]{review + challenges}
+\todo[inline]{future work}
   \begin{block}{Document-oriented Robot Memory} \centering\bfseries The generic robot memory is capable of
     efficiently storing and querying arbitrary symbolic or geometric information
     and allows consistent knowledge sharing.
@@ -719,6 +794,75 @@ trigger only on single documents (denormalization, computational complexity vs e
     end: 282 }
 }
 \end{lstlisting}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Evaluation: Duration without Indexing}
+  \centering
+  \begin{columns}
+    \begin{column}{0.55\textwidth}
+  \centering
+    \\\vspace{-0.08cm}
+    \includegraphics[width=\textwidth]{../thesis/plots/insert-durations}\\
+    (a) Insertions
+    \\\vspace{-0.08cm}
+    \includegraphics[width=\textwidth]{../thesis/plots/update-durations}\\
+    (c) Updates
+    \end{column}
+    \begin{column}{0.55\textwidth}
+  \centering
+    \\\vspace{-0.08cm}
+    \includegraphics[width=\textwidth]{../thesis/plots/query-durations}\\
+    (b) Queries
+    \\\vspace{-0.08cm}
+    \includegraphics[width=\textwidth]{../thesis/plots/computable-durations}\\
+    (d) Computables
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Evaluation: Durations with Indexing}
+  \centering
+  \begin{columns}
+    \begin{column}{0.55\textwidth}
+  \centering
+    \\\vspace{-0.08cm}
+    \includegraphics[width=\textwidth]{../thesis/plots/insert-durations-index}\\
+    (a) Insertions
+    \\\vspace{-0.08cm}
+    \includegraphics[width=\textwidth]{../thesis/plots/update-durations-index}\\
+    (c) Updates
+    \end{column}
+    \begin{column}{0.55\textwidth}
+  \centering
+    \\\vspace{-0.08cm}
+    \includegraphics[width=\textwidth]{../thesis/plots/query-durations-index}\\
+    (b) Queries
+    \\\vspace{-0.08cm}
+    \includegraphics[width=\textwidth]{../thesis/plots/computable-durations-index}\\
+    (d) Computables
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Evaluation: Benchmarks RCLL}
+  \centering
+  \includegraphics[width=0.8\textwidth]{../thesis/plots/rcll-local/cpu-mem}\\
+  \vspace{0.1cm}
+  \includegraphics[width=0.8\textwidth]{../thesis/plots/rcll-local/operations}\\
+  \vspace{0.1cm}
+  \includegraphics[width=0.8\textwidth]{../thesis/plots/rsnetwork}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Evaluation: Benchmarks Blocks World}
+  \centering
+  \includegraphics[width=0.8\textwidth]{../thesis/plots/blocksworld/cpu-mem}\\
+  \vspace{0.1cm}
+  \includegraphics[width=0.8\textwidth]{../thesis/plots/blocksworld/operations}
 \end{frame}
 
 \setcounter{framenumber}{\value{finalframe}}
