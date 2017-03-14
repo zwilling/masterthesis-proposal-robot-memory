@@ -20,8 +20,8 @@
   Knowledge Sharing and Hybrid Reasoning\\ on Mobile Robots}
 \author[Zwilling]{
   \textbf{Frederik Zwilling}\\
-  ~Adviser: Tim Niemueller\\
-  ~Supervisors: Prof. Lakemeyer, PhD., Prof. Dr. Jarke
+  ~Supervisors: Prof. Lakemeyer, PhD., Prof. Dr. Jarke\\
+  ~Adviser: Tim Niemueller
 }
 \def\projecturl{}
 
@@ -44,13 +44,13 @@
   \end{itemize}
 \end{frame}
 
-% \begin{frame}
-%   \tableofcontents[]
-% \end{frame}
-
 \addtocounter{framenumber}{-1}
 
 \section{Motivation}
+\begin{frame}
+  \tableofcontents[currentsection]
+\end{frame}
+
 \begin{frame}
   \frametitle{Why do robots need a memory?}
   \vspace{1cm}
@@ -78,26 +78,31 @@
   \frametitle{Robot Memory Goals}
   \begin{itemize}
   \item Flexible storage and retrieval % generic
-  \item Memory sharing between knowledge-based systems
-  \item Special views for different components
-  \item Computation on demand (\emph{Computables})
-  \item Distributed memory for multi-robot systems
   \item Spatio-temporal grounding
-  \item Notification about updates (\emph{Triggers})
   \item Persistent storage
-  \item Human interface and visualization
+  \bigskip
+  \item Memory sharing between knowledge-based systems
+  %\item Special views for different components
+  \item Distributed memory for multi-robot systems
+  \bigskip
+  \item Computation on demand (\emph{Computables})
+  \item Notification about updates (\emph{Triggers})
+  %\item Human interface and visualization
   \end{itemize}
 \end{frame}
 
 
 \section{Background}
 \begin{frame}
+  \tableofcontents[currentsection]
+\end{frame}
+
+\begin{frame}
   \frametitle{Application Domains}
   \begin{columns}
     \begin{column}{0.5\textwidth}
-    \begin{flushleft}
-    \includegraphics[width=0.7\textwidth]{../thesis/img/rcll-feld}
-    \end{flushleft}
+      \centering
+      \includegraphics[width=0.7\textwidth]{../thesis/img/rcll-feld}
   \begin{description}[]
   \item[RoboCup Logistics League] \hfill \\
     \begin{itemize}
@@ -111,9 +116,8 @@
   \end{description}
     \end{column}
     \begin{column}{0.5\textwidth}
-    \begin{flushright}
+    \centering
     \includegraphics[width=0.7\textwidth]{../thesis/img/pr2-kbsg-kitchen}
-    \end{flushright}
   \begin{description}[]
   \item[RoboCup@Home] \hfill \\
     \begin{itemize}
@@ -129,20 +133,7 @@
   \end{frame}
 
 \begin{frame}
-  \frametitle{Fawkes}
-  \includegraphics[width=0.25\textwidth]{../thesis/img/fawkes}  
-  \bigskip
-  \begin{itemize}
-    \item Robot Software Framework % used in application domains
-    \item Component-based software design % RM one of those components
-    \item Hybrid blackboard communication infrastructure\\ with specific interfaces/messages % but no generic memory
-      \skip
-    \item[$\Rightarrow$] Robot Memory available as Fawkes plugin
-  \end{itemize}
-\end{frame}
-
-\begin{frame}
-  \frametitle{Planners and Reasoners}
+  \frametitle{Planners and Reasoners in Fawkes}
   \begin{columns}
   \begin{column}{0.83\linewidth}
   \begin{description}[]
@@ -150,14 +141,14 @@
   \begin{itemize}
   \item First-Order Logic forward chaining system
   \item Fact base and condition-action rules
-  \item[$\Rightarrow$] Good for world model reasoning and\\ execution monitoring
+  \item[$\Rightarrow$] Used for world model reasoning and\\ execution monitoring
   \end{itemize}
   \item[Planning Domain Definition Language (PDDL)]%<uncover@2->
     \hfill \\
   \begin{itemize}
   \item Standardized language for planning problems
   \item Find action sequence through heuristic search
-  \item[$\Rightarrow$] Good for finding global plans
+  \item[$\Rightarrow$] Used for finding global plans
   \end{itemize}
   \item[Motion Planners]%<uncover@3->
     \hfill \\
@@ -177,6 +168,9 @@
 \end{frame}
 
 \section{Related Work}
+\begin{frame}
+  \tableofcontents[currentsection]
+\end{frame}
 \begin{frame}
   \frametitle{Robot Information Storage Systems}
   \begin{description}[]
@@ -209,7 +203,6 @@
 
 \begin{frame}[fragile]
   \frametitle{Document Orientation}
-
   \begin{itemize}
   \item Documents: Sets of key-value pairs
     %keys unique, different value types
@@ -236,27 +229,26 @@
   \frametitle{MongoDB Database System}
   \hfill\includegraphics[width=0.3\textwidth]{../thesis/img/mongodb}
   \begin{itemize}
-    \item Document-oriented
-    \item Scalable, powerful and widely used
-    \item Collections group documents
-    \item Query language with aggregation, MapReduce, JavaScript %expressive
+    \item Scalable and widely used
+    \item Query language with aggregation, MapReduce, JavaScript % powerful query features
 \begin{lstlisting}[style=SmallJSON,linewidth=8.5cm,
   framexleftmargin=2pt, xleftmargin=10pt,
  morekeywords={}, numbers=none]
 db.environment.find(
   { object: "cup", color: {$ne: "red"}})
 \end{lstlisting}%$
+    \item Collections group documents
     \item Indexing for fast querying
     \item Distributable with Replica Sets\\ %explain a bit (Primary, Secondary)
       Operations Log (Oplog) to forward changes
-    \item Performance and scalability advantages compared to other database systems, e.g., ArangoDB, CouchDB\\\cite{arango-vs-mongo,db-comparison}
+    \item Comparable good performance and scalability\\\cite{arango-vs-mongo,db-comparison}
   \end{itemize}
 \end{frame}
 
 \begin{frame}
   \frametitle{Related Work with MongoDB}
   \begin{description}
-  \item[Generic Robot Database with MongoDB~\cite{RoboDB}]%<uncover@1->
+  \item[Robot Database with MongoDB~\cite{RoboDB}]%<uncover@1->
                 \hfill \\
     \begin{itemize}
     \item Data logging for evaluation and fault analysis
@@ -268,7 +260,7 @@ db.environment.find(
                 \hfill \\
     \begin{itemize}
     \item Triggers with replication Oplog~\cite{mongodb-trigger}
-    \item Multi-Master Replication~\cite{mongodb-multi-master}
+    %\item Multi-Master Replication~\cite{mongodb-multi-master}
     \end{itemize}
   \end{description}
 \end{frame}
@@ -276,25 +268,23 @@ db.environment.find(
 
 \section{Approach}
 \begin{frame}
-  \frametitle{Theoretical Foundation}
+  \tableofcontents[currentsection]
+\end{frame}
+\begin{frame}
+  \frametitle{Terminology}
   \begin{description}
   \item[Documents] \hfill {\small $\{("object","cup"),("position",{\scriptstyle\{("x",8),("y",4)\}})\}$}\\
     \begin{itemize}
     \item Sets of key-value pairs (unique keys)
     \item Finitely nested sub-documents
     \end{itemize}
+\bigskip
   \item[Robot Memory] \hfill \\
     \begin{itemize}
     \item Composed of database and computables
     \item Database: Set of documents
     \item Computables: Functions yielding sets of documents
     \end{itemize}
-  \item[Mapping between documents and PDDL predicates] \hfill \\
-  \includegraphics[width=0.8\textwidth]{../thesis/draw/mapping.pdf}
-    \begin{itemize}
-    \item Recursive for sub-documents / functions
-    \end{itemize}
-  % \item[Mapping of plans to documents] \hfill \\
   \end{description}  
 \end{frame}
 
@@ -388,6 +378,10 @@ Resulting document
 
 \section{Implementation}
 \begin{frame}
+  \tableofcontents[currentsection]
+\end{frame}
+
+\begin{frame}
   \frametitle{Back-End}
   \begin{description}
   \item[MongoDB as basis]%<uncover@1->
@@ -416,20 +410,6 @@ Resulting document
     \item Also use MongoDB query language
     \item Modify documents/queries, e.g., to add meta information % decay time, persistency
     \item Automated start-up and configuration of MongoDB % as sub process
-    \end{itemize}
-  \item[Computable Manager]%<uncover@2->
-                \hfill \\
-    \begin{itemize}
-    \item Registering computables
-    \item Evaluates whether queries require computables
-    \item Caches of computed documents
-    %\item Blackboard and transform computable
-    \end{itemize}
-  \item[Trigger Manager]%<uncover@3->
-                \hfill \\
-    \begin{itemize}
-    \item Registering triggers
-    \item Checks the Oplog for trigger events
     \end{itemize}
   \end{description}
 \end{frame}
@@ -521,13 +501,13 @@ Resulting document
   \item[OpenRAVE Characteristics]%<uncover@1->
                 \hfill \\
     \begin{itemize}
-    \item Motion planner
-    \item Requires geometric positions
+    \item Geometric motion planner
+    \item Operates in continous space
     \end{itemize}
   \item[Robot Memory Interface]%<uncover@2->
                 \hfill \\
     \begin{itemize}
-    \item Insert/update/remove positions represented in documents
+    \item Updates planner scene\\ based on positions\\ represented in documents
 \begin{lstlisting}[style=SmallJSON,
   framexleftmargin=5pt, xleftmargin=0pt,linewidth=5cm,
  morekeywords={}, numbers=none]
@@ -538,7 +518,7 @@ Resulting document
     [0.43, -0.04, 0.01]
 }
 \end{lstlisting}
-    \item Configurable models and queries
+    %\item Configurable models and queries
     \end{itemize}
   \end{description}
     \end{column}
@@ -568,6 +548,10 @@ Resulting document
 
 \section{Evaluation}
 \begin{frame}
+  \tableofcontents[currentsection]
+\end{frame}
+
+\begin{frame}
   \frametitle{Qualitative Evaluation}
   \begin{description}
   \item[Experience from evaluation scenarios]%<uncover@1->
@@ -575,7 +559,7 @@ Resulting document
     \begin{itemize}
     \item Flexible storage and expressive querying
     \item Convenient memory sharing between KBS and in distributed system
-    \item Proper views on a common and thus consistent information basis
+    \item Planner specific views on a common and thus consistent information basis
       % (geometric for motion planner, symbolic for pddl)
     \item Simplification of hybrid reasoning with computables
       % Transformation of geometric block position to on-table predicate
@@ -616,7 +600,7 @@ Resulting document
   tidied: "fridge" }
           \end{lstlisting}
         \item Measure operation durations with increasing domain size
-        \item In worst case without indexing
+        \item With / without indexing
         \end{itemize}
       \end{description}
     \end{column}
@@ -628,7 +612,7 @@ Resulting document
 \end{frame}
 
 \begin{frame}
-  \frametitle{Duration of Robot Memory Operations}
+  \frametitle{Duration of Robot Memory Operations I}
   \centering
   \begin{columns}
     \begin{column}{0.55\textwidth}
@@ -637,54 +621,54 @@ Resulting document
     \\\vspace{-0.15cm}
     \includegraphics[width=\textwidth]{../thesis/plots/insert-durations}\\
     \\\vspace{-0.05cm}
-    (a) Insertions
-    \\\vspace{-0.1cm}
-    \includegraphics[width=\textwidth]{../thesis/plots/update-durations}\\
+    Insertions
     \\\vspace{-0.05cm}
-    (c) Updates
-    \end{column}
-    \begin{column}{0.55\textwidth}
-  \centering
-    \small
-    \\\vspace{-0.15cm}
     \includegraphics[width=\textwidth]{../thesis/plots/query-durations}\\
-    \\\vspace{-0.05cm}
-    (b) Queries
-    \\\vspace{-0.1cm}
-    \includegraphics[width=\textwidth]{../thesis/plots/computable-durations}\\
-    \\\vspace{-0.05cm}
-    (d) Computables
+    \\\vspace{-0.08cm}
+    Queries
     \end{column}
-  \end{columns}
-\end{frame}
-
-\begin{frame}
-  \frametitle{Evaluation: Durations with Indexing}
-  \centering
-  \begin{columns}
     \begin{column}{0.55\textwidth}
   \centering
     \small
     \\\vspace{-0.15cm}
     \includegraphics[width=\textwidth]{../thesis/plots/insert-durations-index}\\
     \\\vspace{-0.05cm}
-    (a) Insertions
-    \\\vspace{-0.1cm}
-    \includegraphics[width=\textwidth]{../thesis/plots/update-durations-index}\\
+    Insertions with Indexing
+    \\\vspace{-0.08cm}
+    \includegraphics[width=\textwidth]{../thesis/plots/query-durations-index}\\
     \\\vspace{-0.05cm}
-    (c) Updates
+    Queries with Indexing
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Duration of Robot Memory Operations II}
+  \centering
+  \begin{columns}
+    \begin{column}{0.55\textwidth}
+  \centering
+    \small
+    \\\vspace{-0.17cm}
+    \includegraphics[width=\textwidth]{../thesis/plots/update-durations}\\
+    \\\vspace{-0.08cm}
+    Updates
+    \\\vspace{-0.05cm}
+    \includegraphics[width=\textwidth]{../thesis/plots/computable-durations}\\
+    \\\vspace{-0.05cm}
+    Computables
     \end{column}
     \begin{column}{0.55\textwidth}
   \centering
     \small
-    \\\vspace{-0.15cm}
-    \includegraphics[width=\textwidth]{../thesis/plots/query-durations-index}\\
+    \\\vspace{-0.17cm}
+    \includegraphics[width=\textwidth]{../thesis/plots/update-durations-index}\\
+    \\\vspace{-0.08cm}
+    Updates with Indexes
     \\\vspace{-0.05cm}
-    (b) Queries
-    \\\vspace{-0.1cm}
     \includegraphics[width=\textwidth]{../thesis/plots/computable-durations-index}\\
     \\\vspace{-0.05cm}
-    (d) Computables
+    Computables with Indexes
     \end{column}
   \end{columns}
 \end{frame}
@@ -692,7 +676,11 @@ Resulting document
 
 \section{Conclusion}
 \begin{frame}
-  \frametitle{Future Work}
+  \tableofcontents[currentsection]
+\end{frame}
+
+\begin{frame}
+  \frametitle{Foundation for Future Projects}
   \begin{description}
   \item[Two projects currently using the Robot Memory]\hfill\\
     \begin{itemize}
@@ -713,7 +701,7 @@ Resulting document
 \begin{frame}
   \frametitle{Conclusion and Questions}
   \begin{block}{Generic Robot Memory } \centering\bfseries
-    with flexible storage and expressive querying for hybrid reasoning and world model sharing between different KBS
+    flexible storage and expressive querying for hybrid reasoning and world model sharing between different KBS
   \end{block}
   \bigskip
   \begin{columns}
@@ -722,14 +710,14 @@ Resulting document
       \item Document-oriented representation and querying
       \item Distributable and persistent
       \item Theoretical foundation
-      \item Architectural design
-      \item Interfaces for KBS
+      \item Triggers for notification
+      % \item Architectural design
+      % \item Interfaces for KBS
       %\item Hybrid reasoning with computables
       \end{itemize}
     \end{column}
     \begin{column}{0.5\textwidth}
       \begin{itemize}
-      \item Triggers for notification
       \item Computables
       \item Symbolic/spatio-temporal
       \item Beneficial and efficient in application scenarios
@@ -952,6 +940,19 @@ Resulting document
   \includegraphics[width=0.8\textwidth]{../thesis/plots/blocksworld/cpu-mem}\\
   \vspace{0.1cm}
   \includegraphics[width=0.8\textwidth]{../thesis/plots/blocksworld/operations}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Fawkes}
+  \includegraphics[width=0.25\textwidth]{../thesis/img/fawkes}  
+  \bigskip
+  \begin{itemize}
+    \item Robot Software Framework % used in application domains
+    \item Component-based software design % RM one of those components
+    \item Hybrid blackboard communication infrastructure\\ with specific interfaces/messages % but no generic memory
+      \skip
+    \item[$\Rightarrow$] Robot Memory available as Fawkes plugin
+  \end{itemize}
 \end{frame}
 
 \setcounter{framenumber}{\value{finalframe}}
