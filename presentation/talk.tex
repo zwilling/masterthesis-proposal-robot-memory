@@ -47,9 +47,10 @@
 \addtocounter{framenumber}{-1}
 
 \section{Motivation}
-\begin{frame}
+\begin{frame}[plain]
   \tableofcontents[currentsection]
 \end{frame}
+\addtocounter{framenumber}{-1}
 
 \begin{frame}
   \frametitle{Why do robots need a memory?}
@@ -93,9 +94,10 @@
 
 
 \section{Background}
-\begin{frame}
+\begin{frame}[plain]
   \tableofcontents[currentsection]
 \end{frame}
+\addtocounter{framenumber}{-1}
 
 \begin{frame}
   \frametitle{Application Domains}
@@ -168,9 +170,11 @@
 \end{frame}
 
 \section{Related Work}
-\begin{frame}
+\begin{frame}[plain]
   \tableofcontents[currentsection]
 \end{frame}
+\addtocounter{framenumber}{-1}
+
 \begin{frame}
   \frametitle{Robot Information Storage Systems}
   \begin{description}[]
@@ -267,9 +271,11 @@ db.environment.find(
 
 
 \section{Approach}
-\begin{frame}
+\begin{frame}[plain]
   \tableofcontents[currentsection]
 \end{frame}
+\addtocounter{framenumber}{-1}
+
 \begin{frame}
   \frametitle{Terminology}
   \begin{description}
@@ -288,128 +294,60 @@ db.environment.find(
   \end{description}  
 \end{frame}
 
-\begin{frame}[fragile]
+\begin{frame}
   \frametitle{Computables}
-  \begin{description}
-  \item[Advantages of on demand computation]%<uncover@1->
-                \hfill \\
-    \begin{itemize}
-    \item Interfacing of perception and complex computation in KBS % to bypass expressiveness/complexity
-    \item Decreased computational effort % compared to continously store %e.g. perception, transform, distance
-    \item Simplify hybrid reasoning by transforming between\\ spatio-temporal and symbolic information
-    \end{itemize}
-  \item[Computables]%<uncover@2->
-                \hfill \\
-    \begin{itemize}
-    \item Function: Query $x$ Robot-State $\rightarrow$ Set of documents
-    \item Computable specification
-    \item Priority % to order evaluation because of dependencies between computables
-    \end{itemize}
-  \end{description}
-
-\begin{minipage}[b]{.27\textwidth}
-\begin{lstlisting}[style=ReallySmallJSON,
-  framexleftmargin=5pt, xleftmargin=0pt,
- morekeywords={}, numbers=none]
-{
-  compute: "sum",
-  x: {$exists:true},
-  y: {$exists:true}
-}
-\end{lstlisting}
-Computable\\specification
-\end{minipage}%
-\hfill
-\begin{minipage}[b]{.25\textwidth}
-\begin{lstlisting}[style=ReallySmallJSON,
-  framexleftmargin=5pt, xleftmargin=0pt,
- morekeywords={}, numbers=none]
-{
-  compute: "sum",
-  x: 15,
-  y: 4
-}
-\end{lstlisting}
-Query requiring the computable
-\end{minipage}%
-\hfill
-\begin{minipage}[b]{.25\textwidth}
-\begin{lstlisting}[style=ReallySmallJSON,
-  framexleftmargin=5pt, xleftmargin=0pt,
- morekeywords={}, numbers=none]
-{
-  compute: "sum",
-  x: 15,
-  y: 4,
-  sum: 19
-}
-\end{lstlisting}
-  \vspace{-0.1cm}
-Resulting document
-\end{minipage}%
+  \only<1>{\includegraphics[width=1.03\textwidth]{../thesis/draw/computable-4.pdf}}
+  \only<2>{\includegraphics[width=1.03\textwidth]{../thesis/draw/computable-3.pdf}}
+  \only<3>{\includegraphics[width=1.03\textwidth]{../thesis/draw/computable-2.pdf}}
+  \only<4>{\includegraphics[width=1.03\textwidth]{../thesis/draw/computable-1.pdf}}
+  \only<5>{\includegraphics[width=1.03\textwidth]{../thesis/draw/computable.pdf}}
+  \pause\pause\pause\pause
 \end{frame}
 
 \begin{frame}
   \frametitle{Triggers}
-  \begin{description}
-  \item[Trigger: Notification about events in the robot memory]%<uncover@1->
-                \hfill \\
-    \begin{itemize}
-    \item Queries define changes of single documents, e.g., \texttt{\{relation: "order"\}}
-    \item Callback with matching document, timestamp, and operation type
-    \item Avoids polling
-    \item Use cases: World model updates, Messaging % e.g. multi-robot system, new plan
-    \end{itemize}
-  \item[Implementation]%<uncover@2->
-                \hfill \\
-    \begin{itemize}
-    \item Searching replication Oplog for changes
-    \item Tailable cursor in capped collection % give intuition ring buffer
-    \end{itemize}
-  \end{description}
+  \only<1>{\includegraphics[width=1.03\textwidth]{../thesis/draw/trigger-5.pdf}}
+  \only<2>{\includegraphics[width=1.03\textwidth]{../thesis/draw/trigger-4.pdf}}
+  \only<3>{\includegraphics[width=1.03\textwidth]{../thesis/draw/trigger-3.pdf}}
+  \only<4>{\includegraphics[width=1.03\textwidth]{../thesis/draw/trigger-2.pdf}}
+  \only<5>{\includegraphics[width=1.03\textwidth]{../thesis/draw/trigger-1.pdf}}
+  \only<6>{\includegraphics[width=1.03\textwidth]{../thesis/draw/trigger.pdf}}
+  \pause\pause\pause\pause\pause
 \end{frame}
 
 \begin{frame}
   \frametitle{Architecture}
-  \center
-  \includegraphics[width=0.8\textwidth]{../thesis/architecture.pdf}
+  \hspace{-1.3cm}
+  \only<1>{\includegraphics[width=1.1\textwidth]{../thesis/draw/architecture.pdf}}
+  \only<2>{\includegraphics[width=1.1\textwidth]{../thesis/draw/architecture-comp.pdf}}
+  \pause
 \end{frame}
 
 
 \section{Implementation}
-\begin{frame}
+\begin{frame}[plain]
   \tableofcontents[currentsection]
 \end{frame}
+\addtocounter{framenumber}{-1}
 
 \begin{frame}
-  \frametitle{Back-End}
+  \frametitle{Back-End and Robot Memory}
   \begin{description}
-  \item[MongoDB as basis]%<uncover@1->
+  \item[Distribution in multi-robot system]
                 \hfill \\
     \begin{itemize}
-    \item Document-oriented storage
-    \item Basic operations (insert, query, update, remove)
-    \end{itemize}
-  \item[Distribution in multi-robot system]%<uncover@2->
-                \hfill \\
-    \begin{itemize}
-    \item Private and shared database
     \item Write operations only on primary instance
     \item Eventual consistency on secondaries %(forwarding changes, denormalization)
     %\item No sharding because WiFi, one robot in breakdown
     \end{itemize}
-  \end{description}
-\end{frame}
-
-\begin{frame}
-  \frametitle{Robot Memory}
-  \begin{description}
-  \item[Operation Manager]%<uncover@1->
+\bigskip
+  \item[Robot Memory]
                 \hfill \\
     \begin{itemize}
-    \item Also use MongoDB query language
-    \item Modify documents/queries, e.g., to add meta information % decay time, persistency
-    \item Automated start-up and configuration of MongoDB % as sub process
+    \item Modifying queries and inserts
+    \item Trigger and computable managers
+    \item Caching of computed documents
+    \item Automated start-up of MongoDB
     \end{itemize}
   \end{description}
 \end{frame}
@@ -547,9 +485,10 @@ Resulting document
 
 
 \section{Evaluation}
-\begin{frame}
+\begin{frame}[plain]
   \tableofcontents[currentsection]
 \end{frame}
+\addtocounter{framenumber}{-1}
 
 \begin{frame}
   \frametitle{Qualitative Evaluation}
@@ -675,9 +614,10 @@ Resulting document
 
 
 \section{Conclusion}
-\begin{frame}
+\begin{frame}[plain]
   \tableofcontents[currentsection]
 \end{frame}
+\addtocounter{framenumber}{-1}
 
 \begin{frame}
   \frametitle{Foundation for Future Projects}
