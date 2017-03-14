@@ -440,7 +440,7 @@ db.environment.find(
                 \hfill \\
     \begin{itemize}
     \item Geometric motion planner
-    \item Operates in continous space
+    \item Operates in continuous space
     \end{itemize}
   \item[Robot Memory Interface]%<uncover@2->
                 \hfill \\
@@ -497,27 +497,36 @@ db.environment.find(
                 \hfill \\
     \begin{itemize}
     \item Flexible storage and expressive querying
-    \item Convenient memory sharing between KBS and in distributed system
-    \item Planner specific views on a common and thus consistent information basis
+    \item Convenient memory sharing between KBS\\ and in distributed system
+    % \item Planner specific views on a common\\ and thus consistent information basis
       % (geometric for motion planner, symbolic for pddl)
-    \item Simplification of hybrid reasoning with computables
+    \item Allows hybrid reasoning with computables\\(e.g. \texttt{on-table} derived from geometric position)
       % Transformation of geometric block position to on-table predicate
     \item Triggers useful for worldmodel updates and messages
     \end{itemize}
-  \item[Expressiveness vs. Computational Complexity]%<uncover@2->
-                \hfill \\
-    \begin{itemize}
-    \item Trigger only for changes of single documents %(ok because of denormalization)
-    \item No direct trigger evaluation for computables % mention complexity, posisble with workaround
-    \end{itemize}
   \end{description}
-
-\begin{block}{}%<uncover@3->
+\begin{block}{}%<uncover@2->
   \begin{itemize}
   \item Beneficial for AI/robot software development
   \item Especially for combining different planners/reasoners
   \end{itemize}
   \end{block}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Qualitative Evaluation: Limitations}
+  \begin{description}
+  \item[Trade-offs / Limitations]
+                \hfill \\
+\bigskip
+    \begin{itemize}
+    \item Trigger only for changes of single documents % (ok because of denormalization)
+\vspace{0.15cm}
+    \item No direct trigger evaluation for computables % mention complexity, posisble with workaround
+\vspace{0.15cm}
+    \item Query complexity determined by application % formulation important
+    \end{itemize}
+  \end{description}
 \end{frame}
 
 \begin{frame}[fragile]
