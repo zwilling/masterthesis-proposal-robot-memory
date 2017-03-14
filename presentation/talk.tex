@@ -92,7 +92,7 @@
 
 \section{Background}
 \begin{frame}
-  \frametitle{Background: Application Domains}
+  \frametitle{Application Domains}
   \begin{columns}
     \begin{column}{0.5\textwidth}
     \begin{flushleft}
@@ -129,7 +129,7 @@
   \end{frame}
 
 \begin{frame}
-  \frametitle{Background: Fawkes}
+  \frametitle{Fawkes}
   \includegraphics[width=0.25\textwidth]{../thesis/img/fawkes}  
   \bigskip
   \begin{itemize}
@@ -142,7 +142,7 @@
 \end{frame}
 
 \begin{frame}
-  \frametitle{Background: Planners and Reasoners}
+  \frametitle{Planners and Reasoners}
   \begin{columns}
   \begin{column}{0.83\linewidth}
   \begin{description}[]
@@ -178,7 +178,7 @@
 
 \section{Related Work}
 \begin{frame}
-  \frametitle{Related Work: Robot Information Storage Systems}
+  \frametitle{Robot Information Storage Systems}
   \begin{description}[]
   \item[KnowRob~\cite{KnowRob}]%<uncover@1->
     \hfill \\
@@ -276,7 +276,7 @@ db.environment.find(
 
 \section{Approach}
 \begin{frame}
-  \frametitle{Approach: Theoretical Foundation}
+  \frametitle{Theoretical Foundation}
   \begin{description}
   \item[Documents] \hfill {\small $\{("object","cup"),("position",{\scriptstyle\{("x",8),("y",4)\}})\}$}\\
     \begin{itemize}
@@ -299,7 +299,7 @@ db.environment.find(
 \end{frame}
 
 \begin{frame}[fragile]
-  \frametitle{Approach: Computables}
+  \frametitle{Computables}
   \begin{description}
   \item[Advantages of on demand computation]%<uncover@1->
                 \hfill \\
@@ -360,7 +360,7 @@ Resulting document
 \end{frame}
 
 \begin{frame}
-  \frametitle{Approach: Triggers}
+  \frametitle{Triggers}
   \begin{description}
   \item[Trigger: Notification about events in the robot memory]%<uncover@1->
                 \hfill \\
@@ -388,7 +388,7 @@ Resulting document
 
 \section{Implementation}
 \begin{frame}
-  \frametitle{Implementation: Back-End}
+  \frametitle{Back-End}
   \begin{description}
   \item[MongoDB as basis]%<uncover@1->
                 \hfill \\
@@ -408,7 +408,7 @@ Resulting document
 \end{frame}
 
 \begin{frame}
-  \frametitle{Implementation: Robot Memory}
+  \frametitle{Robot Memory}
   \begin{description}
   \item[Operation Manager]%<uncover@1->
                 \hfill \\
@@ -438,7 +438,7 @@ Resulting document
 % and how to map documents into specific concepts
 
 \begin{frame}[fragile]
-  \frametitle{Implementation: CLIPS Interface}
+  \frametitle{CLIPS Interface}
   \begin{description}
   \item[CLIPS Characteristics]%<uncover@1->
                 \hfill \\
@@ -476,7 +476,7 @@ Resulting document
 \end{frame}
 
 \begin{frame}[fragile]
-  \frametitle{Implementation: PDDL Interface}
+  \frametitle{PDDL Interface}
   \begin{description}
   \item[PDDL Characteristics]%<uncover@1->
                 \hfill \\
@@ -514,7 +514,7 @@ Resulting document
 \end{frame}
 
 \begin{frame}[fragile]
-  \frametitle{Implementation: OpenRAVE Interface}
+  \frametitle{OpenRAVE Interface}
   \begin{columns}
     \begin{column}{0.6\textwidth}
   \begin{description}
@@ -568,7 +568,7 @@ Resulting document
 
 \section{Evaluation}
 \begin{frame}
-  \frametitle{Evaluation: Qualitative}
+  \frametitle{Qualitative Evaluation}
   \begin{description}
   \item[Experience from evaluation scenarios]%<uncover@1->
                 \hfill \\
@@ -598,7 +598,7 @@ Resulting document
 \end{frame}
 
 \begin{frame}[fragile]
-  \frametitle{Evaluation: Quantitative}
+  \frametitle{Quantitative Evaluation}
   \begin{columns}
     \begin{column}{0.55\textwidth}
       \begin{description}
@@ -628,7 +628,7 @@ Resulting document
 \end{frame}
 
 \begin{frame}
-  \frametitle{Evaluation: Duration of Robot Memory Operations}
+  \frametitle{Duration of Robot Memory Operations}
   \centering
   \begin{columns}
     \begin{column}{0.55\textwidth}
@@ -658,6 +658,37 @@ Resulting document
   \end{columns}
 \end{frame}
 
+\begin{frame}
+  \frametitle{Evaluation: Durations with Indexing}
+  \centering
+  \begin{columns}
+    \begin{column}{0.55\textwidth}
+  \centering
+    \small
+    \\\vspace{-0.15cm}
+    \includegraphics[width=\textwidth]{../thesis/plots/insert-durations-index}\\
+    \\\vspace{-0.05cm}
+    (a) Insertions
+    \\\vspace{-0.1cm}
+    \includegraphics[width=\textwidth]{../thesis/plots/update-durations-index}\\
+    \\\vspace{-0.05cm}
+    (c) Updates
+    \end{column}
+    \begin{column}{0.55\textwidth}
+  \centering
+    \small
+    \\\vspace{-0.15cm}
+    \includegraphics[width=\textwidth]{../thesis/plots/query-durations-index}\\
+    \\\vspace{-0.05cm}
+    (b) Queries
+    \\\vspace{-0.1cm}
+    \includegraphics[width=\textwidth]{../thesis/plots/computable-durations-index}\\
+    \\\vspace{-0.05cm}
+    (d) Computables
+    \end{column}
+  \end{columns}
+\end{frame}
+
 
 \section{Conclusion}
 \begin{frame}
@@ -681,7 +712,7 @@ Resulting document
 
 \begin{frame}
   \frametitle{Conclusion and Questions}
-  \begin{block}{Generic robot memory } \centering\bfseries
+  \begin{block}{Generic Robot Memory } \centering\bfseries
     with flexible storage and expressive querying for hybrid reasoning and world model sharing between different KBS
   \end{block}
   \bigskip
@@ -790,7 +821,6 @@ Resulting document
 \text{e.g. } map_p&(\{("predicate", "at"),("object", "cup"),("room","kitchen")\})\\
              &= at(map_f("cup"), map_f("kitchen")) = at(cup, kitchen) \text{.}
 \end{align*}
-\pause
   \begin{enumerate}
       \item \textbf{Predicate symbols} $\mathcal{R}$, \textbf{Function symbols} $\mathcal{F}$
       \item \textbf{Name mapping:}
@@ -800,14 +830,14 @@ Resulting document
         name_{pred-atr}: \mathcal{R} \times \mathbb{N} \rightarrow \mathcal{K} &\text{ and } name_{func-atr}: \mathcal{F} \times \mathbb{N} \rightarrow
 \mathcal{K}
       \end{align*}
-      \only<1-2>{
+      \only<1>{
       \item \textbf{Map to predicate:}
       \begin{align*}
         map_p(d)=&\text{ }p(map_f(v_1), ..., map_f(v_n)), \text{ iff } p \text{ is a n-array predicate in } \mathcal{R},\\
   ("predica&te", name_{pred}(p))\in d, \forall i \in \{1..n\} (name_{pred-atr}(p,i), v_i)\in d\\
   map_p(d)=& \text{ }nil_p, otherwise
       \end{align*}}
-      \only<3>{
+      \only<2>{
       \item \textbf{Map to predicate}
       \item \textbf{Map to function term:}
       \begin{align*}
