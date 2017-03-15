@@ -1,0 +1,674 @@
+\input{common/tex/header}
+\input{../listings/clips.tex}
+\input{../listings/json.tex}
+\input{../listings/pddl.tex}
+
+\usepackage{todonotes}
+\usepackage{booktabs}
+\newcommand{\tabitem}{~~\llap{\textcolor{FawkesOrange}{\textbullet}}~~}
+
+
+\hypersetup{
+  pdftitle      = {Robot Memory-Master Thesis Presentation},
+  pdfauthor     = {Frederik Zwilling},
+  pdfkeywords   = {robotics, artificial intelligence, robot memory, logistics, RCLL, @Home},
+  pdfsubject    = {Master Thesis Presentation}
+  %hidelinks    = true
+}
+
+\title[Robot Memory] {A Document-Oriented Robot Memory\\ for
+  Knowledge Sharing and Hybrid Reasoning\\ on Mobile Robots}
+\author[Zwilling]{
+  \textbf{Frederik Zwilling}\\
+  ~Supervisors: Prof. Lakemeyer, PhD., Prof. Dr. Jarke\\
+  ~Adviser: Tim Niemueller
+}
+\def\projecturl{}
+
+\date[Mar 15th 2017]{Mar 15th 2017 -- Master Thesis Presentation}
+
+\begin{document}
+\shorthandoff{"} % aus "o kein ö machen
+
+\frame[plain]{\titlepage}
+\addtocounter{framenumber}{-1}
+
+\begin{frame}[plain]
+  \frametitle{Robot Memory at a Glance}
+  \textbf{\large Database to store information of a robot about its environment}
+  \bigskip
+  \begin{itemize}
+  \item \textbf{Domain:} Logistics and domestic service robotics
+  \item \textbf{Purpose:} Scalable storage and rich querying
+  \item \textbf{Focus:} Knowledge sharing and hybrid reasoning\\ for knowledge-based systems
+  \end{itemize}
+\end{frame}
+
+\addtocounter{framenumber}{-1}
+
+\section{Motivation}
+
+\begin{frame}
+  \frametitle{Why do robots need a memory?}
+  \vspace{1cm}
+  \begin{columns}
+    \begin{column}{0.5\textwidth}
+    \includegraphics[width=\textwidth]{../thesis/img/rcll-feld}
+    \begin{itemize}
+    \item Store and reason about world state
+    \item Share information in multi-robot system
+    \end{itemize}
+%% share knowledge to collaborate
+    \end{column}
+    \begin{column}{0.5\textwidth}
+    \includegraphics[width=\textwidth]{../thesis/img/pr2-kbsg-kitchen}
+    \begin{itemize}
+    \item Remember object sights
+    \item Persistent storage
+    \item Consistent information base for different components
+    \end{itemize}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Robot Memory Goals}
+  \begin{itemize}
+  \item Flexible storage and retrieval % generic
+  \item Spatio-temporal grounding
+  \item Persistent storage
+  \bigskip
+  \item Memory sharing between knowledge-based systems
+  %\item Special views for different components
+  \item Distributed memory for multi-robot systems
+  \bigskip
+  \item Computation on demand (\emph{Computables})
+  \item Notification about updates (\emph{Triggers})
+  %\item Human interface and visualization
+  \end{itemize}
+\end{frame}
+
+
+\section{Background}
+
+\begin{frame}
+  \frametitle{Application Domains}
+  \begin{columns}
+    \begin{column}{0.5\textwidth}
+      \centering
+      \includegraphics[width=0.7\textwidth]{../thesis/img/rcll-feld}
+  \begin{description}[]
+  \item[RoboCup Logistics League] \hfill \\
+    \begin{itemize}
+    \item Production logistics\\ in smart factory
+    \item Share world model
+    \begin{itemize}
+    \item between robots
+    \item between global planner and reasoner executive
+    \end{itemize}
+    \end{itemize}
+  \end{description}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+    \centering
+    \includegraphics[width=0.7\textwidth]{../thesis/img/pr2-kbsg-kitchen}
+  \begin{description}[]
+  \item[RoboCup@Home] \hfill \\
+    \begin{itemize}
+    \item Domestic service robots
+    \item Collect information about concrete environment
+    \item Hybrid reasoning with spatio-temporal knowledge
+    \end{itemize}
+  \end{description}    
+    \end{column}
+  \end{columns}
+%TODO: already intorduce evaluation scenario here?
+  \end{frame}
+
+\begin{frame}
+  \frametitle{Planners and Reasoners in Fawkes}
+  \begin{columns}
+  \begin{column}{0.83\linewidth}
+  \begin{description}[]
+  \item[CLIPS Rules Engine] \hfill \\
+  \begin{itemize}
+  \item First-Order Logic forward chaining system
+  \item Fact base and condition-action rules
+  \item[$\Rightarrow$] Used for world model reasoning and\\ execution monitoring
+  \end{itemize}
+  \item[Planning Domain Definition Language (PDDL)]%<uncover@2->
+    \hfill \\
+  \begin{itemize}
+  \item Standardized language for planning problems
+  \item Find action sequence through heuristic search
+  \item[$\Rightarrow$] Used for finding global plans
+  \end{itemize}
+  \item[Motion Planners]%<uncover@3->
+    \hfill \\
+  \begin{itemize}
+  \item Robot arm and locomotion collision avoidance
+  \item Depend on geometric data
+  \end{itemize}
+  \end{description}
+  \end{column}
+  \begin{column}{0.17\linewidth}
+  \includegraphics[width=\textwidth]{../thesis/img/CLIPS}
+  \vspace{3.4cm}
+  %\pause\pause
+  \includegraphics[width=\textwidth]{../thesis/img/openrave}
+  \end{column}
+  \end{columns}
+\end{frame}
+
+\section{Related Work}
+
+\begin{frame}
+  \frametitle{Robot Information Storage Systems}
+  \begin{description}[]
+  \item[KnowRob~\cite{KnowRob}]%<uncover@1->
+    \hfill \\
+    \begin{itemize}
+    \item Common sense reasoning with ontologies
+          %explain with example (graph, rdf, milk)
+    \item Based on Prolog
+    \item Virtual knowledge base to interface perception
+    \end{itemize}
+  \end{description}
+  \begin{description}[]
+  \item[OpenRobots Ontology (ORO)~\cite{Oro}]%<uncover@2-> 
+    \hfill \\
+    \begin{itemize}
+    \item Common sense reasoning with ontologies
+    \item Based on  Java
+    \item Events notifying about changes
+    \end{itemize}
+  \end{description}
+  \begin{block}{}%<uncover@3->
+  \begin{itemize}
+  \item Not applicable for multi-robot systems
+  \item Scalability, efficiency concerns % because storage is interwined with reasoning
+  \item Missing events / computation on demand
+  \end{itemize}
+  \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Document Orientation}
+  \begin{itemize}
+  \item Documents: Sets of key-value pairs
+    %keys unique, different value types
+  \item Java Script Object Notation (JSON)
+    \begin{lstlisting}[style=SmallJSON,linewidth=8.5cm,
+      label=lst:json,
+      framexleftmargin=1pt, xleftmargin=0pt,
+      morekeywords={}, numbers=none]
+      {
+        "key": "value",
+        "subdocument": {"x":3, "y":1},
+        "array": [{"n":0.1},{"n":2}]
+      }
+    \end{lstlisting}
+  \item Denormalized (information bundled in documents)
+  \item Schema free
+  \end{itemize}
+  \begin{itemize}
+  \item[$\Rightarrow$] Allows generic, flexible, and distributable robot memory
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{MongoDB Database System}
+  \hfill\includegraphics[width=0.3\textwidth]{../thesis/img/mongodb}
+  \begin{itemize}
+    \item Scalable and widely used
+    \item Query language with aggregation, MapReduce, JavaScript % powerful query features
+%% \begin{lstlisting}[style=SmallJSON,linewidth=8.5cm,
+%%   framexleftmargin=2pt, xleftmargin=10pt,
+%%  morekeywords={}, numbers=none]
+%% db.environment.find(
+%%   { object: "cup", color: {$ne: "red"}})
+%% \end{lstlisting}%$
+    \item Indexing for fast querying
+    \item Distributable with Replica Sets\\ %explain a bit (Primary, Secondary)
+      Operations Log (Oplog) to forward changes
+    \item Comparable good performance and scalability\\\cite{arango-vs-mongo,db-comparison}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Related Work with MongoDB}
+  \begin{description}
+  \item[Robot Database with MongoDB~\cite{RoboDB}]%<uncover@1->
+                \hfill \\
+    \begin{itemize}
+    \item Data logging for evaluation and fault analysis
+    \item Generic and scalable storage with MongoDB
+    \item Integration in Fawkes and ROS
+    \end{itemize}
+\bigskip
+  \item[Extensions of  MongoDB]%<uncover@2->
+                \hfill \\
+    \begin{itemize}
+    \item Triggers with replication Oplog~\cite{mongodb-trigger}
+    %\item Multi-Master Replication~\cite{mongodb-multi-master}
+    \end{itemize}
+  \end{description}
+\end{frame}
+
+
+\section{Approach}
+
+%% \begin{frame}
+%%   \frametitle{Terminology}
+%%   \begin{description}
+%%   \item[Documents] \hfill {\small $\{("object","cup"),("position",{\scriptstyle\{("x",8),("y",4)\}})\}$}\\
+%%     \begin{itemize}
+%%     \item Sets of key-value pairs (unique keys)
+%%     \item Finitely nested sub-documents
+%%     \end{itemize}
+%% \bigskip
+%%   \item[Robot Memory] \hfill \\
+%%     \begin{itemize}
+%%     \item Composed of database and computables
+%%     \item Database: Set of documents
+%%     \item Computables: Functions yielding sets of documents
+%%     \end{itemize}
+%%   \end{description}  
+%% \end{frame}
+
+\begin{frame}
+  \frametitle{Computables and KBS Interface}
+  %% \only<1>{\includegraphics[width=1.03\textwidth]{../thesis/draw/computable-4.pdf}}
+  %% \only<2>{\includegraphics[width=1.03\textwidth]{../thesis/draw/computable-3.pdf}}
+  %% \only<3>{\includegraphics[width=1.03\textwidth]{../thesis/draw/computable-2.pdf}}
+  %% \only<4>{\includegraphics[width=1.03\textwidth]{../thesis/draw/computable-1.pdf}}
+  %% \only<5>{\includegraphics[width=1.03\textwidth]{../thesis/draw/computable.pdf}}
+  %% \pause\pause\pause\pause
+
+  % Handout:
+  \only<1>{\includegraphics[width=1.03\textwidth]{../thesis/draw/computable.pdf}}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Triggers}
+  %% \only<1>{\includegraphics[width=1.03\textwidth]{../thesis/draw/trigger-5.pdf}}
+  %% \only<2>{\includegraphics[width=1.03\textwidth]{../thesis/draw/trigger-4.pdf}}
+  %% \only<3>{\includegraphics[width=1.03\textwidth]{../thesis/draw/trigger-3.pdf}}
+  %% \only<4>{\includegraphics[width=1.03\textwidth]{../thesis/draw/trigger-2.pdf}}
+  %% \only<5>{\includegraphics[width=1.03\textwidth]{../thesis/draw/trigger-1.pdf}}
+  %% \only<6>{\includegraphics[width=1.03\textwidth]{../thesis/draw/trigger.pdf}}
+  %% \pause\pause\pause\pause\pause
+  
+  % Handout:
+  \only<1>{\includegraphics[width=1.03\textwidth]{../thesis/draw/trigger.pdf}}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Architecture}
+  \hspace{-1.3cm}
+  %% \only<1>{\hspace{0.105cm}\includegraphics[width=1.1\textwidth]{../thesis/draw/architecture.pdf}}
+  %% \only<2>{\includegraphics[width=1.1\textwidth]{../thesis/draw/architecture-comp.pdf}}
+  %% \pause
+
+  % Handout:
+  \only<1>{\includegraphics[width=1.1\textwidth]{../thesis/draw/architecture-comp.pdf}}
+\end{frame}
+
+
+\section{Implementation}
+
+\begin{frame}
+  \frametitle{Back-End and Robot Memory}
+  \begin{description}
+  \item[Distribution in multi-robot system]
+                \hfill \\
+    \begin{itemize}
+    \item Write operations only on primary instance
+    \item Eventual consistency on secondaries %(forwarding changes, denormalization)
+    %\item No sharding because WiFi, one robot in breakdown
+    \end{itemize}
+\bigskip
+  \item[Robot Memory]
+                \hfill \\
+    \begin{itemize}
+    \item Caching of computed documents
+    \item Automated start-up of MongoDB
+    \end{itemize}
+  \end{description}
+\end{frame}
+
+% how to interface robot memory from planners and reasoners
+% and how to map documents into specific concepts
+
+\begin{frame}[fragile]
+  \frametitle{CLIPS Interface}
+  \begin{description}
+  \item[CLIPS Characteristics]%<uncover@1->
+                \hfill \\
+    \begin{itemize}
+    \item Fact base as working memory
+  \begin{lstlisting}[showlines,style=ReallySmallCLIPS,
+  framexleftmargin=4pt, xleftmargin=0pt,
+  emph={skill, args, state, target, res},
+  emphstyle=\bfseries\color{green!80!black},
+  emph={[2]\?skill, \$\?args, cap-station, \?target, use,
+  WAIT-FOR-LOCK, SKILL-EXECUTION, running},
+  emphstyle={[2]\bfseries\color{blue!80!black}},
+  morekeywords={retract, assert, modify, skill-call, skill-to-execute,
+    wait-for-lock},
+  numbers=none]
+(cap-station (name M-CS1) (loaded NONE) (caps-on-shelf 3))
+\end{lstlisting} %$ This is just to fix Emacs highlighting due to dollar sign in code above
+    \item Condition-action rules
+    \item Procedural functions
+    \end{itemize}
+  \item[Robot Memory Interface]%<uncover@2->
+                \hfill \\
+    \begin{itemize}
+    \item Provide operation and traversal functions in CLIPS % insert, query, update, get-key, construct document
+    \item Mapping between facts and documents
+\begin{lstlisting}[style=SmallJSON,
+  framexleftmargin=0pt, xleftmargin=0pt,
+ morekeywords={}, numbers=none]
+ { relation: "cap-station", name: "M-CS1",
+   loaded: "NONE", caps-on-shelf: NumberLong(3)}
+\end{lstlisting}
+    \item Assert trigger events as facts
+    \end{itemize}
+  \end{description}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{PDDL Interface}
+  \begin{description}
+  \item[PDDL Characteristics]%<uncover@1->
+                \hfill \\
+    \begin{itemize}
+    \item Domain definition and problem description as input %for PDDL-based planner
+    \item Predicates represent information
+\begin{lstlisting}[style=SmallSlidePDDL,
+  framexleftmargin=1pt, xleftmargin=1pt,linewidth=9.5cm,
+ morekeywords={}, numbers=none]
+  (:goal (on A B))
+  (:init (on-table A) (on-table B))
+\end{lstlisting}
+    \end{itemize}
+  \item[Robot Memory Interface]%<uncover@2->
+                \hfill \\
+    \begin{itemize}
+    \item Mapping of documents to predicates
+    \item Generation of problem description from template
+\begin{lstlisting}[style=SmallSlidePDDL,
+  framexleftmargin=1pt, xleftmargin=1pt,linewidth=9.5cm,
+ morekeywords={}, numbers=none]
+  (:goal <<GOAL>>)
+  (:init  <<#ONTABLE|{relation:'on-table'}>>
+            (on-table <<object>>) <</ONTABLE>>))
+\end{lstlisting}
+\begin{lstlisting}[style=SmallJSON,
+  framexleftmargin=0pt, xleftmargin=0pt,linewidth=9.5cm,
+ morekeywords={}, numbers=none]
+ { relation: "on-table", object: "A"},
+ { relation: "on-table", object: "B"}
+\end{lstlisting}
+    %\item Parses resulting plans and inserts them as documents % used Fast Forward in thesis
+    \end{itemize}
+  \end{description}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{OpenRAVE Interface}
+  \begin{columns}
+    \begin{column}{0.6\textwidth}
+  \begin{description}
+  \item[OpenRAVE Characteristics]%<uncover@1->
+                \hfill \\
+    \begin{itemize}
+    \item Reqires geometric information
+    \item Operates in motion planner scene
+    \end{itemize}
+  \item[Robot Memory Interface]%<uncover@2->
+                \hfill \\
+    \begin{itemize}
+    \item Updates planner scene\\ based on positions\\ represented in documents
+\begin{lstlisting}[style=SmallJSON,
+  framexleftmargin=5pt, xleftmargin=0pt,linewidth=5cm,
+ morekeywords={}, numbers=none]
+{
+  block: "B",
+  frame: "map",
+  translation:
+    [0.43, -0.04, 0.01]
+}
+\end{lstlisting}
+    %\item Configurable models and queries
+    \end{itemize}
+  \end{description}
+    \end{column}
+    \begin{column}{0.4\textwidth}
+    \includegraphics[width=\textwidth]{../thesis/img/openrave-blocks}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Application and evaluation scenarios}
+  \begin{columns}
+    \begin{column}{0.5\textwidth}
+    \textbf{World model synchronization between robots in the RCLL}\\
+    \vspace{0.6cm}
+    \includegraphics[width=0.9\textwidth]{../thesis/img/rcll-sim-slim}
+%% share knowledge to collaborate
+    \end{column}
+    \begin{column}{0.4\textwidth}
+    \textbf{Blocks world with a robot arm}\\
+    \vspace{0.6cm}
+    \includegraphics[width=\textwidth]{../thesis/img/blocks-world-annotated}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+
+\section{Evaluation}
+
+\begin{frame}
+  \frametitle{Qualitative Evaluation}
+  \begin{description}
+  \item[Experience from evaluation scenarios]%<uncover@1->
+                \hfill \\
+    \begin{itemize}
+    \item Flexible storage and powerful querying
+    \item Convenient memory sharing between KBS\\ and in distributed system
+    % \item Planner specific views on a common\\ and thus consistent information basis
+      % (geometric for motion planner, symbolic for pddl)
+    \item Allows hybrid reasoning with computables\\(e.g. \texttt{on-table} derived from geometric position)
+      % Transformation of geometric block position to on-table predicate
+    \item Triggers useful for world model updates and messages
+    \end{itemize}
+  \end{description}
+\begin{block}{}%<uncover@2->
+  \begin{itemize}
+  \item Beneficial for AI/robot software development
+  \item Especially for combining different planners/reasoners
+  \end{itemize}
+  \end{block}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Qualitative Evaluation: Limitations}
+  \begin{description}
+  \item[Trade-offs / Limitations]
+                \hfill \\
+\bigskip
+    \begin{itemize}
+    \item Trigger only for changes of single documents % (ok because of denormalization)
+\vspace{0.15cm}
+    \item No direct trigger evaluation for computables % mention complexity, posisble with workaround
+\vspace{0.15cm}
+    \item Query complexity determined by application % formulation important
+    \end{itemize}
+  \end{description}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Quantitative Evaluation}
+  \begin{columns}
+    \begin{column}{0.55\textwidth}
+      \begin{description}
+      \item[Tidy up scenario] \hfill \\
+        \begin{itemize}
+        \item Robot Memory with information about objects
+          \begin{lstlisting}[style=SmallJSON,
+            framexleftmargin=5pt, xleftmargin=0pt,
+            morekeywords={}, numbers=none]
+{ name: "coffee machine",
+  position: "counter",
+  tidied: "counter" },
+{ name: "milk",
+  position: "counter",
+  tidied: "fridge" }
+          \end{lstlisting}
+        \item Measure operation durations with increasing domain size
+        \item With / without indexing
+        \end{itemize}
+      \end{description}
+    \end{column}
+    \begin{column}{0.45\textwidth}
+      \centering
+    \includegraphics[width=0.9\textwidth]{../thesis/img/tidy-up}\\
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Duration of Robot Memory Operations I}
+  \centering
+  \begin{columns}
+    \begin{column}{0.55\textwidth}
+  \centering
+    \small
+    \\\vspace{-0.15cm}
+    \includegraphics[width=\textwidth]{../thesis/plots/insert-durations}\\
+    \\\vspace{-0.05cm}
+    Insertions
+    \\\vspace{-0.05cm}
+    \includegraphics[width=\textwidth]{../thesis/plots/query-durations}\\
+    \\\vspace{-0.08cm}
+    Queries
+    \end{column}
+    \begin{column}{0.55\textwidth}
+  \centering
+    \small
+    \\\vspace{-0.15cm}
+    \includegraphics[width=\textwidth]{../thesis/plots/insert-durations-index}\\
+    \\\vspace{-0.05cm}
+    Insertions with Indexing
+    \\\vspace{-0.08cm}
+    \includegraphics[width=\textwidth]{../thesis/plots/query-durations-index}\\
+    \\\vspace{-0.05cm}
+    Queries with Indexing
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Duration of Robot Memory Operations II}
+  \centering
+  \begin{columns}
+    \begin{column}{0.55\textwidth}
+  \centering
+    \small
+    \\\vspace{-0.16cm}
+    \includegraphics[width=\textwidth]{../thesis/plots/update-durations}\\
+    \\\vspace{-0.08cm}
+    Updates
+    \\\vspace{-0.05cm}
+    \includegraphics[width=\textwidth]{../thesis/plots/computable-durations}\\
+    \\\vspace{-0.05cm}
+    Computables
+    \end{column}
+    \begin{column}{0.55\textwidth}
+  \centering
+    \small
+    \\\vspace{-0.16cm}
+    \includegraphics[width=\textwidth]{../thesis/plots/update-durations-index}\\
+    \\\vspace{-0.08cm}
+    Updates with Indexes
+    \\\vspace{-0.05cm}
+    \includegraphics[width=\textwidth]{../thesis/plots/computable-durations-index}\\
+    \\\vspace{-0.05cm}
+    Computables with Indexes
+    \end{column}
+  \end{columns}
+\end{frame}
+
+
+\section{Conclusion}
+
+\begin{frame}
+  \frametitle{Foundation for Future Projects}
+  \begin{description}
+  \item[Two projects currently using the Robot Memory]\hfill\\
+    \begin{itemize}
+    \item Both for centralized global task planning in the RCLL
+    \item Reactive ASP and real-time constraints
+    \item PDDL with temporal aspects
+    \end{itemize}
+  \item[Beneficial features] \hfill \\
+    \begin{itemize}
+    \item Distributed memory shared by planner and executives
+    \item CLIPS agent integration
+    \item Triggers for notifications
+    \item PDDL problem definition generation
+    \end{itemize}
+  \end{description}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Conclusion and Questions}
+  \begin{block}{Generic Robot Memory } \centering\bfseries
+    flexible storage and expressive querying for hybrid reasoning and world model sharing between different KBS
+  \end{block}
+  \bigskip
+  \begin{columns}
+    \begin{column}{0.5\textwidth}
+      \begin{itemize}
+      \item Document-oriented representation and querying
+      \item Distributable and persistent
+      \item Interfaces for KBS
+      \item Triggers for notification
+      % \item Architectural design
+      %\item Hybrid reasoning with computables
+      \end{itemize}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \begin{itemize}
+      \item Computables
+      \item Symbolic/spatio-temporal
+      \item Beneficial and efficient in application scenarios
+      \item Foundation for future projects
+      \end{itemize}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newcounter{finalframe}
+\setcounter{finalframe}{\value{framenumber}}
+
+
+\begin{frame}[allowframebreaks]
+  \frametitle{References}
+  \small
+  \bibliographystyle{apalike}
+  \bibliography{../references}
+\end{frame}
+
+\setcounter{framenumber}{\value{finalframe}}
+
+\end{document}
