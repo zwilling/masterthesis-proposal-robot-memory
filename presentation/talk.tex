@@ -119,6 +119,7 @@
     \end{column}
     \begin{column}{0.5\textwidth}
     \centering
+    \pause
     \includegraphics[width=0.7\textwidth]{../thesis/img/pr2-kbsg-kitchen}
   \begin{description}[]
   \item[RoboCup@Home] \hfill \\
@@ -144,14 +145,14 @@
   \item Fact base and condition-action rules
   \item[$\Rightarrow$] Used for world model reasoning and\\ execution monitoring
   \end{itemize}
-  \item[Planning Domain Definition Language (PDDL)]%<uncover@2->
+  \item[Planning Domain Definition Language (PDDL)]<uncover@2->
     \hfill \\
   \begin{itemize}
   \item Standardized language for planning problems
   \item Find action sequence through heuristic search
   \item[$\Rightarrow$] Used for finding global plans
   \end{itemize}
-  \item[Motion Planners]%<uncover@3->
+  \item[Motion Planners]<uncover@3->
     \hfill \\
   \begin{itemize}
   \item Robot arm and locomotion collision avoidance
@@ -162,7 +163,7 @@
   \begin{column}{0.17\linewidth}
   \includegraphics[width=\textwidth]{../thesis/img/CLIPS}
   \vspace{3.4cm}
-  %\pause\pause
+  \pause\pause
   \includegraphics[width=\textwidth]{../thesis/img/openrave}
   \end{column}
   \end{columns}
@@ -177,7 +178,7 @@
 \begin{frame}
   \frametitle{Robot Information Storage Systems}
   \begin{description}[]
-  \item[KnowRob~\cite{KnowRob}]%<uncover@1->
+  \item[KnowRob~\cite{KnowRob}]
     \hfill \\
     \begin{itemize}
     \item Common sense reasoning with ontologies
@@ -187,7 +188,7 @@
     \end{itemize}
   \end{description}
   \begin{description}[]
-  \item[OpenRobots Ontology (ORO)~\cite{Oro}]%<uncover@2-> 
+  \item[OpenRobots Ontology (ORO)~\cite{Oro}]
     \hfill \\
     \begin{itemize}
     \item Common sense reasoning with ontologies
@@ -195,7 +196,8 @@
     \item Events notifying about changes
     \end{itemize}
   \end{description}
-  \begin{block}{}%<uncover@3->
+  \pause
+  \begin{block}{}
   \begin{itemize}
   \item Not applicable for multi-robot systems
   \item Scalability, efficiency concerns % because storage is interwined with reasoning
@@ -382,6 +384,7 @@
     \item Condition-action rules
     \item Procedural functions
     \end{itemize}
+    \pause
   \item[Robot Memory Interface]%<uncover@2->
                 \hfill \\
     \begin{itemize}
@@ -413,6 +416,7 @@
   (:init (on-table A) (on-table B))
 \end{lstlisting}
     \end{itemize}
+    \pause
   \item[Robot Memory Interface]%<uncover@2->
                 \hfill \\
     \begin{itemize}
@@ -447,7 +451,7 @@
     \item Reqires geometric information
     \item Operates in motion planner scene
     \end{itemize}
-  \item[Robot Memory Interface]%<uncover@2->
+  \item[Robot Memory Interface]<uncover@2->
                 \hfill \\
     \begin{itemize}
     \item Updates planner scene\\ based on positions\\ represented in documents
@@ -469,6 +473,7 @@
     \includegraphics[width=\textwidth]{../thesis/img/openrave-blocks}
     \end{column}
   \end{columns}
+    \pause
 \end{frame}
 
 \begin{frame}
@@ -510,6 +515,7 @@
     \item Triggers useful for world model updates and messages
     \end{itemize}
   \end{description}
+  \pause
 \begin{block}{}%<uncover@2->
   \begin{itemize}
   \item Beneficial for AI/robot software development
@@ -642,6 +648,7 @@
     \item Reactive ASP and real-time constraints
     \item PDDL with temporal aspects
     \end{itemize}
+    \pause
   \item[Beneficial features] \hfill \\
     \begin{itemize}
     \item Distributed memory shared by planner and executives
@@ -658,6 +665,7 @@
     flexible storage and expressive querying for hybrid reasoning and world model sharing between different KBS
   \end{block}
   \bigskip
+  \pause
   \begin{columns}
     \begin{column}{0.5\textwidth}
       \begin{itemize}
