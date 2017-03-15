@@ -38,7 +38,7 @@
   \textbf{\large Database to store information of a robot about its environment}
   \bigskip
   \begin{itemize}
-  \item \textbf{Domain:} Logistics and domestic service robots
+  \item \textbf{Domain:} Logistics and domestic service robotics
   \item \textbf{Purpose:} Scalable storage and rich querying
   \item \textbf{Focus:} Knowledge sharing and hybrid reasoning\\ for knowledge-based systems
   \end{itemize}
@@ -124,9 +124,8 @@
   \item[RoboCup@Home] \hfill \\
     \begin{itemize}
     \item Domestic service robots
-    \item Collect knowledge about concrete environment
+    \item Collect information about concrete environment
     \item Hybrid reasoning with spatio-temporal knowledge
-    \item Persistent storage
     \end{itemize}
   \end{description}    
     \end{column}
@@ -188,7 +187,7 @@
     \end{itemize}
   \end{description}
   \begin{description}[]
-  \item[OpenRobots Ontology~\cite{Oro}]%<uncover@2-> 
+  \item[OpenRobots Ontology (ORO)~\cite{Oro}]%<uncover@2-> 
     \hfill \\
     \begin{itemize}
     \item Common sense reasoning with ontologies
@@ -235,12 +234,12 @@
   \begin{itemize}
     \item Scalable and widely used
     \item Query language with aggregation, MapReduce, JavaScript % powerful query features
-\begin{lstlisting}[style=SmallJSON,linewidth=8.5cm,
-  framexleftmargin=2pt, xleftmargin=10pt,
- morekeywords={}, numbers=none]
-db.environment.find(
-  { object: "cup", color: {$ne: "red"}})
-\end{lstlisting}%$
+%% \begin{lstlisting}[style=SmallJSON,linewidth=8.5cm,
+%%   framexleftmargin=2pt, xleftmargin=10pt,
+%%  morekeywords={}, numbers=none]
+%% db.environment.find(
+%%   { object: "cup", color: {$ne: "red"}})
+%% \end{lstlisting}%$
     \item Indexing for fast querying
     \item Distributable with Replica Sets\\ %explain a bit (Primary, Secondary)
       Operations Log (Oplog) to forward changes
@@ -275,23 +274,23 @@ db.environment.find(
 \end{frame}
 \addtocounter{framenumber}{-1}
 
-\begin{frame}
-  \frametitle{Terminology}
-  \begin{description}
-  \item[Documents] \hfill {\small $\{("object","cup"),("position",{\scriptstyle\{("x",8),("y",4)\}})\}$}\\
-    \begin{itemize}
-    \item Sets of key-value pairs (unique keys)
-    \item Finitely nested sub-documents
-    \end{itemize}
-\bigskip
-  \item[Robot Memory] \hfill \\
-    \begin{itemize}
-    \item Composed of database and computables
-    \item Database: Set of documents
-    \item Computables: Functions yielding sets of documents
-    \end{itemize}
-  \end{description}  
-\end{frame}
+%% \begin{frame}
+%%   \frametitle{Terminology}
+%%   \begin{description}
+%%   \item[Documents] \hfill {\small $\{("object","cup"),("position",{\scriptstyle\{("x",8),("y",4)\}})\}$}\\
+%%     \begin{itemize}
+%%     \item Sets of key-value pairs (unique keys)
+%%     \item Finitely nested sub-documents
+%%     \end{itemize}
+%% \bigskip
+%%   \item[Robot Memory] \hfill \\
+%%     \begin{itemize}
+%%     \item Composed of database and computables
+%%     \item Database: Set of documents
+%%     \item Computables: Functions yielding sets of documents
+%%     \end{itemize}
+%%   \end{description}  
+%% \end{frame}
 
 \begin{frame}
   \frametitle{Computables and KBS Interface}
@@ -352,8 +351,6 @@ db.environment.find(
   \item[Robot Memory]
                 \hfill \\
     \begin{itemize}
-    \item Modifying queries and inserts
-    \item Trigger and computable managers
     \item Caching of computed documents
     \item Automated start-up of MongoDB
     \end{itemize}
@@ -434,7 +431,7 @@ db.environment.find(
  { relation: "on-table", object: "A"},
  { relation: "on-table", object: "B"}
 \end{lstlisting}
-    \item Parses resulting plans and inserts them as documents % used Fast Forward in thesis
+    %\item Parses resulting plans and inserts them as documents % used Fast Forward in thesis
     \end{itemize}
   \end{description}
 \end{frame}
@@ -447,8 +444,8 @@ db.environment.find(
   \item[OpenRAVE Characteristics]%<uncover@1->
                 \hfill \\
     \begin{itemize}
-    \item Geometric motion planner
-    \item Operates in continuous space
+    \item Reqires geometric information
+    \item Operates in motion planner scene
     \end{itemize}
   \item[Robot Memory Interface]%<uncover@2->
                 \hfill \\
@@ -504,13 +501,13 @@ db.environment.find(
   \item[Experience from evaluation scenarios]%<uncover@1->
                 \hfill \\
     \begin{itemize}
-    \item Flexible storage and expressive querying
+    \item Flexible storage and powerful querying
     \item Convenient memory sharing between KBS\\ and in distributed system
     % \item Planner specific views on a common\\ and thus consistent information basis
       % (geometric for motion planner, symbolic for pddl)
     \item Allows hybrid reasoning with computables\\(e.g. \texttt{on-table} derived from geometric position)
       % Transformation of geometric block position to on-table predicate
-    \item Triggers useful for worldmodel updates and messages
+    \item Triggers useful for world model updates and messages
     \end{itemize}
   \end{description}
 \begin{block}{}%<uncover@2->
@@ -605,7 +602,7 @@ db.environment.find(
     \begin{column}{0.55\textwidth}
   \centering
     \small
-    \\\vspace{-0.17cm}
+    \\\vspace{-0.16cm}
     \includegraphics[width=\textwidth]{../thesis/plots/update-durations}\\
     \\\vspace{-0.08cm}
     Updates
@@ -617,7 +614,7 @@ db.environment.find(
     \begin{column}{0.55\textwidth}
   \centering
     \small
-    \\\vspace{-0.17cm}
+    \\\vspace{-0.16cm}
     \includegraphics[width=\textwidth]{../thesis/plots/update-durations-index}\\
     \\\vspace{-0.08cm}
     Updates with Indexes
@@ -666,10 +663,9 @@ db.environment.find(
       \begin{itemize}
       \item Document-oriented representation and querying
       \item Distributable and persistent
-      \item Theoretical foundation
+      \item Interfaces for KBS
       \item Triggers for notification
       % \item Architectural design
-      % \item Interfaces for KBS
       %\item Hybrid reasoning with computables
       \end{itemize}
     \end{column}
